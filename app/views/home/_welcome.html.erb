@@ -1,19 +1,20 @@
-<% title _("Welcome to #{Rails.configuration.branding[:application][:name]}.") %>
 <div>
-  <h1><%= _("Welcome to #{Rails.configuration.branding[:application][:name]}.")%></h1>
+  <h1><%= _('Welcome')%></h1>
   <p>
-    <%= sanitize _('<p>%{application_name} has been developed by the <strong>%{organisation_name}</strong> to help you write data management plans.</p>') % {
-      application_name: Rails.configuration.branding[:application][:name],
-      organisation_name: Rails.configuration.branding[:organisation][:name]}
-      %>
-
-    <label for="linklist">
-      <%=_('Getting started:')%>
-    </label>
-    <ul id="linklist">
-      <% Rails.application.config.branding[:organisation][:welcome_links].each do |wlink| %>
-      <li><a href="<%= wlink[:url] %>"><%= wlink[:title] %></a></li>
-      <% end %>
-    </ul>
+      <%= raw _('<p>%{application_name} helps you to create, review, and share data management plans that meet institutional and funder requirements. It is provided by the Digital Curation Centre (DCC).') % {:application_name => Rails.configuration.branding[:application][:name], :organisation_name => Rails.configuration.branding[:organisation][:name]} %>
+  </p>
+  <p>
+      Join the growing international community that have adopted DMPonline:
+  </p>
+  <p><div style="padding-right:30px"><div class="row text-center">
+      <div class="col-xs-6"><i class="fa fa-user fa-5x" style="font-size:5em;color:#333;"></i><h4><%= number_with_delimiter(User.count, delimiter: ',') %> Users</h4></div>
+      <div class="col-xs-6"><i class="fa fa-university fa-5x" style="font-size:5em;color:#333;"></i><h4><%= number_with_delimiter(Org.count, delimiter: ',') %> Organisations</h4></div>
+  </div><br>
+  <div class="row text-center">
+      <div class="col-xs-6"><i class="fa fa-files-o fa-5x" style="font-size:5em;color:#333;"></i><h4><%= number_with_delimiter(Plan.count, delimiter: ',') %> Plans</h4></div>
+      <div class="col-xs-6"><i class="fa fa-globe fa-5x" style="font-size:5em;color:#333;"></i><h4>89 Countries</h4></div>
+  </div></div></p>
+  <p>
+      Some funders mandate the use of DMPonline, while others point to it as a useful option. You can <a href='https://dmponline.dcc.ac.uk/public_templates'>download funder templates</a> without logging in, but the tool provides tailored guidance and example answers from the DCC and many research organisations. Why not sign up for an account and try it out?
   </p>
 </div>
