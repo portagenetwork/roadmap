@@ -14,8 +14,10 @@ class Phase < ActiveRecord::Base
 	has_many :sections, :through => :versions, :dependent => :destroy
   has_many :questions, :through => :sections, :dependent => :destroy
 
+	has_many :phase_translations
+
 	#Link the child's data
-	accepts_nested_attributes_for :versions, :allow_destroy => true 
+	accepts_nested_attributes_for :versions, :allow_destroy => true
 #	accepts_nested_attributes_for :dmptemplate
 
 	attr_accessible :description, :number, :title, :dmptemplate_id, :as => [:default, :admin]
@@ -67,7 +69,7 @@ class Phase < ActiveRecord::Base
 				has_section = false
 			end
 		else
-			version = self.versions.order('updated_at DESC').first 
+			version = self.versions.order('updated_at DESC').first
 			if !version.sections.empty? then
 				has_section = true
 			else

@@ -3,6 +3,7 @@ class QuestionFormat < ActiveRecord::Base
 
   #associations between tables
   has_many :questions
+  has_many :question_format_translations
   ##
   # gives the title of the question_format
   #

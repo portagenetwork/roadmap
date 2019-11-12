@@ -17,6 +17,8 @@ class Guidance < ActiveRecord::Base
 
   belongs_to :question
 
+  has_many :guidance_translations
+
   #belongs_to :dmptemplate
   #belongs_to :theme
 
@@ -89,7 +91,7 @@ class Guidance < ActiveRecord::Base
 
       # guidances are viewable if they are owned by any of the user's organisations
       user.organisations.each do |organisation|
-        
+
         if guidance_group.organisation.id == organisation.id
           viewable = true
         end

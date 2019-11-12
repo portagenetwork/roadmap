@@ -1,8 +1,8 @@
 class Dmptemplate < ActiveRecord::Base
     include GlobalHelpers
 
-    attr_accessible :id, :organisation_id, :description, :published, :title, :user_id, :locale, 
-                    :is_default, :guidance_group_ids, :as => [:default, :admin] 
+    attr_accessible :id, :organisation_id, :description, :published, :title, :user_id, :locale,
+                    :is_default, :guidance_group_ids, :as => [:default, :admin]
 
     #associations between tables
     has_many :phases
@@ -10,6 +10,7 @@ class Dmptemplate < ActiveRecord::Base
     has_many :sections, through: :versions
     has_many :questions, through: :sections
     has_many :projects
+    has_many :dmptemplate_translations
 
     #has_many :guidances                needs to be removed and checked
 
@@ -157,7 +158,7 @@ class Dmptemplate < ActiveRecord::Base
 		phases.each do |phase|
 			return true if !phase.latest_published_version.nil?
 		end
-		return false 
+		return false
 	end
 
 end

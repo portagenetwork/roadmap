@@ -7,6 +7,8 @@ class Version < ActiveRecord::Base
   has_many :questions, :through => :sections, :dependent => :destroy
   has_many :plans
 
+  has_many :version_translations
+
   #Link the data
 #  accepts_nested_attributes_for :phase
   accepts_nested_attributes_for :sections,  :allow_destroy => true

@@ -5,6 +5,7 @@ class Section < ActiveRecord::Base
   belongs_to :organisation
   has_many :questions, :dependent => :destroy
   has_many :plan_sections, :dependent => :destroy
+  has_many :section_translations
 
   #Link the data
   accepts_nested_attributes_for :questions, :reject_if => lambda {|a| a[:text].blank? },  :allow_destroy => true
