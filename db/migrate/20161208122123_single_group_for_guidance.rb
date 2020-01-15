@@ -8,7 +8,7 @@ class SingleGroupForGuidance < ActiveRecord::Migration
 
         Guidance.includes( :guidance_groups).all.each do |guidance|
           guidance.guidance_group_id = guidance.guidance_groups.first.id unless guidance.guidance_groups.empty?
-          if guidance.guidance_group_id.nil?
+          if guidance.guidance_group_id.nil? || guidance.text.blank?
             guidance.destroy
           else
             guidance.save!

@@ -131,11 +131,13 @@ class AddForeignKeys < ActiveRecord::Migration
     puts "#{i} notes scrubbed"
 
     # templates
+    portage = Org.find(8)
     i = 0
     if table_exists?('templates')
       Template.includes(:org).find_each do |temp|
         if temp.org.nil? && temp.org_id.present?
-          temp.org_id = nil
+          temp.org_id = portage.id
+          temp.published = false
           i += 1
           temp.save!
         end
@@ -229,22 +231,22 @@ class AddForeignKeys < ActiveRecord::Migration
 
     # # themes_in_guidance
 
-    # # users
-    # i = 0
-    # if table_exists?('users')
-    #   User.includes(:org, :language).find_each do |u|
-    #     if u.org.nil? && u.org_id.present?
-    #       u.org_id = nil
-    #       i += 1
-    #     end
-    #     if u.language.nil? && u.language_id.present?
-    #       u.language_id = nil
-    #       i += 1
-    #     end
-    #     u.save!
-    #   end
-    # end
-    # puts "#{i} users scrubbed"
+    # users
+    i = 0
+    if table_exists?('users')
+      User.includes(:org, :language).find_each do |u|
+        if u.org.nil? && u.org_id.present?
+          u.org_id = nil
+          i += 1
+        end
+        if u.language.nil? && u.language_id.present?
+          u.language_id = nil
+          i += 1
+        end
+        u.save!
+      end
+    end
+    puts "#{i} users scrubbed"
 
     # users_perms
     if table_exists?('users_perms')
