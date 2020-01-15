@@ -39,8 +39,8 @@ class Org < ActiveRecord::Base
   dragonfly_accessor :logo do
     after_assign :resize_image
   end
-  validates_property :format, of: :logo, in: ['jpeg', 'png', 'gif','jpg','bmp'], message: _("must be one of the following formats: jpeg, jpg, png, gif, bmp")
-  validates_size_of :logo, maximum: 500.kilobytes, message: _("can't be larger than 500KB")
+  # validates_property :format, of: :logo, in: ['jpeg', 'png', 'gif','jpg','bmp'], message: _("must be one of the following formats: jpeg, jpg, png, gif, bmp")
+  # validates_size_of :logo, maximum: 500.kilobytes, message: _("can't be larger than 500KB")
 
   ##
   # Define Bit Field values
