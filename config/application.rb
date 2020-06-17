@@ -15,7 +15,7 @@ require 'csv'
 #Bundler.require(:default, Rails.env)
 #Changed when migrated to rails 4.0.0
 Bundler.require(*Rails.groups)
-
+ActiveRecord::Base.record_timestamps = false
 begin
   # If Rollbar has been included in the Bundle, load it here.
   require "rollbar"

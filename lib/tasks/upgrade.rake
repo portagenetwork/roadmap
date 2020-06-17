@@ -4,7 +4,9 @@ namespace :upgrade do
   desc "Upgrade to v2.1.3"
   task v2_1_3: :environment do
     Rake::Task['upgrade:fill_blank_plan_identifiers'].execute
+    ActiveRecord::Base.record_timestamps = true
     Rake::Task["upgrade:add_reviewer_perm"].execute
+    ActiveRecord::Base.record_timestamps = false
     Rake::Task["upgrade:add_reviewer_to_existing_admin_perms"].execute
     Rake::Task["upgrade:migrate_reviewer_roles"].execute
   end
