@@ -16,7 +16,7 @@ require 'csv'
 #Bundler.require(:default, Rails.env)
 #Changed when migrated to rails 4.0.0
 Bundler.require(*Rails.groups)
-
+ActiveRecord::Base.record_timestamps = false
 module DMPRoadmap
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
