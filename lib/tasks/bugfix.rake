@@ -1,9 +1,13 @@
 namespace :bugfix do
 
   desc "Bug fixes for version v0.3.3"
-  task v0_3_3: :environment do
+  task v0_3_3: :environment do    
+    ActiveRecord::Base.record_timestamps = true
+    # The following 2 rake tasks only create new models and do not update them.
+    # There is no problem with them recording timestamps
     Rake::Task['bugfix:fix_question_formats'].execute
     Rake::Task['bugfix:add_missing_token_permission_types'].execute
+    ActiveRecord::Base.record_timestamps = false
   end
 
   desc "Add the missing formattype to the question_formats table"
