@@ -261,7 +261,7 @@ namespace :migrate do
   desc "Move old plans.data_contact to data_contact_email and data_contact_phone"
   task plan_data_contacts: :environment do
     email_regex = /([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})/i
-    phone_regex = /\+?[0-9\-\(\)]{7,}/i
+    phone_regex = /\+?[0-9\ \.\-\(\)]{7,}/i
     Plan.where('data_contact IS NOT NULL').each do |p|
       email = p.data_contact[email_regex]
       phone = p.data_contact[phone_regex]
@@ -270,7 +270,7 @@ namespace :migrate do
       contact = p.data_contact
       contact = contact.gsub(email, '') unless email.nil?
       contact = contact.gsub(phone, '') unless phone.nil?
-      contact = contact.gsub(/([Ee]mail|[Pp]hone|[Mm]obile|[Cc]ell|[Oo]ffice|[Hh]ome|[Ww]ork|[Tt]|[Ee]):?/, '')
+      contact = contact.gsub(/([Ee]mail|[Pp]hone|[Mm]obile|[Cc]ell|[Oo]ffice|[Hh]ome|[Ww]ork):?/, '')
       contact = contact.gsub(' , ', '').strip
       contact = contact[0..(contact.length - 2)] if contact.ends_with?(',')
       contact = nil if contact == ','
