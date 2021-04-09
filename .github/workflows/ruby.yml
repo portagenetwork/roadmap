@@ -16,15 +16,20 @@ on:
 jobs:
   test:
 
-    runs-on: ubuntu-latest    
+    runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:latest
+        ports:
+          - 3306
+        env:
+          MYSQL_USER: roadmap_user
+          MYSQL_PASSWORD: ${{ env.DATABASE_PASSWORD }}
+          MYSQL_DATABASE: test_db
+          MYSQL_ROOT_PASSWORD:  ${{ env.ROOT_DATABASE_PASSWORD }}
+        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+
     steps:
-    - uses: getong/mariadb-action@v1.1
-      with:
-        mariadb_version: '10.3.22'
-        mysql_database: 'test_db'
-        mysql_root password: ${{ env.ROOT_DATABASE_PASSWORD }}
-        mysql_user: 'roadmap_user'
-        mysql_password: ${{ env.DATABASE_PASSWORD }}
     - uses: actions/checkout@v2
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
