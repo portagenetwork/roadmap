@@ -22,9 +22,9 @@ jobs:
       with:
         mariadb version: '10.3.22'
         mysql database: 'test_db'
-        mysql root password: ${{ secrets.ROOT_DATABASE_PASSWORD }}
+        mysql root password: ${{ env.ROOT_DATABASE_PASSWORD }}
         mysql user: 'roadmap_user'
-        mysql password: ${{ secrets.DATABASE_PASSWORD }}
+        mysql password: ${{ env.DATABASE_PASSWORD }}
     - uses: actions/checkout@v2
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
