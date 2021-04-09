@@ -20,7 +20,7 @@ jobs:
     steps:
     - uses: getong/mariadb-action@v1.1
       with:
-        mariadb version: '10.3.22'
+        mariadb_version: '10.3.22'
         mysql_database: 'test_db'
         mysql_root password: ${{ env.ROOT_DATABASE_PASSWORD }}
         mysql_user: 'roadmap_user'
