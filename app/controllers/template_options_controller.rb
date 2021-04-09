@@ -44,9 +44,10 @@ class TemplateOptionsController < ApplicationController
       end
       
       # Include customizable funder templates
-      @templates << funder_templates = Template.latest_customizable
+      @templates << Template.latest_customizable
 
       @templates = @templates.flatten.uniq
+
     end
 
     # Always use the default template
