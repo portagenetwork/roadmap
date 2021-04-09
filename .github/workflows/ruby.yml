@@ -21,10 +21,10 @@ jobs:
     - uses: getong/mariadb-action@v1.1
       with:
         mariadb version: '10.3.22'
-        mysql database: 'test_db'
-        mysql root password: ${{ env.ROOT_DATABASE_PASSWORD }}
-        mysql user: 'roadmap_user'
-        mysql password: ${{ env.DATABASE_PASSWORD }}
+        mysql_database: 'test_db'
+        mysql_root password: ${{ env.ROOT_DATABASE_PASSWORD }}
+        mysql_user: 'roadmap_user'
+        mysql_password: ${{ env.DATABASE_PASSWORD }}
     - uses: actions/checkout@v2
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
