@@ -10,8 +10,11 @@
            locals: { user_count: @total_org_users,
                      plan_count: @total_org_plans,
                      separators: @separators } %>
-<% if @funder.present? %>
-  <%= render partial: 'usage/template_statistics' %>
+
+<% if !current_user.can_org_admin? && 
+      !current_user.can_super_admin? && 
+      @funder.present? %>
+    <%= render partial: 'usage/template_statistics' %>
 <% else %>
   <div class="panel-group usage-accordion" role="tablist" aria-multiselectable="true">
     <%= render partial: 'usage/user_statistics_accordion', locals: {expanded: true} %>
