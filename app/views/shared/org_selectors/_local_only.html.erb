@@ -14,7 +14,6 @@ placeholder = _("Begin typing to see a list of suggestions.")
 
 <%= form.label :org_name, label %>
 <%= form.text_field :org_name, class: "form-control autocomplete",
-                            placeholder: placeholder,
                             value: presenter.name,
                             spellcheck: true,
                             aria: {
@@ -36,13 +35,11 @@ placeholder = _("Begin typing to see a list of suggestions.")
     selects or enters something %>
 <% if form.object[id_field]&.to_s =~ /[0-9]+/ || form.object[id_field].nil? %>
   <% val = presenter.crosswalk_entry_from_org_id(value: form.object[id_field]) %>
-  <%= form.hidden_field id_field, value: val, class: "autocomplete-result",
+  <%= form.hidden_field id_field, value: form.object[id_field], class: "autocomplete-result",
                                               autocomplete: "off" %>
 <% else %>
   <%= form.hidden_field :org_id, class: "autocomplete-result",
                                  autocomplete: "off" %>
 <% end %>
 
-<p class="autocomplete-warning red hide">
-  <%= _("The name you entered was not one of the listed suggestions!") %>
-</p>
+<input type="hidden" class="autocomplete-warning hide"/>

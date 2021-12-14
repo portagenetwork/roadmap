@@ -101,7 +101,7 @@ class PlansController < ApplicationController
       if plan_params[:funder].present? && plan_params[:funder][:id].present?
         attrs = plan_params[:funder]
         attrs[:org_id] = attrs[:id]
-        @plan.funder = org_from_params(params_in: attrs, allow_create: false)
+        @plan.funder = org_from_params(params_in: attrs, allow_create: true)
       end
 
       if @plan.save
@@ -481,7 +481,7 @@ class PlansController < ApplicationController
           .permit(:template_id, :title, :visibility, :description, :identifier,
                   :start_date, :end_date, :org_id, :org_name, :org_crosswalk,
                   :ethical_issues, :ethical_issues_description, :ethical_issues_report,
-                  :research_domain_id, :funding_status,
+                  :research_domain_id, :funding_status, :org_sources, :funder,
                   grant: %i[name value],
                   org: %i[id org_id org_name org_sources org_crosswalk],
                   funder: %i[id org_id org_name org_sources org_crosswalk])
