@@ -4,7 +4,7 @@ on: [pull_request]
 
 jobs:
   mysql:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu
 
     env:
       DB_ADAPTER: mysql2
