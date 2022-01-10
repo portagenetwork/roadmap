@@ -1,15 +1,13 @@
 # DMP Assistant
 
 [![Actions Status](https://github.com/portagenetwork/roadmap/workflows/Brakeman/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
-[![Actions Status](https://github.com/portagenetwork/roadmapworkflows/Rubocop/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
 [![Actions Status](https://github.com/portagenetwork/roadmap/workflows/ESLint/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
 [![Actions Status](https://github.co/portagenetwork/roadmap/workflows/Tests%20-%20MySQL/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
 
+[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
 
+[![GitHub release](https://img.shields.io/github/v/release/portagenetwork/roadmap.svg)](https://GitHub.com/portagenetwork/roadmap/releases/)
 
-- Version: 3.0.4+portage-3.0.0
-
-[Contribution guidelines for this project](.github/CONTRIBUTING.md)
 
 
 
