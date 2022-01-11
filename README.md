@@ -7,8 +7,6 @@
 [![GitHub release](https://img.shields.io/github/v/release/portagenetwork/roadmap.svg)](https://GitHub.com/portagenetwork/roadmap/releases/)
 [![GitHub issues](https://img.shields.io/github/issues/portagenetwork/roadmap.svg)](https://GitHub.com/portagenetwork/roadmap/issues/)
 
-<br/>
-
 > Developed by the Digital Research Alliance of Canada (the Alliance; Portage Network) in collaboration with host institution University of Alberta, DMP Assistant repo is a **fork** of the <a href="https://github.com/DMPRoadmap/roadmap">DMP Roadmap codebase</a>, which is management and developed jointly provided by the Digital Curation Centre (DCC) and the University of California Curation Center (UC3).
 
 ---
@@ -17,11 +15,9 @@
   * [Pre-requisites](#pre-requisites)
   * [Troubleshooting](#troubleshooting)
   * [Support](#support)
-- [About DMP Roadmap](#about%20dmp-roadmap)
+- [About DMP Roadmap](#about-dmp-roadmap)
 - [Contributing](#contributing)
 ---
-
-<br/>
 
 ## Overview
 
@@ -85,3 +81,10 @@ If you would like to contribute to the project. Please follow these steps to sub
 * The project team will then review your PR and communicate with you to convey any additional changes that would ensure that your work adheres to our guidelines.
 
 See the [Contribution Guide](https://github.com/portagenetwork/roadmap/blob/development/CONTRIBUTING.md) on the Wiki for more details.
+
+<br/>
+<table style="border:none;"><tr>
+<td style="border:none;" ><a href="https://alliancecan.ca/"><img style="max-width: 300px" src="https://alliancecan.ca/assets/ui/Logo.svg" /></a></td>
+<td style="border:none;" ><a href="https://portagenetwork.ca/"><img style="max-width: 150px" src="https://portagenetwork.ca/wp-content/uploads/2020/06/Portage_logo_Tagline_rgb_bilingual.png" /></a></td>
+<td style="border:none;" ><a href="https://assistant.portagenetwork.ca/"><img style="max-width: 100px" src="https://assistant.portagenetwork.ca/assets/dmp_logo_en_CA-5c33553d0405a518232ce38f3ac75bed9ac72d99753753117a1b3d68b1c35554.png" /></a></td>
+</tr></table>
