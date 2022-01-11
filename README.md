@@ -7,10 +7,11 @@
 [![GitHub release](https://img.shields.io/github/v/release/portagenetwork/roadmap.svg)](https://GitHub.com/portagenetwork/roadmap/releases/)
 [![GitHub issues](https://img.shields.io/github/issues/portagenetwork/roadmap.svg)](https://GitHub.com/portagenetwork/roadmap/issues/)
 
-> Developed by the Digital Research Alliance of Canada (the Alliance; Portage Network) in collaboration with host institution University of Alberta, DMP Assistant repo is a **fork** of the <a href="https://github.com/DMPRoadmap/roadmap">DMP Roadmap codebase</a>, which is management and developed jointly provided by the Digital Curation Centre (DCC) and the University of California Curation Center (UC3).
+> Developed by **the Digital Research Alliance of Canada (the Alliance; Portage Network)** in collaboration with host institution University of Alberta, DMP Assistant repo is a **fork** of the <a href="https://github.com/DMPRoadmap/roadmap">DMP Roadmap codebase</a>, which is management and developed jointly provided by the Digital Curation Centre (DCC) and the University of California Curation Center (UC3).
 
 
 ---
+- [Lastest Update](#overview)
 - [Overview](#overview)
 - [Installation](#installation)
   * [Pre-requisites](#pre-requisites)
@@ -20,11 +21,15 @@
 - [Contributing](#contributing)
 ---
 
+## Latest Update
+
+- DMP Assistant will upgrade to Version 3 in Q1 2022
+
 ## Overview
 
 The DMP Assistant is a national, online, bilingual data management planning tool developed by <a href="https://alliancecan.ca">the Digital Research Alliance of Canada (the Alliance; Portage Network)</a> in collaboration with host institution University of Alberta to assist researchers in preparing data management plans (DMPs). This tool is freely available to all researchers, and develops a DMP through a series of key data management questions, supported by best-practice guidance and examples.
 
-The DMP Assistant was adapted from the <a href="https://dcc.ac.uk/">Digital Curation Centre (DCC)</a>’s <a href="https://dmponline.dcc.ac.uk/">DMPonline</a> tool, and uses the <a href="https://github.com/DMPRoadmap/roadmap">DMP Roadmap</a> codebase developed by DCC and <a href="https://assistant.portagenetwork.ca/%20https://cdlib.org/services/uc3/">the University of California Curation Center (UC3)</a>.
+The DMP Assistant was adapted from the <a href="https://dcc.ac.uk/">Digital Curation Centre (DCC)</a>’s <a href="https://dmponline.dcc.ac.uk/">DMPonline</a> tool, and uses the <a href="https://github.com/DMPRoadmap/roadmap">DMP Roadmap codebase</a> developed by DCC and <a href="https://assistant.portagenetwork.ca/%20https://cdlib.org/services/uc3/">the University of California Curation Center (UC3)</a>.
 
 ## Installation
 
@@ -55,9 +60,7 @@ See the [Troubleshooting Guide](https://github.com/portagenetwork/roadmap/wiki/T
 
 ### Support
 
-Issues should be reported here on [Github Issues](https://github.com/portagenetwork/roadmap/issues)
-Please be advised though that we can only provide limited support for your local installations.
-Any security patches and bugfixes will be applied to the most recent version, and we will endeavour to support migrations to the current release.
+Issues should be reported here on [Github Issues](https://github.com/portagenetwork/roadmap/issues). Please be advised though that we can only provide limited support for your local installations. Any security patches and bugfixes will be applied to the most recent version, and we will endeavour to support migrations to the current release.
 
 ## About DMP Roadmap
 
@@ -85,8 +88,8 @@ See the [Contribution Guide](https://github.com/portagenetwork/roadmap/blob/deve
 
 <br/>
 <table>
-  <tr style="border:none;">
-    <td style="border:none;" ><a href="https://alliancecan.ca/"><img style="max-height: 150px" src="https://alliancecan.ca/assets/ui/Logo.svg" /></a></td>
-    <td style="border:none;" ><a href="https://portagenetwork.ca/"><img style="max-height: 100px" src="https://portagenetwork.ca/wp-content/uploads/2020/06/Portage_logo_Tagline_rgb_bilingual.png" /></a></td>
+  <tr style="border:none !important;">
+    <td style="border:none !important;" ><a href="https://alliancecan.ca/"><img style="max-height: 150px" src="https://alliancecan.ca/assets/ui/Logo.svg" /></a></td>
+    <td style="border:none !important;" ><a href="https://portagenetwork.ca/"><img style="max-height: 100px" src="https://portagenetwork.ca/wp-content/uploads/2020/06/Portage_logo_Tagline_rgb_bilingual.png" /></a></td>
   </tr>
 </table>
