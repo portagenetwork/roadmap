@@ -87,7 +87,8 @@ If you would like to contribute to the project. Please follow these steps to sub
 See the [Contribution Guide](https://github.com/portagenetwork/roadmap/blob/development/CONTRIBUTING.md) on the Wiki for more details.
 
 <br/>
-<table width=100% border=0px><tr>
-<td width=20% ><a href="https://alliancecan.ca/"><img width=400px src="https://alliancecan.ca/assets/ui/Logo.svg" /></a></td>
-<td width=20% ><a href="https://portagenetwork.ca"><img width=200px src="https://portagenetwork.ca/wp-content/uploads/2020/06/Portage_logo_Tagline_rgb_bilingual.png"/></a></td>
+<table width=100% border=0px>
+<tr border=0px>
+<td width=20% border=0px><a href="https://alliancecan.ca/"><img width=400px src="https://alliancecan.ca/assets/ui/Logo.svg" /></a></td>
+<td width=20% border=0px><a href="https://portagenetwork.ca"><img width=150px src="https://portagenetwork.ca/wp-content/uploads/2020/06/Portage_logo_Tagline_rgb_bilingual.png"/></a></td>
 </tr></table>
