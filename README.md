@@ -7,7 +7,7 @@
 [![GitHub release](https://img.shields.io/github/v/release/portagenetwork/roadmap.svg)](https://GitHub.com/portagenetwork/roadmap/releases/)
 [![GitHub issues](https://img.shields.io/github/issues/portagenetwork/roadmap.svg)](https://GitHub.com/portagenetwork/roadmap/issues/)
 
-> Developed by **the Digital Research Alliance of Canada (the Alliance; Portage Network)** in collaboration with host institution University of Alberta, DMP Assistant repo is a **fork** of the <a href="https://github.com/DMPRoadmap/roadmap">DMP Roadmap codebase</a>, which is management and developed jointly provided by the Digital Curation Centre (DCC) and the University of California Curation Center (UC3).
+> Developed by **the Digital Research Alliance of Canada (the Alliance)** in collaboration with host institution University of Alberta, DMP Assistant repo is a **fork** of the <a href="https://github.com/DMPRoadmap/roadmap">DMP Roadmap codebase</a>, which is management and developed jointly provided by the Digital Curation Centre (DCC) and the University of California Curation Center (UC3).
 
 
 ---
@@ -27,7 +27,7 @@
 
 ## Overview
 
-The DMP Assistant is a national, online, bilingual data management planning tool developed by <a href="https://alliancecan.ca">the Digital Research Alliance of Canada (the Alliance; Portage Network)</a> in collaboration with host institution University of Alberta to assist researchers in preparing data management plans (DMPs). This tool is freely available to all researchers, and develops a DMP through a series of key data management questions, supported by best-practice guidance and examples.
+The DMP Assistant is a national, online, bilingual data management planning tool developed by <a href="https://alliancecan.ca">the Digital Research Alliance of Canada (the Alliance)</a> in collaboration with host institution University of Alberta to assist researchers in preparing data management plans (DMPs). This tool is freely available to all researchers, and develops a DMP through a series of key data management questions, supported by best-practice guidance and examples.
 
 The DMP Assistant was adapted from the <a href="https://dcc.ac.uk/">Digital Curation Centre (DCC)</a>’s <a href="https://dmponline.dcc.ac.uk/">DMPonline</a> tool, and uses the <a href="https://github.com/DMPRoadmap/roadmap">DMP Roadmap codebase</a> developed by DCC and <a href="https://assistant.portagenetwork.ca/%20https://cdlib.org/services/uc3/">the University of California Curation Center (UC3)</a>.
 
