@@ -88,7 +88,8 @@ See the [Contribution Guide](https://github.com/portagenetwork/roadmap/blob/deve
 
 <br/>
 
-<div style="background-color:white;">
+<div background-color="white">
 <a href="https://alliancecan.ca/"><img width=400px src="https://alliancecan.ca/assets/ui/Logo.svg" /></a>
 &nbsp;
 <a href="https://portagenetwork.ca"><img width=150px src="https://portagenetwork.ca/wp-content/uploads/2020/06/Portage_logo_Tagline_rgb_bilingual.png"/></a>
+</div>
