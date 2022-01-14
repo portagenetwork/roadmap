@@ -88,6 +88,15 @@ See the [Contribution Guide](https://github.com/portagenetwork/roadmap/blob/deve
 
 <br/>
 
-[![GitHub-Mark-Light](readme/merged-logo.png)](https://alliancecan.ca/services/portage)
+<p align="left">
+  <a href="https://alliancecan.ca/services/portage/#gh-light-mode-only">
+    <img src="readme/merged-logo.png" width=300 height=50 />
+  </a>
+  <a href="https://alliancecan.ca/services/portage/#gh-dark-mode-only">
+    <img src="readme/merged-logo-convert.png" width=300 height=50 />
+  </a>
+</p>
 
-[![GitHub-Mark-Dark](readme/merged-logo-convert.png)](https://alliancecan.ca/services/portage)
+[![GitHub-Mark-Light](readme/merged-logo.png)](https://alliancecan.ca/services/portage#gh-light-mode-only)
+
+[![GitHub-Mark-Dark](readme/merged-logo-convert.png)](https://alliancecan.ca/services/portage#gh-dark-mode-only)
