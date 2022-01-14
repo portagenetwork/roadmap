@@ -87,12 +87,7 @@ If you would like to contribute to the project. Please follow these steps to sub
 See the [Contribution Guide](https://github.com/portagenetwork/roadmap/blob/development/CONTRIBUTING.md) on the Wiki for more details.
 
 <br/>
-<table bgcolor="white" width=100% border=0px>
-  <tr bgcolor="white" border=0px>
-    <td bgcolor="white" border=0px align="right" width=400px ><a href="https://alliancecan.ca/" margin=0><img margin=0 width=400px padding=0 height=50px src="readme/Alliance_logo.jpg" /></a>
-    </a></td>
-    <td bgcolor="white" border=0px align="left" width=150px><a href="https://portagenetwork.ca" margin=0><img margin=0 width=150px height=50px src="readme/Portage_logo.jpg"/></a></td>
-  </tr>
-</table>
 
+[![GitHub-Mark-Light](readme/merged-logo.png)](https://alliancecan.ca/services/portage)
 
+[![GitHub-Mark-Dark](readme/merged-logo-convert.png)](https://alliancecan.ca/services/portage)
