@@ -17,15 +17,16 @@ Once the fork has been created, clone the repository onto your machine. See Gith
 
 On your local machine, add a remote that points to the original DMP Assistant codebase. This will allow you to pull down the latest changes and sync up your forked repository
 
-Run the following from your local clone of the repository to setup a remote that will allow you to pull down the latest changes from DMP Assistant. Then pull down the development branch:
+Run the following from your local clone of the repository to setup a remote that will allow you to pull down the latest changes from DMP Assistant:
+
 ```bash
 git remote add upstream https://github.com/portagenetwork/roadmap.git
-git fetch integration
+git fetch
 ```
 
 ### Pulling down the latest changes from DMP Assistant into your fork
 
-If you've already forked the project, you should make sure you pull down the latest changes before working on your feature, bug fix or translations.
+If you've already forked the project, you should make sure you pull down the latest changes from **integration** branch before working on your feature, bug fix or translations.
 
 ### Create a new feature/bug fix/translations branch 
 

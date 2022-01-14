@@ -60,7 +60,9 @@ See the [Troubleshooting Guide](https://github.com/portagenetwork/roadmap/wiki/T
 
 ### Support
 
-Issues should be reported here on [Github Issues](https://github.com/portagenetwork/roadmap/issues). Please be advised though that we can only provide limited support for your local installations. Any security patches and bugfixes will be applied to the most recent version, and we will endeavour to support migrations to the current release.
+1) Any question about DMP Assistant can be emailed to support@portagenetwork.ca. A team member will follow-up with you soon.
+
+2) Issues should be reported here on [Github Issues](https://github.com/portagenetwork/roadmap/issues). Please be advised though that we can only provide limited support for your local installations. Any security patches and bugfixes will be applied to the most recent version, and we will endeavour to support migrations to the current release.
 
 ## About DMP Roadmap
 
@@ -88,6 +90,4 @@ See the [Contribution Guide](https://github.com/portagenetwork/roadmap/blob/inte
 
 <br/>
 
-[![GitHub-Mark-Light](readme/merged-logo.png)](https://alliancecan.ca/services/portage#gh-light-mode-only)
-
-[![GitHub-Mark-Dark](readme/merged-logo-convert.png)](https://alliancecan.ca/services/portage#gh-dark-mode-only)
+[![Alliance](Alliance_logo.jpg)](https://alliancecan.ca)
