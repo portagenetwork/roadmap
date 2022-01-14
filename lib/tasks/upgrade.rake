@@ -849,7 +849,7 @@ namespace :upgrade do
                                 .where.not(identifier: nil)
                                 .where.not(identifier: '')
 
-    Parallel.map(identifiers, in_threads: 8) do |ui|
+    identifiers.each do |ui|
       # Parallel has trouble with ActiveRecord lazy loading
       require "org" unless Object.const_defined?("Org")
       require "identifier" unless Object.const_defined?("Identifier")
@@ -1061,7 +1061,7 @@ namespace :upgrade do
     # into Contributors
     plans = Plan.includes(:contributors, roles: :user).joins(roles: :user)
 
-    Parallel.map(plans, in_threads: 8) do |plan|
+    plans.each do |plan|
       next if plan.contributors.any?
       owner = plan.owner
 
@@ -1123,7 +1123,7 @@ namespace :upgrade do
                 .joins(template: :org, roles: :user)
 
     p "Attaching Plans to Orgs ... this can take in excess of 5 minutes depending on how many plans you have."
-    Parallel.map(plans, in_threads: 8) do |plan|
+    plans.each do |plan|
       next if plan.org_id.present?
 
       # Parallel has trouble with ActiveRecord lazy loading
@@ -1139,7 +1139,7 @@ namespace :upgrade do
     end
 
     p "Attaching Plans to Funders"
-    Parallel.map(plans, in_threads: 8) do |plan|
+    plans.each do |plan|
       next if plan.funder_id.present?
 
       # Parallel has trouble with ActiveRecord lazy loading
