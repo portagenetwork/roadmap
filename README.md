@@ -1,4 +1,4 @@
-<h1>DMP Assistant</h1>
+# DMP Assistant
 
 [![Actions Brakeman](https://github.com/portagenetwork/roadmap/workflows/Brakeman/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
 [![Actions ESLint](https://github.com/portagenetwork/roadmap/workflows/ESLint/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
@@ -7,11 +7,11 @@
 [![GitHub release](https://img.shields.io/github/v/release/portagenetwork/roadmap.svg)](https://GitHub.com/portagenetwork/roadmap/releases/)
 [![GitHub issues](https://img.shields.io/github/issues/portagenetwork/roadmap.svg)](https://GitHub.com/portagenetwork/roadmap/issues/)
 
+
 > Developed by **the Digital Research Alliance of Canada (the Alliance)** in collaboration with host institution University of Alberta, DMP Assistant repo is a **fork** of the current state of the main <a href="https://github.com/DMPRoadmap/roadmap">DMP Roadmap codebase</a>, which is management and developed jointly provided by the Digital Curation Centre (DCC) and the University of California Curation Center (UC3).
 
-
 ---
-- [Latest Update](#overview)
+- [Latest Update](#last-update)
 - [Overview](#overview)
 - [Installation](#installation)
   * [Pre-requisites](#pre-requisites)
@@ -20,6 +20,7 @@
 - [About DMP Roadmap](#about-dmp-roadmap)
 - [Contributing](#contributing)
 ---
+
 
 ## Latest Update
 
@@ -46,8 +47,8 @@ Further detail on how to install Ruby on Rails applications are available from t
 
 Further details on how to install MySQL and create your first user and database. Be sure to follow the instructions for your particular environment.
 * Install: http://dev.mysql.com/downloads/mysql/
-* Create a user: http://dev.mysql.com/doc/refman/8.0/en/create-user.html
-* Create the database: http://dev.mysql.com/doc/refman/8.0/en/creating-database.html
+* Create a user: http://dev.mysql.com/doc/refman/5.7/en/create-user.html
+* Create the database: http://dev.mysql.com/doc/refman/5.7/en/creating-database.html
 
 You may also find the following resources handy:
 

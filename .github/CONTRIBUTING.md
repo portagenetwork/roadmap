@@ -141,7 +141,7 @@ Once we receive your PR, at lest one member of the core development team will re
 
 ### Acceptance of your PR
 
-Once your code has been approved a member of the core development team will merge it into the development branch and nd include it in an upcoming release. 
+Once your code has been approved a member of the core development team will merge it into the development branch and include it in an upcoming release. 
 
 At this point its a good idea to delete the branch from your fork in Github and also delete it from your local machine via:
 ```bash
