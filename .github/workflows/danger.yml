@@ -3,7 +3,7 @@ name: Danger
 on: [push, pull_request]
 
 jobs:
-  rubocop:
+  danger:
     runs-on: ubuntu-latest
 
     steps:
