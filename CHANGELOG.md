@@ -1,5 +1,8 @@
 # Changelog
 
+## [3.0.4+portage-3.0.4] - 2022-02-25
+  - Update translation for some wording
+  
 ## [3.0.4+portage-3.0.3] - 2020-02-24
 
   ### Changed
@@ -17,7 +20,7 @@
   ### Added
   - Danger workflow to automate code review tasks
 
-## [3.0.4+portage-3.0.1] - 2020-01-17
+## [3.0.4+portage-3.0.1] - 2022-01-17
 
 ### Changed
   - Update mysql installation process for the Github action
