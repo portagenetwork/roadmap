@@ -1,19 +1,18 @@
 # Changelog
 
+## [3.0.4+portage-3.0.7] - 2022-04-05
 ### Added
 
 - Added feature flag for sandbox testing [#159](https://github.com/portagenetwork/roadmap/issues/159)
+- Adjusted seed files for different environment and added seed files for sandbox testing
 
-### Changed
+### Fixed 
 
-- Adjust seed files for different environment and prepare seed files for sandbox testing
-
+- Change plan identifier field and add it to export [#158](https://github.com/portagenetwork/roadmap/issues/158)
+- Change contact email to support@portagenetwork.ca [#172](https://github.com/portagenetwork/roadmap/issues/172)
 ## [3.0.4+portage-3.0.6] - 2022-03-23
-
-  ### Fixed
+### Fixed
    - Usage statistics page now shows correct data [#164](https://github.com/portagenetwork/roadmap/issues/164)
-   - Change plan identifier field and add it to export [#158](https://github.com/portagenetwork/roadmap/issues/158)
-   - Change contact email to support@portagenetwork.ca [#172](https://github.com/portagenetwork/roadmap/issues/172)
 
 ## [3.0.4+portage-3.0.5] - 2022-03-07
   
