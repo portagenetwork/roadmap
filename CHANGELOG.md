@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.4+portage-3.0.9] - 2022-04-11
+
+### Fixed
+
+- Fixed sandbox setting based on the server configuration
+
+## [3.0.4+portage-3.0.8] - 2022-04-08
+
+### Fixed
+
+- Fixed invalid org selection when new user accept invitation [#177](https://github.com/portagenetwork/roadmap/issues/177)
 ## [3.0.4+portage-3.0.7] - 2022-04-05
 
 ### Added
