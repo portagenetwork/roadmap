@@ -46,9 +46,9 @@ module ApplicationHelper
   # en_CA, fr_CA
   def current_locale_logo
     file_name = if FeatureFlagHelper.enabled?(:on_sandbox)
-      "sandbox_logo_#{I18n.locale}.png"
+      "sandbox_logo_#{I18n.locale}.svg"
     else
-      "dmp_logo_#{I18n.locale}.png"
+      "dmp_logo_#{I18n.locale}.svg"
     end
   end
 

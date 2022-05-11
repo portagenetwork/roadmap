@@ -1,0 +1,119 @@
+/**
+ This file contains ALL the redefined variables of the DMP Assistant.
+ I put it here in order to avoid merge conflict from upstream in the future. It needs to be loaded before other styles
+ PENDING:
+ This style sheet can be separated to multiple stylesheets and moved to corresponding folders once finished
+
+ Follow Bootstrap 3 media standard (explicitly defined instead of adding classes in view):	
+- phone (<768px)
+- tablets (≥768px)
+- laptops (≥992px)
+- desktops (≥1200px)
+**/
+
+
+h1, h2, h3, h4, h5, h6{
+    font-family: 'Ubuntu', sans-serif;
+    src: url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap');
+    font-weight: bold;
+}
+
+
+/***********************
+Individual Changes
+defined by the original reference in each scss sheet (see comments) for easier move around
+************************/
+
+/*****
+navigation
+*****/
+
+//logo style apply for all screen size
+//_logos.scss
+.app-logo{
+    height: 12em;
+    padding: 0;
+}
+
+@media (min-width: 768px) {
+    
+    #app-navbar{
+        margin-bottom: 0;
+        .navbar-nav > li > a
+        {   
+
+            //color: #FBFAFA;
+
+            //_template_filter.scss
+            font-size: 1.5em;
+            padding: 3em 0.5em; //fit the internal padding of the new logo, and make the font align with the horizontal center of the logo
+
+            &:hover{
+                color: #D6AB00;
+            }
+        }
+    }
+
+    #org-navbar{ //_navbars.scss
+        margin: auto;
+    }
+
+    #main{
+        margin-top: 1em;
+    }
+}
+
+#app-navbar{
+    font-weight: 700;
+}
+
+/*****
+Forms & Tables
+*****/
+.nav-tabs, .nav-pills{ //_navs.scss
+    background-color:  #D6AB00;
+}
+
+//_table.scss
+thead th{
+    background-color: #D6AB00;
+}
+
+/****
+Mobile Only
+****/
+@media (max-width: 767px) {
+    html {
+        min-height: 100%;
+    }
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 1px solid transparent;
+        min-height: 100%;
+        overflow-y: scroll;
+    }
+    main{
+        margin-bottom: 0 !important;
+    }
+    #footer-navbar {
+        position: relative; //prevent footer overlap with main content in mobile device
+    }
+
+    .navbar-header{
+        margin: 0;
+        padding: 0;
+    }
+    .navbar-collapse{
+        position: absolute;
+        z-index: 100;
+        width: 100%;
+        background-color: #D6AB00;
+    }
+    .navbar-toggle{ //show the other breadcrumb icon on right top
+        border-color: #ddd; 
+        .icon-bar{
+            background-color: #888;
+        }
+    }
+}

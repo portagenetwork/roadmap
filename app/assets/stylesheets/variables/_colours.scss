@@ -19,6 +19,20 @@ $color-portage-orange: #FB9C26;
 $color-portage-orange-darker: darken($color-portage-orange, 10%);
 
 
+/*****
+Rebranding: not change the name, just color code
+*****/
+$color-portage-blue: #32322F; //Digital Grey to replace portage network blue
+$color-portage-blue-darker: darken($color-portage-blue, 10%);
+$color-alliance-yellow: #D6AB00;
+$color-alliance-white: #FBFAFA;
+$color-alliance-teal: #00DBA7;
+$color-alliance-grey: #B7B6B3;
+
+$color-grey-darkest: $color-portage-blue;
+$color-grey-light: $color-alliance-grey;
+$color-portage-orange: $color-alliance-yellow;
+$color-portage-orange-darker: darken($color-portage-orange, 10%);
 
 /*
   Variables to define look and feel
@@ -67,3 +81,21 @@ $color-fa: $color-portage-blue;
 
 // Focus colors
 $color-focus-outline: $color-portage-blue-darker;
+
+/*****
+Rebranding: some color variable needs to be switched to another one
+*****/
+
+// Backgrounds
+$color-primary-background: $color-alliance-yellow;
+$color-seccondary-background: $color-alliance-white;
+$color-navbar-background: $color-alliance-white;
+$color-navbar-background-active: $color-alliance-white;
+$color-primary-text: $color-white;
+
+// Borders colors
+$color-border-default: $color-alliance-yellow;
+$color-border-light: $color-alliance-grey;
+
+//Text
+$color-org-navbar-links-hover: $color-alliance-yellow;
