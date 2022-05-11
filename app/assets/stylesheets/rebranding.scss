@@ -36,7 +36,7 @@ navigation
 }
 
 @media (min-width: 768px) {
-    
+
     #app-navbar{
         margin-bottom: 0;
         .navbar-nav > li > a
@@ -105,10 +105,15 @@ Mobile Only
         padding: 0;
     }
     .navbar-collapse{
-        position: absolute;
-        z-index: 100;
-        width: 100%;
-        background-color: #D6AB00;
+        &.collapse{
+            z-index:1;
+            &.in{
+                position: absolute;
+                z-index: 100;
+                width: 100%; 
+                background-color: #D6AB00;
+            }
+        }
     }
     .navbar-toggle{ //show the other breadcrumb icon on right top
         border-color: #ddd; 
