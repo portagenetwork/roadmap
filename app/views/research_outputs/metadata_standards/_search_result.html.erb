@@ -1,6 +1,7 @@
 <%# locals: result %>
-
+<b>result: <%= result%></b>
 <% if result.present? %>
+  <h1><%= result.to_s %></h1>
   <%= hidden_field_tag "research_output[metadata_standards_attributes[#{result.id}][id]]", result.id %>
 
   <p><%= sanitize(result.description) %></p>

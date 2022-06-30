@@ -223,8 +223,8 @@ module DMPRoadmap
     # Machine Actionable / Networked DMP Features (maDMP) #
     # --------------------------------------------------- #
     # Enable/disable functionality on the Project Details tab
-    config.x.madmp.enable_ethical_issues = false
-    config.x.madmp.enable_research_domain = false
+    config.x.madmp.enable_ethical_issues = true
+    config.x.madmp.enable_research_domain = true
 
     # This flag will enable/disable the entire Research Outputs tab. The others below will
     # just enable/disable specific functionality on the Research Outputs tab

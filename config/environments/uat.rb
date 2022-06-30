@@ -94,4 +94,6 @@ Rails.application.configure do
     enable_starttls_auto: true 
   }
 
+  # Fix Missing Host Error
+  Rails.application.routes.default_url_options[:host] = "uat.library.ualberta.ca:3000"
 end

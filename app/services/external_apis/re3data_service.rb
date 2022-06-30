@@ -57,7 +57,6 @@ module ExternalApis
 
           xml = query_re3data_repository(repo_id: node.text)
           next unless xml.present?
-
           process_repository(id: node.text, node: xml.xpath('//r3d:re3data//r3d:repository').first)
         end
       end
@@ -69,7 +68,6 @@ module ExternalApis
         # Call the ROR API and log any errors
         resp = http_get(uri: "#{api_base_url}#{list_path}", additional_headers: {},
                         debug: false)
-
         unless resp.present? && resp.code == 200
           handle_http_failure(method: 're3data list', http_response: resp)
           return nil
@@ -85,7 +83,6 @@ module ExternalApis
         # Call the ROR API and log any errors
         resp = http_get(uri: target, additional_headers: {},
                         debug: false)
-
         unless resp.present? && resp.code == 200
           handle_http_failure(method: "re3data repository #{repo_id}", http_response: resp)
           return []
@@ -99,34 +96,63 @@ module ExternalApis
 
         # Try to find the Repo by the re3data identifier
         repo = Repository.find_by(uri: id)
+        p "@@@@@@@@@@@@@@"
+        p id #r3d100000001
+        p repo #nil
         homepage = node.xpath('//r3d:repositoryURL')&.text
         name = node.xpath('//r3d:repositoryName')&.text
         repo = Repository.find_by(homepage: homepage) unless repo.present?
+        p '$$$$$$$$$$$$$$$$$'
+        p repo #nil
+        p homepage #https://dataverse.unc.edu/dataverse/odum
+        p name #Odum Institute Archive Dataverse
         repo = Repository.find_or_initialize_by(uri: id, name: name) unless repo.present?
+
         repo = parse_repository(repo: repo, node: node)
-        repo.reload
+        p "^^^^^^^^"
+        p repo
       end
 
       # Updates the Repository based on the XML input
       # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       def parse_repository(repo:, node:)
         return nil unless repo.present? && node.present?
-
-        repo.update(
-          description: node.xpath('//r3d:description')&.text,
-          homepage: node.xpath('//r3d:repositoryURL')&.text,
-          contact: node.xpath('//r3d:repositoryContact')&.text,
-          info: {
-            types: node.xpath('//r3d:type').map(&:text),
-            subjects: node.xpath('//r3d:subject').map(&:text),
-            provider_types: node.xpath('//r3d:providerType').map(&:text),
-            keywords: node.xpath('//r3d:keyword').map(&:text),
-            access: node.xpath('//r3d:databaseAccess//r3d:databaseAccessType')&.text,
-            pid_system: node.xpath('//r3d:pidSystem')&.text,
-            policies: node.xpath('//r3d:policy').map { |n| parse_policy(node: n) },
-            upload_types: node.xpath('//r3d:dataUpload').map { |n| parse_upload(node: n) }
-          }
+        puts "########################"
+        test_json = []
+        info = {
+          types: node.xpath('//r3d:type').map(&:text),
+          subjects: node.xpath('//r3d:subject').map(&:text),
+          provider_types: node.xpath('//r3d:providerType').map(&:text),
+          keywords: node.xpath('//r3d:keyword').map(&:text),
+          access: node.xpath('//r3d:databaseAccess//r3d:databaseAccessType')&.text,
+          pid_system: node.xpath('//r3d:pidSystem')&.text,
+          policies: node.xpath('//r3d:policy').map { |n| parse_policy(node: n) },
+          upload_types: node.xpath('//r3d:dataUpload').map { |n| parse_upload(node: n) }
+        }
+        puts info.to_json
+        r_e = {
+            '$schema': 'http://json-schema.org/draft-04/schema#',
+            'type': 'object',
+            'properties': info.to_json
+        }
+        test = {
+          'schema'=> r_e.to_json
+        }
+        # repo.update!(
+        #   description: node.xpath('//r3d:description')&.text,
+        #   homepage: node.xpath('//r3d:repositoryURL')&.text,
+        #   contact: node.xpath('//r3d:repositoryContact')&.text,
+        #   info: test.to_json
+        # )
+        repo.update!(
+            description: node.xpath('//r3d:description')&.text,
+            homepage: node.xpath('//r3d:repositoryURL')&.text,
+            contact: node.xpath('//r3d:repositoryContact')&.text
         )
+        puts repo.valid? #falsebi
+        repo.reload
+        p "%%%%%"
+        p repo
         repo
       end
       # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity

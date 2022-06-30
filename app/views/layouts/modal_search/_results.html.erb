@@ -19,7 +19,7 @@ results = results || []
 selected = selected || false
 no_results_msg = _("No results matched your filter criteria.")
 %>
-
+<p>layouts/modal_search/results.html.erb: <%=results%></p>
 <% unless selected %>
   <% if results.any? %>
     <div class="col-md-12 modal-search-results-pagination">

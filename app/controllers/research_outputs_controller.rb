@@ -136,10 +136,13 @@ class ResearchOutputsController < ApplicationController
     @plan = Plan.find_by(id: params[:plan_id])
     @research_output = ResearchOutput.new(plan: @plan)
     authorize @research_output
-
+    p '%%%%%'
+    p metadata_standard_search_params[:search_term]
     @search_results = MetadataStandard.search(metadata_standard_search_params[:search_term])
                                       .order(:title)
                                       .page(params[:page])
+    p '%%%search_results'
+    p @search_results
   end
 
   private

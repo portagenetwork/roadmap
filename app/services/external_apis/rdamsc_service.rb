@@ -132,7 +132,7 @@ module ExternalApis
 
         json['data']['items'].each do |item|
           standard = MetadataStandard.find_or_create_by(uri: item['uri'], title: item['title'])
-          standard.update(description: item['description'], locations: item['locations'],
+          standard.update!(description: item['description'], locations: item['locations'],
                           related_entities: item['relatedEntities'], rdamsc_id: item['mscid'])
         end
       end

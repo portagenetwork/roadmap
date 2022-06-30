@@ -42,8 +42,10 @@ RUN bundle config set --local without 'development test pgsql thin aws ci'
 RUN RAILS_ENV=production bundle install --jobs=3 --retry=3
 
 COPY . $INSTALL_PATH
+COPY ./config/initializers/_dmproadmap.rb $INSTALL_PATH/config/initializers/_dmproadmap.rb
 RUN NODE_ENV=production yarn install --prod --check-files
-RUN DATABASE_URL=nulldb://user:test@127.0.0.1/roadmap RAILS_ENV=production SECRET_KEY_BASE=change_me DEVISE_SECRET_KEY=pickasecuretoken bundle exec rake assets:precompile
+# RUN DATABASE_URL=nulldb://user:test@127.0.0.1/roadmap RAILS_ENV=production SECRET_KEY_BASE=change_me DEVISE_SECRET_KEY=pickasecuretoken bundle exec rails external_api:load_re3data_repos
+# RUN DATABASE_URL=nulldb://user:test@127.0.0.1/roadmap RAILS_ENV=production SECRET_KEY_BASE=change_me DEVISE_SECRET_KEY=pickasecuretoken bundle exec rails assets:precompile
 
 EXPOSE 3000
 CMD bundle exec puma -C config/puma.rb
