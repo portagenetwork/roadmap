@@ -36,16 +36,14 @@ WORKDIR $INSTALL_PATH
 
 COPY Gemfile* $INSTALL_PATH
 
+# Before run bundle install, force docker using linux build
+RUN bundle config set force_ruby_platform true 
 RUN bundle config --local build.sassc --disable-march-tune-native
 RUN bundle config set --local without 'development test pgsql thin aws ci'
 RUN RAILS_ENV=production bundle install --jobs=3 --retry=3
 
 COPY . $INSTALL_PATH
 RUN NODE_ENV=production yarn install --prod --check-files
-RUN bundle config set force_ruby_platform true
-
-# /bundle/ruby/2.7.0/bin/rake error: #0 6.246 bundler: failed to load command: rake (/bundle/ruby/2.7.0/bin/rake)                                                 
-RUN bundle update rake
 RUN DATABASE_URL=nulldb://user:test@127.0.0.1/roadmap RAILS_ENV=production SECRET_KEY_BASE=change_me DEVISE_SECRET_KEY=pickasecuretoken bundle exec rake assets:precompile
 
 EXPOSE 3000
