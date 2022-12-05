@@ -7,7 +7,7 @@
     <p><%= sanitize(_("Please select the Organisation that will replace the current organisation: '<strong>%{org_name}</strong>'.") % { org_name: org.name }) %></p>
     <p><%= _(" Then click the 'analyze' button to review the proposed changes. Note that no changes will take place until you have reviewed and approve of the changes.") %></p>
     <%= form_for org, url: merge_analyze_super_admin_org_path(org), method: :post, remote: true do |form| %>
-     <%= render partial: "shared/org_selectors/external_only",
+     <%= render partial: "shared/org_selectors/local_only",
                 locals: {
                   form: form,
                   id_field: :id,
