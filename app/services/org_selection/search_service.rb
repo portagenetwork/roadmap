@@ -73,6 +73,7 @@ module OrgSelection
 
         Rails.cache.fetch(["org_selection-local", search_term], expires_in: expiry) do
           Org.includes(identifiers: :identifier_scheme)
+             .managed
              .search(name_without_alias(name: search_term)).to_a
         end
       end
