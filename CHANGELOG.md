@@ -1,5 +1,13 @@
 # Changelog
 
+### Fixed 
+
+- Unmanaged organization will not show in all org selector except the creating new organization page [#260](https://github.com/portagenetwork/roadmap/issues/260)
+
+- Allowed contributors to choose organization [#273](https://github.com/portagenetwork/roadmap/issues/273)
+
+- Allowed admin to see unmanaged org name when creating new org to avoid duplication [#275](https://github.com/portagenetwork/roadmap/issues/275)
+
 ## [3.0.4+portage-3.0.15] - 2022-11-04
 
 ### Changed
