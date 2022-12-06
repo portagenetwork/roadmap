@@ -8,6 +8,8 @@
 
 - Allowed admin to see unmanaged org name when creating new org to avoid duplication [#275](https://github.com/portagenetwork/roadmap/issues/275)
 
+- Force Github actions using Ubuntu 20.04 to fix wkhtmltopdf-binary issue [#266](https://github.com/portagenetwork/roadmap/issues/266)
+
 ## [3.0.4+portage-3.0.15] - 2022-11-04
 
 ### Changed
