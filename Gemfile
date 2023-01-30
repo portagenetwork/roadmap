@@ -294,7 +294,7 @@ group :development, :test do
   gem "rails-controller-testing"
 
   # Pull Request etiquette enforcement
-  gem "danger", '~> 8.4', require: false 
+  gem "danger", '~> 9.2', require: false 
 end
 
 group :ci, :development do
