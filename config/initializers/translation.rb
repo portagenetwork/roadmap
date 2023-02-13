@@ -2,10 +2,11 @@
 
 ## TODO Verify functionality after merging
 
+# rubocop:disable Style/WordArray
 TranslationIO.configure do |config|
   config.api_key        = Rails.application.secrets.translation_io_api_key
   config.source_locale  = 'en'
-  config.target_locales = %w[en-CA en-GB fr-CA]
+  config.target_locales = ['en-CA', 'en-GB', 'fr-CA']
 
   # Uncomment this if you don't want to use gettext
   # config.disable_gettext = true
@@ -13,17 +14,18 @@ TranslationIO.configure do |config|
   # Uncomment this if you already use gettext or fast_gettext
   config.locales_path = File.join('config', 'locale')
   config.db_fields = {
-    'Theme' => %w[title description],
-    'QuestionFormat' => %w[title description],
-    'Template' => %w[title description],
-    'Phase' => %w[title description],
-    'Section' => %w[title description],
-    'Question' => %w[text default_value],
+    'Theme' => ['title', 'description'],
+    'QuestionFormat' => ['title', 'description'],
+    'Template' => ['title', 'description'],
+    'Phase' => ['title', 'description'],
+    'Section' => ['title', 'description'],
+    'Question' => ['text', 'default_value'],
     'Annotation' => ['text']
   }
   # Find other useful usage information here:
   # https://github.com/translation/rails#readme
 end
+# rubocop:enable Style/WordArray
 
 I18n.enforce_available_locales = false
 I18n.default_locale = :'en-CA'

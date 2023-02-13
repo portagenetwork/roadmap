@@ -150,4 +150,19 @@ class Repository < ApplicationRecord
               message: ->(errors) { errors }
             },
             allow_nil: true
+
+  # ===========================
+  # = Public instance methods =
+  # ===========================
+
+  # title and description are translated through the translation gem
+  def name
+    name = read_attribute(:name)
+    _(name) unless name.blank?
+  end
+
+  def description
+    description = read_attribute(:description)
+    _(description) unless description.blank?
+  end
 end

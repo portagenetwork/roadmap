@@ -86,4 +86,19 @@ class MetadataStandard < ApplicationRecord
               message: ->(errors) { errors }
             },
             allow_nil: true
+
+  # ===========================
+  # = Public instance methods =
+  # ===========================
+
+  # title and description are translated through the translation gem
+  def title
+    title = read_attribute(:title)
+    _(title) unless title.blank?
+  end
+
+  def description
+    description = read_attribute(:description)
+    _(description) unless description.blank?
+  end
 end

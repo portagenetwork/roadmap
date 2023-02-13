@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.1.0+portage-3.1.0] - 2023-02-22
+
+### Fixed
+
+- Reversed `perm_helper.rb` changes to reduce translation.io sync memory pressure and added rubocop exception for `translation.rb` [#188](https://github.com/portagenetwork/roadmap/issues/315)
+
 ## [3.0.4+portage-3.0.15] - 2022-11-04
 
 ### Changed
