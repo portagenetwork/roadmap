@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.1.0+portage-3.1.1] - 2023-02-22
+
+### Fixed
+
+- Add extra `orgs` table retrieve data via SQL process to fix the logo_uid and logo_name
+
+- Confirm for sandbox 3.1.0 release
+
 ## [3.1.0+portage-3.1.0] - 2023-02-22
 
 ### Added
