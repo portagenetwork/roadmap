@@ -43,8 +43,8 @@ namespace :rewrite_postgres do
     # orgs
     orgs = JSON.parse(File.read('db/seeds/staging/temp/orgs.rb'))
     orgs.each do |x|
-      query = ActiveRecord::Base.sanitize_sql(["Update orgs set logo_uid = ?,logo_name = ? where id = ?",
-        x['logo_uid'],x['logo_name'],x['id']])
+      query = ActiveRecord::Base.sanitize_sql(['Update orgs set logo_uid = ?,logo_name = ? where id = ?',
+                                               x['logo_uid'], x['logo_name'], x['id']])
       ActiveRecord::Base.connection.exec_query(query)
     end
   end
