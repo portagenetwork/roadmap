@@ -977,5 +977,16 @@ namespace :mysql_to_postgres do
     file_name = 'db/seeds/staging/temp/schema_migrations.rb'
     FileUtils.rm_f(file_name)
     File.write(file_name, JSON.dump(schema_migrations))
+     # orgs
+     orgs = []
+     puts 'loading orgs'
+     sql = 'SELECT logo_uid, logo_name, id FROM orgs'
+     ActiveRecord::Base.connection.exec_query(sql).map do |org|
+       org = org.with_indifferent_access
+       orgs << org
+     end
+     file_name = 'db/seeds/staging/temp/orgs.rb'
+     FileUtils.rm_f(file_name)
+     File.write(file_name, JSON.dump(orgs))
   end
 end

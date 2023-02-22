@@ -33,10 +33,21 @@ namespace :rewrite_postgres do
     Rake::Task['rewrite_postgres:projects_files'].execute
     Rake::Task['rewrite_postgres:settings_sessions_stats_stylesheets'].execute
     Rake::Task['rewrite_postgres:trackers_notes_prefs_dmptemplates_migrations'].execute
+    Rake::Task['rewrite_postgres:orgs'].execute
     Rake::Task['rewrite_postgres:reset_all_pk'].execute
+
     puts 'Now, please test user login THEN DELETE /db/seeds/staging/temp folder for security.'
   end
 
+  task orgs: :environment do
+    # orgs
+    orgs = JSON.parse(File.read('db/seeds/staging/temp/orgs.rb'))
+    orgs.each do |x|
+      query = ActiveRecord::Base.sanitize_sql(["Update orgs set logo_uid = ?,logo_name = ? where id = ?",
+        x['logo_uid'],x['logo_name'],x['id']])
+      ActiveRecord::Base.connection.exec_query(query)
+    end
+  end
   task users: :environment do
     users = JSON.parse(File.read('db/seeds/staging/temp/users.rb'))
     users.each do |x|
