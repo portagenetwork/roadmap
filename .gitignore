@@ -25,7 +25,7 @@ public/videos/*
 # Ignore branded content
 app/views/branded/*
 config/locales/static_pages/*.yml
-
+compose-dev.yaml
 
 # Ignore db schema.rb
 # db/schema.rb
