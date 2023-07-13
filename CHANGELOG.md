@@ -6,7 +6,7 @@
 
 ### Changed
 
- - Merged Release [V3.3.1](https://github.com/portagenetwork/roadmap/commit/47be9ba2102bd834bb55b0a95c2cec38a9cc0e35) into portage-deployment
+ - Merged [DMPRoadmap Release v3.3.1](https://github.com/DMPRoadmap/roadmap/releases/tag/v3.3.1) into portage-deployment
 
 ### [3.1.0+portage-3.1.3] - 2023-06-13 
 
