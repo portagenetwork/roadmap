@@ -9,7 +9,7 @@ RSpec.describe UserMailer, type: :mailer do
     context 'when the user language is set to English' do
       before do
         @original_locale = I18n.locale
-        I18n.locale = :"en-CA"
+        I18n.locale = :'en-CA'
       end
 
       after do
@@ -18,18 +18,16 @@ RSpec.describe UserMailer, type: :mailer do
 
       let(:mail) { UserMailer.welcome_notification(user) }
 
-
       it 'renders the email subject in English' do
-        expect(mail.subject).to eq("Welcome to DMP Assistant")
+        expect(mail.subject).to eq('Welcome to DMP Assistant')
         expect(mail.subject).not_to eq("Bienvenue sur l'Assistant PGD")
       end
-
     end
 
     context 'when the user language is set to French' do
       before do
         @original_locale = I18n.locale
-        I18n.locale =  :"fr-CA"
+        I18n.locale = :'fr-CA'
       end
 
       after do
@@ -40,10 +38,8 @@ RSpec.describe UserMailer, type: :mailer do
 
       it 'renders the email subject in French' do
         expect(mail.subject).to eq("Bienvenue sur l'Assistant PGD")
-        expect(mail.subject).not_to eq("Welcome to DMP Assistant")
+        expect(mail.subject).not_to eq('Welcome to DMP Assistant')
       end
-
     end
   end
 end
-
