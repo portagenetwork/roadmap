@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### [3.1.0+portage-3.1.4] - 2023-07-13
+
+### Changed
+
+ - Merged Release [V3.3.1](https://github.com/portagenetwork/roadmap/commit/47be9ba2102bd834bb55b0a95c2cec38a9cc0e35) into portage-deployment
+
 ### [3.1.0+portage-3.1.3] - 2023-06-13 
 
 ### Fixed
