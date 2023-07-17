@@ -2,7 +2,16 @@
 
 ## Unreleased
 
+### Changed
+
+ - Portage Network Training Resources now has correct training link [portagenetwork/roadmap#339](https://github.com/portagenetwork/roadmap/issues/339)
+ - for contacts at your local institution updated to the institutions list with contacts. [portagenetwork/roadmap#339](https://github.com/portagenetwork/roadmap/issues/339)
+
+### Removed
+  - Help page, contacts at your institution" link -- we don't maintain this page anymore, so we can delete that phrase. [portagenetwork/roadmap#339](https://github.com/portagenetwork/roadmap/issues/339)
+
 ### [3.1.0+portage-3.1.3] - 2023-06-13
+
 
 ### Fixed
 
