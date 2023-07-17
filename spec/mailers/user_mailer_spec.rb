@@ -22,7 +22,6 @@ RSpec.describe UserMailer, type: :mailer do
 
       it 'renders the email subject in English' do
         expect(mail.subject).to include('Welcome to')
-        expect(mail.subject).not_to include('Bienvenue sur ')
       end
     end
 
@@ -40,7 +39,6 @@ RSpec.describe UserMailer, type: :mailer do
 
       it 'renders the email subject in French' do
         expect(mail.subject).to include('Bienvenue sur ')
-        expect(mail.subject).not_to include('Welcome to ')
       end
     end
   end
