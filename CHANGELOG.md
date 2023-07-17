@@ -2,7 +2,11 @@
 
 ## Unreleased
 
-### [3.1.0+portage-3.1.3] - 2023-06-13 
+### Changed
+
+ - Merged [v3.3.1](https://github.com/DMPRoadmap/roadmap/releases/tag/v3.3.1)
+
+## [3.1.0+portage-3.1.3] - 2023-06-13 
 
 ### Fixed
 
