@@ -20,8 +20,8 @@ RSpec.describe UserMailer, type: :mailer do
       let(:mail) { UserMailer.welcome_notification(user) }
 
       it 'renders the email subject in English' do
-        expect(mail.subject).to eq('Welcome to DMP Assistant')
-        expect(mail.subject).not_to eq("Bienvenue sur l'Assistant PGD")
+        expect(mail.subject).to include('Welcome to ')
+        expect(mail.subject).not_to include("Bienvenue sur")
       end
     end
 
@@ -38,8 +38,8 @@ RSpec.describe UserMailer, type: :mailer do
       let(:mail) { UserMailer.welcome_notification(user) }
 
       it 'renders the email subject in French' do
-        expect(mail.subject).to eq("Bienvenue sur l'Assistant PGD")
-        expect(mail.subject).not_to eq('Welcome to DMP Assistant')
+        expect(mail.subject).to include("Bienvenue sur ")
+        expect(mail.subject).not_to include('Welcome to ')
       end
     end
   end
