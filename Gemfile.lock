@@ -659,7 +659,7 @@ DEPENDENCIES
   translation!
   turbolinks
   web-console
-  webdrivers (~> 5.2.0)
+  webdrivers (~> 5.2)
   webmock
   webpacker
   wicked_pdf
