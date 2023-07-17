@@ -4,10 +4,12 @@
 
 ### Changed
 
+ - Merged [v3.3.1](https://github.com/DMPRoadmap/roadmap/releases/tag/v3.3.1)
+
  - Removed broken links to Portage Network pages [portagenetwork/roadmap#339](https://github.com/portagenetwork/roadmap/issues/339)
 
-### [3.1.0+portage-3.1.3] - 2023-06-13
 
+## [3.1.0+portage-3.1.3] - 2023-06-13
 
 ### Fixed
 
