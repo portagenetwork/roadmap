@@ -529,6 +529,7 @@
  - Change CSS Branding for navbar
  - Replace portage orange in favor of white as 2nd UI color
  - Change logger to syslog
+ - Updated Broken links.
 
 ### Fixed
  - Fix random log warnings
