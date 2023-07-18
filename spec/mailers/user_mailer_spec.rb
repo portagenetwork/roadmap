@@ -21,7 +21,8 @@ RSpec.describe UserMailer, type: :mailer do
       let(:mail) { UserMailer.welcome_notification(user) }
 
       it 'renders the email subject in English' do
-        expect(mail.subject).to include('Welcome to')
+        Rails.configuration.x.application.name = 'Foo'
+        expect(mail.subject).to include('Welcome to Foo')
       end
     end
 
@@ -38,7 +39,8 @@ RSpec.describe UserMailer, type: :mailer do
       let(:mail) { UserMailer.welcome_notification(user) }
 
       it 'renders the email subject in French' do
-        expect(mail.subject).to include('Bienvenue sur ')
+        Rails.configuration.x.application.name = 'Bar'
+        expect(mail.subject).to include("Bienvenue sur l'Bar")
       end
     end
   end
