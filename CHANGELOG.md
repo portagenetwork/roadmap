@@ -6,7 +6,10 @@
 
  - Merged [v3.3.1](https://github.com/DMPRoadmap/roadmap/releases/tag/v3.3.1)
 
-## [3.1.0+portage-3.1.3] - 2023-06-13 
+ - Removed broken links to Portage Network pages [portagenetwork/roadmap#339](https://github.com/portagenetwork/roadmap/issues/339)
+
+
+## [3.1.0+portage-3.1.3] - 2023-06-13
 
 ### Fixed
 
@@ -23,13 +26,13 @@
 
 ## [3.1.0+portage-3.1.2] - 2023-03-28
 
-### Fixed 
+### Fixed
 
 - Resolved problem with updating plans [#333](https://github.com/portagenetwork/roadmap/issues/333)
 
 ## [3.1.0+portage-3.1.1] - 2023-02-24
 
-### Fixed 
+### Fixed
 
 - Fixed 500 error when admins try to downloading [#328](https://github.com/portagenetwork/roadmap/issues/328)
 
@@ -260,7 +263,7 @@
 
 ### Changed
 
-- Test JSON format plan download 
+- Test JSON format plan download
 
 ## [3.0.4+portage-3.0.9] - 2022-04-11
 
@@ -292,27 +295,27 @@
    - Usage statistics page now shows correct data [#164](https://github.com/portagenetwork/roadmap/issues/164)
 
 ## [3.0.4+portage-3.0.5] - 2022-03-07
-  
+
 ### Fixed
    - Fixed pdf/html/docx/txt download issue [#153](https://github.com/portagenetwork/roadmap/issues/153)
 
 ## [3.0.4+portage-3.0.4] - 2022-02-25
   - Update translation for some wording
-  
+
 ## [3.0.4+portage-3.0.3] - 2020-02-24
 
   ### Changed
    - Updated Alliance information
    - Updated branding
    - Updated translation files
-  
+
   ### Fixed
    - Docker workflow to build image on release
 
 ## [3.0.4+portage-3.0.2] - 2020-02-10
 
   ### Changed
-   - Update footer for the new Alliance branding 
+   - Update footer for the new Alliance branding
   ### Added
   - Danger workflow to automate code review tasks
 
@@ -330,7 +333,7 @@
 
 ### Updated
  - Upgrade Ruby to 2.6.6
- - Upgrade Bundler to 2.2.24. 
+ - Upgrade Bundler to 2.2.24.
  - Upgrade node to 12
  - Upgrade node-sass to 7.0.0
 
@@ -453,7 +456,7 @@
  - Make public plans downloadable
 
 ## [2.1.3+portage-1.0.6] - 2021-03-02
- 
+
 ### Fixed
  - Vertical alignment for organization name
 
@@ -463,7 +466,7 @@
  - Add content to help page
 
 ### Changed
- - Update translation files 
+ - Update translation files
 
 ### Fixed
  - Fix small errors for French content
@@ -533,6 +536,7 @@
  - Change CSS Branding for navbar
  - Replace portage orange in favor of white as 2nd UI color
  - Change logger to syslog
+ - Updated Broken links.
 
 ### Fixed
  - Fix random log warnings
