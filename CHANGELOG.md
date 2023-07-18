@@ -6,7 +6,10 @@
 
  - Merged [v3.3.1](https://github.com/DMPRoadmap/roadmap/releases/tag/v3.3.1)
 
+ - Removed broken links to Portage Network pages [portagenetwork/roadmap#339](https://github.com/portagenetwork/roadmap/issues/339)
+
  - Updated emails's language is based on user's choice on UI, instead of system default [196](https://github.com/portagenetwork/roadmap/issues/196)
+
 
 ## [3.1.0+portage-3.1.3] - 2023-06-13
 
@@ -535,6 +538,7 @@
  - Change CSS Branding for navbar
  - Replace portage orange in favor of white as 2nd UI color
  - Change logger to syslog
+ - Updated Broken links.
 
 ### Fixed
  - Fix random log warnings
