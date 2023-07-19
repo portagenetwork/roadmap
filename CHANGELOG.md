@@ -12,6 +12,7 @@
 
  - Help-desk email now has correct address [portagenetwork/roadmap#338](https://github.com/portagenetwork/roadmap/issues/338)
  - Password reset mail no longer instructs the user against replying to email. [portagenetwork/roadmap#338](https://github.com/portagenetwork/roadmap/issues/338)
+ - Migrated font-awesome-sass from v5 to v6. Entailed resolving [#384](https://github.com/portagenetwork/roadmap/issues/384)
 
 ### Added
 
