@@ -8,6 +8,8 @@
 
  - Removed broken links to Portage Network pages [portagenetwork/roadmap#339](https://github.com/portagenetwork/roadmap/issues/339)
 
+ - Updated emails's language is based on user's choice on UI, instead of system default [196](https://github.com/portagenetwork/roadmap/issues/196)
+
 
 ## [3.1.0+portage-3.1.3] - 2023-06-13
 
