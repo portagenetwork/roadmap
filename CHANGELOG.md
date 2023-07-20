@@ -10,6 +10,7 @@
 
  - Updated emails's language is based on user's choice on UI, instead of system default [196](https://github.com/portagenetwork/roadmap/issues/196)
 
+ - Issue with 500 page error resue on Logo isseus on update of Organizations [327](https://github.com/portagenetwork/roadmap/issues/327) and [354](https://github.com/portagenetwork/roadmap/issues/354)
 
 ## [3.1.0+portage-3.1.3] - 2023-06-13
 
