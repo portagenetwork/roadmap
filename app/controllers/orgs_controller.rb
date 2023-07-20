@@ -77,7 +77,7 @@ class OrgsController < ApplicationController
 
     # Remove the extraneous Org Selector hidden fields
     attrs = remove_org_selection_params(params_in: attrs)
-
+    begin
     if @org.update(attrs)
       # Save any identifiers that were found
       if current_user.can_super_admin? && lookup.present?
@@ -92,6 +92,10 @@ class OrgsController < ApplicationController
                   notice: success_message(@org, _('saved'))
     else
       failure = failure_message(@org, _('save')) if failure.blank?
+      redirect_to "#{admin_edit_org_path(@org)}##{tab}", alert: failure
+    end
+    rescue Dragonfly::Job::Fetch::NotFound
+      failure = _('There seems to be a problem with your logo. Please upload it again.')
       redirect_to "#{admin_edit_org_path(@org)}##{tab}", alert: failure
     end
   end
