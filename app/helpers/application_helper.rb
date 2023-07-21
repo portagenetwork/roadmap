@@ -58,37 +58,37 @@ module ApplicationHelper
   # we need different urls. This will be changed when we move to DMPRoadmap 3.0
   # as there is a service that handles fetching this information.
   def contact_us_path
-    if I18n.locale == 'fr_CA'
+    if I18n.locale == :'fr-CA'
       'https://portagenetwork.ca/fr/contactez-nous/'
     else
-      # Handling "en_CA" locale
+      # Handling :'en-CA' locale
       'https://portagenetwork.ca/contact-us/'
     end
   end
 
   def terms_of_use_path
-    if I18n.locale == 'fr_CA'
+    if I18n.locale == :'fr-CA'
       'https://portagenetwork.ca/fr/outils-et-ressources/assistant-pgd/conditions-dutilisation-de-lassistant-pgd/'
     else
-      # Handling "en_CA" locale
+      # Handling :'en-CA' locale
       'https://assistant.portagenetwork.ca/terms'
     end
   end
 
   def how_to_manage_your_data_path
-    if I18n.locale == 'fr_CA'
+    if I18n.locale == :'fr-CA'
       'https://portagenetwork.ca/fr/outils-et-ressources/assistant-pgd/comment-gerer-vos-donnees/'
     else
-      # Handling "en_CA" locale
+      # Handling :'en-CA' locale
       'https://portagenetwork.ca/tools-and-resources/dmp-assistant/how-to-manage-your-data/'
     end
   end
 
   def contacts_at_your_instutution_path
-    if I18n.locale == 'fr_CA'
+    if I18n.locale == :'fr-CA'
       'https://alliancecan.ca/fr/services/gestion-des-donnees-de-recherche/apprentissage-et-ressources/personnes-ressources-dans-les-etablissements'
     else
-      # Handling "en_CA" locale
+      # Handling :'en-CA' locale
       'https://alliancecan.ca/en/services/research-data-management/learning-and-training/institutional-contacts'
     end
   end
