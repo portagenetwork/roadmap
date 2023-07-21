@@ -42,9 +42,9 @@ module ApplicationHelper
     content_for(:title) { page_title }
   end
 
-  # This method assumes there will be an image file called dmp_logo_xx_XX.png
-  # Where xx_XX is the current locale in ww-WW format. Examples of this are
-  # en_CA, fr_CA
+  # This method assumes there will be an image file called dmp_logo_xx-XX.png
+  # where xx-XX is the string formatted I18n.locale.
+  # e.g. if I18n.locale == :'en_CA', then "#{I18n.locale}" == 'en-CA'
   def current_locale_logo
     if FeatureFlagHelper.enabled?(:on_sandbox)
       "sandbox_logo_#{I18n.locale}.png"
