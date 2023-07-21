@@ -53,10 +53,6 @@ module ApplicationHelper
     end
   end
 
-  # We are overriding this method in order to provide different contact us urls
-  # based on the chosen locale. Using the branding.yml does not work for this as
-  # we need different urls. This will be changed when we move to DMPRoadmap 3.0
-  # as there is a service that handles fetching this information.
   def contact_us_path
     if I18n.locale == :'fr-CA'
       'https://portagenetwork.ca/fr/contactez-nous/'
