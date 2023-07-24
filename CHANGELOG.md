@@ -16,6 +16,7 @@
 ### Fixed
 
  - Resolved problem when creating organisations [portagenetwork/roadmap#336](https://github.com/portagenetwork/roadmap/issues/336)
+ - Users can now download public templates without being logged in [#335](https://github.com/portagenetwork/roadmap/issues/335)
  - Fixed equality checks in application_helper.rb [#355](https://github.com/portagenetwork/roadmap/issues/355)
 
 ### Changed
