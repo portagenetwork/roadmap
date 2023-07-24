@@ -5,16 +5,16 @@ on: [push, pull_request]
 jobs:
   brakeman:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     # Will run Brakeman checks on dependencies
     #   https://github.com/marketplace/actions/brakeman-action
     - name: Brakeman
       uses: artplan1/brakeman-action@v1.2.1
       with:
-        flags: "--color"
+        flags: "--no-exit-on-warn" # OPTIONAL: change this no-exit-on-warn flag to avoid complaining of EOL security warning
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

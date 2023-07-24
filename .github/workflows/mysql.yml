@@ -1,10 +1,10 @@
 name: Tests - MySQL
 
-on: [pull_request]
+on: [push, pull_request]
 
 jobs:
   mysql:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     env:
       DB_ADAPTER: mysql2
@@ -13,9 +13,12 @@ jobs:
 
     steps:
     # Checkout the repo
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 1
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
 
     - name: 'Install MySQL Packages'
       run: |
@@ -30,7 +33,7 @@ jobs:
         echo "BUNDLER_VERSION=`cat ./Gemfile.lock | grep -A 1 'BUNDLED WITH' | grep -oE '[0-9]\.[0-9]'`" >> $GITHUB_ENV
 
     - name: 'Install Ruby'
-      uses: actions/setup-ruby@v1
+      uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ env.RUBY_VERSION }}
 
@@ -62,7 +65,7 @@ jobs:
         # generate a default credential file and key
         EDITOR='echo "$(cat config/credentials.yml.example)" >' bundle exec rails credentials:edit
 
-    # Try to retrieve the yarn JS dependencies from the cache
+    # # Try to retrieve the yarn JS dependencies from the cache
     - name: 'Cache Yarn Packages'
       uses: actions/cache@v2.1.5
       with:
@@ -97,6 +100,7 @@ jobs:
         bin/rails webpacker:compile
         bin/rails assets:precompile
 
+    # Note V3.1.0 DMPTool commented out Karma tests and will move this part to rspec
     - name: 'Run Karma Tests'
       run: yarn test
 

@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   postgresql:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     services:
       # Postgres installation
@@ -29,9 +29,12 @@ jobs:
 
     steps:
     # Checkout the repo
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 1
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
 
     - name: 'Install Postgresql Packages'
       run: |
@@ -45,7 +48,7 @@ jobs:
 
     # Install Ruby - using the version found in the Gemfile.lock
     - name: 'Install Ruby'
-      uses: actions/setup-ruby@v1
+      uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ env.RUBY_VERSION }}
 
