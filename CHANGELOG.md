@@ -18,11 +18,14 @@
 
  - Resolved problem when creating organisations [portagenetwork/roadmap#336](https://github.com/portagenetwork/roadmap/issues/336)
  - Users can now download public templates without being logged in [#335](https://github.com/portagenetwork/roadmap/issues/335)
+ - Fixed equality checks in application_helper.rb [#355](https://github.com/portagenetwork/roadmap/issues/355)
 
 ### Changed
 
  - Help-desk email now has correct address [portagenetwork/roadmap#338](https://github.com/portagenetwork/roadmap/issues/338)
  - Password reset mail no longer instructs the user against replying to email. [portagenetwork/roadmap#338](https://github.com/portagenetwork/roadmap/issues/338)
+ - Edited terms-of-use and how-to-manage-your-data links to always be the localized routes in application_helper.rb [#397](https://github.com/portagenetwork/roadmap/issues/397)
+ - Temporarily hardcoded terms_of_use_path in application_helper.rb to always return en-CA route. This will have to be changed again when the French terms-of-use route is made available.
 
 ### Added
 
