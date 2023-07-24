@@ -62,13 +62,16 @@ module ApplicationHelper
     end
   end
 
+  # Regardless of locale, we are currently only routing to '/terms'
+  # This will be changed when the French terms route is made available
   def terms_of_use_path
-    if I18n.locale == :'fr-CA'
-      'https://portagenetwork.ca/fr/outils-et-ressources/assistant-pgd/conditions-dutilisation-de-lassistant-pgd/'
-    else
-      # Handling :'en-CA' locale
-      'https://assistant.portagenetwork.ca/terms'
-    end
+    'https://assistant.portagenetwork.ca/terms'
+    # if I18n.locale == :'fr-CA'
+    #   'https://portagenetwork.ca/fr/outils-et-ressources/assistant-pgd/conditions-dutilisation-de-lassistant-pgd/'
+    # else
+    #   # Handling :'en-CA' locale
+    #   'https://assistant.portagenetwork.ca/terms'
+    # end
   end
 
   def how_to_manage_your_data_path
