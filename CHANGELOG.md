@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Fixed
+
+ - Users can now download public templates without being logged in [#335](https://github.com/portagenetwork/roadmap/issues/335)
+
+ - Fixed equality checks in application_helper.rb [#355](https://github.com/portagenetwork/roadmap/issues/355)
+
 ### Changed
 
  - Merged [v3.3.1](https://github.com/DMPRoadmap/roadmap/releases/tag/v3.3.1)
@@ -12,20 +18,20 @@
 
  - Issue with 500 page error resue on Logo isseus on update of Organizations [327](https://github.com/portagenetwork/roadmap/issues/327) and [354](https://github.com/portagenetwork/roadmap/issues/354)
 
+ - Edited terms-of-use and how-to-manage-your-data links to always be the localized routes in application_helper.rb [#397](https://github.com/portagenetwork/roadmap/issues/397)
+ 
+ - Temporarily hardcoded terms_of_use_path in application_helper.rb to always return en-CA route. This will have to be changed again when the French terms-of-use route is made available.
+
 ## [3.1.0+portage-3.1.3] - 2023-06-13
 
 ### Fixed
 
  - Resolved problem when creating organisations [portagenetwork/roadmap#336](https://github.com/portagenetwork/roadmap/issues/336)
- - Users can now download public templates without being logged in [#335](https://github.com/portagenetwork/roadmap/issues/335)
- - Fixed equality checks in application_helper.rb [#355](https://github.com/portagenetwork/roadmap/issues/355)
 
 ### Changed
 
  - Help-desk email now has correct address [portagenetwork/roadmap#338](https://github.com/portagenetwork/roadmap/issues/338)
  - Password reset mail no longer instructs the user against replying to email. [portagenetwork/roadmap#338](https://github.com/portagenetwork/roadmap/issues/338)
- - Edited terms-of-use and how-to-manage-your-data links to always be the localized routes in application_helper.rb [#397](https://github.com/portagenetwork/roadmap/issues/397)
- - Temporarily hardcoded terms_of_use_path in application_helper.rb to always return en-CA route. This will have to be changed again when the French terms-of-use route is made available.
 
 ### Added
 
