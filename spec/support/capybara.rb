@@ -6,6 +6,8 @@ require_relative 'helpers/sessions_helper'
 require_relative 'helpers/tiny_mce_helper'
 require_relative 'helpers/autocomplete_helper'
 
+Webdrivers::Chromedriver.required_version = '114.0.5735.90' # TEMPORARY PATCH
+
 Capybara.default_driver = :rack_test
 
 # Cache for one hour

@@ -1,6 +1,12 @@
 # Changelog
 
-## Unreleased
+## [3.3.1+portage-3.2.0] - 2023-07-26
+
+### Fixed
+
+ - Users can now download public templates without being logged in [#335](https://github.com/portagenetwork/roadmap/issues/335)
+
+ - Fixed equality checks in application_helper.rb [#355](https://github.com/portagenetwork/roadmap/issues/355)
 
 ### Changed
 
@@ -12,20 +18,40 @@
 
  - Issue with 500 page error resue on Logo isseus on update of Organizations [327](https://github.com/portagenetwork/roadmap/issues/327) and [354](https://github.com/portagenetwork/roadmap/issues/354)
 
+ - Edited terms-of-use and how-to-manage-your-data links to always be the localized routes in application_helper.rb [#397](https://github.com/portagenetwork/roadmap/issues/397)
+
+ - update Danger to V9.3.1 [#360](https://github.com/portagenetwork/roadmap/pull/360)
+ 
+ - Bump engine.io from 6.4.0 to 6.4.2 [#362](https://github.com/portagenetwork/roadmap/pull/362)
+ 
+ - Bump socket.io-parser from 4.2.2 to 4.2.4 [#363](https://github.com/portagenetwork/roadmap/pull/363)
+ 
+ - Bump semver from 5.7.1 to 5.7.2 [#366](https://github.com/portagenetwork/roadmap/pull/366)
+ 
+ - Bump devise_invitable from 2.0.7 to 2.0.8 [#370](https://github.com/portagenetwork/roadmap/pull/370)
+ 
+ - Bump devise from 4.8.1 to 4.9.2 [#371](https://github.com/portagenetwork/roadmap/pull/371)
+ 
+ - Bump word-wrap from 1.2.3 to 1.2.4 [#376](https://github.com/portagenetwork/roadmap/pull/376)
+ 
+ - Bump autoprefixer-rails from 10.4.7.0 to 10.4.13.0 [#377](https://github.com/portagenetwork/roadmap/pull/377)
+ 
+ - Bump parallel from 1.22.1 to 1.23.0 [#378](https://github.com/portagenetwork/roadmap/pull/378)
+ 
+ - Bump rack-mini-profiler from 3.0.0 to 3.1.0 [#391](https://github.com/portagenetwork/roadmap/pull/391)
+ 
+ - Bump puma from 6.1.0 to 6.3.0 [#396](https://github.com/portagenetwork/roadmap/pull/396)
+
 ## [3.1.0+portage-3.1.3] - 2023-06-13
 
 ### Fixed
 
  - Resolved problem when creating organisations [portagenetwork/roadmap#336](https://github.com/portagenetwork/roadmap/issues/336)
- - Users can now download public templates without being logged in [#335](https://github.com/portagenetwork/roadmap/issues/335)
- - Fixed equality checks in application_helper.rb [#355](https://github.com/portagenetwork/roadmap/issues/355)
 
 ### Changed
 
  - Help-desk email now has correct address [portagenetwork/roadmap#338](https://github.com/portagenetwork/roadmap/issues/338)
  - Password reset mail no longer instructs the user against replying to email. [portagenetwork/roadmap#338](https://github.com/portagenetwork/roadmap/issues/338)
- - Edited terms-of-use and how-to-manage-your-data links to always be the localized routes in application_helper.rb [#397](https://github.com/portagenetwork/roadmap/issues/397)
- - Temporarily hardcoded terms_of_use_path in application_helper.rb to always return en-CA route. This will have to be changed again when the French terms-of-use route is made available.
 
 ### Added
 
