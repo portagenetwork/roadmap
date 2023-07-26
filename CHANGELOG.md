@@ -19,8 +19,6 @@
  - Issue with 500 page error resue on Logo isseus on update of Organizations [327](https://github.com/portagenetwork/roadmap/issues/327) and [354](https://github.com/portagenetwork/roadmap/issues/354)
 
  - Edited terms-of-use and how-to-manage-your-data links to always be the localized routes in application_helper.rb [#397](https://github.com/portagenetwork/roadmap/issues/397)
- 
- - Temporarily hardcoded terms_of_use_path in application_helper.rb to always return en-CA route. This will have to be changed again when the French terms-of-use route is made available.
 
  - update Danger to V9.3.1 [#360](https://github.com/portagenetwork/roadmap/pull/360)
  
