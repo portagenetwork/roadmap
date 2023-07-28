@@ -8,6 +8,8 @@
 
  - Fixed equality checks in application_helper.rb [#355](https://github.com/portagenetwork/roadmap/issues/355)
 
+ - Fixed landing page content and links for fr-CA locale [#405](https://github.com/portagenetwork/roadmap/pull/405)
+
 ### Changed
 
  - Merged [v3.3.1](https://github.com/DMPRoadmap/roadmap/releases/tag/v3.3.1)
