@@ -9,7 +9,7 @@
 
   <%
 
-    landing_page_content = _(%{
+    landing_page_content = format(_(%{
       <!-- landing page content -->
       <p>
         The <strong>DMP Assistant</strong> is a national, online, bilingual data management planning tool developed by the <strong>Digital Research Alliance of Canada (the Alliance)</strong> in collaboration with host institution <strong>University of Alberta</strong> to assist researchers in preparing <strong>data management plans (DMPs)</strong>. This tool is freely available to all researchers, and develops a DMP through a series of key data management questions, supported by best-practice guidance and examples.
@@ -32,7 +32,7 @@
           <a href="https://doi.org/10.5281/zenodo.4001018">Primer – Data Management Plan</a>
         </li>
         <li>
-          <a href="#{how_to_manage_your_data_path}">How to Manage Your Data</a>
+          <a href="%{manage_data_path}">How to Manage Your Data</a>
         </li>
         <li>
           Tutorial Videos:
@@ -68,7 +68,7 @@
       <p>
         The DMP Assistant was adapted from the <a href="https://dcc.ac.uk/"> Digital Curation Centre (DCC)</a>’s <a href="https://dmponline.dcc.ac.uk/">DMPonline</a> tool, and uses the DMP Roadmap codebase developed by DCC and the <a href="https://cdlib.org/services/uc3/">University of California Curation Center (UC3).</a>
       </p>
-    })
+    }),manage_data_path: how_to_manage_your_data_path)
 
   %>
 
