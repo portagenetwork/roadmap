@@ -10,6 +10,10 @@
 
  - Fixed landing page content and links for fr-CA locale [#405](https://github.com/portagenetwork/roadmap/pull/405)
 
+ - Address missing French translations throughout application [#404](https://github.com/portagenetwork/roadmap/issues/404)
+
+ - Removed repeated "Sign-up" and "Help" text in "About Us" section [#407](https://github.com/portagenetwork/roadmap/issues/407)
+
 ### Changed
 
  - Merged [v3.3.1](https://github.com/DMPRoadmap/roadmap/releases/tag/v3.3.1)
