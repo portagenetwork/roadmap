@@ -12,7 +12,7 @@
 
  - Address missing French translations throughout application [#404](https://github.com/portagenetwork/roadmap/issues/404)
 
- - Removed repeated "Sign-up" and "Help" text in "About Us" section [#407](https://github.com/portagenetwork/roadmap/issues/407)
+ - Removed repeated "Sign-up" and "Help" text in "About Us" [#407](https://github.com/portagenetwork/roadmap/issues/407)
 
 ### Changed
 

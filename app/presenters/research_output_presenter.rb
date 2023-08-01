@@ -86,7 +86,7 @@ class ResearchOutputPresenter
   end
 
   # Converts the byte_size into a more friendly value (e.g. 15.4 MB)
-  # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/CyclomaticComplexity
   def converted_file_size(size:)
     return { size: nil, unit: 'mb' } unless size.present? && size.is_a?(Numeric) && size.positive?
     return { size: size / 1.petabytes, unit: 'pb' } if size >= 1.petabytes
