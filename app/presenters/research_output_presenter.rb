@@ -11,13 +11,13 @@ class ResearchOutputPresenter
   # Returns the output_type list for a select_tag
   def selectable_output_types
     ResearchOutput.output_types
-                  .map { |k, _v| [k.humanize, k] }
+                  .map { |k, _v| [_(k.humanize), k] }
   end
 
   # Returns the access options for a select tag
   def selectable_access_types
     ResearchOutput.accesses
-                  .map { |k, _v| [k.humanize, k] }
+                  .map { |k, _v| [_(k.humanize), k] }
   end
 
   # Returns the options for file size units
@@ -54,22 +54,23 @@ class ResearchOutputPresenter
   end
 
   # Returns the options for subjects for the repository filter
+  # rubocop:disable Metrics/AbcSize
   def self.selectable_subjects
     [
-      '23-Agriculture, Forestry, Horticulture and Veterinary Medicine',
-      '21-Biology',
-      '31-Chemistry',
-      '44-Computer Science, Electrical and System Engineering',
-      '45-Construction Engineering and Architecture',
-      '34-Geosciences (including Geography)',
-      '11-Humanities',
-      '43-Materials Science and Engineering',
-      '33-Mathematics',
-      '41-Mechanical and industrial Engineering',
-      '22-Medicine',
-      '32-Physics',
-      '12-Social and Behavioural Sciences',
-      '42-Thermal Engineering/Process Engineering'
+      "23-#{_('Agriculture, Forestry, Horticulture and Veterinary Medicine')}",
+      "21-#{_('Biology')}",
+      "31-#{_('Chemistry')}",
+      "44-#{_('Computer Science, Electrical and System Engineering')}",
+      "45-#{_('Construction Engineering and Architecture')}",
+      "34-#{_('Geosciences (including Geography)')}",
+      "11-#{_('Humanities')}",
+      "43-#{_('Materials Science and Engineering')}",
+      "33-#{_('Mathematics')}",
+      "41-#{_('Mechanical and industrial Engineering')}",
+      "22-#{_('Medicine')}",
+      "32-#{_('Physics')}",
+      "12-#{_('Social and Behavioural Sciences')}",
+      "42-#{_('Thermal Engineering/Process Engineering')}"
     ].map do |subject|
       [subject.split('-').last, subject.gsub('-', ' ')]
     end
