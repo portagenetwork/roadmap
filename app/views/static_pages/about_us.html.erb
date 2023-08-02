@@ -49,8 +49,8 @@
       </p>
 
       <p>
-        <% help_url = "help_url" %>
-        <%= sanitize(_('Please visit the <a href="%{help_url}"> \'Help\' </a> page for guidance.') % {help_url: help_url}) %>
+        <% help_url = help_path %>
+        <%= sanitize(_('Please visit the <a href="%{help_url}"> \'Help\' </a> page for guidance.') % {help_url: help_path}) %>
       </p>
 
       <h2 class="fontsize-h3"><%= _('Feedback') %></h2>

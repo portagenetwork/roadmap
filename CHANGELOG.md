@@ -14,6 +14,8 @@
 
  - Removed repeated "Sign-up" and "Help" text in "About Us" [#407](https://github.com/portagenetwork/roadmap/issues/407)
 
+ - Fixed broken "Help" link [402](https://github.com/portagenetwork/roadmap/issues/412)
+
 ### Changed
 
  - Merged [v3.3.1](https://github.com/DMPRoadmap/roadmap/releases/tag/v3.3.1)
