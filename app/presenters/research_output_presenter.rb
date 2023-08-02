@@ -11,13 +11,13 @@ class ResearchOutputPresenter
   # Returns the output_type list for a select_tag
   def selectable_output_types
     ResearchOutput.output_types
-                  .map { |k, _v| [_(k.humanize), k] }
+                  .map { |k, _v| [_(k.humanize), k] } # k.humanize is sync'd to translation.io via _research_output.erb
   end
 
   # Returns the access options for a select tag
   def selectable_access_types
     ResearchOutput.accesses
-                  .map { |k, _v| [_(k.humanize), k] }
+                  .map { |k, _v| [_(k.humanize), k] } # k.humanize is sync'd to translation.io via _research_output.erb
   end
 
   # Returns the options for file size units
