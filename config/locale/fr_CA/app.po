@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: roadmap 1.0\n"
 "Report-Msgid-Bugs-To: contact@translation.io\n"
-"POT-Creation-Date: 2023-08-03 08:53-0600\n"
-"PO-Revision-Date: 2023-08-03 16:54+0200\n"
+"POT-Creation-Date: 2023-05-19 11:30-0600\n"
+"PO-Revision-Date: 2023-05-19 19:31+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French\n"
 "Language: fr_CA\n"
@@ -17,6 +17,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n>1;\n"
 "\n"
+
+msgid ""
+"Data preservation will depend on potential reuse value, whether there are obli"
+"gations to either retain or destroy data, and the resources required to proper"
+"ly curate the data and ensure that it remains usable in the future. In some ci"
+"rcumstances, it may be desirable to preserve all versions of the data (e.g. ra"
+"w, processed, analyzed, final), but in others, it may be preferable to keep on"
+"ly selected or final data (e.g. transcripts instead of audio interviews)"
+msgstr ""
 
 msgid "Date"
 msgstr ""
@@ -2041,7 +2050,7 @@ msgstr ""
 "echnologie.</span></p>"
 
 msgid "<p>This is a test template phase.</p>"
-msgstr "<p>Il s'agit du modèle générique de PGD pour Portage.</p>"
+msgstr ""
 
 msgid ""
 "<p><span style=\"font-weight: 400;\">Phase 2 questions seek greater detail. It i"
@@ -50558,144 +50567,6 @@ msgid ""
 "r information or if you have questions."
 msgstr ""
 
-msgid "Economics and business"
-msgstr ""
-
-msgid "Health sciences"
-msgstr ""
-
-msgid "Natural sciences"
-msgstr ""
-
-msgid "Languages and literature"
-msgstr ""
-
-msgid "Materials engineering"
-msgstr ""
-
-msgid "History and archaeology"
-msgstr ""
-
-msgid "Social Sciences"
-msgstr ""
-
-msgid "Other humanities"
-msgstr ""
-
-msgid "Philosophy, ethics and religion"
-msgstr ""
-
-msgid "Law"
-msgstr ""
-
-msgid "Medical engineering"
-msgstr ""
-
-msgid "Art (arts, history of arts, performing arts, music)"
-msgstr ""
-
-msgid "Industrial Biotechnology"
-msgstr ""
-
-msgid "Chemical sciences"
-msgstr ""
-
-msgid "Agriculture, forestry, and fisheries"
-msgstr ""
-
-msgid "Other medical sciences"
-msgstr ""
-
-msgid "Agricultural biotechnology"
-msgstr "Biotechnologie agricole"
-
-msgid "Nano-technology"
-msgstr ""
-
-msgid "Environmental engineering"
-msgstr ""
-
-msgid "Electrical engineering, electronic engineering,  information engineering"
-msgstr ""
-
-msgid "Chemical engineering"
-msgstr ""
-
-msgid "Agricultural Sciences"
-msgstr ""
-
-msgid "Animal and dairy science"
-msgstr ""
-
-msgid "Mechanical engineering"
-msgstr ""
-
-msgid "Sociology"
-msgstr ""
-
-msgid "Educational sciences"
-msgstr ""
-
-msgid "Other agricultural sciences"
-msgstr ""
-
-msgid "Social and economic geography"
-msgstr ""
-
-msgid "Medical and Health Sciences"
-msgstr ""
-
-msgid "Basic medicine"
-msgstr ""
-
-msgid "Clinical medicine"
-msgstr ""
-
-msgid "Other social sciences"
-msgstr ""
-
-msgid "Computer and information sciences"
-msgstr ""
-
-msgid "Civil engineering"
-msgstr ""
-
-msgid "Other natural sciences"
-msgstr ""
-
-msgid "Political science"
-msgstr ""
-
-msgid "Veterinary science"
-msgstr ""
-
-msgid "Health biotechnology"
-msgstr ""
-
-msgid "Psychology"
-msgstr ""
-
-msgid "Earth and related environmental sciences"
-msgstr ""
-
-msgid "Biological sciences"
-msgstr ""
-
-msgid "Other engineering and technologies"
-msgstr ""
-
-msgid "Media and communications"
-msgstr ""
-
-msgid "Physical sciences"
-msgstr ""
-
-msgid "Engineering and Technology"
-msgstr ""
-
-msgid "Environmental biotechnology"
-msgstr ""
-
 #: ../../app/controllers/answers_controller.rb:27
 msgid ""
 "There is no question with id %{question_id} associated to plan id %{plan_id} f"
@@ -51304,28 +51175,23 @@ msgstr ""
 msgid "Unable to download the DMP Template at this time."
 msgstr "Il est impossible de télécharger le modèle du PGD pour le moment."
 
-#: ../../app/controllers/orgs_controller.rb:98
-#: ../../app/controllers/super_admin/orgs_controller.rb:70
-msgid "There seems to be a problem with your logo. Please upload it again."
-msgstr "Votre logo semble présenter un problème. Veuillez le télécharger de nouveau."
-
-#: ../../app/controllers/orgs_controller.rb:124
+#: ../../app/controllers/orgs_controller.rb:120
 msgid "No organisations are currently registered."
 msgstr "Aucun organisme n’est actuellement inscrit."
 
-#: ../../app/controllers/orgs_controller.rb:135
+#: ../../app/controllers/orgs_controller.rb:131
 msgid "Please choose an organisation"
 msgstr "Veuillez choisir un organisme"
 
-#: ../../app/controllers/orgs_controller.rb:144
+#: ../../app/controllers/orgs_controller.rb:140
 msgid "Your organisation does not seem to be properly configured."
 msgstr "Votre organisme ne semble pas être correctement configuré."
 
-#: ../../app/controllers/plan_exports_controller.rb:105
+#: ../../app/controllers/plan_exports_controller.rb:102
 msgid "Created using %{application_name}. Last modified %{date}"
 msgstr "Créé(e) avec %{application_name}. Dernière modification : %{date}"
 
-#: ../../app/controllers/plan_exports_controller.rb:110
+#: ../../app/controllers/plan_exports_controller.rb:107
 msgid "[page] of [topage]"
 msgstr "[page] sur [topage]"
 
@@ -51588,6 +51454,10 @@ msgstr "Vous ne pouvez changer votre affiliation organisationnelle à cette éta
 #: ../../app/controllers/super_admin/org_swaps_controller.rb:31
 msgid "Unknown organisation."
 msgstr "Organisme inconnu."
+
+#: ../../app/controllers/super_admin/orgs_controller.rb:70
+msgid "There seems to be a problem with your logo. Please upload it again."
+msgstr "Votre logo semble présenter un problème. Veuillez le télécharger de nouveau."
 
 #: ../../app/controllers/super_admin/orgs_controller.rb:137
 msgid "An error occurred while trying to merge the Organisations."
@@ -52463,7 +52333,7 @@ msgid "Principal Investigator"
 msgstr "Chercheur principal"
 
 #: ../../app/presenters/contributor_presenter.rb:48
-#: ../../app/views/translation_io_exports/_research_output.erb:19
+#: ../../app/views/translation_io_exports/_research_output.erb:18
 msgid "Other"
 msgstr "Autre"
 
@@ -52494,26 +52364,26 @@ msgstr ""
 "Responsabilité de gestion et de coordination de la planification et de l'exécu"
 "tion de l'activité de recherche."
 
-#: ../../app/presenters/research_output_presenter.rb:83
+#: ../../app/presenters/research_output_presenter.rb:81
 msgid "Generalist (multidisciplinary)"
 msgstr "Généraliste (multidisciplinaire) "
 
-#: ../../app/presenters/research_output_presenter.rb:84
+#: ../../app/presenters/research_output_presenter.rb:82
 msgid "Discipline specific"
 msgstr "Discipline spécifique"
 
-#: ../../app/presenters/research_output_presenter.rb:85
+#: ../../app/presenters/research_output_presenter.rb:83
 msgid "Institutional"
 msgstr "Institutionnel"
 
-#: ../../app/presenters/research_output_presenter.rb:121
-#: ../../app/presenters/research_output_presenter.rb:128
-#: ../../app/presenters/research_output_presenter.rb:135
+#: ../../app/presenters/research_output_presenter.rb:119
+#: ../../app/presenters/research_output_presenter.rb:126
+#: ../../app/presenters/research_output_presenter.rb:133
 msgid "None specified"
 msgstr ""
 
-#: ../../app/presenters/research_output_presenter.rb:142
-#: ../../app/presenters/research_output_presenter.rb:149
+#: ../../app/presenters/research_output_presenter.rb:140
+#: ../../app/presenters/research_output_presenter.rb:147
 msgid "Unspecified"
 msgstr ""
 
@@ -53001,6 +52871,7 @@ msgid "The %{tool_name} team"
 msgstr "Équipe chargée de l’outil %{tool_name}"
 
 #: ../../app/views/devise/mailer/invitation_instructions.html.erb:38
+#: ../../app/views/devise/mailer/reset_password_instructions.html.erb:25
 #: ../../app/views/user_mailer/_email_signature.html.erb:18
 #: ../../app/views/user_mailer/welcome_notification.html.erb:13
 msgid "Please do not reply to this email."
@@ -53035,6 +52906,15 @@ msgid "If you didn't request this, please ignore this email."
 msgstr ""
 "Si vous n’avez pas effectué cette demande, veuillez ne pas tenir compte de ce "
 "courriel."
+
+#: ../../app/views/devise/mailer/reset_password_instructions.html.erb:25
+#: ../../app/views/user_mailer/_email_signature.html.erb:19
+msgid ""
+"If you have any questions or need help, please contact us at %{helpdesk_email}"
+" or visit %{contact_us}"
+msgstr ""
+"Si vous avez des questions ou avez besoin d’aide, veuillez nous écrire à %{hel"
+"pdesk_email} ou visiter la page %{contact_us}"
 
 #: ../../app/views/devise/mailer/unlock_instructions.html.erb:2
 msgid "Hello"
@@ -53552,11 +53432,11 @@ msgstr "Publié?"
 msgid "Welcome to %{application_name}."
 msgstr "Bienvenue sur l'%{application_name}."
 
-#: ../../app/views/home/_welcome.html.erb:12
+#: ../../app/views/home/_welcome.html.erb:11
 msgid ""
 "\n"
 "      <!-- landing page content -->\n"
-"      <p>\n"
+"      <p> \n"
 "        The <strong>DMP Assistant</strong> is a national, online, bilingual da"
 "ta management planning tool developed by the <strong>Digital Research Alliance"
 " of Canada (the Alliance)</strong> in collaboration with host institution <str"
@@ -53590,8 +53470,8 @@ msgid ""
 "ement Plan</a>\n"
 "        </li>\n"
 "        <li>\n"
-"          <a href=\"%{how_to_manage_your_data_path}\">How to Manage Your Data</a"
-">\n"
+"          <a href=\"https://portagenetwork.ca/tools-and-resources/dmp-assistant"
+"/how-to-manage-your-data/\">How to Manage Your Data</a>\n"
 "        </li>\n"
 "        <li>\n"
 "          Tutorial Videos:\n"
@@ -53627,16 +53507,16 @@ msgid ""
 "\n"
 "      <p>\n"
 "        For more resources and training materials spanning the entire research"
-" data life cycle, see the <a href=\"%{training_resources_path}\"> Portage Networ"
-"k Training Resources. </a>\n"
+" data life cycle, see the <a href=\"https://portagenetwork.ca/tools-and-resourc"
+"es/training-resources/\"> Portage Network Training Resources. </a>\n"
 "      </p>\n"
 "\n"
 "      <p>\n"
 "        The DMP Assistant was adapted from the <a href=\"https://dcc.ac.uk/\"> D"
 "igital Curation Centre (DCC)</a>’s <a href=\"https://dmponline.dcc.ac.uk/\">DMPo"
 "nline</a> tool, and uses the DMP Roadmap codebase developed by DCC and the <a "
-"href=\"https://cdlib.org/services/uc3/\">University of California Curation Cente"
-"r (UC3).</a>\n"
+"href=\" https://cdlib.org/services/uc3/\">University of California Curation Cent"
+"er (UC3).</a>\n"
 "      </p>\n"
 "    "
 msgstr ""
@@ -53677,7 +53557,8 @@ msgstr ""
 "</a>\n"
 "  </li>\n"
 "  <li>\n"
-"    <a href=\"%{how_to_manage_your_data_path}\">Comment gérer vos données</a>\n"
+"    <a href=\"https://portagenetwork.ca/fr/outils-et-ressources/assistant-pgd/c"
+"omment-gerer-vos-donnees/\">Comment gérer vos données</a>\n"
 "  </li>\n"
 "  <li>\n"
 "    Vidéos tutorielles :\n"
@@ -53708,8 +53589,9 @@ msgstr ""
 "</ul>\n"
 "<p>\n"
 "  Pour plus de ressources et de matériel de formation couvrant l'ensemble du c"
-"ycle de vie des données de recherche, consultez les <a href=\"%{training_resour"
-"ces_path}\">Ressources de formation de Portage</a>.\n"
+"ycle de vie des données de recherche, consultez les <a href=\"https://portagene"
+"twork.ca/fr/outils-et-ressources/ressources-de-formation-de-portage/\">Ressourc"
+"es de formation de Portage</a>.\n"
 "\n"
 "</p>\n"
 "\n"
@@ -53904,7 +53786,7 @@ msgstr "Accueil"
 
 #: ../../app/views/layouts/_header_navigation_delete.html.erb:58
 #: ../../app/views/layouts/_navigation.html.erb:55
-#: ../../app/views/static_pages/about_us.html.erb:40
+#: ../../app/views/static_pages/about_us.html.erb:39
 #: ../../app/views/static_pages/help.html.erb:1
 #: ../../app/views/static_pages/help.html.erb:4
 msgid "Help"
@@ -54421,7 +54303,7 @@ msgstr "Classer"
 #: ../../app/views/orgs/_profile_form.html.erb:161
 #: ../../app/views/paginable/guidances/_index.html.erb:6
 #: ../../app/views/shared/_links.html.erb:13
-#: ../../app/views/translation_io_exports/_research_output.erb:17
+#: ../../app/views/translation_io_exports/_research_output.erb:16
 msgid "Text"
 msgstr "Texte"
 
@@ -55359,7 +55241,6 @@ msgid "Not Applicable"
 msgstr "Sans objet"
 
 #: ../../app/views/paginable/research_outputs/_index.html.erb:13
-#: ../../app/views/research_outputs/repositories/_search.html.erb:31
 msgid "Repository"
 msgstr ""
 
@@ -56166,10 +56047,6 @@ msgstr "Veuillez indiquer le ou les produits de recherche que vous prévoyez. "
 msgid "Add a research output"
 msgstr "Ajouter un produit de recherche "
 
-#: ../../app/views/research_outputs/licenses/_form.html.erb:6
-msgid "- Other Licenses - will load a complete list -"
-msgstr ""
-
 #: ../../app/views/research_outputs/licenses/_form.html.erb:24
 msgid "Initial license"
 msgstr "Licence initiale"
@@ -56177,14 +56054,6 @@ msgstr "Licence initiale"
 #: ../../app/views/research_outputs/licenses/_form.html.erb:30
 msgid "For guidance on selecting a license:"
 msgstr "Conseils pour le choix d’une licence : "
-
-#: ../../app/views/research_outputs/metadata_standards/_search.html.erb:10
-msgid "Metadata Standard"
-msgstr ""
-
-#: ../../app/views/research_outputs/metadata_standards/_search.html.erb:11
-msgid "(e.g. DataCite, Dublin, Biological, etc.)"
-msgstr ""
 
 #: ../../app/views/research_outputs/new.html.erb:12
 msgid "New research output"
@@ -56214,10 +56083,6 @@ msgstr "- Sélectionnez une matière -"
 #: ../../app/views/research_outputs/repositories/_search.html.erb:21
 msgid "- Select a repository type -"
 msgstr "- Sélectionnez un type de référentiel -"
-
-#: ../../app/views/research_outputs/repositories/_search.html.erb:32
-msgid "(e.g. DNA, titanium, FAIR, etc.)"
-msgstr ""
 
 #: ../../app/views/research_outputs/repositories/_search_result.html.erb:18
 #: ../../app/views/research_outputs/repositories/_search_result_modified.html.erb:34
@@ -56514,32 +56379,30 @@ msgid "Getting started"
 msgstr "Par où commencer"
 
 #: ../../app/views/static_pages/about_us.html.erb:37
-msgid "If you have an account, please sign in and start creating or editing your DMP."
+msgid "If you have an account please sign in and start creating or editing your DMP."
 msgstr ""
-"Si vous avez un compte, connectez-vous et commencez à créer ou modifier votre "
-"plan de gestion des données."
 
-#: ../../app/views/static_pages/about_us.html.erb:39
+#: ../../app/views/static_pages/about_us.html.erb:38
 msgid "If you do not have a %{application_name} account, click on"
 msgstr ""
 
-#: ../../app/views/static_pages/about_us.html.erb:39
+#: ../../app/views/static_pages/about_us.html.erb:38
 msgid "Sign up"
 msgstr ""
 
-#: ../../app/views/static_pages/about_us.html.erb:39
+#: ../../app/views/static_pages/about_us.html.erb:38
 msgid "on the homepage."
 msgstr ""
 
-#: ../../app/views/static_pages/about_us.html.erb:40
+#: ../../app/views/static_pages/about_us.html.erb:39
 msgid "Please visit the"
 msgstr ""
 
-#: ../../app/views/static_pages/about_us.html.erb:40
+#: ../../app/views/static_pages/about_us.html.erb:39
 msgid "page for guidance."
 msgstr ""
 
-#: ../../app/views/static_pages/about_us.html.erb:44
+#: ../../app/views/static_pages/about_us.html.erb:43
 msgid ""
 "If you do not have a DMP Assistant account, click on <a href=\"%{sign_up_url}\">"
 " 'Sign up' </a> on the homepage."
@@ -56547,7 +56410,7 @@ msgstr ""
 "Si vous ne possédez pas de compte dans l'Assistant PGD, cliquez sur <a href=\"%"
 "{sign_up_url}\">« S'inscrire »</a> dans la page d'accueil."
 
-#: ../../app/views/static_pages/about_us.html.erb:48
+#: ../../app/views/static_pages/about_us.html.erb:47
 msgid ""
 "Please note that we are currently working on single sign-in authentication wit"
 "h your campus ID. You will have the option to link your existing account to yo"
@@ -56558,17 +56421,17 @@ msgstr ""
 "identifiant campus dès que la fonction sera disponible.\n"
 "\n"
 
-#: ../../app/views/static_pages/about_us.html.erb:53
+#: ../../app/views/static_pages/about_us.html.erb:52
 msgid "Please visit the <a href=\"%{help_url}\"> 'Help' </a> page for guidance."
 msgstr ""
 "Visitez la page <a href=\"%{help_url}\"> « Aide » </a> pour consulter l'aide dis"
 "ponible."
 
-#: ../../app/views/static_pages/about_us.html.erb:56
+#: ../../app/views/static_pages/about_us.html.erb:55
 msgid "Feedback"
 msgstr "Commentaires"
 
-#: ../../app/views/static_pages/about_us.html.erb:59
+#: ../../app/views/static_pages/about_us.html.erb:58
 msgid ""
 "If you have any questions or comments about the DMP Assistant, <a href=\"%{cont"
 "act_your_institution_url}\"> contact your local institution </a> or email us at"
@@ -56579,11 +56442,11 @@ msgstr ""
 "niversitaire</a> ou communiquez avec nous par courriel à  <a href=\"mailto:%{em"
 "ail_link}?Subject=%{email_subject}\">%{email_link}</a>.\n"
 
-#: ../../app/views/static_pages/about_us.html.erb:62
+#: ../../app/views/static_pages/about_us.html.erb:61
 msgid "Portage data stewardship template"
 msgstr "Modèle de plan de gestion des données Portage"
 
-#: ../../app/views/static_pages/about_us.html.erb:65
+#: ../../app/views/static_pages/about_us.html.erb:64
 msgid ""
 "The Portage Data Stewardship template is based on internationally accepted sta"
 "ndards and best practices. It has been prepared and is maintained by a group o"
@@ -56594,7 +56457,7 @@ msgstr ""
 "ur par un groupe d'experts en gestion des données de recherche travaillant au "
 "sein de bibliothèques de recherche à travers le Canada."
 
-#: ../../app/views/static_pages/about_us.html.erb:69
+#: ../../app/views/static_pages/about_us.html.erb:68
 msgid ""
 "Organizations may provide their own DMP templates. The Portage template is the"
 " default DMP. Select templates from other organizations from the drop-down Org"
@@ -56605,7 +56468,7 @@ msgstr ""
 "e modèle d'un autre organisme à l'aide du menu déroulant.\n"
 "\n"
 
-#: ../../app/views/static_pages/about_us.html.erb:73
+#: ../../app/views/static_pages/about_us.html.erb:72
 msgid ""
 "For funding agencies, research institutions, and other organizations, please c"
 "ontact <a href=\"mailto:%{email_link}\">%{email_link}</a> if you would like to a"
@@ -56632,8 +56495,15 @@ msgid ""
 "resource may help get you started: <a href=\"%{how_to_manage_your_data_url}\"> H"
 "ow to manage your data</a>. If you require more guidance, contact us at <a hre"
 "f=\"mailto:%{email_link}?Subject=%{email_subject}\">support@portagenetwork.ca</a"
-">."
+">, or see <a href=\"%{contact_your_institution_url}\">Contacts at your instituti"
+"on</a>."
 msgstr ""
+"Si vous avez besoin d'aide pour développer votre plan de gestion des données, "
+"la ressource suivante peut vous aider à démarrer : <a href=\"%{how_to_manage_yo"
+"ur_data_url}\">Comment gérer vos données</a>. Si vous avez besoin de plus d’inf"
+"ormation, communiquez avec nous par courriel à <a href=\"mailto:%{email_link}?S"
+"ubject=%{email_subject}\">support@portagenetwork.ca</a>, ou voir <a href=\"%{con"
+"tact_your_institution_url}\">Personne-ressource dans votre institution</a>."
 
 #: ../../app/views/static_pages/help.html.erb:21
 msgid "Create a plan"
@@ -56875,10 +56745,6 @@ msgstr ""
 msgid "Create Api Client"
 msgstr ""
 
-#: ../../app/views/super_admin/api_clients/index.html.erb:10
-msgid "Manage API access for external applications"
-msgstr ""
-
 #: ../../app/views/super_admin/api_clients/new.html.erb:1
 msgid "New API client"
 msgstr ""
@@ -57082,11 +56948,6 @@ msgstr ""
 "Commencez par rechercher un utilisateur par courriel, puis sélectionnez-le dan"
 "s la liste."
 
-#: ../../app/views/template_exports/template_export.docx.erb:29
-#: ../../app/views/template_exports/template_export.pdf.erb:73
-msgid "default"
-msgstr ""
-
 #: ../../app/views/template_exports/template_export.docx.erb:39
 #: ../../app/views/template_exports/template_export.pdf.erb:81
 msgid "Example Answer"
@@ -57129,129 +56990,57 @@ msgstr "Équivalent de l'Assistant PGD en France"
 msgid "France funder requirements for Data Management Plans"
 msgstr "Exigences des bailleurs de fonds de la France en matière de PGD"
 
-#: ../../app/views/translation_io_exports/_research_output.erb:5
+#: ../../app/views/translation_io_exports/_research_output.erb:4
 msgid "Audiovisual"
 msgstr ""
 
-#: ../../app/views/translation_io_exports/_research_output.erb:6
+#: ../../app/views/translation_io_exports/_research_output.erb:5
 msgid "Collection"
 msgstr ""
 
-#: ../../app/views/translation_io_exports/_research_output.erb:7
-msgid "Data paper"
+#: ../../app/views/translation_io_exports/_research_output.erb:6
+msgid "Data_paper"
 msgstr ""
 
-#: ../../app/views/translation_io_exports/_research_output.erb:8
+#: ../../app/views/translation_io_exports/_research_output.erb:7
 msgid "Dataset"
 msgstr ""
 
-#: ../../app/views/translation_io_exports/_research_output.erb:9
+#: ../../app/views/translation_io_exports/_research_output.erb:8
 msgid "Event"
 msgstr ""
 
-#: ../../app/views/translation_io_exports/_research_output.erb:10
+#: ../../app/views/translation_io_exports/_research_output.erb:9
 msgid "Image"
 msgstr ""
 
+#: ../../app/views/translation_io_exports/_research_output.erb:10
+msgid "Interactive_resource"
+msgstr ""
+
 #: ../../app/views/translation_io_exports/_research_output.erb:11
-msgid "Interactive resource"
+msgid "Model_representation"
 msgstr ""
 
 #: ../../app/views/translation_io_exports/_research_output.erb:12
-msgid "Model representation"
+msgid "Physical_object"
 msgstr ""
 
 #: ../../app/views/translation_io_exports/_research_output.erb:13
-msgid "Physical object"
-msgstr ""
-
-#: ../../app/views/translation_io_exports/_research_output.erb:14
 msgid "Service"
 msgstr ""
 
-#: ../../app/views/translation_io_exports/_research_output.erb:15
+#: ../../app/views/translation_io_exports/_research_output.erb:14
 msgid "Software"
 msgstr ""
 
-#: ../../app/views/translation_io_exports/_research_output.erb:16
+#: ../../app/views/translation_io_exports/_research_output.erb:15
 msgid "Sound"
 msgstr ""
 
-#: ../../app/views/translation_io_exports/_research_output.erb:18
+#: ../../app/views/translation_io_exports/_research_output.erb:17
 msgid "Workflow"
 msgstr ""
-
-#: ../../app/views/translation_io_exports/_research_output.erb:22
-msgid "Open"
-msgstr ""
-
-#: ../../app/views/translation_io_exports/_research_output.erb:23
-msgid "Embargoed"
-msgstr ""
-
-#: ../../app/views/translation_io_exports/_research_output.erb:24
-msgid "Restricted"
-msgstr "Limité"
-
-#: ../../app/views/translation_io_exports/_research_output.erb:25
-msgid "Closed"
-msgstr ""
-
-#: ../../app/views/translation_io_exports/_research_output.erb:28
-msgid "Agriculture, Forestry, Horticulture and Veterinary Medicine"
-msgstr "Agriculture, foresterie, horticulture et médecine vétérinaire"
-
-#: ../../app/views/translation_io_exports/_research_output.erb:29
-msgid "Biology"
-msgstr ""
-
-#: ../../app/views/translation_io_exports/_research_output.erb:30
-msgid "Chemistry"
-msgstr ""
-
-#: ../../app/views/translation_io_exports/_research_output.erb:31
-msgid "Computer Science, Electrical and System Engineering"
-msgstr ""
-
-#: ../../app/views/translation_io_exports/_research_output.erb:32
-msgid "Construction Engineering and Architecture"
-msgstr ""
-
-#: ../../app/views/translation_io_exports/_research_output.erb:33
-msgid "Geosciences (including Geography)"
-msgstr ""
-
-#: ../../app/views/translation_io_exports/_research_output.erb:34
-msgid "Humanities"
-msgstr ""
-
-#: ../../app/views/translation_io_exports/_research_output.erb:35
-msgid "Materials Science and Engineering"
-msgstr ""
-
-#: ../../app/views/translation_io_exports/_research_output.erb:36
-msgid "Mathematics"
-msgstr ""
-
-#: ../../app/views/translation_io_exports/_research_output.erb:37
-msgid "Mechanical and industrial Engineering"
-msgstr ""
-
-#: ../../app/views/translation_io_exports/_research_output.erb:38
-msgid "Medicine"
-msgstr ""
-
-#: ../../app/views/translation_io_exports/_research_output.erb:39
-msgid "Physics"
-msgstr ""
-
-#: ../../app/views/translation_io_exports/_research_output.erb:40
-msgid "Social and Behavioural Sciences"
-msgstr ""
-
-#: ../../app/views/translation_io_exports/_research_output.erb:41
-msgid "Thermal Engineering/Process Engineering"
-msgstr "Génie Thermique/Génie des Procédés"
 
 #: ../../app/views/translation_io_exports/_themes.html.erb:2
 msgid "Active Data Storage"
@@ -57670,14 +57459,6 @@ msgstr ""
 #: ../../app/views/user_mailer/_email_signature.html.erb:16
 msgid "You may change your notification preferences on your profile page. "
 msgstr "Vous pouvez modifier vos préférences quant aux avis sur votre page de profil."
-
-#: ../../app/views/user_mailer/_email_signature.html.erb:19
-msgid ""
-"If you have any questions or need help, please contact us at %{helpdesk_email}"
-" or visit %{contact_us}"
-msgstr ""
-"Si vous avez des questions ou avez besoin d’aide, veuillez nous écrire à %{hel"
-"pdesk_email} ou visiter la page %{contact_us}"
 
 #: ../../app/views/user_mailer/admin_privileges.html.erb:2
 #: ../../app/views/user_mailer/plan_visibility.html.erb:2
