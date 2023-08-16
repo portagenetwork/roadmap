@@ -18,12 +18,13 @@ $color-portage-blue: #1f3d7d;
 $color-portage-blue-darker: darken($color-portage-blue, 10%);
 $color-portage-orange: #FB9C26;
 $color-portage-orange-darker: darken($color-portage-orange, 10%);
+$color-alliance-digital-grey: #32322F;
 
 
 /*****
 Rebranding: not change the name, just color code
 *****/
-$color-portage-blue: #32322F; //Digital Grey to replace portage network blue
+$color-portage-blue: #D6AB00; //Digital Grey to replace portage network blue
 $color-portage-blue-darker: darken($color-portage-blue, 10%);
 $color-alliance-yellow: #D6AB00;
 $color-alliance-white: #FBFAFA;
@@ -49,7 +50,7 @@ $color-tooltip-background: $color-primary-background;
 $color-icon-bar-background: $color-white;
 
 // Text
-$color-primary-text: $color-white;
+$color-primary-text: $color-portage-blue;
 $color-seccondary-text: $color-portage-blue;
 $color-heading-text: $color-portage-blue;
 $color-navbar-text: $color-portage-blue;
@@ -69,10 +70,11 @@ $color-text-grey: $color-grey;
 $color-text-black: $color-black;
 
 // Borders colors
-$color-border-default: $color-portage-blue;
+$color-border-default: $color-alliance-yellow;
 $color-border-light: #ddd;
 $color-dropdown-inverse-border: $color-portage-blue;
 $color-navbar-border: darken($color-navbar-background, 10%);
+$navbar-branding-toggle-hover-bg: #ddd;
 
 // Shadow colors
 $color-shadow-dark: $color-black;
@@ -92,11 +94,63 @@ $color-primary-background: $color-alliance-yellow;
 $color-seccondary-background: $color-alliance-white;
 $color-navbar-background: $color-alliance-white;
 $color-navbar-background-active: $color-alliance-white;
-$color-primary-text: $color-white;
+$color-primary-text: $color-portage-blue;
 
 // Borders colors
 $color-border-default: $color-alliance-yellow;
-$color-border-light: $color-alliance-grey;
+$color-border-light: $color-alliance-yellow;
 
 //Text
 $color-org-navbar-links-hover: $color-alliance-yellow;
+
+
+
+
+
+/*****
+GREY BRANDING: not change the name, just color code
+*****/
+
+$color-alliance-darker-yellow: #F5C400; //Tomorrow yellow to pass the AAA of webAim
+
+
+$color-portage-blue: #32322F; //Digital Grey to replace portage network blue
+
+//Background
+$color-primary-background: $color-portage-blue;
+$color-tooltip-background: $color-primary-background;
+
+// Focus colors
+$color-focus-outline: $color-portage-blue-darker;
+
+
+// Text
+$color-primary-text: $color-alliance-darker-yellow;
+$color-seccondary-text: $color-white;
+$color-heading-text: $color-portage-blue;
+$color-navbar-text: $color-white;
+$color-navbar-text-hover: $color-white;
+$color-navbar-text-disabled: $color-white;
+$color-link-text: $color-alliance-digital-grey;
+$color-navbar-link-text: $color-white;
+$color-org-navbar-links: $color-alliance-digital-grey;
+$color-org-navbar-links-hover: $color-portage-blue-darker;
+$color-dropdown-inverse-text: $color-alliance-digital-grey;
+$color-dropdown-inverse-text-hover: $color-alliance-digital-grey;
+// $color-footer-links:;
+// $color-footer-links-hover:;
+// $color-tooltip-text:;
+$color-text-red: $color-red;
+$color-text-grey: $color-grey;
+$color-text-black: $color-black;
+
+
+// Backgrounds
+$color-primary-background: $color-alliance-darker-yellow;
+$color-primary-text: $color-alliance-darker-yellow;
+
+// Borders colors
+$color-border-default: $color-alliance-digital-grey;
+$color-border-light: $color-alliance-digital-grey;
+
+

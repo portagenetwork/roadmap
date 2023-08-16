@@ -15,6 +15,8 @@
 $color-alliance-yellow: #D6AB00;
 $color-alliance-darker-yellow: #F5C400;
 $color-alliance-digital-grey: #32322F;
+$brown: #524033;
+
 $color-alliance-darker-accent-teal: #01513E;
 
 //logo style apply for all screen size
@@ -64,7 +66,7 @@ thead th{
   .nav-tabs > li > a.active,
   .nav-tabs > li > a.active:focus,
   .nav-tabs > li > a.active:hover {
-    color: $color-alliance-digital-grey;
+    color: $color-alliance-digital-grey !important;
   }
 
  .nav-tabs > li.active > a,
@@ -72,6 +74,5 @@ thead th{
  .nav-tabs > li:focus > a,
  .nav-tabs > li.active:focus > a,
  .nav-tabs > li.active:hover > a {
-    color: $color-alliance-darker-accent-teal;
-    font-weight: bold;
+    color: $color-alliance-digital-grey !important;
  }
