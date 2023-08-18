@@ -68,7 +68,7 @@ navigation
             //_template_filter.scss
             font-size: 1.2rem;
             margin: 3.2em 0.5em; //fit the internal padding of the new logo, and make the font align with the horizontal center of the logo
-
+            &:focus,
             &:hover{
                 color: $color-alliance-darker-yellow;
                 background-color: $color-alliance-digital-grey;

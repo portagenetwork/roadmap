@@ -15,9 +15,8 @@
 $color-alliance-yellow: #D6AB00;
 $color-alliance-darker-yellow: #F5C400;
 $color-alliance-digital-grey: #32322F;
-$brown: #524033;
-
-$color-alliance-darker-accent-teal: #01513E;
+$color-alliance-darkest-yellow: #8A6E00;
+$color-white: #FFF;
 
 //logo style apply for all screen size
 //_logos.scss
@@ -76,3 +75,29 @@ thead th{
  .nav-tabs > li.active:hover > a {
     color: $color-alliance-digital-grey !important;
  }
+
+
+ /* Drop downs of the coloege lists in create plans section */
+
+ .ui-menu {
+  .ui-menu-item {
+    background-color: $color-white;
+    .ui-menu-item-wrapper {
+      &:hover,
+      &:focus{
+        color: $color-alliance-darker-yellow !important;
+        background-color: $color-alliance-digital-grey !important;
+      }
+    }
+    &:hover,
+    &:focus{
+      color: $color-alliance-darker-yellow !important;
+      background-color: $color-alliance-digital-grey !important;
+    }
+  }
+}
+
+/* alignment of write plans button in the plan overview section*/
+.fontsize-h4 > a {
+  margin-top: -14px !important;
+}

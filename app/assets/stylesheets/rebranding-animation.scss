@@ -6,11 +6,11 @@
 /** The color variables **/
 $color-alliance-yellow: #D6AB00;
 $color-alliance-darker-yellow: #F5C400;
+$color-alliance-darkest-yellow: #8A6D00;
 $color-alliance-digital-grey: #32322F;
 
 $color-alliance-lighter-grey: #CCC;
 $color-alliance-light-grey: #999;
-$color-alliance-accent-teal: #00DBA7;
 
  /** Table content shadow added to make it look good**/
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
@@ -22,7 +22,7 @@ $color-alliance-accent-teal: #00DBA7;
   a[href^="https"]:not([href*="#"]),
   a[href^="mailto"] {
       text-decoration: underline;
-      color: $color-alliance-accent-teal;
+      color: $color-alliance-darkest-yellow;
     }
 
 
@@ -41,9 +41,9 @@ $color-alliance-accent-teal: #00DBA7;
 }
 
 
-form > fieldset > button.btn.btn-default {
-  animation: wiggle 2s linear infinite;
-}
+// form > fieldset > button.btn.btn-default {
+//   animation: wiggle 2s linear infinite;
+// }
 
 form > fieldset > button.btn.btn-default {
   border-top: 3px solid $color-alliance-digital-grey !important;
