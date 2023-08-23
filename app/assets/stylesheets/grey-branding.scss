@@ -17,6 +17,7 @@ $color-alliance-darker-yellow: #F5C400;
 $color-alliance-digital-grey: #32322F;
 $color-alliance-darkest-yellow: #8A6E00;
 $color-white: #FFF;
+$color-alliance-lighter-grey: #CCC;
 
 //logo style apply for all screen size
 //_logos.scss
@@ -100,4 +101,16 @@ thead th{
 /* alignment of write plans button in the plan overview section*/
 .fontsize-h4 > a {
   margin-top: -14px !important;
+}
+
+/* Headers dropdown margin changes*/
+a#language-menu, a#reference-menu, a#user-menu{
+  margin-bottom: 3px !important;
+}
+
+/* Notification color change*/
+.alert.alert-info {
+  background-color: $color-alliance-lighter-grey;
+  border-color: $color-alliance-yellow;
+  color: $color-alliance-darkest-yellow;
 }
