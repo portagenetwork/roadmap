@@ -16,6 +16,8 @@
 
  - Fixed broken "Help" link [#402](https://github.com/portagenetwork/roadmap/issues/412)
 
+ - Fixed compatibility issues between Webdrivers Gem and Google Chrome v116+ [#427](https://github.com/portagenetwork/roadmap/pull/427)
+
 ### Changed
 
  - Merged [v3.3.1](https://github.com/DMPRoadmap/roadmap/releases/tag/v3.3.1)
