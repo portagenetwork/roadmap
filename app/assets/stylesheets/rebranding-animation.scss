@@ -8,6 +8,7 @@ $color-alliance-yellow: #D6AB00;
 $color-alliance-darker-yellow: #F5C400;
 $color-alliance-darkest-yellow: #8A6D00;
 $color-alliance-digital-grey: #32322F;
+$color-alliance-darker-teal: #007283;
 
 $color-alliance-lighter-grey: #CCC;
 $color-alliance-light-grey: #999;
@@ -22,7 +23,12 @@ $color-alliance-light-grey: #999;
   a[href^="https"]:not([href*="#"]),
   a[href^="mailto"] {
       text-decoration: underline;
+      color: $color-alliance-darker-teal;
+    &:hover,
+    &:focus{
       color: $color-alliance-darkest-yellow;
+      border-color: $color-alliance-digital-grey !important;
+      }
     }
 
 
