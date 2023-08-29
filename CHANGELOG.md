@@ -52,7 +52,9 @@
  
  - Bump puma from 6.1.0 to 6.3.0 [#396](https://github.com/portagenetwork/roadmap/pull/396)
 
- - Bump puma from 6.3.1 to 6.3.1 [#422](https://github.com/portagenetwork/roadmap/pull/422)
+ - Bump puma from 6.3.0 to 6.3.1 [#422](https://github.com/portagenetwork/roadmap/pull/422)
+
+ - Set Guidances/Comments toggle to opened by default [#425](https://github.com/portagenetwork/roadmap/pull/425)
 
 ## [3.1.0+portage-3.1.3] - 2023-06-13
 
