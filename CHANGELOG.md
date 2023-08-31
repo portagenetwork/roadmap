@@ -16,6 +16,8 @@
 
  - Fixed broken "Help" link [#402](https://github.com/portagenetwork/roadmap/issues/412)
 
+ - Fixed compatibility issues between Webdrivers Gem and Google Chrome v116+ [#427](https://github.com/portagenetwork/roadmap/pull/427)
+
 ### Changed
 
  - Merged [v3.3.1](https://github.com/DMPRoadmap/roadmap/releases/tag/v3.3.1)
@@ -49,6 +51,10 @@
  - Bump rack-mini-profiler from 3.0.0 to 3.1.0 [#391](https://github.com/portagenetwork/roadmap/pull/391)
  
  - Bump puma from 6.1.0 to 6.3.0 [#396](https://github.com/portagenetwork/roadmap/pull/396)
+
+ - Bump puma from 6.3.0 to 6.3.1 [#422](https://github.com/portagenetwork/roadmap/pull/422)
+
+ - Set Guidances/Comments toggle to opened by default [#425](https://github.com/portagenetwork/roadmap/pull/425)
 
 ## [3.1.0+portage-3.1.3] - 2023-06-13
 
