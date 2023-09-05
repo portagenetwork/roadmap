@@ -18,6 +18,8 @@
 
  - Fixed compatibility issues between Webdrivers Gem and Google Chrome v116+ [#427](https://github.com/portagenetwork/roadmap/pull/427)
 
+ - Enable translations of Terms-Of-Use and Privacy-Policy pages [#429](https://github.com/portagenetwork/roadmap/pull/429) 
+
 ### Changed
 
  - Merged [v3.3.1](https://github.com/DMPRoadmap/roadmap/releases/tag/v3.3.1)
