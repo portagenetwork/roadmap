@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/lagoan/translation_io_rails
+  revision: 1975821394c8c84da9458d7c6a588c862cdcb46e
+  branch: fix/broken_db_fake_method_calls
+  specs:
+    translation (1.22)
+      gettext (~> 3.2, >= 3.2.5)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -47,6 +55,8 @@ GEM
     activerecord (6.1.7)
       activemodel (= 6.1.7)
       activesupport (= 6.1.7)
+    activerecord-nulldb-adapter (0.9.0)
+      activerecord (>= 5.2.0, < 7.1)
     activerecord_json_validator (2.1.1)
       activerecord (>= 4.2.0, < 8)
       json_schemer (~> 0.2.18)
@@ -183,14 +193,15 @@ GEM
     font-awesome-sass (5.15.1)
       sassc (>= 1.11)
     formatador (1.1.0)
-    forwardable (1.3.2)
+    forwardable (1.3.3)
     fuubar (2.5.1)
       rspec-core (~> 3.0)
       ruby-progressbar (~> 1.4)
-    gettext (3.4.3)
+    gettext (3.4.7)
       erubi
       locale (>= 2.0.5)
       prime
+      racc
       text (>= 1.3.0)
     globalid (1.0.0)
       activesupport (>= 5.0)
@@ -449,8 +460,6 @@ GEM
     thor (1.2.1)
     tilt (2.0.11)
     tomparse (0.4.2)
-    translation (1.32)
-      gettext (~> 3.2, >= 3.2.5, <= 3.4.3)
     turbo-rails (1.3.2)
       actionpack (>= 6.0.0)
       activejob (>= 6.0.0)
@@ -487,7 +496,7 @@ GEM
     websocket-extensions (0.1.5)
     wicked_pdf (2.6.3)
       activesupport
-    wkhtmltopdf-binary (0.12.6.5)
+    wkhtmltopdf-binary (0.12.6.6)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yard (0.9.28)
@@ -501,6 +510,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  activerecord-nulldb-adapter
   activerecord_json_validator
   annotate
   annotate_gem
@@ -565,7 +575,7 @@ DEPENDENCIES
   spring-commands-rspec
   spring-watcher-listen
   text
-  translation
+  translation!
   turbo-rails
   web-console
   webdrivers
@@ -580,4 +590,4 @@ RUBY VERSION
    ruby 2.7.6p219
 
 BUNDLED WITH
-   2.3.15
+   2.4.15

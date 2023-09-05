@@ -79,6 +79,10 @@ gem 'mysql2', group: :mysql, require: false
 # RDBMS}[http://www.postgresql.org/](https://bitbucket.org/ged/ruby-pg)
 gem 'pg', group: :pgsql, require: false
 
+# A null db adapter so we can perform tast rake assets:precompile with
+# production environment without a live database.
+gem 'activerecord-nulldb-adapter', group: :nulldb, require: false
+
 # Bit fields for ActiveRecord (https://github.com/pboling/flag_shih_tzu)
 gem 'flag_shih_tzu' # , "~> 0.3.23"
 
@@ -199,7 +203,8 @@ gem 'htmltoword'
 # INTERNATIONALIZATION #
 # ==================== #
 
-gem 'translation'
+gem 'translation', git: 'https://github.com/lagoan/translation_io_rails',
+                   branch: 'fix/broken_db_fake_method_calls'
 
 # ========= #
 # UTILITIES #
