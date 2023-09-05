@@ -1,6 +1,15 @@
 # frozen_string_literal: true
 
-## TODO Verify functionality after merging
+# New with Rails 6+, we need to define the list of locales outside the context of
+# the Database since thiss runs during startup. Trying to access the DB causes
+# issues with autoloading; 'DEPRECATION WARNING: Initialization autoloaded the constants ... Language'
+#
+# Note that the entries here must have a corresponding directory in config/locale, a
+# YAML file in config/locales and should also have an entry in the DB's languages table
+SUPPORTED_LOCALES = %w[en-CA en-GB fr-CA].freeze
+# You can define a subset of the locales for your instance's version of Translation.io if applicable
+# CLIENT_LOCALES = %w[de en-CA en-GB en-US es fi fr-CA fr-FR pt-BR sv-FI tr-TR].freeze
+DEFAULT_LOCALE = 'en-CA'
 
 # # Control ignored source paths
 # # Note, all prefixes of the directory you want to translate must be defined here
@@ -11,7 +20,7 @@ end
 TranslationIO.configure do |config|
   config.api_key        = Rails.application.secrets.translation_io_api_key
   config.source_locale  = 'en'
-  config.target_locales = %w[en-CA en-GB fr-CA]
+  config.target_locales = SUPPORTED_LOCALES
   config.ignored_source_paths = ignore_paths
   config.disable_yaml         = true
 
@@ -35,7 +44,6 @@ TranslationIO.configure do |config|
 end
 
 I18n.enforce_available_locales = false
-I18n.default_locale = :'en-CA'
 
 # frozen_string_literal: true
 
@@ -99,3 +107,15 @@ I18n.default_locale = :'en-CA'
 
 #   I18n.default_locale = "en-GB"
 # end
+# Setup languages
+def default_locale
+  DEFAULT_LOCALE
+end
+
+def available_locales
+  SUPPORTED_LOCALES.sort { |a, b| a <=> b }
+end
+
+I18n.available_locales = SUPPORTED_LOCALES
+
+I18n.default_locale = DEFAULT_LOCALE

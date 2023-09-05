@@ -3,7 +3,7 @@
 <% if @show_coversheet %>
 <%= Array(@hash[:attribution]).many? ? _("Creators: ") + Array(@hash[:attribution]).join(", ")  : _('Creator:') + @hash[:attribution] %>
 <%# Added contributors to coverage of plans. 
-    # Users will see both roles and contributor names if the role is filled %>
+  # Users will see both roles and contributor names if the role is filled %>
 <%# Roles are ranked by PI -> DM -> PA -> Other (if any) %>
   <% if @hash[:investigation].present? %>
 <%= _("Principal Investigator: ") + @hash[:investigation].map(&:name).join(', ') %>
@@ -37,8 +37,9 @@
 <% end %>
 
 <% @hash[:phases].each do |phase| %>
-<% if @hash[:all_phases] || (@selected_phase.present? && phase[:title] == @selected_phase.title) %>
-<%= (@hash[:phases].many? ? "#{phase[:title]}" : "") %>
+<%# Only render selected phase %>
+<% if phase[:title] == @selected_phase.title %>
+<%= (@hash[:phases].length > 1 ? "#{phase[:title]}" : "") %>
   <% phase[:sections].each do |section| %>
     <% if display_section?(@hash[:customization], section, @show_custom_sections) && num_section_questions(@plan, section, phase) > 0 %>
       <% if @show_sections_questions %>

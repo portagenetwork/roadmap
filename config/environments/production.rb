@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'syslog/logger'
+require 'active_support/core_ext/integer/time'
 
 Rails.application.configure do
   # Verifies that versions and hashed value of the package contents in the project's
@@ -80,6 +81,25 @@ Rails.application.configure do
   # logger.formatter = ::Logger::Formatter.new
   # config.logger = ActiveSupport::TaggedLogging.new(logger)
   # config.log_tags = [ Rails.root.to_s.split('/').last ]
+  
+  # Log disallowed deprecations.
+  config.active_support.disallowed_deprecation = :log
+
+  # Tell Active Support which deprecation messages to disallow.
+  config.active_support.disallowed_deprecation_warnings = []
+
+  # Use default logging formatter so that PID and timestamp are not suppressed.
+  config.log_formatter = ::Logger::Formatter.new
+
+  # Use a different logger for distributed setups.
+  # require 'syslog/logger'
+  # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
+
+  if ENV['RAILS_LOG_TO_STDOUT'].present?
+    logger           = ActiveSupport::Logger.new($stdout)
+    logger.formatter = config.log_formatter
+    config.logger    = ActiveSupport::TaggedLogging.new(logger)
+  end
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
@@ -98,6 +118,34 @@ Rails.application.configure do
     enable_starttls_auto: true
   }
 
-  # Fix JSON Download Error
-  Rails.application.routes.default_url_options[:host] = "assistant.portagenetwork.ca"
+  # Inserts middleware to perform automatic connection switching.
+  # The `database_selector` hash is used to pass options to the DatabaseSelector
+  # middleware. The `delay` is used to determine how long to wait after a write
+  # to send a subsequent read to the primary.
+  #
+  # The `database_resolver` class is used by the middleware to determine which
+  # database is appropriate to use based on the time delay.
+  #
+  # The `database_resolver_context` class is used by the middleware to set
+  # timestamps for the last write to the primary. The resolver uses the context
+  # class timestamps to determine how long to wait before reading from the
+  # replica.
+  #
+  # By default Rails will store a last write timestamp in the session. The
+  # DatabaseSelector middleware is designed as such you can define your own
+  # strategy for connection switching and pass that into the middleware through
+  # these configuration options.
+  # config.active_record.database_selector = { delay: 2.seconds }
+  # config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
+  # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
+
+  # Rails 6+ adds middleware to prevent DNS rebinding attacks:
+  #    https://guides.rubyonrails.org/configuring.html#actiondispatch-hostauthorization
+  #
+  # This allows us to define the hostname and add it to the whitelist. If you attempt
+  # to access the site and receive a 'Blocked host' error then you will need to
+  # set this environment variable
+  config.hosts << ENV['DMPROADMAP_HOST'] if ENV['DMPROADMAP_HOST'].present?
 end
+# Used by Rails' routes url_helpers (typically when including a link in an email)
+Rails.application.routes.default_url_options[:host] = ENV.fetch('DMPROADMAP_HOST', 'example.org')
