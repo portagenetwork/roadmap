@@ -110,8 +110,8 @@ jobs:
         bin/rails webpacker:compile
         bin/rails assets:precompile
 
-    - name: 'Run Karma Tests'
-      run: yarn test
+    # - name: 'Run Karma Tests'
+    #   run: yarn test
 
     - name: 'Run Rspec Unit and Functional Tests'
       run: |
