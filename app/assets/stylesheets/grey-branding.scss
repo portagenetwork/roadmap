@@ -22,10 +22,12 @@ $color-alliance-lighter-grey: #CCC;
 //logo style apply for all screen size
 //_logos.scss
 .app-logo{
-    height: 200px;
-    // padding: 0;
-    margin-top: calc(10% * -1);
+    width: 150px !important;
+    height: 86px !important;
+    margin-top: calc(10% * 2);
+    padding: 0%;
 }
+
 
 
 /*****
@@ -41,6 +43,16 @@ thead th{
     background-color: $color-alliance-digital-grey;
 }
 
+// margins of the header bars
+@media (min-width: 768px){
+  .navbar-nav {
+    margin-left: auto;
+    margin-left: 2%;
+  }
+  .container-fluid{
+    margin-left: 39px;
+  }
+}
 
 
 /* For org navbar custom background color */
