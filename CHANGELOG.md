@@ -1,11 +1,5 @@
 # Changelog
 
-## [3.3.1+portage-3.3.0] - 2023-08-07
-
-### Changed
-
- - Rebranding color changes (digital grey primary color) [331](https://github.com/portagenetwork/roadmap/issues/331)
-
 ## [3.3.1+portage-3.2.0] - 2023-07-26
 
 ### Fixed
@@ -27,6 +21,8 @@
  - Enable translations of Terms-Of-Use and Privacy-Policy pages [#429](https://github.com/portagenetwork/roadmap/pull/429) 
 
 ### Changed
+
+ - Rebranding color changes (digital grey primary color) [331](https://github.com/portagenetwork/roadmap/issues/331)
 
  - Merged [v3.3.1](https://github.com/DMPRoadmap/roadmap/releases/tag/v3.3.1)
 
