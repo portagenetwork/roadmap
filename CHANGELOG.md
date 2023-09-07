@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.3.1+portage-3.3.0] - 2023-08-07
+
+### Changed
+
+ - Rebranding color changes (digital grey primary color) [331](https://github.com/portagenetwork/roadmap/issues/331)
+
 ## [3.3.1+portage-3.2.0] - 2023-07-26
 
 ### Fixed
