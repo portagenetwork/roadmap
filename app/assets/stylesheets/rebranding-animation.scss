@@ -50,11 +50,6 @@ $color-alliance-light-grey: #999;
 //   animation: wiggle 2s linear infinite;
 // }
 
-form > fieldset > button.btn.btn-default {
-  border-top: 3px solid $color-alliance-digital-grey !important;
-}
-
-
 /* Keyframes */
 @keyframes wiggle {
   0%, 7% {

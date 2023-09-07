@@ -67,10 +67,10 @@ thead th{
   }
 
 /* link button AND change color of search icon AND all the buttons*/
-.btn-default, .btn-primary, .fa-search {
-    color: $color-alliance-digital-grey !important;
+.btn-default, .btn-primary, #search-addon {
+    color: $color-alliance-darker-yellow !important;
+    background-color: $color-alliance-digital-grey !important;
   }
-
 
 /* nav-tabs overiding on active */
   .nav-tabs > li > a:hover,
