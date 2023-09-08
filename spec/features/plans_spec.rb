@@ -6,6 +6,11 @@ RSpec.describe 'Plans', type: :feature do
   include Webmocks
 
   before do
+    # TODO: Temporary patch until handling of default_funder_name is addressed in app
+    if !Rails.application.config.respond_to?(:default_funder_name) ||
+       Rails.application.config.default_funder_name.blank?
+      Rails.application.config.default_funder_name = 'test_funder'
+    end
     @default_template = create(:template, :default, :published)
     @org = create(:org)
     @research_org = create(:org, :organisation, :research_institute,
