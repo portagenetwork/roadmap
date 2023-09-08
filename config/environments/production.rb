@@ -3,6 +3,7 @@
 require 'syslog/logger'
 require 'active_support/core_ext/integer/time'
 
+# rubocop:disable Metrics/BlockLength
 Rails.application.configure do
   # Verifies that versions and hashed value of the package contents in the project's
   # package.json
@@ -81,7 +82,7 @@ Rails.application.configure do
   # logger.formatter = ::Logger::Formatter.new
   # config.logger = ActiveSupport::TaggedLogging.new(logger)
   # config.log_tags = [ Rails.root.to_s.split('/').last ]
-  
+
   # Log disallowed deprecations.
   config.active_support.disallowed_deprecation = :log
 
@@ -147,5 +148,7 @@ Rails.application.configure do
   # set this environment variable
   config.hosts << ENV['DMPROADMAP_HOST'] if ENV['DMPROADMAP_HOST'].present?
 end
+
+# rubocop:enable Metrics/BlockLength
 # Used by Rails' routes url_helpers (typically when including a link in an email)
 Rails.application.routes.default_url_options[:host] = ENV.fetch('DMPROADMAP_HOST', 'example.org')
