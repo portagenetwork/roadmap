@@ -79,6 +79,10 @@ gem 'mysql2', group: :mysql, require: false
 # RDBMS}[http://www.postgresql.org/](https://bitbucket.org/ged/ruby-pg)
 gem 'pg', group: :pgsql, require: false
 
+# A null db adapter so we can perform tast rake assets:precompile with
+# production environment without a live database.
+gem 'activerecord-nulldb-adapter', group: :nulldb, require: false
+
 # Bit fields for ActiveRecord (https://github.com/pboling/flag_shih_tzu)
 gem 'flag_shih_tzu' # , "~> 0.3.23"
 
@@ -199,7 +203,8 @@ gem 'htmltoword'
 # INTERNATIONALIZATION #
 # ==================== #
 
-gem 'translation'
+gem 'translation', git: 'https://github.com/lagoan/translation_io_rails',
+                   branch: 'fix/broken_db_fake_method_calls'
 
 # ========= #
 # UTILITIES #
@@ -271,8 +276,9 @@ group :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara'
   gem 'selenium-webdriver'
+
   # Easy installation and use of web drivers to run system tests with browsers
-  gem 'webdrivers'
+  gem 'webdrivers', '~> 5.3'
 
   # Automatically create snapshots when Cucumber steps fail with Capybara
   # and Rails (http://github.com/mattheworiordan/capybara-screenshot)
@@ -292,6 +298,9 @@ group :test do
   # This gem brings back assigns to your controller tests as well as assert_template
   # to both controller and integration tests.
   gem 'rails-controller-testing'
+
+  # Pull Request etiquette enforcement
+  gem 'danger', '~> 9.0', require: false
 end
 
 group :ci, :development do
