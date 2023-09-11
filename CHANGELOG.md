@@ -18,7 +18,9 @@
 
  - Fixed compatibility issues between Webdrivers Gem and Google Chrome v116+ [#427](https://github.com/portagenetwork/roadmap/pull/427)
 
- - Enable translations of Terms-Of-Use and Privacy-Policy pages [#429](https://github.com/portagenetwork/roadmap/pull/429) 
+ - Enable translations of Terms-Of-Use and Privacy-Policy pages [#429](https://github.com/portagenetwork/roadmap/pull/429)
+
+ - Improve 'Getting Started' Text For Signed In vs Non-Signed In Users [#433](https://github.com/portagenetwork/roadmap/pull/433)
 
 ### Changed
 
