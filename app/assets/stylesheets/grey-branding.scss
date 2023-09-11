@@ -24,10 +24,12 @@ $color-alliance-lighter-grey: #CCC;
 .app-logo{
     width: 150px !important;
     height: 86px !important;
-    margin-top: calc(10% * 2);
     padding: 0%;
 }
 
+.fas{
+  color: $color-alliance-yellow;
+}
 
 
 /*****

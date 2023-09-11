@@ -44,13 +44,17 @@ navigation
 .app-logo{
     height: 200px;
     // padding: 0;
-    margin-top: calc(10% * -1);
 }
 
 .sign-in{
     margin-top: 5%;
 }
 
+@media (min-height: 412px) {
+    .app-logo{
+        margin-top: calc(10% * 2)
+    }
+}
 
 @media (min-width: 768px) {
 
@@ -59,6 +63,10 @@ navigation
         margin-left: -3%;
         margin-top: -2%;
         font-size: 12px;
+
+        app-logo{
+            margin-top: calc(10% * 2.5);
+        }
 
         .navbar-nav > li > a
         {
