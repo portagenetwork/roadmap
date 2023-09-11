@@ -45,18 +45,6 @@ thead th{
     background-color: $color-alliance-digital-grey;
 }
 
-// margins of the header bars
-@media (min-width: 768px){
-  .navbar-nav {
-    margin-left: auto;
-    margin-left: 2%;
-  }
-  .container-fluid{
-    margin-left: 39px;
-  }
-}
-
-
 /* For org navbar custom background color */
 @media (min-width: 768px) {
     #admin-dropdown ul li a, #super-admin-dropdown ul li a {

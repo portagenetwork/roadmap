@@ -43,6 +43,7 @@ navigation
 //_logos.scss
 .app-logo{
     height: 200px;
+    margin-top: 20%;
     // padding: 0;
 }
 
@@ -50,23 +51,12 @@ navigation
     margin-top: 5%;
 }
 
-@media (min-height: 412px) {
-    .app-logo{
-        margin-top: calc(10% * 2)
-    }
-}
-
 @media (min-width: 768px) {
 
     #app-navbar{
         margin-bottom: 0;
-        margin-left: -3%;
-        margin-top: -1.5%;
+        margin-top: -1%;
         font-size: 12px;
-
-        .app-logo{
-            margin-top: calc(10% * 2.5);
-        }
 
         .navbar-nav > li > a
         {
