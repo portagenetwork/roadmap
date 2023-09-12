@@ -1,6 +1,24 @@
 # Changelog
 
-## Unreleased
+## [3.3.1+portage-3.2.0] - 2023-07-26
+
+### Fixed
+
+ - Users can now download public templates without being logged in [#335](https://github.com/portagenetwork/roadmap/issues/335)
+
+ - Fixed equality checks in application_helper.rb [#355](https://github.com/portagenetwork/roadmap/issues/355)
+
+ - Fixed landing page content and links for fr-CA locale [#405](https://github.com/portagenetwork/roadmap/pull/405)
+
+ - Address missing French translations throughout application [#404](https://github.com/portagenetwork/roadmap/issues/404)
+
+ - Removed repeated "Sign-up" and "Help" text in "About Us" [#407](https://github.com/portagenetwork/roadmap/issues/407)
+
+ - Fixed broken "Help" link [#402](https://github.com/portagenetwork/roadmap/issues/412)
+
+ - Fixed compatibility issues between Webdrivers Gem and Google Chrome v116+ [#427](https://github.com/portagenetwork/roadmap/pull/427)
+
+ - Enable translations of Terms-Of-Use and Privacy-Policy pages [#429](https://github.com/portagenetwork/roadmap/pull/429) 
 
 ### Changed
 
@@ -10,6 +28,35 @@
 
  - Updated emails's language is based on user's choice on UI, instead of system default [196](https://github.com/portagenetwork/roadmap/issues/196)
 
+ - Issue with 500 page error resue on Logo isseus on update of Organizations [327](https://github.com/portagenetwork/roadmap/issues/327) and [354](https://github.com/portagenetwork/roadmap/issues/354)
+
+ - Edited terms-of-use and how-to-manage-your-data links to always be the localized routes in application_helper.rb [#397](https://github.com/portagenetwork/roadmap/issues/397)
+
+ - update Danger to V9.3.1 [#360](https://github.com/portagenetwork/roadmap/pull/360)
+ 
+ - Bump engine.io from 6.4.0 to 6.4.2 [#362](https://github.com/portagenetwork/roadmap/pull/362)
+ 
+ - Bump socket.io-parser from 4.2.2 to 4.2.4 [#363](https://github.com/portagenetwork/roadmap/pull/363)
+ 
+ - Bump semver from 5.7.1 to 5.7.2 [#366](https://github.com/portagenetwork/roadmap/pull/366)
+ 
+ - Bump devise_invitable from 2.0.7 to 2.0.8 [#370](https://github.com/portagenetwork/roadmap/pull/370)
+ 
+ - Bump devise from 4.8.1 to 4.9.2 [#371](https://github.com/portagenetwork/roadmap/pull/371)
+ 
+ - Bump word-wrap from 1.2.3 to 1.2.4 [#376](https://github.com/portagenetwork/roadmap/pull/376)
+ 
+ - Bump autoprefixer-rails from 10.4.7.0 to 10.4.13.0 [#377](https://github.com/portagenetwork/roadmap/pull/377)
+ 
+ - Bump parallel from 1.22.1 to 1.23.0 [#378](https://github.com/portagenetwork/roadmap/pull/378)
+ 
+ - Bump rack-mini-profiler from 3.0.0 to 3.1.0 [#391](https://github.com/portagenetwork/roadmap/pull/391)
+ 
+ - Bump puma from 6.1.0 to 6.3.0 [#396](https://github.com/portagenetwork/roadmap/pull/396)
+
+ - Bump puma from 6.3.0 to 6.3.1 [#422](https://github.com/portagenetwork/roadmap/pull/422)
+
+ - Set Guidances/Comments toggle to opened by default [#425](https://github.com/portagenetwork/roadmap/pull/425)
 
 ## [3.1.0+portage-3.1.3] - 2023-06-13
 

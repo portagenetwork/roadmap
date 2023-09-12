@@ -276,7 +276,7 @@ group :development, :test, :sandbox do
   gem 'capybara'
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
-  gem 'webdrivers', '~> 5.2'
+  gem 'webdrivers', '~> 5.3'
 
   # Automatically create snapshots when Cucumber steps fail with Capybara
   # and Rails (http://github.com/mattheworiordan/capybara-screenshot)
