@@ -21,7 +21,9 @@
  - Enable translations of Terms-Of-Use and Privacy-Policy pages [#429](https://github.com/portagenetwork/roadmap/pull/429)
 
  - Bump activerecord-nulldb-adapter from 0.8.0 to 0.9.0 [#386](https://github.com/portagenetwork/roadmap/pull/386)
- 
+
+ - Bump rubocop-thread_safety from 0.4.4 to 0.5.1 [#381](https://github.com/portagenetwork/roadmap/pull/381)
+
 ### Changed
 
  - Merged [v3.3.1](https://github.com/DMPRoadmap/roadmap/releases/tag/v3.3.1)
