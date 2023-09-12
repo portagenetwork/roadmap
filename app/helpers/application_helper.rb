@@ -42,9 +42,9 @@ module ApplicationHelper
     content_for(:title) { page_title }
   end
 
-  # This method assumes there will be an image file called dmp_logo_xx_XX.png
-  # Where xx_XX is the current locale in ww-WW format. Examples of this are
-  # en_CA, fr_CA
+  # This method assumes there will be an image file called dmp_logo_xx-XX.png
+  # where xx-XX is the string formatted I18n.locale.
+  # e.g. if I18n.locale == :'en_CA', then "#{I18n.locale}" == 'en-CA'
   def current_locale_logo
     if FeatureFlagHelper.enabled?(:on_sandbox)
       "sandbox_logo_#{I18n.locale}.png"
@@ -53,43 +53,49 @@ module ApplicationHelper
     end
   end
 
-  # We are overriding this method in order to provide different contact us urls
-  # based on the chosen locale. Using the branding.yml does not work for this as
-  # we need different urls. This will be changed when we move to DMPRoadmap 3.0
-  # as there is a service that handles fetching this information.
   def contact_us_path
-    if I18n.locale == 'fr_CA'
+    if I18n.locale == :'fr-CA'
       'https://portagenetwork.ca/fr/contactez-nous/'
     else
-      # Handling "en_CA" locale
+      # Handling :'en-CA' locale
       'https://portagenetwork.ca/contact-us/'
     end
   end
 
+  # TODO: Replace function body with the commented-out code when French version of this path is made available.
   def terms_of_use_path
-    if I18n.locale == 'fr_CA'
-      'https://portagenetwork.ca/fr/outils-et-ressources/assistant-pgd/conditions-dutilisation-de-lassistant-pgd/'
-    else
-      # Handling "en_CA" locale
-      'https://assistant.portagenetwork.ca/terms'
-    end
+    'https://assistant.portagenetwork.ca/terms' # TEMPORARY FIX
+    # if I18n.locale == :'fr-CA'
+    #   'https://portagenetwork.ca/fr/outils-et-ressources/assistant-pgd/conditions-dutilisation-de-lassistant-pgd/'
+    # else
+    #   # Handling :'en-CA' locale
+    #   'https://assistant.portagenetwork.ca/terms'
+    # end
   end
 
   def how_to_manage_your_data_path
-    if I18n.locale == 'fr_CA'
+    if I18n.locale == :'fr-CA'
       'https://portagenetwork.ca/fr/outils-et-ressources/assistant-pgd/comment-gerer-vos-donnees/'
     else
-      # Handling "en_CA" locale
+      # Handling :'en-CA' locale
       'https://portagenetwork.ca/tools-and-resources/dmp-assistant/how-to-manage-your-data/'
     end
   end
 
   def contacts_at_your_instutution_path
-    if I18n.locale == 'fr_CA'
+    if I18n.locale == :'fr-CA'
       'https://alliancecan.ca/fr/services/gestion-des-donnees-de-recherche/apprentissage-et-ressources/personnes-ressources-dans-les-etablissements'
     else
-      # Handling "en_CA" locale
+      # Handling :'en-CA' locale
       'https://alliancecan.ca/en/services/research-data-management/learning-and-training/institutional-contacts'
+    end
+  end
+
+  def training_resources_path
+    if I18n.locale == :'fr-CA'
+      'https://alliancecan.ca/fr/services/gestion-des-donnees-de-recherche/apprentissage-et-ressources/ressources-de-formation'
+    else
+      'https://alliancecan.ca/en/services/research-data-management/learning-and-training/training-resources/'
     end
   end
 

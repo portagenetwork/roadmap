@@ -27,7 +27,8 @@ TranslationIO.configure do |config|
     'Phase' => %w[title description],
     'Section' => %w[title description],
     'Question' => %w[text default_value],
-    'Annotation' => ['text']
+    'Annotation' => ['text'],
+    'ResearchDomain' => ['label']
   }
   # Find other useful usage information here:
   # https://github.com/translation/rails#readme
