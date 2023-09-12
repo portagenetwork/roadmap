@@ -26,6 +26,8 @@
 
  - Bump recaptcha from 5.12.3 to 5.15.0 [#423](https://github.com/portagenetwork/roadmap/pull/423)
 
+ - Bump rubocop-rails from 2.17.4 to 2.21.0 [#432](https://github.com/portagenetwork/roadmap/pull/432)
+
 ### Changed
 
  - Merged [v3.3.1](https://github.com/DMPRoadmap/roadmap/releases/tag/v3.3.1)
