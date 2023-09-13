@@ -18,7 +18,15 @@
 
  - Fixed compatibility issues between Webdrivers Gem and Google Chrome v116+ [#427](https://github.com/portagenetwork/roadmap/pull/427)
 
- - Enable translations of Terms-Of-Use and Privacy-Policy pages [#429](https://github.com/portagenetwork/roadmap/pull/429) 
+ - Enable translations of Terms-Of-Use and Privacy-Policy pages [#429](https://github.com/portagenetwork/roadmap/pull/429)
+
+ - Bump activerecord-nulldb-adapter from 0.8.0 to 0.9.0 [#386](https://github.com/portagenetwork/roadmap/pull/386)
+
+ - Bump rubocop-thread_safety from 0.4.4 to 0.5.1 [#381](https://github.com/portagenetwork/roadmap/pull/381)
+
+ - Bump recaptcha from 5.12.3 to 5.15.0 [#423](https://github.com/portagenetwork/roadmap/pull/423)
+
+ - Bump rubocop-rails from 2.17.4 to 2.21.0 [#432](https://github.com/portagenetwork/roadmap/pull/432)
 
 ### Changed
 
