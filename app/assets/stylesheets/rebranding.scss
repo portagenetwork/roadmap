@@ -1,0 +1,174 @@
+/**
+ This file contains ALL the redefined variables of the DMP Assistant.
+ I put it here in order to avoid merge conflict from upstream in the future. It needs to be loaded before other styles
+ PENDING:
+ This style sheet can be separated to multiple stylesheets and moved to corresponding folders once finished
+
+ Follow Bootstrap 3 media standard (explicitly defined instead of adding classes in view):
+- phone (<768px)
+- tablets (≥768px)
+- laptops (≥992px)
+- desktops (≥1200px)
+**/
+
+/** The color variables **/
+$color-alliance-yellow: #D6AB00;
+$color-alliance-darker-yellow: #F5C400;
+
+// $color-alliance-darker-yellow: $color-alliance-yellow;
+
+$color-alliance-digital-grey: #32322F;
+
+$color-alliance-lighter-grey: #CCC;
+$color-alliance-lightest-grey: #888;
+
+
+h1, h2, h3, h4, h5, h6{
+    font-family: 'Ubuntu', sans-serif;
+    src: url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap');
+    font-weight: bold;
+}
+
+
+/***********************
+Individual Changes
+defined by the original reference in each scss sheet (see comments) for easier move around
+************************/
+
+/*****
+navigation
+*****/
+
+//logo style apply for all screen size
+//_logos.scss
+.app-logo{
+    height: 200px;
+    margin-top: 2.6em;
+    // padding: 0;
+}
+
+.navbar-nav{
+    margin-left: 2.5em;
+}
+
+.sign-in{
+    margin-top: 5%;
+}
+
+@media (min-width: 768px) {
+
+    #app-navbar{
+        margin-bottom: 0;
+        font-size: 12px;
+
+        .navbar-nav > li > a
+        {
+
+            //color: #FBFAFA;
+
+            //_template_filter.scss
+            font-size: 1.2rem;
+            margin: 3.2em 0.5em; //fit the internal padding of the new logo, and make the font align with the horizontal center of the logo
+            &:focus,
+            &:hover{
+                color: $color-alliance-darker-yellow;
+                background-color: $color-alliance-digital-grey;
+            }
+        }
+
+    }
+
+
+      // Dropdowns
+    .navbar-nav {
+        > .open > a {
+      &,
+      &:hover,
+      &:focus {
+        background-color: $color-alliance-lighter-grey;
+        color: $color-alliance-darker-yellow;
+            }
+        }
+    }
+
+    #org-navbar{ //_navbars.scss
+        margin: auto;
+    }
+
+    #main{
+        margin-top: 1em;
+    }
+
+    #app-navbar .navbar-nav > li.active > a {
+        color: $color-alliance-darker-yellow;
+        background-color: $color-alliance-digital-grey;
+    }
+
+    .navbar-header{
+        height: 50px;
+    }
+
+}
+
+#app-navbar{
+    font-weight: 700;
+}
+
+/*****
+Forms & Tables
+*****/
+.nav-tabs, .nav-pills{ //_navs.scss
+    background-color: $color-alliance-darker-yellow;
+}
+
+//_table.scss
+thead th{
+    background-color: $color-alliance-darker-yellow;
+}
+
+//for the on focus and hover change the border left
+
+/****
+Mobile Only
+****/
+@media (max-width: 767px) {
+    html {
+        min-height: 100%;
+    }
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 1px solid transparent;
+        min-height: 100%;
+        overflow-y: scroll;
+    }
+    main{
+        margin-bottom: 0 !important;
+    }
+    #footer-navbar {
+        position: relative; //prevent footer overlap with main content in mobile device
+    }
+
+    .navbar-header{
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+    .navbar-collapse{
+        &.collapse{
+            z-index:1;
+            &.in{
+                position: absolute;
+                z-index: 100;
+                width: 100%;
+                background-color: $color-alliance-darker-yellow;
+            }
+        }
+    }
+    .navbar-toggle{ //show the other breadcrumb icon on right top
+        border-color: $color-alliance-lighter-grey;
+        .icon-bar{
+            background-color: $color-alliance-lightest-grey;
+        }
+    }
+}

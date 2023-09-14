@@ -5,12 +5,12 @@
   & > li > a {
     color: $dropdown-inverse-text !important;
     &:hover {
-      color: $dropdown-inverse-text-hoover !important;
-      background-color: $dropdown-inverse-bg-hoover !important;
+      color: $color-alliance-darker-yellow !important;
+      background-color: $color-alliance-digital-grey !important;
     }
   }
   .active a {
-    color: $dropdown-inverse-text-hoover !important;
-    background-color: $dropdown-inverse-bg-hoover !important;
+    color: $color-alliance-darker-yellow !important;
+    background-color: $color-alliance-digital-grey !important;
   }
 }

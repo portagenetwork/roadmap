@@ -32,6 +32,8 @@
 
 ### Changed
 
+ - Rebranding color changes (digital grey primary color) [331](https://github.com/portagenetwork/roadmap/issues/331)
+
  - Merged [v3.3.1](https://github.com/DMPRoadmap/roadmap/releases/tag/v3.3.1)
 
  - Removed broken links to Portage Network pages [portagenetwork/roadmap#339](https://github.com/portagenetwork/roadmap/issues/339)
