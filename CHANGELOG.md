@@ -28,6 +28,8 @@
 
  - Bump rubocop-rails from 2.17.4 to 2.21.0 [#432](https://github.com/portagenetwork/roadmap/pull/432)
 
+ - Improve 'Getting Started' Text For Signed In vs Non-Signed In Users [#433](https://github.com/portagenetwork/roadmap/pull/433)
+
 ### Changed
 
  - Rebranding color changes (digital grey primary color) [331](https://github.com/portagenetwork/roadmap/issues/331)
