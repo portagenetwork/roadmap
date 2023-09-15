@@ -4,6 +4,8 @@
 
 ### Fixed
 
+ - Fixed issue with the space between browser top and headers [#444](https://github.com/portagenetwork/roadmap/issues/444)
+
  - Users can now download public templates without being logged in [#335](https://github.com/portagenetwork/roadmap/issues/335)
 
  - Fixed equality checks in application_helper.rb [#355](https://github.com/portagenetwork/roadmap/issues/355)

@@ -43,8 +43,14 @@ navigation
 //_logos.scss
 .app-logo{
     height: 200px;
-    margin-top: 2.6em;
+    margin-top: 0.6em;
     // padding: 0;
+}
+
+
+//overriding the row margins to the zero. needs to addressed while refractoring css
+.row{
+    margin: 0px !important; 
 }
 
 .navbar-nav{
@@ -68,7 +74,7 @@ navigation
 
             //_template_filter.scss
             font-size: 1.2rem;
-            margin: 3.2em 0.5em; //fit the internal padding of the new logo, and make the font align with the horizontal center of the logo
+            margin: 0.5em 0em 3.2em 0.5em; //fit the internal padding of the new logo, and make the font align with the horizontal center of the logo
             &:focus,
             &:hover{
                 color: $color-alliance-darker-yellow;
