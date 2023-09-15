@@ -2,8 +2,6 @@
 
 ## Unreleased
 
-## [3.3.1+portage-3.2.0] - 2023-07-26
-
 ### Fixed
 
  - Fixed issue with the space between browser top and headers [#444](https://github.com/portagenetwork/roadmap/issues/444)
