@@ -4,7 +4,7 @@
 
 ### Fixed
 
-- Fixed margin issues with the rebranding [#446](https://github.com/portagenetwork/roadmap/issues/446)
+ - Fixed margin issues with the rebranding [#446](https://github.com/portagenetwork/roadmap/issues/446)
 
  - Fixed issue with the space between browser top and headers [#444](https://github.com/portagenetwork/roadmap/issues/444)
 
