@@ -8,7 +8,7 @@
   <div class="col-md-12">
     <div>
       <%=
-      sanitize(_(%{
+      sanitize(_('
         <p>The following Privacy Policy applies to the DMP Assistant website (the Site), <a href="https://assistant.portagenetwork.ca/">assistant.portagenetwork.ca</a> / <a href="https://assistant.portagenetwork.ca/?locale=fr_CA">assistant.portagenetwork.ca/?locale=fr_CA</a>, and the services available on or at the Site (taken together, the Service). The Service is supported by the Digital Research Alliance of Canada (the Alliance) and the University of Alberta Library (taken together, the Service Providers).</p>
         <h1 id="privacy-statement">Privacy Statement</h1>
         <p>The Alliance and the University of Alberta respect the privacy of individuals and will only collect, use, and disclose Personal Information in keeping with information access and privacy law.</p>
@@ -83,16 +83,16 @@
         <p>7.2.1 Should a requested correction or change not be made to the Personal Information, a copy of the request plus the reason for not granting the request will become part of the administrative record.</p>
         <p>7.3 Submitters may request, in writing, to have their Personal Information removed from the system administered by the Service Providers within a period of 30 days.</p>
         <p>7.3.1 Should the requested deletion of the Personal Information not be done, a copy of the request plus the reason for not granting the request will become part of the administrative record.</p>
-        <p>7.4 Persons wishing to have Content containing Personal Information edited, amended, or removed from the Service should contact <a href="mailto:support@portagenetwork.ca">support@portagenetwork.ca</a>.</p>
+        <p>7.4 Persons wishing to have Content containing Personal Information edited, amended, or removed from the Service should contact <a href="mailto:%{email_link}">%{email_link}</a>.</p>
         <h2 id="8-0-dissemination-of-privacy-policy">8.0 Dissemination of Privacy Policy</h2>
         <p>8.1 This Privacy Policy shall be posted on the DMP Assistant Site.</p>
         <p>8.2 This Privacy Policy shall be appended to the DMP Assistant Terms of Use Agreement.</p>
         <p>8.3 This Privacy Policy will be reviewed every two years, or as required.</p>
         <p>8.4 Notification of any changes to the collection, use, or disclosure of Personal Information, or changes to the Privacy Policy, will be posted on the DMP Assistant Site.</p>
         <h2 id="contact-us">Contact Us</h2>
-        <p>Should you have any questions or concerns about the collection, use, or disclosure of Personal Information as regards the DMP Assistant, or about this Privacy Policy please contact us at <a href="mailto:support@portagenetwork.ca">support@portagenetwork.ca</a>.</p>
+        <p>Should you have any questions or concerns about the collection, use, or disclosure of Personal Information as regards the DMP Assistant, or about this Privacy Policy please contact us at <a href="mailto:%{email_link}">%{email_link}</a>.</p>
         <p>The Service Providers reserve the right to suspend use by any party (User) if that party engages in, or is suspected of engaging in, activities that violate applicable information access and privacy laws.</p>
-      }))
+      ') % {email_link: Rails.configuration.branding[:organisation][:helpdesk_email]})
       %>
     </div>
   </div>
