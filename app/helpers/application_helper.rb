@@ -42,6 +42,13 @@ module ApplicationHelper
     content_for(:title) { page_title }
   end
 
+  # This function does not actually read the app's hostname to return the base url
+  # Rather, it only reads what has been assigned to Rails.application.routes.default_url_options[:host]
+  def base_url
+    host = Rails.application.routes.default_url_options[:host]
+    host == 'assistant.portagenetwork.ca' ? 'https://assistant.portagenetwork.ca' : 'https://dmp-pgd.ca'
+  end
+
   # This method assumes there will be an image file called dmp_logo_xx-XX.png
   # where xx-XX is the string formatted I18n.locale.
   # e.g. if I18n.locale == :'en_CA', then "#{I18n.locale}" == 'en-CA'
@@ -64,7 +71,7 @@ module ApplicationHelper
 
   # TODO: Replace function body with the commented-out code when French version of this path is made available.
   def terms_of_use_path
-    'https://assistant.portagenetwork.ca/terms' # TEMPORARY FIX
+    "#{base_url}/terms" # TEMPORARY FIX
     # if I18n.locale == :'fr-CA'
     #   'https://portagenetwork.ca/fr/outils-et-ressources/assistant-pgd/conditions-dutilisation-de-lassistant-pgd/'
     # else
