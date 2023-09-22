@@ -4,6 +4,8 @@
 
 ### Fixed
 
+ - Fixed margin issues with the rebranding [#446](https://github.com/portagenetwork/roadmap/issues/446)
+
  - Fixed issue with the space between browser top and headers [#444](https://github.com/portagenetwork/roadmap/issues/444)
 
  - Users can now download public templates without being logged in [#335](https://github.com/portagenetwork/roadmap/issues/335)
