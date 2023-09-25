@@ -3,7 +3,6 @@
 # Generic helper methods
 module ApplicationHelper
   HOSTNAME = 'dmp-pgd.ca'
-  BASE_URL = "https://#{HOSTNAME}"
 
   def resource_name
     :user
@@ -67,7 +66,7 @@ module ApplicationHelper
 
   # TODO: Replace function body with the commented-out code when French version of this path is made available.
   def terms_of_use_path
-    "#{BASE_URL}/terms" # TEMPORARY FIX
+    "https://#{HOSTNAME}/terms" # TEMPORARY FIX
     # if I18n.locale == :'fr-CA'
     #   'https://portagenetwork.ca/fr/outils-et-ressources/assistant-pgd/conditions-dutilisation-de-lassistant-pgd/'
     # else
