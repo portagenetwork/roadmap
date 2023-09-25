@@ -4,6 +4,8 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
+  before_action :redirect_if_old_hostname
+
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   # Look for template overrides before rendering
@@ -195,5 +197,12 @@ class ApplicationController < ActionController::Base
         render '/api/v1/error', status: http_status
       end
     end
+  end
+
+  # redirects urls with 'assistant.portagenetwork.ca' hostname to same url using 'dmp-pgd.ca' hostname
+  def redirect_if_old_hostname
+    return unless request.host == 'assistant.portagenetwork.ca'
+
+    redirect_to "#{ApplicationHelper::BASE_URL}#{request.fullpath}", status: :moved_permanently
   end
 end
