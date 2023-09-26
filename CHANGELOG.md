@@ -38,15 +38,15 @@
 
  - Updated Email and Hostname to correspond with rebranding changes [#450](https://github.com/portagenetwork/roadmap/issues/450) and [#456](https://github.com/portagenetwork/roadmap/issues/456)
 
- - Rebranding color changes (digital grey primary color) [331](https://github.com/portagenetwork/roadmap/issues/331)
+ - Rebranding color changes (digital grey primary color) [#331](https://github.com/portagenetwork/roadmap/issues/331)
 
  - Merged [v3.3.1](https://github.com/DMPRoadmap/roadmap/releases/tag/v3.3.1)
 
  - Removed broken links to Portage Network pages [portagenetwork/roadmap#339](https://github.com/portagenetwork/roadmap/issues/339)
 
- - Updated emails's language is based on user's choice on UI, instead of system default [196](https://github.com/portagenetwork/roadmap/issues/196)
+ - Updated emails's language is based on user's choice on UI, instead of system default [#196](https://github.com/portagenetwork/roadmap/issues/196)
 
- - Issue with 500 page error resue on Logo isseus on update of Organizations [327](https://github.com/portagenetwork/roadmap/issues/327) and [354](https://github.com/portagenetwork/roadmap/issues/354)
+ - Issue with 500 page error resue on Logo isseus on update of Organizations [#327](https://github.com/portagenetwork/roadmap/issues/327) and [#354](https://github.com/portagenetwork/roadmap/issues/354)
 
  - Edited terms-of-use and how-to-manage-your-data links to always be the localized routes in application_helper.rb [#397](https://github.com/portagenetwork/roadmap/issues/397)
 
