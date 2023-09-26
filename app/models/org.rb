@@ -237,18 +237,18 @@ class Org < ApplicationRecord
   # Tests are setup currently to work with this issue.
   #
   # Returns String
-  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/AbcSize
   def org_type_to_s
     ret = []
-    ret << 'Institution' if institution?
-    ret << 'Funder' if funder?
-    ret << 'Organisation' if organisation?
-    ret << 'Research Institute' if research_institute?
-    ret << 'Project' if project?
-    ret << 'School' if school?
-    (ret.empty? ? 'None' : ret.join(', '))
+    ret << _('Institution') if institution?
+    ret << _('Funder') if funder?
+    ret << _('Organisation') if organisation?
+    ret << _('Research Institute') if research_institute?
+    ret << _('Project') if project?
+    ret << _('School') if school?
+    (ret.empty? ? _('None') : ret.join(', '))
   end
-  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/CyclomaticComplexity, Metrics/AbcSize
 
   def funder_only?
     org_type == Org.org_type_values_for(:funder).min

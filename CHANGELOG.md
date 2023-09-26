@@ -14,7 +14,7 @@
 
  - Fixed landing page content and links for fr-CA locale [#405](https://github.com/portagenetwork/roadmap/pull/405)
 
- - Address missing French translations throughout application [#404](https://github.com/portagenetwork/roadmap/issues/404)
+ - Address missing French translations throughout application [#404](https://github.com/portagenetwork/roadmap/issues/404) and [#411](https://github.com/portagenetwork/roadmap/issues/411)
 
  - Removed repeated "Sign-up" and "Help" text in "About Us" [#407](https://github.com/portagenetwork/roadmap/issues/407)
 
