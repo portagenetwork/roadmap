@@ -36,6 +36,8 @@
 
 ### Changed
 
+ - Updated Email and Hostname to correspond with rebranding changes [#450](https://github.com/portagenetwork/roadmap/issues/450) and [#456](https://github.com/portagenetwork/roadmap/issues/456)
+
  - Rebranding color changes (digital grey primary color) [331](https://github.com/portagenetwork/roadmap/issues/331)
 
  - Merged [v3.3.1](https://github.com/DMPRoadmap/roadmap/releases/tag/v3.3.1)
