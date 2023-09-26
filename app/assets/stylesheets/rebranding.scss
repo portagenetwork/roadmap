@@ -49,9 +49,10 @@ navigation
 
 
 //overriding the row margins to the zero. needs to addressed while refractoring css
-.row{
-    margin: 0px !important; 
+.row.no-row-margin{
+    margin: 0px !important;
 }
+
 
 .navbar-nav{
     margin-left: 2.5em;
@@ -62,6 +63,11 @@ navigation
 }
 
 @media (min-width: 768px) {
+
+    // #To avoid the overlapping of main-content with the footer while screen minimization
+    main{
+        margin-bottom: 125px !important;
+    }
 
     #app-navbar{
         margin-bottom: 0;
