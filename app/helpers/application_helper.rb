@@ -64,7 +64,7 @@ module ApplicationHelper
 
   # TODO: Replace function body with the commented-out code when French version of this path is made available.
   def terms_of_use_path
-    'https://assistant.portagenetwork.ca/terms' # TEMPORARY FIX
+    'https://dmp-pgd.ca/terms' # TEMPORARY FIX
     # if I18n.locale == :'fr-CA'
     #   'https://portagenetwork.ca/fr/outils-et-ressources/assistant-pgd/conditions-dutilisation-de-lassistant-pgd/'
     # else
