@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## [3.3.1+portage-3.2.0] - 2023-09-28
+
 ### Fixed
 
  - Fixed margin issues with the rebranding [#446](https://github.com/portagenetwork/roadmap/issues/446)
