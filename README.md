@@ -61,7 +61,7 @@ See the [Troubleshooting Guide](https://github.com/portagenetwork/roadmap/wiki/T
 
 ### Support
 
-1) Any question about DMP Assistant can be emailed to support@portagenetwork.ca. A team member will follow-up with you soon.
+1) Any question about DMP Assistant can be emailed to dmp-assistant@tech.alliancecan.ca. A team member will follow-up with you soon.
 
 2) Issues should be reported here on [Github Issues](https://github.com/portagenetwork/roadmap/issues). Please be advised though that we can only provide limited support for your local installations. Any security patches and bugfixes will be applied to the most recent version, and we will endeavour to support migrations to the current release.
 
