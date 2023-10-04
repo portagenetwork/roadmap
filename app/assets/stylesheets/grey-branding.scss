@@ -109,3 +109,14 @@ thead th{
 a#language-menu, a#reference-menu, a#user-menu{
   margin-bottom: 3px !important;
 }
+
+/* Notification close icon visibility and position*/
+.close {
+  opacity: 1 !important;
+}
+
+button.close{
+  position: relative;
+  margin-top: -7px;
+  margin-right: -12px;
+}

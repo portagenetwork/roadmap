@@ -42,6 +42,10 @@ $color-alliance-light-grey: #999;
 
   &:hover {
     background-color: $color-alliance-yellow;
+    i.fas.fa-plus.pull-right,
+    i.fas.pull-right.fa-minus{
+      color: $color-alliance-digital-grey;
+    }
   }
 }
 
