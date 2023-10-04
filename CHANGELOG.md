@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Fixed 
+  - Fixed icons issues with the rebranding [472](https://github.com/portagenetwork/roadmap/pull/472)  
+  
 ## [3.3.1+portage-3.2.0] - 2023-09-28
 
 ### Fixed
