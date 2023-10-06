@@ -56,13 +56,6 @@ class PlanExportsController < ApplicationController
     @hash[:pa] =  Contributor.where(plan_id: @plan.id).project_administration
     @hash[:other] = Contributor.where(plan_id: @plan.id).other
 
-    # Added contributors to coverage of plans.
-    # Users will see both roles and contributor names if the role is filled
-    @hash[:data_curation] = Contributor.where(plan_id: @plan.id).data_curation
-    @hash[:investigation] = Contributor.where(plan_id: @plan.id).investigation
-    @hash[:pa] = Contributor.where(plan_id: @plan.id).project_administration
-    @hash[:other] = Contributor.where(plan_id: @plan.id).other
-
     respond_to do |format|
       format.html { show_html }
       format.csv  { show_csv }
