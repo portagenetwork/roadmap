@@ -41,44 +41,17 @@ jobs:
         ruby-version: ${{ env.RUBY_VERSION }}
 
     # Copy all of the example configs over
-    - name: 'Setup Default Configuration'
+    - name: 'Setup the application'
       run: |
         # Make copies of all the example config files
         cp config/database.yml.sample config/database.yml
         cp config/initializers/contact_us.rb.example config/initializers/contact_us.rb
         cp config/initializers/wicked_pdf.rb.example config/initializers/wicked_pdf.rb
+        cp .env.mysql2 .env
 
-    # Try to retrieve the gems from the cache
-    - name: 'Cache Gems'
-      uses: actions/cache@v2.1.5
-      with:
-        path: vendor/bundle
-        key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-gem-
-
-    - name: 'Bundle Install'
-      run: |
-        gem install bundler -v ${{ env.BUNDLER_VERSION }}
-        bundle config path vendor/bundle
-        bundle install --jobs 4 --retry 3 --without pgsql rollbar aws
-
+    # Stub out the Rails credentials file so that we can start the Rails app
     - name: 'Setup Credentials'
-      run: |
-        # generate a default credential file and key
-        EDITOR='echo "$(cat config/credentials.yml.example)" >' bundle exec rails credentials:edit
-
-    # # Try to retrieve the yarn JS dependencies from the cache
-    - name: 'Cache Yarn Packages'
-      uses: actions/cache@v2.1.5
-      with:
-        path: node_modules/
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-yarn-
-          ${{ runner.os }}-
+      run: EDITOR='echo "$(cat config/credentials.yml.mysql2)" >' bundle exec rails credentials:edit
 
     - name: 'Determine wkhtmltopdf location'
       run: echo "WICKED_PDF_PATH=`bundle exec which wkhtmltopdf`" >> $GITHUB_ENV
