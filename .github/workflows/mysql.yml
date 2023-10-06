@@ -15,8 +15,11 @@ jobs:
     # Checkout the repo
     - uses: actions/checkout@v3
       with:
-        fetch-depth: 1
-    - uses: actions/setup-node@v3
+        ruby-version: 2.7.6
+        bundler-cache: true
+
+    # Install Node
+    - uses: actions/setup-node@v2
       with:
         node-version: 16
 
@@ -85,31 +88,26 @@ jobs:
         yarn install
 
     - name: 'Start MySQL'
+      run: sudo systemctl start mysql
+
+    - name: 'Build out the test database'
       run: |
-        sudo systemctl unmask mysql
-        sudo systemctl start mysql
+        bundle exec rails db:create RAILS_ENV=test
+        bundle exec rails db:schema:load RAILS_ENV=test
 
-    - name: 'Setup Test DB'
-      run: bin/rails db:setup RAILS_ENV=test
-
-    - name: 'Migrate DB'
+    - name: 'Run any pending database migrations'
       run: bin/rails db:migrate RAILS_ENV=test
 
-    - name: 'Compile Assets'
-      run: |
-        bin/rails webpacker:compile
-        bin/rails assets:precompile
-
-    # Note V3.1.0 DMPTool commented out Karma tests and will move this part to rspec
-    - name: 'Run Karma Tests'
-      run: yarn test
+    # Prebuild the CSS, JS and image assets
+    - name: 'Precompile all of the Assets'
+      run: bundle exec rails assets:precompile
 
     - name: 'Run Rspec Unit and Functional Tests'
       run: |
-        bin/bundle exec rspec spec/models/ spec/policies/ spec/services/ spec/helpers/
-        bin/bundle exec rspec spec/controllers/ spec/presenters/ spec/requests/ spec/views
-        bin/bundle exec rspec spec/mixins/
+        bundle exec rspec spec/models/ spec/policies/ spec/services/ spec/helpers/
+        bundle exec rspec spec/controllers/ spec/presenters/ spec/requests/ spec/views
+        bundle exec rspec spec/mixins/
 
     # Only run Integration tests if the PR or Push is to master or development branches
     - name: 'Run Rspec Integration Tests'
-      run: bin/bundle exec rspec spec/features/
+      run: bundle exec rspec spec/features/

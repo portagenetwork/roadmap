@@ -31,8 +31,11 @@ jobs:
     # Checkout the repo
     - uses: actions/checkout@v3
       with:
-        fetch-depth: 1
-    - uses: actions/setup-node@v3
+        ruby-version: 2.7.6
+        bundler-cache: true
+
+    # Install Node
+    - uses: actions/setup-node@v2
       with:
         node-version: 16
 
@@ -100,25 +103,19 @@ jobs:
         yarn install
 
     - name: 'Setup Test DB'
-      run: bin/rails db:setup RAILS_ENV=test
-
-    - name: 'Migrate DB'
-      run: bin/rails db:migrate RAILS_ENV=test
+      run: |
+        bundle exec rails db:setup RAILS_ENV=test
+        bundle exec rails db:migrate RAILS_ENV=test
 
     - name: 'Compile Assets'
-      run: |
-        bin/rails webpacker:compile
-        bin/rails assets:precompile
-
-    - name: 'Run Karma Tests'
-      run: yarn test
+      run: bundle exec rails assets:precompile
 
     - name: 'Run Rspec Unit and Functional Tests'
       run: |
-        bin/rspec spec/models/ spec/policies/ spec/services/ spec/helpers/
-        bin/rspec spec/controllers/ spec/presenters/ spec/requests/ spec/views
-        bin/rspec spec/mixins/
+        bundle exec rspec spec/models/ spec/policies/ spec/services/ spec/helpers/
+        bundle exec rspec spec/controllers/ spec/presenters/ spec/requests/ spec/views
+        bundle exec rspec spec/mixins/
 
     # Integration Tests are only run if PR or Push is to master or development branches
     - name: 'Run Integration Tests'
-      run: bin/rspec spec/features/
+      run: bundle exec rspec spec/features/

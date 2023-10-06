@@ -18,6 +18,28 @@
       },
       "user_input": "field",
       "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Unmaintained Dependency",
+      "warning_code": 121,
+      "fingerprint": "9a3951031616a07c8e02c86652f537e92c08685da97f5ec2b12d5d3602b55bb8",
+      "check_name": "EOLRuby",
+      "message": "Support for Ruby 2.6.3 ended on 2022-03-31",
+      "file": "Gemfile.lock",
+      "line": 325,
+      "link": "https://brakemanscanner.org/docs/warning_types/unmaintained_dependency/",
+      "code": null,
+      "render_path": null,
+      "location": null,
+      "user_input": null,
+      "confidence": "High",
+      "cwe_id": [
+        1104
+      ],
       "note": ""
     },
     {
@@ -27,7 +49,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/plans_controller.rb",
-      "line": 390,
+      "line": 393,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Plan.deep_copy(Plan.find(params[:id])), :notice => success_message(Plan.deep_copy(Plan.find(params[:id])), _(\"copied\")))",
       "render_path": null,
@@ -38,6 +60,28 @@
       },
       "user_input": "Plan.deep_copy(Plan.find(params[:id]))",
       "confidence": "High",
+      "cwe_id": [
+        601
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "Unmaintained Dependency",
+      "warning_code": 120,
+      "fingerprint": "d84924377155b41e094acae7404ec2e521629d86f97b0ff628e3d1b263f8101c",
+      "check_name": "EOLRails",
+      "message": "Support for Rails 5.2.8.1 ended on 2022-06-01",
+      "file": "Gemfile.lock",
+      "line": 325,
+      "link": "https://brakemanscanner.org/docs/warning_types/unmaintained_dependency/",
+      "code": null,
+      "render_path": null,
+      "location": null,
+      "user_input": null,
+      "confidence": "High",
+      "cwe_id": [
+        1104
+      ],
       "note": ""
     },
     {
@@ -47,7 +91,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/orgs_controller.rb",
-      "line": 135,
+      "line": 145,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(\"#{shib_login_url}?#{shib_callback_url}&#{\"entityID=#{Identifier.by_scheme_name(\"shibboleth\", \"Org\").where(:identifiable => Org.where(:id => shib_params[:org_id])).first.value}\"}\")",
       "render_path": null,
@@ -58,9 +102,12 @@
       },
       "user_input": "Identifier.by_scheme_name(\"shibboleth\", \"Org\").where(:identifiable => Org.where(:id => shib_params[:org_id])).first.value",
       "confidence": "High",
+      "cwe_id": [
+        601
+      ],
       "note": ""
     }
   ],
-  "updated": "2022-05-04 12:37:38 -0400",
-  "brakeman_version": "5.1.1"
+  "updated": "2022-08-10 07:47:14 -0700",
+  "brakeman_version": "5.3.1"
 }

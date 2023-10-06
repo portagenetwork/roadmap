@@ -52,7 +52,7 @@ class IdentifierScheme < ApplicationRecord
             4 => :for_users,
             5 => :for_contributors,
             column: 'context',
-            check_for_column: false
+            check_for_column: !Rails.env.test?
 
   # =========================
   # = Custom Accessor Logic =

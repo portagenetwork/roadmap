@@ -12,7 +12,11 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 16
-    - name: Install modules
-      run: yarn
-    - name: Run ESLint
-      run: yarn run eslint ./app/javascript/**/*.js
+        cache: 'yarn'
+
+    # Run yarn install for JS dependencies
+    - name: 'Yarn Install'
+      run: yarn install
+
+    - name: 'Run ESLint'
+      run: yarn run eslint app/javascript/**/*.js --ext .js
