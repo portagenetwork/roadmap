@@ -4,7 +4,7 @@
     <meta http-equiv="content-type" />
     <meta content="text/html" />
     <meta charset="utf-8" />
-    <title><%= @plan.title %></title>
+    <title><%= sanitize @plan.title %></title>
 
     <%= render partial: 'shared/export/plan_styling',
                locals: {
