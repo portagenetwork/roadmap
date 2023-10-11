@@ -42,7 +42,8 @@ module PlansHelper
 
   def download_plan_page_title(plan, phase, hash)
     # If there is more than one phase show the plan title and phase title
-    hash[:phases].many? ? "#{plan.title} - #{phase[:title]}" : plan.title
+    plan_page_title = hash[:phases].many? ? "#{plan.title} - #{phase[:title]}" : plan.title
+    plan_page_title.gsub(/&amp;/, '&')
   end
 
   def display_section?(customization, section, show_custom_sections)

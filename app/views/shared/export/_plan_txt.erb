@@ -1,4 +1,4 @@
-<%= "#{@plan.title}" %>
+<%= "#{@plan.title}".gsub(/&amp;/,'&') %>
 <%= "----------------------------------------------------------\n" %>
 <% if @show_coversheet %>
 <%= Array(@hash[:attribution]).many? ? _("Creators: ") + Array(@hash[:attribution]).join(", ")  : _('Creator:') + @hash[:attribution] %>
