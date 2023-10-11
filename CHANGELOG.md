@@ -2,8 +2,13 @@
 
 ## Unreleased
 
-### Fixed 
-  - Fixed icons issues with the rebranding [472](https://github.com/portagenetwork/roadmap/pull/472)  
+### Fixed
+
+ - Fixed icons issues with the rebranding [#472](https://github.com/portagenetwork/roadmap/pull/472)
+
+ - Fixed URL for API documentation v1 [#469](https://github.com/portagenetwork/roadmap/issues/469)
+
+ - Removed duplicate line of code from application_controller.rb [#471](https://github.com/portagenetwork/roadmap/issues/471)
   
 ## [3.3.1+portage-3.2.0] - 2023-09-28
 
