@@ -9,6 +9,10 @@
  - Fixed URL for API documentation v1 [#469](https://github.com/portagenetwork/roadmap/issues/469)
 
  - Removed duplicate line of code from application_controller.rb [#471](https://github.com/portagenetwork/roadmap/issues/471)
+
+### Changed
+
+ - Bump yard from 0.9.28 to 0.9.34 [#439](https://github.com/portagenetwork/roadmap/pull/439)
   
 ## [3.3.1+portage-3.2.0] - 2023-09-28
 
