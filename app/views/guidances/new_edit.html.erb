@@ -22,7 +22,7 @@ end
     <%= form_for(@guidance, url: url, html: { method: method , id: 'new_edit_guidance'}) do |f| %>
       <div class="form-group" data-toggle="tooltip" title="<%= guidance_text_tooltip %>">
         <em class="sr-only"><%= guidance_text_tooltip %></em>
-        <%= f.label :text, class: 'control-label' %>
+        <%= f.label(:text, _('Text'), class: "control-label") %>
         <%= f.text_area :text, rows: 10, class: "form-control", spellcheck: true,
                         aria: { required: true } %>
       </div>

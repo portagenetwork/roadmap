@@ -1,0 +1,80 @@
+/**
+ This file contains ALL the new designs variables of the DMP Assistant animation.
+ I put it here in order to avoid the desing reverting issues.
+ **/
+
+/** The color variables **/
+$color-alliance-yellow: #D6AB00;
+$color-alliance-darker-yellow: #F5C400;
+$color-alliance-darkest-yellow: #8A6D00;
+$color-alliance-digital-grey: #32322F;
+$color-alliance-darker-teal: #007283;
+
+$color-alliance-lighter-grey: #CCC;
+$color-alliance-light-grey: #999;
+
+ /** Table content shadow added to make it look good**/
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+   box-shadow: 5px 5px 5px $color-alliance-light-grey, 0px -5px 5px $color-alliance-light-grey;
+  }
+
+  /* This styles links that start with 'https' and have text more than '#' in the link and
+  the ones with the mail */
+  a[href^="https"]:not([href*="#"]),
+  a[href^="mailto"] {
+      text-decoration: underline;
+      color: $color-alliance-darker-teal;
+    &:hover,
+    &:focus{
+      color: $color-alliance-darkest-yellow;
+      }
+    }
+
+
+  /* This is added to the header of the Write Plan section in the Plans*/
+  .heading-button > .panel-heading,
+  .panel-default > .panel-heading {
+  color: $color-alliance-digital-grey;
+  background-color: $color-alliance-lighter-grey;
+  border-top: 3px solid $color-alliance-yellow;
+  cursor: pointer;
+  transition: color 1s ease, background 1s ease; /* Combine transitions */
+
+  &:hover {
+    background-color: $color-alliance-yellow;
+    i.fas.fa-plus.pull-right,
+    i.fas.pull-right.fa-minus{
+      color: $color-alliance-digital-grey;
+    }
+  }
+}
+
+
+// form > fieldset > button.btn.btn-default {
+//   animation: wiggle 2s linear infinite;
+// }
+
+/* Keyframes */
+@keyframes wiggle {
+  0%, 7% {
+    transform: rotateZ(0);
+  }
+  15% {
+    transform: rotateZ(-15deg);
+  }
+  20% {
+    transform: rotateZ(10deg);
+  }
+  25% {
+    transform: rotateZ(-10deg);
+  }
+  30% {
+    transform: rotateZ(6deg);
+  }
+  35% {
+    transform: rotateZ(-4deg);
+  }
+  40%, 100% {
+    transform: rotateZ(0);
+  }
+}

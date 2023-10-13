@@ -1,0 +1,126 @@
+/**
+ This file contains ALL the redefined variables of the DMP Assistant.
+ I put it here in order to avoid merge conflict from upstream in the future. It needs to be loaded before other styles
+ PENDING:
+ This style sheet can be separated to multiple stylesheets and moved to corresponding folders once finished
+
+ Follow Bootstrap 3 media standard (explicitly defined instead of adding classes in view):
+- phone (<768px)
+- tablets (≥768px)
+- laptops (≥992px)
+- desktops (≥1200px)
+**/
+
+/** The color variables **/
+$color-alliance-yellow: #D6AB00;
+$color-alliance-darker-yellow: #F5C400;
+$color-alliance-digital-grey: #32322F;
+$color-alliance-darkest-yellow: #8A6E00;
+$color-white: #FFF;
+$color-alliance-lighter-grey: #CCC;
+
+//logo style apply for all screen size
+//_logos.scss
+.app-logo{
+    width: 150px !important;
+    height: 86px !important;
+    padding: 0%;
+}
+
+.fas{
+  color: $color-alliance-yellow;
+}
+
+
+/*****
+Forms & Tables
+*****/
+.nav-tabs, .nav-pills{ //_navs.scss
+    background-color: $color-alliance-digital-grey;
+}
+
+
+//_table.scss
+thead th{
+    background-color: $color-alliance-digital-grey;
+}
+
+/* For org navbar custom background color */
+@media (min-width: 768px) {
+    #admin-dropdown ul li a, #super-admin-dropdown ul li a {
+      &:hover,
+      &:focus{
+        color: $color-alliance-darker-yellow !important;
+        background-color: $color-alliance-digital-grey;
+      }
+    }
+  }
+
+/* link button AND change color of search icon AND all the buttons*/
+.btn-default, .btn-primary, #search-addon {
+    color: $color-alliance-darker-yellow !important;
+    background-color: $color-alliance-digital-grey !important;
+  }
+
+/* nav-tabs overiding on active */
+  .nav-tabs > li > a:hover,
+  .nav-tabs > li > a:focus,
+  .nav-tabs > li > a.active,
+  .nav-tabs > li > a.active:focus,
+  .nav-tabs > li > a.active:hover {
+    color: $color-alliance-digital-grey !important;
+  }
+
+ .nav-tabs > li.active > a,
+ .nav-tabs > li:hover > a,
+ .nav-tabs > li:focus > a,
+ .nav-tabs > li.active:focus > a,
+ .nav-tabs > li.active:hover > a {
+    color: $color-alliance-digital-grey !important;
+ }
+
+
+ /* Drop downs of the college lists in create plans section */
+
+ .ui-menu {
+  .ui-menu-item {
+    background-color: $color-white;
+    .ui-menu-item-wrapper {
+      &:hover,
+      &:focus{
+        color: $color-alliance-darker-yellow !important;
+        background-color: $color-alliance-digital-grey !important;
+      }
+    }
+    &:hover,
+    &:focus{
+      color: $color-alliance-darker-yellow !important;
+      background-color: $color-alliance-digital-grey !important;
+    }
+  }
+}
+
+/* alignment of write plans button in the plan overview section*/
+.fontsize-h4 > a {
+  margin-top: -14px !important;
+}
+
+/* Headers dropdown margin changes*/
+a#language-menu, a#reference-menu, a#user-menu{
+  margin-bottom: 3px !important;
+}
+
+/* Notification close icon visibility and position*/
+.close {
+  opacity: 1 !important;
+}
+
+button.close{
+  position: relative;
+  margin-right: -12px;
+} 
+
+.alert-info, .alert-warning, .alert-danger {
+  display: inline-block;
+  width: 100%;
+}
