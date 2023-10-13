@@ -12,6 +12,8 @@
 
 ### Changed
 
+ - Bump zaru from 0.3.0 to 1.0.0 [#437](https://github.com/portagenetwork/roadmap/pull/437)
+
  - Bump better_errors from 2.9.1 to 2.10.1 [#436](https://github.com/portagenetwork/roadmap/pull/436)
 
  - Bump wicked_pdf from 2.6.3 to 2.7.0 [#438](https://github.com/portagenetwork/roadmap/pull/438)
