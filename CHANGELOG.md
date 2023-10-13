@@ -4,6 +4,8 @@
 
 ### Fixed
 
+ - Fixed display of ampersands in plan titles [#473](https://github.com/portagenetwork/roadmap/issues/473)
+
  - Fixed icons issues with the rebranding [#472](https://github.com/portagenetwork/roadmap/pull/472)
 
  - Fixed URL for API documentation v1 [#469](https://github.com/portagenetwork/roadmap/issues/469)
