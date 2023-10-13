@@ -12,6 +12,8 @@
 
 ### Changed
 
+ - Bump better_errors from 2.9.1 to 2.10.1 [#436](https://github.com/portagenetwork/roadmap/pull/436)
+
  - Bump wicked_pdf from 2.6.3 to 2.7.0 [#438](https://github.com/portagenetwork/roadmap/pull/438)
 
  - Bump yard from 0.9.28 to 0.9.34 [#439](https://github.com/portagenetwork/roadmap/pull/439)
