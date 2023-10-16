@@ -12,6 +12,8 @@
 
 ### Changed
 
+ - Bump activerecord_json_validator from 2.1.3 to 2.1.5 [#483](https://github.com/portagenetwork/roadmap/pull/483)
+
  - Bump rubocop-rspec from 2.18.1 to 2.24.1 [#460](https://github.com/portagenetwork/roadmap/pull/460)
 
  - Bump zaru from 0.3.0 to 1.0.0 [#437](https://github.com/portagenetwork/roadmap/pull/437)
