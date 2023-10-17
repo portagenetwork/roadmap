@@ -4,6 +4,8 @@
 
 ### Fixed
 
+ - Fixed display of ampersands in plan titles [#473](https://github.com/portagenetwork/roadmap/issues/473)
+
  - Fixed error handling in Dangerfile for missing CHANGELOG.md entry [#359](https://github.com/portagenetwork/roadmap/issues/359)
 
  - Fixed icons issues with the rebranding [#472](https://github.com/portagenetwork/roadmap/pull/472)
