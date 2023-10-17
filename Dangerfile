@@ -25,8 +25,10 @@ warn('PR is classed as Work in Progress') if github.pr_title.include? '[WIP]'
 declared_trivial = (github.pr_title + github.pr_body).include?('#trivial') || !has_app_changes
 
 if !git.modified_files.include?('CHANGELOG.md') && !declared_trivial
-  raise(
+  # rubocop:disable Style/SignalException
+  fail(
     'Please include a CHANGELOG entry. You can find it at [CHANGELOG.md](https://github.com/portagenetwork/roadmap/blob/deployment-portage/CHANGELOG.md).',
     sticky: false
   )
+  # rubocop:enable Style/SignalException
 end
