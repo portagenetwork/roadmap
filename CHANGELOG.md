@@ -4,6 +4,8 @@
 
 ### Fixed
 
+ - Fixed guidance collapse issues [#467](https://github.com/portagenetwork/roadmap/issues/467)
+ 
  - Fixed display of ampersands in plan titles [#473](https://github.com/portagenetwork/roadmap/issues/473)
 
  - Fixed error handling in Dangerfile for missing CHANGELOG.md entry [#359](https://github.com/portagenetwork/roadmap/issues/359)
