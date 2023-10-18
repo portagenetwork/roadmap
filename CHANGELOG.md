@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [3.3.1+portage-3.2.1] - 2023-10-19
 
 ### Fixed
 
