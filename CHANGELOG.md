@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+ - Bump jwt from 2.7.0 to 2.7.1 [#499](https://github.com/portagenetwork/roadmap/pull/499)
+
 ## [3.3.1+portage-3.2.1] - 2023-10-19
 
 ### Fixed
