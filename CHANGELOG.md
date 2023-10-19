@@ -40,8 +40,6 @@
 
  - Bump yard from 0.9.28 to 0.9.34 [#439](https://github.com/portagenetwork/roadmap/pull/439)
 
- - Bump guard from 2.18.0 to 2.18.1 [#486](https://github.com/portagenetwork/roadmap/pull/486)
-
  - Bump mocha from 2.0.2 to 2.1.0 [#485](https://github.com/portagenetwork/roadmap/pull/485)
 
  - Bump @babel/traverse from 7.20.13 to 7.23.2 [#484](https://github.com/portagenetwork/roadmap/pull/484)
