@@ -1,15 +1,5 @@
 # Changelog
 
-## Unreleased
-
-### Changed
-
- - Bump jwt from 2.7.0 to 2.7.1 [#499](https://github.com/portagenetwork/roadmap/pull/499)
-
- - Bump activerecord-nulldb-adapter from 0.9.0 to 1.0.1 [#498](https://github.com/portagenetwork/roadmap/pull/498)
-
- - Bump pundit from 2.3.0 to 2.3.1 [#495](https://github.com/portagenetwork/roadmap/pull/495)
-
 ## [3.3.1+portage-3.2.1] - 2023-10-19
 
 ### Fixed
@@ -47,6 +37,12 @@
  - Bump devise from 4.9.2 to 4.9.3 [#480](https://github.com/portagenetwork/roadmap/pull/480)
 
  - Bump database_cleaner from 2.0.1 to 2.0.2 [#479](https://github.com/portagenetwork/roadmap/pull/479)
+
+ - Bump jwt from 2.7.0 to 2.7.1 [#499](https://github.com/portagenetwork/roadmap/pull/499)
+
+ - Bump activerecord-nulldb-adapter from 0.9.0 to 1.0.1 [#498](https://github.com/portagenetwork/roadmap/pull/498)
+
+ - Bump pundit from 2.3.0 to 2.3.1 [#495](https://github.com/portagenetwork/roadmap/pull/495)
   
 ## [3.3.1+portage-3.2.0] - 2023-09-28
 
