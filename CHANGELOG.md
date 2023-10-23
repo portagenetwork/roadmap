@@ -1,7 +1,49 @@
 # Changelog
 
-## Unreleased
+## [3.3.1+portage-3.2.1] - 2023-10-19
 
+### Fixed
+
+ - Fixed guidance collapse issues [#467](https://github.com/portagenetwork/roadmap/issues/467)
+ 
+ - Fixed display of ampersands in plan titles [#473](https://github.com/portagenetwork/roadmap/issues/473)
+
+ - Fixed error handling in Dangerfile for missing CHANGELOG.md entry [#359](https://github.com/portagenetwork/roadmap/issues/359)
+
+ - Fixed icons issues with the rebranding [#472](https://github.com/portagenetwork/roadmap/pull/472)
+
+ - Fixed URL for API documentation v1 [#469](https://github.com/portagenetwork/roadmap/issues/469)
+
+ - Removed duplicate line of code from application_controller.rb [#471](https://github.com/portagenetwork/roadmap/issues/471)
+
+### Changed
+
+ - Bump activerecord_json_validator from 2.1.3 to 2.1.5 [#483](https://github.com/portagenetwork/roadmap/pull/483)
+
+ - Bump rubocop-rspec from 2.18.1 to 2.24.1 [#460](https://github.com/portagenetwork/roadmap/pull/460)
+
+ - Bump zaru from 0.3.0 to 1.0.0 [#437](https://github.com/portagenetwork/roadmap/pull/437)
+
+ - Bump better_errors from 2.9.1 to 2.10.1 [#436](https://github.com/portagenetwork/roadmap/pull/436)
+
+ - Bump wicked_pdf from 2.6.3 to 2.7.0 [#438](https://github.com/portagenetwork/roadmap/pull/438)
+
+ - Bump yard from 0.9.28 to 0.9.34 [#439](https://github.com/portagenetwork/roadmap/pull/439)
+
+ - Bump mocha from 2.0.2 to 2.1.0 [#485](https://github.com/portagenetwork/roadmap/pull/485)
+
+ - Bump @babel/traverse from 7.20.13 to 7.23.2 [#484](https://github.com/portagenetwork/roadmap/pull/484)
+
+ - Bump devise from 4.9.2 to 4.9.3 [#480](https://github.com/portagenetwork/roadmap/pull/480)
+
+ - Bump database_cleaner from 2.0.1 to 2.0.2 [#479](https://github.com/portagenetwork/roadmap/pull/479)
+
+ - Bump jwt from 2.7.0 to 2.7.1 [#499](https://github.com/portagenetwork/roadmap/pull/499)
+
+ - Bump activerecord-nulldb-adapter from 0.9.0 to 1.0.1 [#498](https://github.com/portagenetwork/roadmap/pull/498)
+
+ - Bump pundit from 2.3.0 to 2.3.1 [#495](https://github.com/portagenetwork/roadmap/pull/495)
+  
 ## [3.3.1+portage-3.2.0] - 2023-09-28
 
 ### Fixed

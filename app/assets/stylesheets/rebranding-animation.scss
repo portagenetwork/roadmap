@@ -40,12 +40,27 @@ $color-alliance-light-grey: #999;
   cursor: pointer;
   transition: color 1s ease, background 1s ease; /* Combine transitions */
 
-  &:hover {
+  &:hover,
+  &:focus {
     background-color: $color-alliance-yellow;
+    i.fas.fa-plus.pull-right,
+    i.fas.pull-right.fa-minus{
+      color: $color-alliance-digital-grey;
+    }
   }
 }
 
-
+/* Guidance collapse bar in Templates section icon color issues fix on-hover OR on focus*/
+.panel-heading {
+  &:hover,
+  &:focus {
+    i.fas.pull-left.fa-minus,
+    i.fas.fa-plus.pull-left,
+    i.fas.fa-arrows-alt.pull-right{
+      color: $color-alliance-digital-grey !important;
+    }
+  }
+}
 // form > fieldset > button.btn.btn-default {
 //   animation: wiggle 2s linear infinite;
 // }
