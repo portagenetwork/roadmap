@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+ - Merged Upstream Release [v4.0.0](https://github.com/DMPRoadmap/roadmap/releases/tag/v4.0.0)
+
+ - Merged Upstream Release [v4.0.1](https://github.com/DMPRoadmap/roadmap/releases/tag/v4.0.1)
+
+ - Merged Upstream Release [v4.0.2](https://github.com/DMPRoadmap/roadmap/releases/tag/v4.0.2)
+
 ## [3.3.1+portage-3.2.1] - 2023-10-19
 
 ### Fixed
