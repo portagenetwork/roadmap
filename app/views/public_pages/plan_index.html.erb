@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <% title _('Example DMPs') %>
 
 <%
@@ -20,6 +21,24 @@ example_dmps = [
   { title: _("Data Management Plan Exemplar #3: Mixed Methods Fictional Exemplar"), url: _("https://doi.org/10.5281/zenodo.4019562") }
 ]
 %>
+=======
+<% title _('Public DMPs') %>
+<div class="row">
+  <div class="col-md-12">
+    <h1><%= _('Public DMPs') %></h1>
+    <!-- if the user has projects -->
+    <% if @plans.count > 0 %>
+      <p class="start-indent">
+        <%= _('Public DMPs are plans created using the %{application_name} service and shared publicly by their owners. They are not vetted for quality, completeness, or adherence to funder guidelines.') % {application_name: ApplicationService.application_name} %>
+      </p>
+    <% else %>
+      <p class="start-indent">
+        <%= _("There are currently no public DMPs.")%>
+      </p>
+    <% end %>
+  </div>
+</div>
+>>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
 
 <div class="row">
   <div class="col-md-12">

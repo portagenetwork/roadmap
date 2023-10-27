@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @import '../../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables';
 
 /* HEADER LOGOS */
@@ -9,4 +10,18 @@
 .org-logo {
   height: 65px;
   padding-right: $grid-gutter-width / 2;
+=======
+@import "../../../../node_modules/bootstrap/scss/functions";
+@import "../../../../node_modules/bootstrap/scss/variables";
+
+/* HEADER LOGOS */
+.app-logo {
+  height: 50px;
+  padding-right: calc($grid-gutter-width / 2);
+}
+
+.org-logo {
+  height: 100px;
+  padding-right: calc($grid-gutter-width / 2);
+>>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
 }

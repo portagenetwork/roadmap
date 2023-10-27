@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!-- header information (bootstrap 3 column layout) -->
 <div class="main-nav">
   <div class="row no-row-margin">
@@ -5,6 +6,11 @@
       <%= render partial: "layouts/navigation" %>
     </div>
   </div>
+=======
+<!-- header information (bootstrap column layout) -->
+<div class="main-nav pb-3">
+  <%= render partial: "layouts/navigation" %>
+>>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
 </div>
 <div class="org-branding">
   <% if user_signed_in? && !current_user.org.nil? && (!current_user.org.is_other || current_user.can_super_admin?) %>

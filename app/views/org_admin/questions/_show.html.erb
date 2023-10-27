@@ -91,11 +91,11 @@
         </dl>
       </div>
 
-      <div class="col-md-4">
+      <div class="ps-4 col-md-4">
         <% has_org_themed_guidance = false %>
         <% themes_q = question.themes %>
         <% if !themes_q.nil? %>
-          <div class="panel-group" id="<%= question.id %>-guidance">
+          <div class="d-flex flex-column" id="<%= question.id %>-guidance">
             <% ggs = GuidanceGroup.where(org_id: current_user.org.id) %>
             <h4><%= _("Themed Guidance") %></h4>
 
@@ -124,6 +124,7 @@
                       ) %>
                     <% if theme_guidances.length > 0 %>
                       <% theme_guidances.each do |guidance| %>
+<<<<<<< HEAD
                         <div class="panel panel-default">
                           <div class="heading-button"
                                role="button"
@@ -154,10 +155,39 @@
                                 <%= sanitize guidance.text %>
                               </div>
                             </div>
+=======
+                        <div class="accordion my-1 card card-default">
+                          <div class="accordion-item w-100">
+                              <h2 class="accordion-header" 
+                                  id="#headingGuidance-<%= guidance.id%>-<%= question.id %>">
+                                <button class="accordion-button collapsed"
+                                     type="button"
+                                     data-bs-toggle="collapse"
+                                     href="#collapseGuidance-<%= guidance.id%>-<%= question.id %>"
+                                     aria-expanded="false"
+                                     aria-controls="#collapseGuidance-<%= guidance.id%>-<%= question.id %>">
+                                     <%= theme.title %>
+                                     <% if ggs.length > 1 %>
+                                        &nbsp;(<%= guidance_group.name %>)
+                                    <% end %>
+                                </button>
+                              </h2>
+                            
+                              <div id="collapseGuidance-<%= guidance.id%>-<%= question.id %>"
+                                 class="accordion-collapse collapse"
+                                 role="tabpanel"
+                                 aria-labelledby="headingGuidance-<%= guidance.id%>-<%= question.id %>">
+                                <div class="accordion-body card card-body allow-break-words">
+                                   <div class="display-readonly-textarea-content">
+                                      <%= sanitize guidance.text %>
+                                   </div>
+                                </div>
+                              </div>
+                           </div>
+>>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
                         </div>
-                      </div>
+                      <% end %>
                     <% end %>
-                   <% end %>
                   <% end %>
                 <% end %>
               <% end %>
@@ -204,18 +234,18 @@
                                locals: { f: annotation_fields } %>
                   <% end %>
                 <% end %>
-                <div class="form-group col-md-10">
-                  <div class="pull-right">
-                    <%= f.submit _('Save'), class: "btn btn-default", role: 'button' %>
+                <div class="form-control mb-3 col-md-10">
+                  <div class="float-end">
+                    <%= f.submit _('Save'), class: "btn btn-secondary", role: 'button' %>
                   </div>
                 </div>
               <% end %>
             <% end %>
           <% end %>
           <% if section.modifiable? %>
-            <div class="form-group col-md-10">
-              <div class="pull-right">
-                <%= link_to _('Edit'), edit_org_admin_template_phase_section_question_path(template_id: question.section.phase.template.id, phase_id: question.section.phase.id, section_id: question.section.id, id: question.id), class: "btn btn-default ajaxified-question", remote: true %>
+            <div class="form-control mb-3 col-md-10">
+              <div class="float-end">
+                <%= link_to _('Edit'), edit_org_admin_template_phase_section_question_path(template_id: question.section.phase.template.id, phase_id: question.section.phase.id, section_id: question.section.id, id: question.id), class: "btn btn-secondary ajaxified-question", remote: true %>
               </div>
             </div>
           <% end %>
