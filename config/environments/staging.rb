@@ -96,6 +96,6 @@ Rails.application.configure do
     authentication: Rails.application.secrets.smtp_authentication || 'plain',
     enable_starttls_auto: true
   }
-
-  Rails.application.routes.default_url_options[:host] = "dmptest.library.ualberta.ca"
+  config.hosts << Rails.application.secrets.dmproadmap_host if Rails.application.secrets.dmproadmap_host.present?
 end
+Rails.application.routes.default_url_options[:host] = Rails.application.secrets.dmproadmap_host
