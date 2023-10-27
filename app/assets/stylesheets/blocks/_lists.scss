@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 @import '../../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables';
+=======
+@import "../../../../node_modules/bootstrap/scss/functions";
+@import "../../../../node_modules/bootstrap/scss/variables";
+
+>>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
 // Overrides Bootstrap 3.0's lists
 
 /* list-group styling */
@@ -13,6 +19,6 @@
 
 /* LIST STYLING */
 span.sublist {
-  margin-left: $grid-gutter-width / -2;
+  margin-left: calc($grid-gutter-width / -2);
   margin-right: 25px;
 }

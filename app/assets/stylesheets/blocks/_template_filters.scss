@@ -1,6 +1,12 @@
 @use '../variables/colours' as *;
+<<<<<<< HEAD
 @import '../../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables';
+=======
+@import "../../../../node_modules/bootstrap/scss/functions";
+@import "../../../../node_modules/bootstrap/scss/variables";
+
+>>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
 .template-table-filters .navbar-nav > li > a {
   color: $color-secondary-text;
-  padding: 5px ($grid-gutter-width / 2) 5px 5px;
+  padding: 5px calc($grid-gutter-width / 2) 5px 5px;
 }

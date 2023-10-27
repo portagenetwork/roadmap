@@ -18,3 +18,14 @@
 
 <%= render partial: 'usage/filter' %>
 
+<<<<<<< HEAD
+=======
+<% if @funder.present? %>
+  <%= render partial: 'usage/template_statistics' %>
+<% else %>
+  <div  id="usage-accordion" class="accordion" role="tablist" aria-multiselectable="true">
+    <%= render partial: 'usage/user_statistics_accordion', locals: {expanded: true} %>
+    <%= render partial: 'usage/template_statistics_accordion', locals: {expanded: false} %>
+  </div>
+<% end %>
+>>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)

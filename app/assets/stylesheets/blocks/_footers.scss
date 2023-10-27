@@ -1,5 +1,11 @@
+<<<<<<< HEAD
 @import '../../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables';
 /* For sticky footer */
+=======
+@import "../../../../node_modules/bootstrap/scss/functions";
+@import "../../../../node_modules/bootstrap/scss/variables";
+
+>>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
 #footer-navbar {
   margin-bottom: 0px;
   position: absolute;
@@ -8,6 +14,7 @@
   border-radius:0px;
   z-index: 1;
   ul {
+<<<<<<< HEAD
     padding-right: $grid-gutter-width / 2;
 
     #alliance-logo{
@@ -19,5 +26,8 @@
           Need to change to 25px height to make footer logo aligned when viewed by the mobile device. */
       }
     }
+=======
+    padding-right: calc($grid-gutter-width / 2);
+>>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
   }
 }
