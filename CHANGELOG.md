@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+ - Removed `app/views/paginable/plans/_org_admin_other_user.html.erb` and `get org_admin_other_user/:page` route [#519](https://github.com/portagenetwork/roadmap/issues/519)
+
 ## [3.3.1+portage-3.2.1] - 2023-10-19
 
 ### Fixed
