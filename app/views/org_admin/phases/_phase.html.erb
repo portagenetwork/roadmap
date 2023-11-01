@@ -56,7 +56,7 @@
                           <% if question.question_options.length > 0 %>
                             <ul>
                               <% question.question_options.each do |option| %>
-                                <li><%= option.text %></li>
+                                <li><%= _(option.text) %></li>
                               <% end %>
                             </ul>
                           <% end %>
