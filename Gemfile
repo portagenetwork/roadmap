@@ -203,7 +203,7 @@ gem 'zaru'
 # ==================== #
 
 gem 'translation', git: 'https://github.com/lagoan/translation_io_rails',
-                   branch: 'fix/broken_db_fake_method_calls'
+                   branch: 'fix/carriage-return-issue'
 
 # ========= #
 # UTILITIES #
