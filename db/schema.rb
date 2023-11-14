@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_11_07_222551) do
+ActiveRecord::Schema.define(version: 2023_11_14_225410) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "annotations", id: :serial, force: :cascade do |t|
-    t.integer "question_id"
-    t.integer "org_id"
+    t.bigint "question_id"
+    t.bigint "org_id"
     t.text "text"
     t.integer "type", default: 0, null: false
     t.datetime "created_at"
