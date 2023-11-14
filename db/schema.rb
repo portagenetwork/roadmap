@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_15_104737) do
+ActiveRecord::Schema.define(version: 2023_11_07_222551) do
 
   create_table "annotations", id: :integer, force: :cascade do |t|
     t.integer "question_id"
@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(version: 2022_03_15_104737) do
     t.integer "question_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer "lock_version", default: 0
+    t.integer "lock_version", default: 0, null: false
     t.index ["plan_id"], name: "index_answers_on_plan_id"
     t.index ["question_id"], name: "index_answers_on_question_id"
     t.index ["user_id"], name: "fk_rails_584be190c2"
