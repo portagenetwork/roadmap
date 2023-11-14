@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/lagoan/translation_io_rails
-  revision: 5fb2d5cea54a1b684ae1d3d6fb1226c0fcab8564
-  branch: fix/carriage-return-issue
+  revision: 6fbb2cd619e7bf01b37b9b8916b0f345899f876b
+  branch: fix/broken_db_fake_method_calls
   specs:
     translation (1.22)
       gettext (~> 3.2, >= 3.2.5)
