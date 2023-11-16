@@ -90,6 +90,8 @@
 
 ### Changed
 
+ - Updated ruby.yml workflow to use PostgreSQL database [#532](https://github.com/portagenetwork/roadmap/issues/532)
+
  - Added scss files to EditorConfig
  
  - Change csv file name for statistics from 'Completed' to 'Created'
