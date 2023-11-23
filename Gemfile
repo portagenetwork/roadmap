@@ -326,7 +326,8 @@ group :ci, :development do
 
   # RuboCop is a Ruby code style checking and code formatting tool. It aims to enforce
   # the community-driven Ruby Style Guide.
-  gem 'rubocop', '~> 1.44.1' # Pinned to align with upstream v4.0.2
+  # Pinned by portagenetwork so its offences align with DMPRoadmap
+  gem 'rubocop', '~> 1.44.1' # Pinned to match DMPRoadmap release v4.0.2
 
   # RuboCop rules for detecting and autocorrecting undecorated strings for i18n
   # (gettext and rails-i18n)
