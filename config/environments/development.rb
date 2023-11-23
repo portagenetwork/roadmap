@@ -92,6 +92,7 @@ Rails.application.configure do
   # to access the site and receive a 'Blocked host' error then you will need to
   # set this environment variable
   config.hosts << ENV.fetch('DMPROADMAP_HOST', 'localhost:3000')
+end
 # rubocop:enable Metrics/BlockLength
 
 # Used by Rails' routes url_helpers (typically when including a link in an email)
