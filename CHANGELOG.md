@@ -32,6 +32,12 @@
        - Added scss files to EditorConfig
        - Change csv file name for statistics from 'Completed' to 'Created'
        - Added error message and updated saving message for plan writing session to improve user experience
+       
+## [3.3.1+portage-3.2.2] - 2023-11-20
+
+### Fixed
+
+ - Fixed handling of `\r` when syncing db fields to translation.io [#523](https://github.com/portagenetwork/roadmap/issues/523)
 
 ## [3.3.1+portage-3.2.1] - 2023-10-19
 
