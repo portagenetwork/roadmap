@@ -52,7 +52,7 @@ class IdentifierScheme < ApplicationRecord
             4 => :for_users,
             5 => :for_contributors,
             column: 'context',
-            check_for_column: !Rails.env.test?
+            check_for_column: false # Must be false to allow Docker GH Action to pass
 
   # =========================
   # = Custom Accessor Logic =
