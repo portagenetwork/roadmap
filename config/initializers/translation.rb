@@ -37,7 +37,8 @@ TranslationIO.configure do |config|
     'Section' => %w[title description],
     'Question' => %w[text default_value],
     'Annotation' => ['text'],
-    'ResearchDomain' => ['label']
+    'ResearchDomain' => ['label'],
+    'QuestionOption' => ['text']
   }
   # Find other useful usage information here:
   # https://github.com/translation/rails#readme
