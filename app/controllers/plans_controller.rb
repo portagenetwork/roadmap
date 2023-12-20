@@ -188,15 +188,11 @@ class PlansController < ApplicationController
     # "Organisation" org type GGs
     @important_ggs = []
 
-    if @all_ggs_grouped_by_org.include?(current_user.org)
-      @important_ggs << [current_user.org, @all_ggs_grouped_by_org[current_user.org]]
-    end
     @default_orgs = Org.default_orgs
     @all_ggs_grouped_by_org.each do |org, ggs|
-      @important_ggs << [org, ggs] if @default_orgs.include?(org) && !@important_ggs.include?([org, ggs])
-
-      # If this is one of the already selected guidance groups its important!
-      @important_ggs << [org, ggs] if !(ggs & @selected_guidance_groups).empty? && !@important_ggs.include?([org, ggs])
+      if (org == current_user.org) || @default_orgs.include?(org) || !(ggs & @selected_guidance_groups).empty?
+        @important_ggs << [org, ggs]
+      end
     end
 
     # Sort the rest by org name for the accordion
