@@ -39,9 +39,9 @@ See the [Installation Guide](https://github.com/portagenetwork/roadmap/wiki/Inst
 ### Pre-requisites
 
 DMP Assistant is a Ruby on Rails application and you will need to have:
-* Ruby = 2.6.6 - 2.6.9
-* Rails = 5
-* MySQL >= 5
+* Ruby = 2.7.6
+* Rails = 6.1
+* MySQL >= 5.0 OR PostgreSQL
 
 Further detail on how to install Ruby on Rails applications are available from the Ruby on Rails site: http://rubyonrails.org.
 

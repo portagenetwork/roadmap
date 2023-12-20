@@ -98,6 +98,7 @@ Rails.application.configure do
     enable_starttls_auto: true
   }
 
-  # Fix JSON Download Error
-  Rails.application.routes.default_url_options[:host] = "assistant-sandbox.library.ualberta.ca"
+  config.hosts << Rails.application.secrets.dmproadmap_host if Rails.application.secrets.dmproadmap_host.present?
 end
+# Fix JSON Download Error
+Rails.application.routes.default_url_options[:host] = Rails.application.secrets.dmproadmap_host
