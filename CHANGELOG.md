@@ -4,6 +4,8 @@
 
 ### Added
 
+ - Bump socket.io-parser from 4.2.2 to 4.2.4 [#559](https://github.com/portagenetwork/roadmap/pull/559)
+
  - Merged Upstream Release [v4.0.0](https://github.com/DMPRoadmap/roadmap/releases/tag/v4.0.0)
 
  - Merged Upstream Release [v4.0.1](https://github.com/DMPRoadmap/roadmap/releases/tag/v4.0.1)
