@@ -4,6 +4,8 @@
 
 ### Added
 
+ - Bump rollbar from 3.4.0 to 3.4.2 [#547](https://github.com/portagenetwork/roadmap/pull/547)
+
  - Bump danger from 9.3.1 to 9.4.2 [#555](https://github.com/portagenetwork/roadmap/pull/555)
 
  - Bump bullet from 7.1.0 to 7.1.4 [#563](https://github.com/portagenetwork/roadmap/pull/563)
