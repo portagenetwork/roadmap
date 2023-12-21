@@ -4,6 +4,8 @@
 
 ### Added
 
+ - Bump bullet from 7.1.0 to 7.1.4 [#563](https://github.com/portagenetwork/roadmap/pull/563)
+
  - Bump browserify-sign from 4.2.1 to 4.2.2 [#520](https://github.com/portagenetwork/roadmap/pull/520)
 
  - Bump socket.io-parser from 4.2.2 to 4.2.4 [#559](https://github.com/portagenetwork/roadmap/pull/559)
