@@ -4,6 +4,8 @@
 
 ### Added
 
+ - Bump rack-mini-profiler from 3.1.0 to 3.3.0 [#548](https://github.com/portagenetwork/roadmap/pull/548)
+
  - Bump spring from 4.1.1 to 4.1.3 [#562](https://github.com/portagenetwork/roadmap/pull/562)
 
  - Bump rollbar from 3.4.0 to 3.4.2 [#547](https://github.com/portagenetwork/roadmap/pull/547)
