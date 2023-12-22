@@ -4,6 +4,8 @@
 
 ### Added
 
+ - Bump activerecord-nulldb-adapter from 0.9.0 to 1.0.1 [#567](https://github.com/portagenetwork/roadmap/pull/567)
+
  - Bump recaptcha from 5.15.0 to 5.16.0 [#568](https://github.com/portagenetwork/roadmap/pull/568)
 
  - Bump tinymce from 5.10.0 to 5.10.9 [#530](https://github.com/portagenetwork/roadmap/pull/530)
