@@ -4,6 +4,8 @@
 
 ### Added
 
+ - Bump faker from 3.2.1 to 3.2.2 [#565](https://github.com/portagenetwork/roadmap/pull/565)
+
  - Bump turbo-rails from 1.4.0 to 1.5.0 [#566](https://github.com/portagenetwork/roadmap/pull/566)
 
  - Bump activerecord-nulldb-adapter from 0.9.0 to 1.0.1 [#567](https://github.com/portagenetwork/roadmap/pull/567)
