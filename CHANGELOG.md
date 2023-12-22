@@ -4,6 +4,8 @@
 
 ### Added
 
+ - Bump turbo-rails from 1.4.0 to 1.5.0 [#566](https://github.com/portagenetwork/roadmap/pull/566)
+
  - Bump activerecord-nulldb-adapter from 0.9.0 to 1.0.1 [#567](https://github.com/portagenetwork/roadmap/pull/567)
 
  - Bump recaptcha from 5.15.0 to 5.16.0 [#568](https://github.com/portagenetwork/roadmap/pull/568)
