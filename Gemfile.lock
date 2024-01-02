@@ -156,6 +156,7 @@ GEM
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
+    date (3.3.4)
     debug_inspector (1.1.0)
     devise (4.9.3)
       bcrypt (~> 3.0)
@@ -291,8 +292,11 @@ GEM
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     lumberjack (1.2.9)
-    mail (2.7.1)
+    mail (2.8.1)
       mini_mime (>= 0.1.1)
+      net-imap
+      net-pop
+      net-smtp
     marcel (1.0.2)
     matrix (0.4.2)
     method_source (1.0.0)
@@ -312,6 +316,15 @@ GEM
     mysql2 (0.5.5)
     nap (1.1.0)
     nenv (0.3.0)
+    net-imap (0.4.9)
+      date
+      net-protocol
+    net-pop (0.1.2)
+      net-protocol
+    net-protocol (0.2.2)
+      timeout
+    net-smtp (0.4.0)
+      net-protocol
     nio4r (2.5.9)
     no_proxy_fix (0.1.2)
     nokogiri (1.15.5-arm64-darwin)
@@ -513,6 +526,7 @@ GEM
     text (1.3.1)
     thor (1.3.0)
     tilt (2.3.0)
+    timeout (0.4.1)
     tomparse (0.4.2)
     turbo-rails (1.5.0)
       actionpack (>= 6.0.0)
@@ -604,7 +618,7 @@ DEPENDENCIES
   kaminari
   ledermann-rails-settings
   listen
-  mail (= 2.7.1)
+  mail (= 2.8.1)
   mimemagic
   mocha
   mysql2
