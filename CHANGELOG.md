@@ -4,6 +4,8 @@
 
 ### Added
 
+ - Bump parallel from 1.23.0 to 1.24.0 [#574](https://github.com/portagenetwork/roadmap/pull/574)
+
  - Bump omniauth from 2.1.1 to 2.1.2 [#573](https://github.com/portagenetwork/roadmap/pull/573)
 
  - Bump autoprefixer-rails from 10.4.15.0 to 10.4.16.0 [#571](https://github.com/portagenetwork/roadmap/pull/571)
