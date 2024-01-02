@@ -4,6 +4,8 @@
 
 ### Added
 
+ - Bump autoprefixer-rails from 10.4.15.0 to 10.4.16.0 [#571](https://github.com/portagenetwork/roadmap/pull/571)
+
  - Bump bootsnap from 1.16.0 to 1.17.0 [#564](https://github.com/portagenetwork/roadmap/pull/564)
 
  - Bump faker from 3.2.1 to 3.2.2 [#565](https://github.com/portagenetwork/roadmap/pull/565)
