@@ -46,6 +46,8 @@
 
 ### Fixed
 
+ - Fix 500 error being thrown for GET api/v0/plans [#569](https://github.com/portagenetwork/roadmap/issues/569)
+
  - Fixed an issue that was preventing uses from leaving the research output byte_size field blank
 
  - Patched issue that was causing template visibility to default to organizationally visible after saving
