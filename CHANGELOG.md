@@ -4,6 +4,12 @@
 
 ### Added
 
+ - Bump puma from 6.4.0 to 6.4.1 [#584](https://github.com/portagenetwork/roadmap/pull/584)
+
+ - Bump bullet from 7.1.4 to 7.1.5 [#588](https://github.com/portagenetwork/roadmap/pull/588)
+
+ - Bump rollbar from 3.4.2 to 3.5.0 [#585](https://github.com/portagenetwork/roadmap/pull/585)
+
  - Bump parallel from 1.23.0 to 1.24.0 [#574](https://github.com/portagenetwork/roadmap/pull/574)
 
  - Bump omniauth from 2.1.1 to 2.1.2 [#573](https://github.com/portagenetwork/roadmap/pull/573)
