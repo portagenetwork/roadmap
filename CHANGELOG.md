@@ -52,6 +52,8 @@
 
 ### Fixed
 
+ - Fix duplicate guidance choices [#560](https://github.com/portagenetwork/roadmap/issues/560)
+
  - Fix 500 error being thrown for GET api/v0/plans [#569](https://github.com/portagenetwork/roadmap/issues/569)
 
  - Fixed an issue that was preventing uses from leaving the research output byte_size field blank
