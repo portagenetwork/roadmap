@@ -93,7 +93,7 @@ class Org < ApplicationRecord
   # ===============
 
   # DMP Assistant has some org names that are non-unique in there .downcase form
-  # Set `case_sensitive: false` after all such orgs names have been addressed
+  # TODO: Set `case_sensitive: false` after all such orgs names have been addressed
   validates :name, presence: { message: PRESENCE_MESSAGE },
                    uniqueness: { message: UNIQUENESS_MESSAGE,
                                  case_sensitive: true }
