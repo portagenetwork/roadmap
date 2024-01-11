@@ -17,10 +17,26 @@ jobs:
   test:
     runs-on: ubuntu-20.04
 
+    services:
+      # Postgres installation
+      db:
+        image: postgres
+        env:
+          # Latest version of Postgres has increased security. We can use the default
+          # user/password in this testing scenario though so use the following env
+          # variable to bypass this changes:
+          # https://github.com/docker-library/postgres/issues/681
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     env:
-      DB_ADAPTER: mysql2
-      MYSQL_PWD: root
       RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:@localhost:5432/roadmap_test
 
     steps:
     # Checkout the repo
@@ -31,12 +47,10 @@ jobs:
       with:
         node-version: 16
 
-    - name: 'Install MySQL Packages'
+    - name: 'Install Postgresql Packages'
       run: |
         sudo apt-get update
-        sudo apt-get install -y mysql-client-core-8.0 
-        sudo apt-get install -y mysql-server
-        sudo apt-get install -y libmysqlclient-dev 
+        sudo apt-get install libpq-dev
 
     - name: 'Determine Ruby and Bundler Versions from Gemfile.lock'
       run: |
@@ -69,7 +83,7 @@ jobs:
       run: |
         gem install bundler -v ${{ env.BUNDLER_VERSION }}
         bundle config path vendor/bundle
-        bundle install --jobs 4 --retry 3 --without pgsql rollbar aws
+        bundle install --jobs 4 --retry 3 --without mysql rollbar aws
 
     - name: 'Setup Credentials'
       run: |
@@ -94,11 +108,6 @@ jobs:
     - name: 'Yarn Install'
       run: |
         yarn install
-
-    - name: 'Start MySQL'
-      run: |
-        sudo systemctl unmask mysql
-        sudo systemctl start mysql
 
     - name: 'Setup Test DB'
       run: bin/rails db:setup RAILS_ENV=test
