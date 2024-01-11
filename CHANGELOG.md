@@ -4,6 +4,8 @@
 
 ### Added
 
+ - Enabled reCaptcha widget's language to match app's selected language [#558](https://github.com/portagenetwork/roadmap/pull/558)
+
  - Bump follow-redirects from 1.15.2 to 1.15.4 [#596](https://github.com/portagenetwork/roadmap/pull/596)
 
  - Bump puma from 6.4.1 to 6.4.2 [#592](https://github.com/portagenetwork/roadmap/pull/592)
