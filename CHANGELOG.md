@@ -64,6 +64,8 @@
 
 ### Fixed
 
+ - Fixed tooltips that were previously rendering 'undefined' as their message [#552](https://github.com/portagenetwork/roadmap/issues/552)
+
  - Patched a validation check to enable updates for all existing DMP Assistant Orgs [#587](https://github.com/portagenetwork/roadmap/issues/587)
 
  - Fix duplicate guidance choices [#560](https://github.com/portagenetwork/roadmap/issues/560)
