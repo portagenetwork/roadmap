@@ -4,6 +4,8 @@
 
 ### Added
 
+ - Bump faker from 3.2.2 to 3.2.3 [#603](https://github.com/portagenetwork/roadmap/pull/603)
+ 
  - Bump bootsnap from 1.17.0 to 1.17.1 [#598](https://github.com/portagenetwork/roadmap/pull/598)
 
  - Enabled reCaptcha widget's language to match app's selected language [#558](https://github.com/portagenetwork/roadmap/pull/558)
