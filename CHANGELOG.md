@@ -64,6 +64,8 @@
 
 ### Fixed
 
+ - Fixed `gem install bundler` issue that was preventing Github Actions from pushing images to Docker Hub [#599](https://github.com/portagenetwork/roadmap/issues/599)
+
  - Fixed tooltips that were previously rendering 'undefined' as their message [#552](https://github.com/portagenetwork/roadmap/issues/552)
 
  - Patched a validation check to enable updates for all existing DMP Assistant Orgs [#587](https://github.com/portagenetwork/roadmap/issues/587)
