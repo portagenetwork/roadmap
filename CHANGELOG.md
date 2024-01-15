@@ -4,6 +4,8 @@
 
 ### Added
 
+ - Bump bootsnap from 1.17.0 to 1.17.1 [#598](https://github.com/portagenetwork/roadmap/pull/598)
+
  - Enabled reCaptcha widget's language to match app's selected language [#558](https://github.com/portagenetwork/roadmap/pull/558)
 
  - Bump follow-redirects from 1.15.2 to 1.15.4 [#596](https://github.com/portagenetwork/roadmap/pull/596)
