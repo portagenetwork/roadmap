@@ -33,8 +33,9 @@ ARG INSTALL_PATH=/usr/src/app/
 ENV INSTALL_PATH $INSTALL_PATH
 
 WORKDIR $INSTALL_PATH
-RUN gem install bundler
 COPY Gemfile* $INSTALL_PATH
+# Install Bundler with the specified version from Gemfile.lock
+RUN gem install bundler -v "$(tail -1 Gemfile.lock | tr -d " ")"
 
 # for 3.1.0 test, need both mysql and psql group installed
 RUN bundle config --local build.sassc --disable-march-tune-native
