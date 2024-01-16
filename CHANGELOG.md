@@ -4,6 +4,8 @@
 
 ### Added
 
+ - Bump bullet from 7.1.5 to 7.1.6 [#605](https://github.com/portagenetwork/roadmap/pull/605)
+
  - Bump rollbar from 3.5.0 to 3.5.1 [#601](https://github.com/portagenetwork/roadmap/pull/601)
 
  - Bump faker from 3.2.2 to 3.2.3 [#603](https://github.com/portagenetwork/roadmap/pull/603)
