@@ -9,7 +9,7 @@ ruby '>= 2.7.6'
 # ===========#
 
 # Full-stack web application framework. (http://rubyonrails.org)
-gem 'rails', '~> 6.1'
+gem 'rails', '~> 7.1'
 
 # TODO: Remove this once Rails addresses the issue with its dependency on mimemagic. Mimemagic had
 #       an MIT license but was using some incompatible GPL license code.
