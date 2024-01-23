@@ -8,7 +8,7 @@
     plan_name: @plan_name,
     tool_name: tool_name,
     allow_change_prefs: false,
-    link_html: link_to(@plan_name, plan_url(@plan))
+    link_html: link_to(sanitize(@plan_name), plan_url(@plan))
     } 
     %>
 </p>
