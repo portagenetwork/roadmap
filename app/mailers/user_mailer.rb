@@ -4,6 +4,7 @@
 class UserMailer < ActionMailer::Base
   prepend_view_path 'app/views/branded/'
 
+  require 'cgi' # Using CGI.unescapeHTML() on sanitized plan.title within mail(subject: ) to render '&amp;' as '&'
   include MailerHelper
   helper MailerHelper
   helper FeedbacksHelper
@@ -133,11 +134,12 @@ class UserMailer < ActionMailer::Base
       mail(to: recipient.email,
            from: sender,
            subject: format(_('%{tool_name}: Expert feedback has been provided for %{plan_title}'),
-                           tool_name: tool_name, plan_title: @plan.title))
+                           tool_name: tool_name, plan_title: CGI.unescapeHTML(@plan.title)))
     end
   end
   # rubocop:enable Metrics/AbcSize
 
+  # rubocop:disable Metrics/AbcSize
   def plan_visibility(user, plan)
     return unless user.active?
 
@@ -150,9 +152,10 @@ class UserMailer < ActionMailer::Base
 
     I18n.with_locale I18n.locale do
       mail(to: @user.email,
-           subject: format(_('DMP Visibility Changed: %{plan_title}'), plan_title: @plan.title))
+           subject: format(_('DMP Visibility Changed: %{plan_title}'), plan_title: CGI.unescapeHTML(@plan.title)))
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   # commenter - User who wrote the comment.
   # plan - Plan for which the comment is associated to
@@ -180,7 +183,7 @@ class UserMailer < ActionMailer::Base
     I18n.with_locale I18n.locale do
       mail(to: @plan.owner.email,
            subject: format(_('%{tool_name}: A new comment was added to %{plan_title}'),
-                           tool_name: tool_name, plan_title: @plan.title))
+                           tool_name: tool_name, plan_title: CGI.unescapeHTML(@plan.title)))
     end
   end
   # rubocop:enable Metrics/AbcSize
