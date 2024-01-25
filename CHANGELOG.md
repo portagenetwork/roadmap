@@ -102,7 +102,9 @@
 
 ### Changed
 
-  - Removed dmp-pgd.ca/?locale=fr_CA links from terms & privacy pages (they had no effect on the app's language selector) [#455](https://github.com/portagenetwork/roadmap/issues/455)
+ - Remove "You must answer at least" message when plans.default_percentage_answered is set to 0 [#607](https://github.com/portagenetwork/roadmap/issues/607)
+
+ - Removed dmp-pgd.ca/?locale=fr_CA links from terms & privacy pages (they had no effect on the app's language selector) [#455](https://github.com/portagenetwork/roadmap/issues/455)
 
  - Updated ruby.yml workflow to use PostgreSQL database [#532](https://github.com/portagenetwork/roadmap/issues/532)
 
