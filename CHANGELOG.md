@@ -72,6 +72,8 @@
 
 ### Fixed
 
+ - Fixed display of plan titles (specifically ampersands) within outgoing e-mails [#615](https://github.com/portagenetwork/roadmap/issues/615)
+
  - Fixed `gem install bundler` issue that was preventing Github Actions from pushing images to Docker Hub [#599](https://github.com/portagenetwork/roadmap/issues/599)
 
  - Fixed tooltips that were previously rendering 'undefined' as their message [#552](https://github.com/portagenetwork/roadmap/issues/552)
@@ -102,7 +104,7 @@
 
 ### Changed
 
-  - Removed dmp-pgd.ca/?locale=fr_CA links from terms & privacy pages (they had no effect on the app's language selector) [#455](https://github.com/portagenetwork/roadmap/issues/455)
+ - Removed dmp-pgd.ca/?locale=fr_CA links from terms & privacy pages (they had no effect on the app's language selector) [#455](https://github.com/portagenetwork/roadmap/issues/455)
 
  - Updated ruby.yml workflow to use PostgreSQL database [#532](https://github.com/portagenetwork/roadmap/issues/532)
 
