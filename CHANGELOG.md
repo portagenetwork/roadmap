@@ -4,6 +4,8 @@
 
 ### Added
 
+ - Bump bootsnap from 1.17.1 to 1.18.3 [#630](https://github.com/portagenetwork/roadmap/pull/630)
+
  - Bump bullet from 7.1.5 to 7.1.6 [#605](https://github.com/portagenetwork/roadmap/pull/605)
 
  - Bump rollbar from 3.5.0 to 3.5.1 [#601](https://github.com/portagenetwork/roadmap/pull/601)
