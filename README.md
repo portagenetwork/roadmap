@@ -1,8 +1,11 @@
 # DMP Assistant
 
-[![Actions Brakeman](https://github.com/portagenetwork/roadmap/workflows/Brakeman/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
-[![Actions ESLint](https://github.com/portagenetwork/roadmap/workflows/ESLint/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
-[![Actions Test - MySQL](https://github.com/portagenetwork/roadmap/workflows/Tests%20-%20MySQL/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
+[![Actions Brakeman](https://github.com/portagenetwork/roadmap/actions/workflows/brakeman.yml/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
+[![Actions ESLint](https://github.com/portagenetwork/roadmap/actions/workflows/eslint.yml/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
+[![Actions Rubocop](https://github.com/portagenetwork/roadmap/actions/workflows/rubocop.yml/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
+[![Actions Tests - PostgreSQL](https://github.com/portagenetwork/roadmap/actions/workflows/postgres.yml/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
+[![Actions Tests - MySQL](https://github.com/portagenetwork/roadmap/actions/workflows/mysql.yml/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
+[![Actions Tests - Ruby](https://github.com/portagenetwork/roadmap/actions/workflows/ruby.yml/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
 [![MIT License](https://img.shields.io/github/license/portagenetwork/roadmap)](https://github.com/portagenetwork/roadmap/blob/deployment-portage/LICENSE.md)
 [![GitHub release](https://img.shields.io/github/v/release/portagenetwork/roadmap.svg)](https://GitHub.com/portagenetwork/roadmap/releases/)
 [![GitHub issues](https://img.shields.io/github/issues/portagenetwork/roadmap.svg)](https://GitHub.com/portagenetwork/roadmap/issues/)
