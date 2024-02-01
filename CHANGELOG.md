@@ -74,6 +74,8 @@
 
 ### Fixed
 
+ - Removed unwanted text from success notification when permissions are changed for a plan collaborator [#606](https://github.com/portagenetwork/roadmap/issues/606)
+
  - Fixed `gem install bundler` issue that was preventing Github Actions from pushing images to Docker Hub [#599](https://github.com/portagenetwork/roadmap/issues/599)
 
  - Fixed tooltips that were previously rendering 'undefined' as their message [#552](https://github.com/portagenetwork/roadmap/issues/552)
