@@ -1,0 +1,41 @@
+# {{ ansible_managed }}
+
+#Yashu, December 20, 2023 - this file belongs in the PortageNetwork? So that we could just yum-install it & have it *work*
+#This is based on the assumption of using Phusion Passenger as our primary Rails server.
+
+# Ensure that we're always using https, even here in dev/test
+RewriteEngine On
+#RewriteRule (.*) https://dmp{{ server_role }}.library.ualberta.ca/%{REQUEST_URI}
+
+PassengerAppEnv {{ passengerAppEnv }}
+RailsEnv {{ railsEnv }}
+
+   <VirtualHost *:443>
+      #Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+      PassengerEnabled On
+      ServerName {{ serverName }}
+      ServerAlias {{ ansible_fqdn }}
+      # !!! Be sure to point DocumentRoot to 'public'!
+      DocumentRoot /var/www/sites/dmp/public
+
+      SetOutputFilter DEFLATE
+
+      # These came out of our Security Review, on Jun 26, 2014 -- disable the TRACE feature by rewriting TRACE requests, 
+      # See http://www.apacheweek.com/issues/03-01-24 for technical details
+      RewriteCond %{REQUEST_METHOD} ^TRACE 
+      RewriteRule .* - [F] 
+
+      Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+      SSLEngine on
+#        SSLCertificateFile /etc/pki/tls/certs/library.ualberta.ca.crt
+ #       SSLCertificateKeyFile /etc/pki/tls/private/library.ualberta.ca.key
+  #      SSLCertificateChainFile /etc/pki/tls/certs/GlobalSignRSAOrganizationValidationCA-SHA256-R3.crt
+	 SSLCertificateKeyFile /home/yashu/Dev/portage_roadmap/roadmap/config/letsencrypt/privkey.pem
+	 SSLCertificateChainFile /home/yashu/Dev/portage_roadmap/roadmap/config/letsencrypt/fullchain.pem
+      <Directory /var/www/sites/dmp/public>
+         # This relaxes Apache security settings.
+         AllowOverride all
+         # MultiViews must be turned off.
+         Options -MultiViews
+      </Directory>
+   </VirtualHost>
