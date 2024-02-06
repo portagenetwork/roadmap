@@ -1,12 +1,7 @@
 # frozen_string_literal: true
 
+require 'capybara/rspec'
 require 'mocha'
-# require 'simplecov'
-
-# Start up the SimpleCov Test Coverage service. This must run before the app's
-# code is loaded/required!
-# SimpleCov writes the results to the ./coverage dir once the tests complete
-# SimpleCov.start 'rails'
 
 $LOAD_PATH.unshift(File.expand_path(__dir__))
 
@@ -133,6 +128,6 @@ RSpec.configure do |config|
   end
 
   config.after(:suite) do |example|
-    Capybara::Webmock.stop if example.metadata[:type] == :feature
+    # Capybara::Webmock.stop if example.metadata[:type] == :feature
   end
 end

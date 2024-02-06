@@ -72,7 +72,6 @@
     </script>
 
     <%= stylesheet_link_tag(stylesheet_manifest_file) %>
-    <%= javascript_pack_tag 'application', 'data-turbo-track': 'reload' %>
     <%= csrf_meta_tags %>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -80,6 +79,8 @@
 
     <%= render partial: 'layouts/analytics' %>
 
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
   </head>
   <body data-locale="<%= I18n.locale %>">
       <div class="skip">
