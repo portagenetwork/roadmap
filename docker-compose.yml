@@ -18,6 +18,15 @@ services:
     depends_on:
       - db
 
+  apache:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+
   db:
     image: postgres:12.14
     volumes:
