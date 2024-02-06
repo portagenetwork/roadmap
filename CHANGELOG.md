@@ -1,5 +1,121 @@
 # Changelog
 
+## [4.0.2+portage-4.0.0] - 2024-02-01
+
+### Added
+
+ - Bump bootsnap from 1.17.1 to 1.18.3 [#630](https://github.com/portagenetwork/roadmap/pull/630)
+
+ - Bump bullet from 7.1.5 to 7.1.6 [#605](https://github.com/portagenetwork/roadmap/pull/605)
+
+ - Bump rollbar from 3.5.0 to 3.5.1 [#601](https://github.com/portagenetwork/roadmap/pull/601)
+
+ - Bump faker from 3.2.2 to 3.2.3 [#603](https://github.com/portagenetwork/roadmap/pull/603)
+ 
+ - Bump bootsnap from 1.17.0 to 1.17.1 [#598](https://github.com/portagenetwork/roadmap/pull/598)
+
+ - Enabled reCaptcha widget's language to match app's selected language [#558](https://github.com/portagenetwork/roadmap/pull/558)
+
+ - Bump follow-redirects from 1.15.2 to 1.15.4 [#596](https://github.com/portagenetwork/roadmap/pull/596)
+
+ - Bump puma from 6.4.1 to 6.4.2 [#592](https://github.com/portagenetwork/roadmap/pull/592)
+
+ - Bump puma from 6.4.0 to 6.4.1 [#584](https://github.com/portagenetwork/roadmap/pull/584)
+
+ - Bump bullet from 7.1.4 to 7.1.5 [#588](https://github.com/portagenetwork/roadmap/pull/588)
+
+ - Bump rollbar from 3.4.2 to 3.5.0 [#585](https://github.com/portagenetwork/roadmap/pull/585)
+
+ - Bump parallel from 1.23.0 to 1.24.0 [#574](https://github.com/portagenetwork/roadmap/pull/574)
+
+ - Bump omniauth from 2.1.1 to 2.1.2 [#573](https://github.com/portagenetwork/roadmap/pull/573)
+
+ - Bump autoprefixer-rails from 10.4.15.0 to 10.4.16.0 [#571](https://github.com/portagenetwork/roadmap/pull/571)
+
+ - Bump bootsnap from 1.16.0 to 1.17.0 [#564](https://github.com/portagenetwork/roadmap/pull/564)
+
+ - Bump faker from 3.2.1 to 3.2.2 [#565](https://github.com/portagenetwork/roadmap/pull/565)
+
+ - Bump turbo-rails from 1.4.0 to 1.5.0 [#566](https://github.com/portagenetwork/roadmap/pull/566)
+
+ - Bump activerecord-nulldb-adapter from 0.9.0 to 1.0.1 [#567](https://github.com/portagenetwork/roadmap/pull/567)
+
+ - Bump recaptcha from 5.15.0 to 5.16.0 [#568](https://github.com/portagenetwork/roadmap/pull/568)
+
+ - Bump tinymce from 5.10.0 to 5.10.9 [#530](https://github.com/portagenetwork/roadmap/pull/530)
+
+ - Bump rack-mini-profiler from 3.1.0 to 3.3.0 [#548](https://github.com/portagenetwork/roadmap/pull/548)
+
+ - Bump spring from 4.1.1 to 4.1.3 [#562](https://github.com/portagenetwork/roadmap/pull/562)
+
+ - Bump rollbar from 3.4.0 to 3.4.2 [#547](https://github.com/portagenetwork/roadmap/pull/547)
+
+ - Bump danger from 9.3.1 to 9.4.2 [#555](https://github.com/portagenetwork/roadmap/pull/555)
+
+ - Bump bullet from 7.1.0 to 7.1.4 [#563](https://github.com/portagenetwork/roadmap/pull/563)
+
+ - Bump browserify-sign from 4.2.1 to 4.2.2 [#520](https://github.com/portagenetwork/roadmap/pull/520)
+
+ - Bump socket.io-parser from 4.2.2 to 4.2.4 [#559](https://github.com/portagenetwork/roadmap/pull/559)
+
+ - Merged Upstream Release [v4.0.0](https://github.com/DMPRoadmap/roadmap/releases/tag/v4.0.0)
+
+ - Merged Upstream Release [v4.0.1](https://github.com/DMPRoadmap/roadmap/releases/tag/v4.0.1)
+
+ - Merged Upstream Release [v4.0.2](https://github.com/DMPRoadmap/roadmap/releases/tag/v4.0.2)
+
+ - Added CHANGELOG.md and Danger Github Action [#3257](https://github.com/DMPRoadmap/roadmap/issues/3257)
+
+ - Added validation with custom error message in research_output.rb to ensure a user does not enter a very large value as 'Anticipated file size'. [#3161](https://github.com/DMPRoadmap/roadmap/issues/3161)
+
+ - Added popover for org profile page and added explanation for public plan
+
+ - Added rack-attack version 6.6.1 gem. https://rubygems.org/gems/rack-attack/versions/6.6.1
+
+### Fixed
+
+ - Removed unwanted text from success notification when permissions are changed for a plan collaborator [#606](https://github.com/portagenetwork/roadmap/issues/606)
+
+ - Fixed `gem install bundler` issue that was preventing Github Actions from pushing images to Docker Hub [#599](https://github.com/portagenetwork/roadmap/issues/599)
+
+ - Fixed tooltips that were previously rendering 'undefined' as their message [#552](https://github.com/portagenetwork/roadmap/issues/552)
+
+ - Patched a validation check to enable updates for all existing DMP Assistant Orgs [#587](https://github.com/portagenetwork/roadmap/issues/587)
+
+ - Fix duplicate guidance choices [#560](https://github.com/portagenetwork/roadmap/issues/560)
+
+ - Fix 500 error being thrown for GET api/v0/plans [#569](https://github.com/portagenetwork/roadmap/issues/569)
+
+ - Fixed an issue that was preventing uses from leaving the research output byte_size field blank
+
+ - Patched issue that was causing template visibility to default to organizationally visible after saving
+
+ - Froze mail gem version [#3254](https://github.com/DMPRoadmap/roadmap/issues/3254)
+
+ - Updated the CSV export so that it now includes research outputs
+
+ - Updated sans-serif font used in PDF downloads to Roboto since Google API no longer offers Helvetica
+
+ - Fixed discrepencies with default/max per_page values for API and UI pagination
+
+ - Updated JS that used to call the TinyMCE `setMode()` function so that it now calls `mode.set()` because the former is now deprecated.
+
+ - Patched an issue that was causing a template's visibility to change to 'organizationally_visible' when saving on the template details page.
+
+ - Fixed an issue with the Rails 6 keyword arguments change that was causing the `paginable_sort_link` to fail
+
+### Changed
+
+  - Removed dmp-pgd.ca/?locale=fr_CA links from terms & privacy pages (they had no effect on the app's language selector) [#455](https://github.com/portagenetwork/roadmap/issues/455)
+
+ - Updated ruby.yml workflow to use PostgreSQL database [#532](https://github.com/portagenetwork/roadmap/issues/532)
+
+ - Added scss files to EditorConfig
+ 
+ - Change csv file name for statistics from 'Completed' to 'Created'
+ 
+ - Added error message and updated saving message for plan writing session to improve user experience
+       
 ## [3.3.1+portage-3.2.2] - 2023-11-20
 
 ### Fixed

@@ -48,12 +48,12 @@ class Org < ApplicationRecord
 
   attribute :feedback_msg, :text, default: feedback_confirmation_default_message
   attribute :language_id, :integer, default: -> { Language.default&.id }
-  attribute :links, :text, default: { org: [] }
 
   # Stores links as an JSON object:
   #  { org: [{"link":"www.example.com","text":"foo"}, ...] }
   # The links are validated against custom validator allocated at
   # validators/template_links_validator.rb
+  attribute :links, :text, default: { org: [] }
   serialize :links, JSON
 
   # ================
@@ -92,8 +92,11 @@ class Org < ApplicationRecord
   # = Validations =
   # ===============
 
+  # DMP Assistant has some org names that are non-unique in there .downcase form
+  # TODO: Set `case_sensitive: false` after all such orgs names have been addressed
   validates :name, presence: { message: PRESENCE_MESSAGE },
-                   uniqueness: { message: UNIQUENESS_MESSAGE }
+                   uniqueness: { message: UNIQUENESS_MESSAGE,
+                                 case_sensitive: true }
 
   validates :is_other, inclusion: { in: BOOLEAN_VALUES,
                                     message: PRESENCE_MESSAGE }
@@ -177,7 +180,8 @@ class Org < ApplicationRecord
             4 => :research_institute,
             5 => :project,
             6 => :school,
-            column: 'org_type'
+            column: 'org_type',
+            check_for_column: !Rails.env.test?
 
   # The default Org is the one whose guidance is auto-attached to
   # plans when a plan is created

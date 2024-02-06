@@ -18,13 +18,8 @@ jobs:
     - name: 'Install Ruby'
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: ${{ env.RUBY_VERSION }}
-
-    - name: 'Bundle Install'
-      run: |
-        gem install bundler -v ${{ env.BUNDLER_VERSION }}
-        bundle config path vendor/bundle
-        bundle install --jobs 4 --retry 3 --without pgsql rollbar aws
+        ruby-version: 2.7.6
+        bundler-cache: true
 
     - name: 'Run Rubocop'
       run: bin/rubocop
