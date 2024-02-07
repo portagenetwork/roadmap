@@ -7,23 +7,20 @@ ENV BUNDLE_PATH=/bundle/ \
     DEBIAN_FRONTEND="noninteractive"
 ENV Path="${BUNDLE_BIN}:${PATH}"
 
-# Install necessary dependencies for Passenger and Apache
-RUN apt-get update && \
-    apt-get install -y gnupg2 curl apache2 && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
 
-# Add Phusion's APT repository to the system
-RUN curl -LSs https://www.phusionpassenger.com/keys/PHUSION-GPG-KEY.pub | gpg --dearmor -o /usr/share/keyrings/phusion-archive-keyring.gpg && \
-    echo deb [signed-by=/usr/share/keyrings/phusion-archive-keyring.gpg] https://oss-binaries.phusionpassenger.com/apt/passenger $(lsb_release -cs) main > /etc/apt/sources.list.d/passenger.list && \
-    apt-get update
 
-# Install Passenger
-RUN apt-get install -y --no-install-recommends passenger
 
-# Enable Passenger module for Apache
-RUN sed -i '/# passenger_module/c\LoadModule passenger_module /usr/lib/apache2/modules/mod_passenger.so' /etc/apache2/mods-available/passenger.load && \
-    a2enmod passenger
+# # Add Phusion's APT repository to the system
+# RUN curl -LSs https://www.phusionpassenger.com/keys/PHUSION-GPG-KEY.pub | gpg --dearmor -o /usr/share/keyrings/phusion-archive-keyring.gpg && \
+#     echo deb [signed-by=/usr/share/keyrings/phusion-archive-keyring.gpg] https://oss-binaries.phusionpassenger.com/apt/passenger $(lsb_release -cs) main > /etc/apt/sources.list.d/passenger.list && \
+#     apt-get update
+
+# # Install Passenger
+# RUN apt-get install -y --no-install-recommends passenger
+
+# # Enable Passenger module for Apache
+# RUN sed -i '/# passenger_module/c\LoadModule passenger_module /usr/lib/apache2/modules/mod_passenger.so' /etc/apache2/mods-available/passenger.load && \
+#     a2enmod passenger
 
 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
