@@ -9,6 +9,9 @@ ENV Path="${BUNDLE_BIN}:${PATH}"
 
 
 
+# Install apache and  dependencies
+RUN apt-get update && \
+    apt-get install -y apache2 apache2-dev nodejs
 
 # # Add Phusion's APT repository to the system
 # RUN curl -LSs https://www.phusionpassenger.com/keys/PHUSION-GPG-KEY.pub | gpg --dearmor -o /usr/share/keyrings/phusion-archive-keyring.gpg && \
@@ -81,9 +84,10 @@ RUN DATABASE_URL=nulldb://user:test@127.0.0.1/roadmap RAILS_ENV=production SECRE
 
 # Configure Apache
 COPY apache/dev.dmp-pgd.conf /etc/apache2/sites-available/
+RUN a2enmod headers
+RUN a2enmod proxy proxy_http rewrite
 RUN a2ensite dev.dmp-pgd
-RUN a2enmod proxy
-RUN a2enmod proxy_http
+
 
 # Expose ports
 EXPOSE 80
