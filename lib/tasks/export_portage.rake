@@ -182,9 +182,9 @@ namespace :export_production_data do
         plan.title = "Test Plan #{index}"
         plan.description = Faker::Lorem.sentence
         # force a few plan to use modified template from the two test organizations for statistics
-        if [20..50].include?(index)
+        if (20..50).cover?(index)
           plan.template = Template.find(title: 'Portage Template-Test1')
-        elsif [60..90].include?(index)
+        elsif (60..90).cover?(index)
           plan.template = Template.find(title: 'Portage Template-Test2')
         end
         serialized = plan.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }

@@ -35,5 +35,5 @@ class MimeType < ApplicationRecord
   # ==========
 
   # Retrieves the unique list of categories
-  scope :categories, -> { pluck(:category).uniq.sort { |a, b| a <=> b } }
+  scope :categories, -> { pluck(:category).uniq.sort }
 end
