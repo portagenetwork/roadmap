@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Bump mysql2 from 0.5.5 to 0.5.6 [#645](https://github.com/portagenetwork/roadmap/pull/645)
+
 ## [4.0.2+portage-4.0.0] - 2024-02-01
 
 ### Added
