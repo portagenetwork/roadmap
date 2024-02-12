@@ -34,22 +34,22 @@
 
       <h2 class="fontsize-h3"><%= _('Getting started') %></h2>
 
-        <p><%= _("If you have an account please sign in and start creating or editing your DMP.") %></p>
-        <p><%= _("If you do not have a %{application_name} account, click on")  % {application_name: ApplicationService.application_name} %> <a href="<%= root_path %>"><%= _('Sign up') %></a> <%= _("on the homepage.") %></p>
-        <p><%= _("Please visit the") %> <a href="<%= help_path %>"><%= _('Help') %></a> <%= _("page for guidance.") %></p>
+      <p><%= _("If you have an account, please sign in and start creating or editing your DMP.") %></p>
 
-      <p>
-        <% sign_up_url = request.base_url %>
-        <%= sanitize(_('If you do not have a DMP Assistant account, click on <a href="%{sign_up_url}"> \'Sign up\' </a> on the homepage.') % { sign_up_url: sign_up_url} ) %>
-      </p>
+      <% unless user_signed_in? %>
+        <p>
+          <% sign_up_url = request.base_url %>
+          <%= sanitize(_('If you do not have a DMP Assistant account, click on <a href="%{sign_up_url}"> \'Sign up\' </a> on the homepage.') % { sign_up_url: sign_up_url} ) %>
+        </p>
+      <% end %>
 
       <p>
         <%= _('Please note that we are currently working on single sign-in authentication with your campus ID. You will have the option to link your existing account to your campus ID when that feature becomes available.') %>
       </p>
 
       <p>
-        <% help_url = "help_url" %>
-        <%= sanitize(_('Please visit the <a href="%{help_url}"> \'Help\' </a> page for guidance.') % {help_url: help_url}) %>
+        <% help_url = help_path %>
+        <%= sanitize(_('Please visit the <a href="%{help_url}"> \'Help\' </a> page for guidance.') % {help_url: help_path}) %>
       </p>
 
       <h2 class="fontsize-h3"><%= _('Feedback') %></h2>

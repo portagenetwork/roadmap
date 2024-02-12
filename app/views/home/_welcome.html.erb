@@ -5,12 +5,13 @@
 <% title _("Welcome to %{application_name}.") % {application_name: application_name} %>
 <div>
   <h1><%= _("Welcome to %{application_name}.") % {application_name: application_name}%></h1>
-  
+
+
   <%
 
-    landing_page_content = _(%{
+    landing_page_content = format(_(%{
       <!-- landing page content -->
-      <p> 
+      <p>
         The <strong>DMP Assistant</strong> is a national, online, bilingual data management planning tool developed by the <strong>Digital Research Alliance of Canada (the Alliance)</strong> in collaboration with host institution <strong>University of Alberta</strong> to assist researchers in preparing <strong>data management plans (DMPs)</strong>. This tool is freely available to all researchers, and develops a DMP through a series of key data management questions, supported by best-practice guidance and examples.
       </p>
 
@@ -31,7 +32,7 @@
           <a href="https://doi.org/10.5281/zenodo.4001018">Primer – Data Management Plan</a>
         </li>
         <li>
-          <a href="https://portagenetwork.ca/tools-and-resources/dmp-assistant/how-to-manage-your-data/">How to Manage Your Data</a>
+          <a href="%{how_to_manage_your_data_path}">How to Manage Your Data</a>
         </li>
         <li>
           Tutorial Videos:
@@ -61,13 +62,13 @@
       </ul>
 
       <p>
-        For more resources and training materials spanning the entire research data life cycle, see the <a href="https://portagenetwork.ca/tools-and-resources/training-resources/"> Portage Network Training Resources. </a>
+        For more resources and training materials spanning the entire research data life cycle, see the <a href="%{training_resources_path}"> Portage Network Training Resources. </a>
       </p>
 
       <p>
-        The DMP Assistant was adapted from the <a href="https://dcc.ac.uk/"> Digital Curation Centre (DCC)</a>’s <a href="https://dmponline.dcc.ac.uk/">DMPonline</a> tool, and uses the DMP Roadmap codebase developed by DCC and the <a href=" https://cdlib.org/services/uc3/">University of California Curation Center (UC3).</a>
+        The DMP Assistant was adapted from the <a href="https://dcc.ac.uk/"> Digital Curation Centre (DCC)</a>’s <a href="https://dmponline.dcc.ac.uk/">DMPonline</a> tool, and uses the DMP Roadmap codebase developed by DCC and the <a href="https://cdlib.org/services/uc3/">University of California Curation Center (UC3).</a>
       </p>
-    })
+    }),how_to_manage_your_data_path: how_to_manage_your_data_path, training_resources_path: training_resources_path)
 
   %>
 

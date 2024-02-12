@@ -1,5 +1,5 @@
 <hr />
-<h1><%= @plan.title %></h1>
+<h1><%= sanitize(@plan.title) %></h1>
 <p><em><%= _("A Data Management Plan created using %{application_name}") % { application_name: ApplicationService.application_name } %></em></p>
 <br/>
 <div class="cover-page">

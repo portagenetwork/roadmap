@@ -1,10 +1,9 @@
 <style>
-  @import 'https://fonts.googleapis.com/css?family=<%= font_face.downcase.include?('times') ? 'Times' : 'Helvetica' %>';
+  @import 'https://fonts.googleapis.com/css?family=<%= font_face.downcase.include?('times') ? 'Times' : 'Roboto' %>';
 
   body {
     font-family: <%= font_face %>;
     font-size: <%= font_size %>;
-    margin: <%= margin %>;
   }
   h1 {
       font-size: 1.5rem;
@@ -59,5 +58,5 @@
     }
     .bold {
       font-weight: bold;
-    }  
+    }
 </style>

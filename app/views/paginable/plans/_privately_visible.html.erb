@@ -19,7 +19,7 @@
         <% my_plan_roles = plan.roles.select(&:active).select { |r| r.user_id == current_user.id } %>
         <tr id="<%= dom_id(plan) %>">
           <td>
-            <%= link_to "#{plan.title.length > 60 ? "#{plan.title[0..59]} ..." : plan.title}",
+            <%= link_to sanitize("#{plan.title.length > 60 ? "#{plan.title[0..59]} ..." : plan.title}"),
                 plan_path(plan) %>
           </td>
           <td><%= plan.template.title %></td>
@@ -29,6 +29,9 @@
             <% if plan.administerable_by?(current_user.id) then %>
               <%= check_box_tag :is_test, "1", (plan.visibility === "is_test"),
                                           class: "set_test_plan",
+                                          aria: {
+                                            label: "#{plan.title} - test plan flag"
+                                          },
                                           data: { remote: true, method: :post,
                                                   url: set_test_plan_path(plan) } %>
             <% else %>

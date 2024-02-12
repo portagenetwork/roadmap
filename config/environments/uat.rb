@@ -95,4 +95,5 @@ Rails.application.configure do
     authentication: Rails.application.secrets.smtp_authentication || 'plain',
     enable_starttls_auto: true
   }
+  config.hosts << Rails.application.secrets.dmproadmap_host if Rails.application.secrets.dmproadmap_host.present?
 end

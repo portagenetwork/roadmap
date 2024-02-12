@@ -11,13 +11,13 @@ class ResearchOutputPresenter
   # Returns the output_type list for a select_tag
   def selectable_output_types
     ResearchOutput.output_types
-                  .map { |k, _v| [k.humanize, k] }
+                  .map { |k, _v| [_(k.humanize), k] } # k.humanize is sync'd to translation.io via _research_output.erb
   end
 
   # Returns the access options for a select tag
   def selectable_access_types
     ResearchOutput.accesses
-                  .map { |k, _v| [k.humanize, k] }
+                  .map { |k, _v| [_(k.humanize), k] } # k.humanize is sync'd to translation.io via _research_output.erb
   end
 
   # Returns the options for file size units
@@ -54,6 +54,7 @@ class ResearchOutputPresenter
   end
 
   # Returns the options for subjects for the repository filter
+  # rubocop:disable Metrics/AbcSize
   def self.selectable_subjects
     [
       '23-Agriculture, Forestry, Horticulture and Veterinary Medicine',
@@ -71,7 +72,8 @@ class ResearchOutputPresenter
       '12-Social and Behavioural Sciences',
       '42-Thermal Engineering/Process Engineering'
     ].map do |subject|
-      [subject.split('-').last, subject.gsub('-', ' ')]
+      # subject.split('-').last is sync'd to translation.io via _research_output.erb
+      [_(subject.split('-').last), subject.gsub('-', ' ')]
     end
   end
 
@@ -85,7 +87,7 @@ class ResearchOutputPresenter
   end
 
   # Converts the byte_size into a more friendly value (e.g. 15.4 MB)
-  # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/CyclomaticComplexity
   def converted_file_size(size:)
     return { size: nil, unit: 'mb' } unless size.present? && size.is_a?(Numeric) && size.positive?
     return { size: size / 1.petabytes, unit: 'pb' } if size >= 1.petabytes

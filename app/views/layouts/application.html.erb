@@ -72,7 +72,7 @@
     </script>
 
     <%= stylesheet_link_tag(stylesheet_manifest_file) %>
-    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbo-track': 'reload' %>
     <%= csrf_meta_tags %>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -115,7 +115,6 @@
         <div class="spinner-border hidden" role="status">
           <%spinner_msg = _("Loading...") %>
           <%= image_tag("spinner.gif", alt: spinner_msg) %>
-          <span class="sr-only"><%= spinner_msg %></span>
         </div>
 
       </main>
@@ -134,6 +133,7 @@
       MAX_NUMBER_GUIDANCE_SELECTIONS: 6,
 
       REQUIRED_FIELD_TEXT: _('This field is required.'),
+      VALIDATION_MESSAGE_PASSWORDS_MATCH: _('The passwords must match.'),
 
       SHOW_PASSWORD_MESSAGE: _('Show password'),
       SHOW_SELECT_ORG_MESSAGE: _('Select an organisation from the list.'),

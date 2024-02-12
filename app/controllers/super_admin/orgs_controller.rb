@@ -11,7 +11,7 @@ module SuperAdmin
     def index
       authorize Org
       render 'index', locals: {
-        orgs: Org.includes(:contributors, :plans).with_template_and_user_counts.page(1)
+        orgs: Org.with_template_and_user_counts.page(1)
       }
     end
 
@@ -131,7 +131,8 @@ module SuperAdmin
 
       if @target_org.present?
         if @target_org.merge!(to_be_merged: @org)
-          msg = "Successfully merged '#{@org.name}' into '#{@target_org.name}'"
+          msg = format(_("Successfully merged '%{org}' into '%{target_org}'."), org: @org.name,
+                                                                                target_org: @target_org.name)
           redirect_to super_admin_orgs_path, notice: msg
         else
           msg = _('An error occurred while trying to merge the Organisations.')

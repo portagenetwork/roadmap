@@ -48,12 +48,12 @@ class Org < ApplicationRecord
 
   attribute :feedback_msg, :text, default: feedback_confirmation_default_message
   attribute :language_id, :integer, default: -> { Language.default&.id }
-  attribute :links, :text, default: { org: [] }
 
   # Stores links as an JSON object:
   #  { org: [{"link":"www.example.com","text":"foo"}, ...] }
   # The links are validated against custom validator allocated at
   # validators/template_links_validator.rb
+  attribute :links, :text, default: { org: [] }
   serialize :links, JSON
 
   # ================
@@ -92,8 +92,11 @@ class Org < ApplicationRecord
   # = Validations =
   # ===============
 
+  # DMP Assistant has some org names that are non-unique in there .downcase form
+  # TODO: Set `case_sensitive: false` after all such orgs names have been addressed
   validates :name, presence: { message: PRESENCE_MESSAGE },
-                   uniqueness: { message: UNIQUENESS_MESSAGE }
+                   uniqueness: { message: UNIQUENESS_MESSAGE,
+                                 case_sensitive: true }
 
   validates :is_other, inclusion: { in: BOOLEAN_VALUES,
                                     message: PRESENCE_MESSAGE }
@@ -142,6 +145,11 @@ class Org < ApplicationRecord
   # This gives all managed orgs api access whenever saved or updated.
   before_save :ensure_api_access, if: ->(org) { org.managed? }
 
+  before_validation lambda { |data|
+    data.sanitize_fields(:name)
+    data.name&.strip!
+  }
+
   # If the physical logo file is no longer on disk we do not want it to prevent the
   # model from saving. This typically happens when you copy the database to another
   # environment. The orgs.logo_uid stores the path to the physical logo file that is
@@ -172,7 +180,8 @@ class Org < ApplicationRecord
             4 => :research_institute,
             5 => :project,
             6 => :school,
-            column: 'org_type'
+            column: 'org_type',
+            check_for_column: !Rails.env.test?
 
   # The default Org is the one whose guidance is auto-attached to
   # plans when a plan is created
@@ -232,18 +241,18 @@ class Org < ApplicationRecord
   # Tests are setup currently to work with this issue.
   #
   # Returns String
-  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/AbcSize
   def org_type_to_s
     ret = []
-    ret << 'Institution' if institution?
-    ret << 'Funder' if funder?
-    ret << 'Organisation' if organisation?
-    ret << 'Research Institute' if research_institute?
-    ret << 'Project' if project?
-    ret << 'School' if school?
-    (ret.empty? ? 'None' : ret.join(', '))
+    ret << _('Institution') if institution?
+    ret << _('Funder') if funder?
+    ret << _('Organisation') if organisation?
+    ret << _('Research Institute') if research_institute?
+    ret << _('Project') if project?
+    ret << _('School') if school?
+    (ret.empty? ? _('None') : ret.join(', '))
   end
-  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/CyclomaticComplexity, Metrics/AbcSize
 
   def funder_only?
     org_type == Org.org_type_values_for(:funder).min

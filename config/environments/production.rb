@@ -75,11 +75,11 @@ Rails.application.configure do
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
 
-  # Include working directory name in log for servers running multiple Rails instances.
-  # logger = ActiveSupport::Logger.new(STDOUT)
-  # logger.formatter = ::Logger::Formatter.new
-  # config.logger = ActiveSupport::TaggedLogging.new(logger)
-  # config.log_tags = [ Rails.root.to_s.split('/').last ]
+  # Log disallowed deprecations.
+  config.active_support.disallowed_deprecation = :log
+
+  # Tell Active Support which deprecation messages to disallow.
+  config.active_support.disallowed_deprecation_warnings = []
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
@@ -98,6 +98,13 @@ Rails.application.configure do
     enable_starttls_auto: true
   }
 
-  # Fix JSON Download Error
-  Rails.application.routes.default_url_options[:host] = "assistant.portagenetwork.ca"
+  # Rails 6+ adds middleware to prevent DNS rebinding attacks:
+  #    https://guides.rubyonrails.org/configuring.html#actiondispatch-hostauthorization
+  #
+  # This allows us to define the hostname and add it to the whitelist. If you attempt
+  # to access the site and receive a 'Blocked host' error then you will need to
+  # set this environment variable
+  config.hosts << Rails.application.secrets.dmproadmap_host if Rails.application.secrets.dmproadmap_host.present?
 end
+# Used by Rails' routes url_helpers (typically when including a link in an email)
+Rails.application.routes.default_url_options[:host] = Rails.application.secrets.dmproadmap_host

@@ -79,7 +79,8 @@ class PlanExportsController < ApplicationController
                            @show_unanswered,
                            @selected_phase,
                            @show_custom_sections,
-                           @show_coversheet),
+                           @show_coversheet,
+                           @show_research_outputs),
               filename: "#{file_name}.csv"
   end
 
@@ -91,13 +92,16 @@ class PlanExportsController < ApplicationController
   def show_docx
     # Using and optional locals_assign export_format
     render docx: "#{file_name}.docx",
-           content: render_to_string(partial: 'shared/export/plan',
-                                     locals: { export_format: 'docx' })
+           content: clean_html_for_docx_creation(render_to_string(partial: 'shared/export/plan',
+                                                                  locals: { export_format: 'docx' }))
   end
 
   def show_pdf
     render pdf: file_name,
            margin: @formatting[:margin],
+           # wkhtmltopdf behavior is based on the OS so force the zoom level
+           # See 'Gotchas' section of https://github.com/mileszs/wicked_pdf
+           zoom: 0.78125,
            footer: {
              center: format(_('Created using %{application_name}. Last modified %{date}'),
                             application_name: ApplicationService.application_name,
@@ -117,9 +121,10 @@ class PlanExportsController < ApplicationController
   def file_name
     # Sanitize bad characters and replace spaces with underscores
     ret = @plan.title
-    Zaru.sanitize! ret
     ret = ret.strip.gsub(/\s+/, '_')
     ret = ret.gsub(/"/, '')
+    ret = ret.gsub(/&amp;/, '&')
+    ret = ActiveStorage::Filename.new(ret).sanitized
     # limit the filename length to 100 chars. Windows systems have a MAX_PATH allowance
     # of 255 characters, so this should provide enough of the title to allow the user
     # to understand which DMP it is and still allow for the file to be saved to a deeply
@@ -145,5 +150,12 @@ class PlanExportsController < ApplicationController
           .permit(:form, :project_details, :question_headings, :unanswered_questions,
                   :custom_sections, :research_outputs,
                   formatting: [:font_face, :font_size, { margin: %i[top right bottom left] }])
+  end
+
+  # A method to deal with problematic text combinations
+  # in html that break docx creation by htmltoword gem.
+  def clean_html_for_docx_creation(html)
+    # Replaces single backslash \ with \\ with gsub.
+    html.gsub(/\\/, '\&\&')
   end
 end
