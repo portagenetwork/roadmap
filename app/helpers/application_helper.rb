@@ -53,6 +53,7 @@ module ApplicationHelper
     end
   end
 
+  # Override the contact_us_path value set by the contact-us gem
   def contact_us_path
     if I18n.locale == :'fr-CA'
       'https://portagenetwork.ca/fr/contactez-nous/'
@@ -61,6 +62,9 @@ module ApplicationHelper
       'https://portagenetwork.ca/contact-us/'
     end
   end
+
+  # Override the contact_us_url value set by the contact-us gem
+  alias contact_us_url contact_us_path
 
   # TODO: Replace function body with the commented-out code when French version of this path is made available.
   def terms_of_use_path
