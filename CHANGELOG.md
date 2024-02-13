@@ -18,6 +18,8 @@
 
  - Increased the width of the research outputs file size unit dropdown [#741](https://github.com/portagenetwork/roadmap/pull/741)
 
+ - Updated the "contact-us" link in some places [#660](https://github.com/portagenetwork/roadmap/pull/660)
+
 ## [4.0.2+portage-4.0.3] - 2024-04-11
 
 ### Added
