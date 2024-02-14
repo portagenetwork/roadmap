@@ -47,7 +47,7 @@ ethics_report_tooltip = _("Link to a protocol from a meeting with an ethics comm
     <div class="col-md-8">
       <%= form.label(:research_domain_id, _("Research domain"), class: "control-label") %>
 
-      <% options = research_domains.map { |rd| [_(rd.label), rd.id] } %> <%# rd.label is sync'd to translation.io via config.db_fields %>
+      <% options = research_domains.map { |rd| [rd.label, rd.id] } %>
       <%= form.select :research_domain_id, options_for_select(options, form.object.research_domain_id),
                             {
                               include_blank: _("- Please select one -"),
