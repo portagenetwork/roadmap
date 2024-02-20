@@ -4,7 +4,9 @@
 
 ### Added
 
-- Bump mysql2 from 0.5.5 to 0.5.6 [#645](https://github.com/portagenetwork/roadmap/pull/645)
+ - Bump mysql2 from 0.5.5 to 0.5.6 [#645](https://github.com/portagenetwork/roadmap/pull/645)
+
+ - Create rake task to fix User.accept_terms bug [#672](https://github.com/portagenetwork/roadmap/pull/672)
 
 ## [4.0.2+portage-4.0.0] - 2024-02-01
 
