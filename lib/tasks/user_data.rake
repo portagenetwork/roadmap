@@ -98,4 +98,14 @@ namespace :db do
     end
     puts 'Done!'
   end
+
+  desc 'Update accept terms value for users with outstanding invitation tokens'
+  task update_accept_terms: :environment do
+    puts 'Querying for all users where accept_terms = TRUE and invitation_token IS NOT NULL'
+    users = User.where('accept_terms = ? AND invitation_token IS NOT NULL', true)
+    puts "Query returned #{users.count} users"
+    puts "Setting accept_terms = NULL for each of these #{users.count} users"
+    users.update_all(accept_terms: nil)
+    puts 'Done!'
+  end
 end
