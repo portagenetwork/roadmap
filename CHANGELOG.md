@@ -6,6 +6,10 @@
 
 - Bump mysql2 from 0.5.5 to 0.5.6 [#645](https://github.com/portagenetwork/roadmap/pull/645)
 
+### Fixed
+
+- Updated Webmock's allowed request list to enable fetching of chromedriver [#670](https://github.com/portagenetwork/roadmap/pull/670)
+
 ## [4.0.2+portage-4.0.0] - 2024-02-01
 
 ### Added
