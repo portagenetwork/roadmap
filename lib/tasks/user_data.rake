@@ -98,4 +98,14 @@ namespace :db do
     end
     puts 'Done!'
   end
+
+  desc 'Bugfix for the following issue: https://github.com/portagenetwork/roadmap/issues/664'
+  task correct_accept_terms: :environment do
+    puts 'Retrieving all users where accept_terms == true and invitation_token != nil'
+    users = User.where('accept_terms = ? AND invitation_token IS NOT NULL', true)
+    puts "#{users.count} users retrieved"
+    puts 'Correcting accept_terms to nil for all of the retrieved users'
+    users.update_all(accept_terms: nil)
+    puts 'Done!'
+  end
 end
