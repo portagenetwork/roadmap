@@ -1,6 +1,12 @@
 # Changelog
 
-## [4.0.2+portage-4.0.0] - 2024-02-01
+## [4.0.2+portage-4.0.2] - 2024-03-04
+
+### Added
+
+ - Added an extra Google Analytics Tag [#682](https://github.com/portagenetwork/roadmap/pull/682)
+
+## [4.0.2+portage-4.0.0] [4.0.2+portage-4.0.1] - 2024-02-01
 
 ### Added
 
