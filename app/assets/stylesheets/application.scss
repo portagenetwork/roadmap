@@ -1,9 +1,6 @@
 // Import locally defined variables. Load this before 'bootstrap'
 
-@use "variables";
-
-@use "blocks";
-@use "utils";
+@use "variables" as *;
 
 // Pull in the webpacker managed copy of Bootstrap Stylesheets
 @import "../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
@@ -20,6 +17,9 @@ $fa-font-path: '.';
 @import '@fortawesome/fontawesome-free/scss/regular';
 @import '@fortawesome/fontawesome-free/scss/solid';
 
+@import "blocks";
+@import "utils";
+
 @import "rebranding";
 @import "rebranding-animation";
-@import "grey-branding"
+@import "grey-branding";

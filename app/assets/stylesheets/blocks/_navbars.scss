@@ -1,6 +1,6 @@
 @use '../variables/colours' as *;
 @use '../variables/bootstrap' as *;
-@use "../../../../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss" as *;
+@import '../../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables';
 /* For org navbar custom height */
 #org-navbar {
   border-radius: 0px;
@@ -58,7 +58,7 @@
 
 // Branding navbar. This is defined as a clone of .navbar-branding with customizations
 .navbar-branding {
-  @extend .navbar-inverse;
+  @extend .navbar-inverse !optional;
   background-color: $navbar-branding-bg;
   border-color: $navbar-branding-border;
   border-width: 0px 0px 1px 0px;
