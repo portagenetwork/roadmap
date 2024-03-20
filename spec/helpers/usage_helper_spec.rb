@@ -39,7 +39,7 @@ describe UsageHelper do
       # }
       it 'returns an empty hash if no data was available' do
         expected = {
-          labels: [Date.today.last_month.end_of_month.strftime('%b-%y')],
+          labels: [I18n.l(Date.today.last_month.end_of_month, format: :month_year_abbr)],
           datasets: []
         }
         expect(prep_data_for_template_plans_chart(data: nil)).to eql(expected.to_json)
@@ -132,7 +132,7 @@ describe UsageHelper do
   describe '#prep_date_for_charts' do
     it 'converts the date' do
       rslt = prep_date_for_charts(date: Date.today.to_s)
-      expect(rslt).to eql(Date.today.strftime('%b-%y'))
+      expect(rslt).to eql(I18n.l(Date.today, format: :month_year_abbr))
     end
   end
 

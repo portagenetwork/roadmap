@@ -18,6 +18,7 @@ en-CA:
       short: "%d %b"
       csv: "%d/%m/%Y"
       readable: "%B %d, %Y"
+      month_year_abbr: "%b-%y"
     order:
     - :day
     - :month

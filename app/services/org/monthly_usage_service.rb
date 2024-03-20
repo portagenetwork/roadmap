@@ -26,7 +26,7 @@ class Org
       end
 
       def reducer_body(acc, rec, key_target)
-        month = rec.date.strftime('%b-%y')
+        month = I18n.l(rec.date, format: :month_year_abbr)
         count = rec.count
 
         if acc[month].present?

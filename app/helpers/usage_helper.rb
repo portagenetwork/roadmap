@@ -17,7 +17,7 @@ module UsageHelper
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def prep_data_for_template_plans_chart(data:, subset: 'by_template')
-    last_month = Date.today.last_month.end_of_month.strftime('%b-%y')
+    last_month = I18n.localize(Date.today.last_month.end_of_month, format: :month_year_abbr)
     return { labels: [last_month], datasets: [] }.to_json if data.blank? || data.empty?
 
     datasets = {}
@@ -81,7 +81,8 @@ module UsageHelper
   end
 
   def prep_date_for_charts(date:)
-    date.is_a?(Date) ? date.strftime('%b-%y') : Date.parse(date).strftime('%b-%y')
+    date = Date.parse(date) unless date.is_a?(Date)
+    I18n.l(date, format: :month_year_abbr)
   end
 
   def random_rgb
