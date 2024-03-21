@@ -4,8 +4,7 @@
 module Csvable
   require 'csv'
   class << self
-    # rubocop:disable Style/OptionalBooleanParameter
-    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # rubocop:disable Style/OptionalBooleanParameter, Metrics/AbcSize
     def from_array_of_hashes(data = [], humanize = true, sep = ',')
       return '' unless data.first&.keys
 
@@ -24,7 +23,6 @@ module Csvable
         end
       end
     end
-    # rubocop:enable Style/OptionalBooleanParameter
-    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # rubocop:enable Style/OptionalBooleanParameter, Metrics/AbcSize
   end
 end
