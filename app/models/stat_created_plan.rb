@@ -63,7 +63,7 @@ class StatCreatedPlan < Stat
       end.call(created_plans)
 
       data = created_plans.map do |created_plan|
-        tuple = { Date: created_plan.date.strftime('%b %Y') }
+        tuple = { Date: I18n.l(created_plan.date, format: '%b %Y') }
         template_names.each_with_object(tuple) do |name, acc|
           acc[name] = 0
         end

@@ -18,6 +18,7 @@ fr-CA:
       long: "%e %B %Y"
       csv: "%Y-%m-%d"
       readable: "%d %b %Y"
+      month_year_abbr: "%b-%y"
     order:
     - :year
     - :month

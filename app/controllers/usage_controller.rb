@@ -99,7 +99,7 @@ class UsageController < ApplicationController
       csv << [_('Month'), _('No. Users joined')]
       total = 0
       @users_per_month.each do |data|
-        csv << [data.date.strftime('%b-%y'), data.count]
+        csv << [I18n.l(data.date, format: :month_year_abbr), data.count]
         total += data.count
       end
       csv << [_('Total'), total]
@@ -120,7 +120,7 @@ class UsageController < ApplicationController
       csv << [_('Month'), _('No. Created Plans')]
       total = 0
       @plans_per_month.each do |data|
-        csv << [data.date.strftime('%b-%y'), data.count]
+        csv << [I18n.l(data.date, format: :month_year_abbr), data.count]
         total += data.count
       end
       csv << [_('Total'), total]
