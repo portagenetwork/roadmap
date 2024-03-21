@@ -109,7 +109,7 @@ class PlanExportsController < ApplicationController
              font_size: 8,
              spacing: (Integer(@formatting[:margin][:bottom]) / 2) - 4,
              right: _('[page] of [topage]'),
-             encoding: 'UTF-8'
+             encoding: 'utf8'
            }
   end
 
@@ -124,6 +124,7 @@ class PlanExportsController < ApplicationController
     ret = ret.strip.gsub(/\s+/, '_')
     ret = ret.gsub(/"/, '')
     ret = ret.gsub(/&amp;/, '&')
+    ret = ret.delete('"')
     ret = ActiveStorage::Filename.new(ret).sanitized
     # limit the filename length to 100 chars. Windows systems have a MAX_PATH allowance
     # of 255 characters, so this should provide enough of the title to allow the user
