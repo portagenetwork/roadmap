@@ -34,12 +34,12 @@ module UsageHelper
         # We need a placeholder for each month/year - template combo. The
         # default is to assume that there are zero plans for that month/year + template
         dflt = {
-          label: template['name'],
+          label: _(template['name']),
           backgroundColor: random_rgb,
           data: labels.map { |lbl| { x: 0, y: lbl } }
         }
 
-        template_hash = datasets.fetch(template['name'], dflt)
+        template_hash = datasets.fetch(_(template['name']), dflt)
 
         # Replace any of the month/year plan counts for this template IF it has
         # any plans defined

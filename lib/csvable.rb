@@ -11,11 +11,10 @@ module Csvable
 
       headers = if humanize
                   data.first.keys
-                      .map(&:to_s)
-                      .map(&:humanize)
+                      .map { |x| _(x.to_s.humanize) }
                 else
                   data.first.keys
-                      .map(&:to_s)
+                      .map { |x| _(x.to_s) }
                 end
 
       CSV.generate({ col_sep: sep }) do |csv|
