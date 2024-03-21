@@ -41,7 +41,7 @@ $color-portage-orange-darker: darken($color-portage-orange, 10%);
 */
 // Backgrounds
 $color-primary-background: $color-portage-blue;
-$color-seccondary-background: $color-white;
+$color-secondary-background: $color-white;
 $color-muted-background: $color-muted;
 $color-navbar-background: $color-white;
 $color-navbar-background-active: $color-white;
@@ -51,7 +51,7 @@ $color-icon-bar-background: $color-white;
 
 // Text
 $color-primary-text: $color-portage-blue;
-$color-seccondary-text: $color-portage-blue;
+$color-secondary-text: $color-portage-blue;
 $color-heading-text: $color-portage-blue;
 $color-navbar-text: $color-portage-blue;
 $color-navbar-text-hover: $color-portage-blue;
@@ -91,7 +91,7 @@ Rebranding: some color variable needs to be switched to another one
 
 // Backgrounds
 $color-primary-background: $color-alliance-yellow;
-$color-seccondary-background: $color-alliance-white;
+$color-secondary-background: $color-alliance-white;
 $color-navbar-background: $color-alliance-white;
 $color-navbar-background-active: $color-alliance-white;
 $color-primary-text: $color-portage-blue;
@@ -126,7 +126,7 @@ $color-focus-outline: $color-portage-blue-darker;
 
 // Text
 $color-primary-text: $color-alliance-darker-yellow;
-$color-seccondary-text: $color-alliance-digital-grey;
+$color-secondary-text: $color-alliance-digital-grey;
 $color-heading-text: $color-portage-blue;
 $color-navbar-text: $color-alliance-digital-grey;
 $color-navbar-text-hover: $color-alliance-digital-grey;
