@@ -255,7 +255,7 @@ group :development, :test, :sandbox do
   gem 'capybara'
 
   # Easy installation and use of web drivers to run system tests with browsers
-  gem 'webdrivers'
+  gem 'selenium-webdriver'
 
   # RSpec::CollectionMatchers lets you express expected outcomes on
   # collections of an object in an example.
