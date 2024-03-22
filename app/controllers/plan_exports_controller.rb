@@ -122,7 +122,6 @@ class PlanExportsController < ApplicationController
     # Sanitize bad characters and replace spaces with underscores
     ret = @plan.title
     ret = ret.strip.gsub(/\s+/, '_')
-    ret = ret.gsub(/"/, '')
     ret = ret.gsub(/&amp;/, '&')
     ret = ret.delete('"')
     ret = ActiveStorage::Filename.new(ret).sanitized
