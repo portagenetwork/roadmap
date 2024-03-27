@@ -28,7 +28,7 @@ class TemplateOptionsController < ApplicationController
     if org.present? && !org.new_record?
       # Load the funder's template(s) minus the default template (that gets swapped
       # in below if NO other templates are available)
-      @templates = Template.latest_customizable.where(org_id: funder.id, is_default: false).to_a
+      @templates = Template.latest_customizable.where(org_id: funder.id, is_default: false).sort_by(&:title).to_a
       # Swap out any organisational cusotmizations of a funder template
       @templates = @templates.map do |tmplt|
         customization = Template.published
@@ -47,7 +47,7 @@ class TemplateOptionsController < ApplicationController
       # If the no funder was specified OR the funder matches the org
       # if funder.blank? || funder.id == org&.id
       # Retrieve the Org's templates
-      @templates << Template.published.organisationally_visible.where(org_id: org.id, customization_of: nil).to_a
+      @templates << Template.published.organisationally_visible.where(org_id: org.id, customization_of: nil).sort_by(&:title).to_a
       @templates = @templates.flatten.uniq
     else
       # if'No Primary Research Institution' checkbox is checked,
@@ -65,7 +65,7 @@ class TemplateOptionsController < ApplicationController
       # We want the default template to appear at the beggining of the list
       @templates.unshift(customization)
     end
-    @templates = @templates.uniq.sort_by(&:title)
+    @templates.uniq
   end
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
   # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
