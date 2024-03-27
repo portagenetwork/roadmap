@@ -47,7 +47,8 @@ class TemplateOptionsController < ApplicationController
       # If the no funder was specified OR the funder matches the org
       # if funder.blank? || funder.id == org&.id
       # Retrieve the Org's templates
-      @templates << Template.published.organisationally_visible.where(org_id: org.id, customization_of: nil).sort_by(&:title).to_a
+      @templates << Template.published.organisationally_visible.where(org_id: org.id,
+                                                                      customization_of: nil).sort_by(&:title).to_a
       @templates = @templates.flatten.uniq
     else
       # if'No Primary Research Institution' checkbox is checked,
@@ -58,13 +59,13 @@ class TemplateOptionsController < ApplicationController
     # Include customizable funder templates
     # @templates << funder_templates = Template.latest_customizable
     # Always use the default template
-    if Template.default.present? && org.present?
-      customization = Template.published.latest_customized_version(Template.default.family_id, org.id).first
-      customization ||= Template.default
-      @templates.select! { |t| t.id != Template.default.id && t.id != customization.id }
-      # We want the default template to appear at the beggining of the list
-      @templates.unshift(customization).uniq
-    end
+    return unless Template.default.present? && org.present?
+
+    customization = Template.published.latest_customized_version(Template.default.family_id, org.id).first
+    customization ||= Template.default
+    @templates.select! { |t| t.id != Template.default.id && t.id != customization.id }
+    # We want the default template to appear at the beggining of the list
+    @templates.unshift(customization).uniq
   end
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
   # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
