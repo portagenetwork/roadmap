@@ -18,12 +18,10 @@ class TemplateOptionsController < ApplicationController
 
     org = org_from_params(params_in: { org_id: org_hash.to_json }) if org_hash.present?
     funder = Org.find_by(name: Rails.application.config.default_funder_name)
-    # funder = org_from_params(params_in: { org_id: funder_hash.to_json }) if funder_hash.present?
 
     @templates = []
 
     return unless (org.present? && !org.new_record?) || (funder.present? && !funder.new_record?)
-    return unless funder.present? && !funder.new_record?
 
     if org.present? && !org.new_record?
       # Load the funder's template(s) minus the default template (that gets swapped
