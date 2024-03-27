@@ -12,6 +12,8 @@
 
  - Edit Gemfile config for 'rollbar' to enable app tracking on rollbar.com [#687](https://github.com/portagenetwork/roadmap/pull/687)
 
+ - Fxed ordering of templates within the "Create a new plan" template dropdown [#706](https://github.com/portagenetwork/roadmap/pull/706)
+
 ## [4.0.2+portage-4.0.0] - 2024-02-01
 
 ### Added
