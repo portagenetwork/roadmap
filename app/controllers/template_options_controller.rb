@@ -47,7 +47,8 @@ class TemplateOptionsController < ApplicationController
       # If the no funder was specified OR the funder matches the org
       # if funder.blank? || funder.id == org&.id
       # Retrieve the Org's templates
-      @templates << Template.published.organisationally_visible.where(org_id: org.id, customization_of: nil).sort_by(&:title).to_a
+      @templates << Template.published.organisationally_visible.where(org_id: org.id,
+                                                                      customization_of: nil).sort_by(&:title).to_a
       @templates = @templates.flatten.uniq
     else
       # if'No Primary Research Institution' checkbox is checked,
