@@ -53,7 +53,7 @@ class PlanExportsController < ApplicationController
     # Users will see both roles and contributor names if the role is filled
     @hash[:data_curation] = Contributor.where(plan_id: @plan.id).data_curation
     @hash[:investigation] = Contributor.where(plan_id: @plan.id).investigation
-    @hash[:pa] =  Contributor.where(plan_id: @plan.id).project_administration
+    @hash[:pa] = Contributor.where(plan_id: @plan.id).project_administration
     @hash[:other] = Contributor.where(plan_id: @plan.id).other
 
     respond_to do |format|
@@ -122,7 +122,7 @@ class PlanExportsController < ApplicationController
     # Sanitize bad characters and replace spaces with underscores
     ret = @plan.title
     ret = ret.strip.gsub(/\s+/, '_')
-    ret = ret.gsub(/&amp;/, '&')
+    ret = ret.gsub('&amp;', '&')
     ret = ret.delete('"')
     ret = ActiveStorage::Filename.new(ret).sanitized
     # limit the filename length to 100 chars. Windows systems have a MAX_PATH allowance
@@ -156,6 +156,6 @@ class PlanExportsController < ApplicationController
   # in html that break docx creation by htmltoword gem.
   def clean_html_for_docx_creation(html)
     # Replaces single backslash \ with \\ with gsub.
-    html.gsub(/\\/, '\&\&')
+    html.gsub('\\', '\&\&')
   end
 end
