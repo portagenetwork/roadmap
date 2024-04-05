@@ -115,6 +115,7 @@ yarn-debug.log*
 .yarn-integrity
 /app/assets/builds/*
 !/app/assets/builds/.keep
+!/app/assets/builds/.gitkeep
 
 # Ignore staging files in db folder since they can be auto-generated
 /db/seeds/staging
