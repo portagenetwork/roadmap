@@ -290,7 +290,7 @@ group :ci, :development do
   # RuboCop is a Ruby code style checking and code formatting tool. It aims to enforce
   # the community-driven Ruby Style Guide.
   # Pinned by DMP Assistant so its offences align with DMPRoadmap
-  gem 'rubocop', '1.50.1' # Pinned to match DMPRoadmap release v4.1.0
+  gem 'rubocop', '1.57.1' # Pinned to match DMPRoadmap release v4.1.1
 
   # RuboCop rules for detecting and autocorrecting undecorated strings for i18n
   # (gettext and rails-i18n)
