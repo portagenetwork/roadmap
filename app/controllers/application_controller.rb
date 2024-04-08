@@ -172,7 +172,7 @@ class ApplicationController < ActionController::Base
   end
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:accept_invitation, keys: %i[firstname surname org_id])
+    devise_parameter_sanitizer.permit(:accept_invitation, keys: %i[firstname surname org_id accept_terms])
   end
 
   def render_not_found(exception)
