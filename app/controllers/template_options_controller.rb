@@ -64,7 +64,7 @@ class TemplateOptionsController < ApplicationController
       # We want the default template to appear at the beggining of the list
       @templates.unshift(customization)
     end
-    @templates.uniq
+    @templates = @templates.uniq
   end
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
   # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
