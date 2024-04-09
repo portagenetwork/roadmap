@@ -6,7 +6,9 @@
 
  - Bump mysql2 from 0.5.5 to 0.5.6 [#645](https://github.com/portagenetwork/roadmap/pull/645)
 
-- Added "Accept terms and conditions" checkbox to invitation form [#684](https://github.com/portagenetwork/roadmap/pull/684)
+ - Added "Accept terms and conditions" checkbox to invitation form [#684](https://github.com/portagenetwork/roadmap/pull/684)
+
+ - Bump rack from 2.2.8 to 2.2.9 [#714](https://github.com/portagenetwork/roadmap/pull/714)
 
 ### Fixed
 
@@ -14,7 +16,7 @@
 
  - Edit Gemfile config for 'rollbar' to enable app tracking on rollbar.com [#687](https://github.com/portagenetwork/roadmap/pull/687)
 
- - Fxed ordering of templates within the "Create a new plan" template dropdown [#706](https://github.com/portagenetwork/roadmap/pull/706)
+ - Fixed ordering of templates within the "Create a new plan" template dropdown [#706](https://github.com/portagenetwork/roadmap/pull/706)
 
 ## [4.0.2+portage-4.0.2] - 2024-03-04
 
