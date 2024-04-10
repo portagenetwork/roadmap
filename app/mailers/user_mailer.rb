@@ -52,7 +52,8 @@ class UserMailer < ActionMailer::Base
     @role       = role
     @user       = user
     @user_email = @user.email
-    @username   = @user.name
+    @username   = @user.name(false)
+    @resource_name = (@username.nil? || @username == "First Name Surname") ? @user_email : @username
     @inviter    = inviter
     @link       = url_for(action: 'show', controller: 'plans', id: @role.plan.id)
     @helpdesk_email = helpdesk_email(org: @inviter.org)
