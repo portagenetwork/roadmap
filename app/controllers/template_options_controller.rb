@@ -51,7 +51,9 @@ class TemplateOptionsController < ApplicationController
     else
       # if'No Primary Research Institution' checkbox is checked,
       # only show publicly available template without customization
-      @templates = Template.published.publicly_visible.where(org_id: funder.id, customization_of: nil)
+      @templates << Template.default if Template.default.present?
+      @templates << Template.published.publicly_visible.where(org_id: funder.id, customization_of: nil, is_default: false).sort_by(&:title).to_a
+      @templates = @templates.flatten.uniq
     end
     # DMP Assistant: We do not want to include not customized templates from default funder
     # Include customizable funder templates
