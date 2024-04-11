@@ -10,6 +10,8 @@
 
  - Bump rack from 2.2.8 to 2.2.9 [#714](https://github.com/portagenetwork/roadmap/pull/714)
 
+ - Bump tar from 6.1.13 to 6.2.1 [#719](https://github.com/portagenetwork/roadmap/pull/719)
+
 ### Fixed
 
  - Updated Webmock's allowed request list to enable fetching of chromedriver [#670](https://github.com/portagenetwork/roadmap/pull/670)
