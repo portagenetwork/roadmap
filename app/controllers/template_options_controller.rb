@@ -18,17 +18,15 @@ class TemplateOptionsController < ApplicationController
 
     org = org_from_params(params_in: { org_id: org_hash.to_json }) if org_hash.present?
     funder = Org.find_by(name: Rails.application.config.default_funder_name)
-    # funder = org_from_params(params_in: { org_id: funder_hash.to_json }) if funder_hash.present?
 
     @templates = []
 
     return unless (org.present? && !org.new_record?) || (funder.present? && !funder.new_record?)
-    return unless funder.present? && !funder.new_record?
 
     if org.present? && !org.new_record?
       # Load the funder's template(s) minus the default template (that gets swapped
       # in below if NO other templates are available)
-      @templates = Template.latest_customizable.where(org_id: funder.id, is_default: false).to_a
+      @templates = Template.latest_customizable.where(org_id: funder.id, is_default: false).sort_by(&:title).to_a
       # Swap out any organisational cusotmizations of a funder template
       @templates = @templates.map do |tmplt|
         customization = Template.published
@@ -47,13 +45,16 @@ class TemplateOptionsController < ApplicationController
       # If the no funder was specified OR the funder matches the org
       # if funder.blank? || funder.id == org&.id
       # Retrieve the Org's templates
-      @templates << Template.published.organisationally_visible.where(org_id: org.id, customization_of: nil).to_a
-      @templates = @templates.flatten.uniq
+      @templates << Template.published.organisationally_visible.where(org_id: org.id,
+                                                                      customization_of: nil).sort_by(&:title).to_a
     else
       # if'No Primary Research Institution' checkbox is checked,
       # only show publicly available template without customization
-      @templates = Template.published.publicly_visible.where(org_id: funder.id, customization_of: nil)
+      @templates << Template.default if Template.default.present?
+      @templates << Template.published.publicly_visible.where(org_id: funder.id, customization_of: nil,
+                                                              is_default: false).sort_by(&:title).to_a
     end
+    @templates = @templates.flatten
     # DMP Assistant: We do not want to include not customized templates from default funder
     # Include customizable funder templates
     # @templates << funder_templates = Template.latest_customizable
@@ -65,7 +66,7 @@ class TemplateOptionsController < ApplicationController
       # We want the default template to appear at the beggining of the list
       @templates.unshift(customization)
     end
-    @templates = @templates.uniq.sort_by(&:title)
+    @templates = @templates.uniq
   end
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
   # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity

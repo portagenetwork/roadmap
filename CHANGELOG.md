@@ -2,14 +2,6 @@
 
 ## [Unreleased]
 
-### Added
-
-- Bump mysql2 from 0.5.5 to 0.5.6 [#645](https://github.com/portagenetwork/roadmap/pull/645)
-
-### Fixed
-
-- Updated Webmock's allowed request list to enable fetching of chromedriver [#670](https://github.com/portagenetwork/roadmap/pull/670)
-
 ## V4.1.1
 
 ### Added
@@ -122,7 +114,33 @@ For more detailed explanation, please refer to this video : https://www.youtube.
 - Patched an issue that was causing a template's visibility to change to 'organizationally_visible' when saving on the template details page.
 - Fixed an issue with the Rails 6 keyword arguments change that was causing the `paginable_sort_link` to fail
 
-## [4.0.2+portage-4.0.0] - 2024-02-01
+## [4.0.2+portage-4.0.3] - 2024-04-11
+
+### Added
+
+ - Bump mysql2 from 0.5.5 to 0.5.6 [#645](https://github.com/portagenetwork/roadmap/pull/645)
+
+ - Added "Accept terms and conditions" checkbox to invitation form [#684](https://github.com/portagenetwork/roadmap/pull/684)
+
+ - Bump rack from 2.2.8 to 2.2.9 [#714](https://github.com/portagenetwork/roadmap/pull/714)
+
+ - Bump tar from 6.1.13 to 6.2.1 [#719](https://github.com/portagenetwork/roadmap/pull/719)
+
+### Fixed
+
+ - Updated Webmock's allowed request list to enable fetching of chromedriver [#670](https://github.com/portagenetwork/roadmap/pull/670)
+
+ - Edit Gemfile config for 'rollbar' to enable app tracking on rollbar.com [#687](https://github.com/portagenetwork/roadmap/pull/687)
+
+ - Fixed ordering of templates within the "Create a new plan" template dropdown [#706](https://github.com/portagenetwork/roadmap/pull/706) and [#718](https://github.com/portagenetwork/roadmap/pull/718)
+
+## [4.0.2+portage-4.0.2] - 2024-03-04
+
+### Added
+
+ - Added an extra Google Analytics Tag [#682](https://github.com/portagenetwork/roadmap/pull/682)
+
+## [4.0.2+portage-4.0.0] [4.0.2+portage-4.0.1] - 2024-02-01
 
 ### Added
 

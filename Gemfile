@@ -54,7 +54,7 @@ gem 'bootsnap', require: false
 # Rollbar-gem is the SDK for Ruby apps and includes support for apps using
 # Rails, Sinatra, Rack, plain Ruby, and other frameworks.
 # https://github.com/rollbar/rollbar-gem
-gem 'rollbar', group: :rollbar, require: false
+gem 'rollbar'
 
 # ======== #
 # DATABASE #
