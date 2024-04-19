@@ -379,5 +379,8 @@ Rails.application.routes.draw do
   get 'research_projects/(:type)', action: 'index',
                                    controller: 'research_projects',
                                    constraints: { format: 'json' }
+
+  # Wildcard route for anything not defined above (prevents ActionController::RoutingError)
+  match '*unmatched_route', to: 'application#route_not_found', via: :all
 end
 # rubocop:enable Metrics/BlockLength
