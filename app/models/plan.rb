@@ -166,9 +166,11 @@ class Plan < ApplicationRecord
 
   # Retrieves any plan organisationally or publicly visible for a given org id
   scope :organisationally_or_publicly_visible, lambda { |user|
-    plan_ids = user.org.org_admin_plans.where(complete: true).pluck(:id).uniq
+    org_users_ids = user.org.users.where(active: true).pluck(:id)
+    plan_ids = Role.creator.where(user_id: org_users_ids, active: true).pluck(:plan_id)
     includes(:template, roles: :user)
-      .where(id: plan_ids, visibility: [
+      .where(id: plan_ids, complete: true,
+             visibility: [
                visibilities[:organisationally_visible],
                visibilities[:publicly_visible]
              ])
