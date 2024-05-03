@@ -206,7 +206,7 @@ gem 'htmltoword'
 # ==================== #
 
 gem 'translation', git: 'https://github.com/ualbertalib/translation_io_rails',
-                   branch: 'fix/broken_db_fake_method_calls'
+                   branch: 'aaron/merge-upstream-master'
 
 # ========= #
 # UTILITIES #

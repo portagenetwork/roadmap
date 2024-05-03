@@ -1,10 +1,10 @@
 GIT
   remote: https://github.com/ualbertalib/translation_io_rails
-  revision: 6fbb2cd619e7bf01b37b9b8916b0f345899f876b
-  branch: fix/broken_db_fake_method_calls
+  revision: d329dd8eee387d215b9bedebecc87d065657731c
+  branch: aaron/merge-upstream-master
   specs:
-    translation (1.22)
-      gettext (~> 3.2, >= 3.2.5)
+    translation (1.40)
+      gettext (~> 3.2, >= 3.2.5, <= 3.4.9)
 
 GEM
   remote: https://rubygems.org/
