@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+ - Enable Translation of QuestionOption.text (and Refactor Translation of ResearchDomain.label) [#662](https://github.com/portagenetwork/roadmap/pull/662)
+
 ### Changed
 
  - Deactivate Requests to External ROR API [#738](https://github.com/portagenetwork/roadmap/pull/738)
