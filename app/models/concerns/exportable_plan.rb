@@ -238,7 +238,7 @@ module ExportablePlan
       answer = self.answer(question[:id], false)
       answer_text = ''
       if answer.present?
-        answer_text += answer.question_options.pluck(:text).join(', ') if answer.question_options.any?
+        answer_text += answer.question_options.pluck(:text).map { |x| _(x) }.join(', ') if answer.question_options.any?
         answer_text += answer.text if answer.answered? && answer.text.present?
       elsif unanswered
         answer_text += _('Not Answered')

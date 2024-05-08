@@ -74,6 +74,12 @@ class QuestionOption < ApplicationRecord
   # = Public instance methods =
   # ===========================
 
+  # text is translated through the translation gem
+  def text
+    text = read_attribute(:text)
+    _(text) unless text.blank?
+  end
+
   def deep_copy(**options)
     copy = dup
     copy.question_id = options.fetch(:question_id, nil)
