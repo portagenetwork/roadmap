@@ -351,7 +351,7 @@ class Template < ApplicationRecord
   # Determines whether or not a customization for the customizing_org passed
   # should be generated
   def customize?(customizing_org)
-    if customizing_org.is_a?(Org) && (org.funder_only? || is_default)
+    if customizing_org.is_a?(Org) && (org.funder_only? || is_default || org == Org.default_orgs.first)
       return !Template.unarchived.where(customization_of: family_id,
                                         org: customizing_org).exists?
     end
@@ -416,7 +416,7 @@ class Template < ApplicationRecord
     raise ArgumentError, _('customize! requires an organisation target') unless customizing_org.is_a?(Org)
 
     # Assume self has org associated
-    raise ArgumentError, _('customize! requires a template from a funder') if !org.funder_only? && !is_default
+    raise ArgumentError, _('customize! requires a template from a funder') if !org.funder_only? && !is_default && !org == Org.default_orgs.first
 
     deep_copy(
       attributes: {
