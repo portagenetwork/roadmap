@@ -411,12 +411,15 @@ class Template < ApplicationRecord
   end
 
   # Generates a new copy of self for the specified customizing_org
-  def customize!(customizing_org)
+  def customize!(customizing_org) # rubocop:disable Metrics/AbcSize
     # Assume customizing_org is persisted
     raise ArgumentError, _('customize! requires an organisation target') unless customizing_org.is_a?(Org)
 
     # Assume self has org associated
-    raise ArgumentError, _('customize! requires a template from a funder') if !org.funder_only? && !is_default && !org == Org.default_orgs.first
+    if !org.funder_only? && !is_default && !org == Org.default_orgs.first
+      raise ArgumentError,
+            _('customize! requires a template from a funder')
+    end
 
     deep_copy(
       attributes: {
