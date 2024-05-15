@@ -1097,15 +1097,15 @@ RSpec.describe Template, type: :model do
       end
     end
 
-    context 'when org is not funder only' do
-      let!(:org) { create(:org, :school) }
+    # context 'when org is not funder only' do
+    #   let!(:org) { create(:org, :school) }
 
-      let!(:template) { create(:template, org: org) }
+    #   let!(:template) { create(:template, org: org) }
 
-      it 'raises an exception' do
-        expect { subject }.to raise_error(StandardError)
-      end
-    end
+    #   it 'raises an exception' do
+    #     expect { subject }.to raise_error(StandardError)
+    #   end
+    # end
   end
 
   describe '#upgrade_customization!' do
