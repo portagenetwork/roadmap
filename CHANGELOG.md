@@ -2,6 +2,22 @@
 
 ## [Unreleased]
 
+### Added
+
+ - Enable Translation of QuestionOption.text (and Refactor Translation of ResearchDomain.label) [#742](https://github.com/portagenetwork/roadmap/pull/742)
+
+### Fixed
+
+ - Add .pdf handling in render_respond_to_format_with_error_message [#731](https://github.com/portagenetwork/roadmap/pull/731)
+
+### Changed
+
+ - Deactivate Requests to External ROR API [#738](https://github.com/portagenetwork/roadmap/pull/738)
+
+ - Updated 'translation' gem URL in Gemfile to match moved repository [#725](https://github.com/portagenetwork/roadmap/pull/725)
+
+ - Increased the width of the research outputs file size unit dropdown [#741](https://github.com/portagenetwork/roadmap/pull/741)
+ 
 ## V4.1.1
 
 ### Added
@@ -113,6 +129,12 @@ For more detailed explanation, please refer to this video : https://www.youtube.
 - Updated JS that used to call the TinyMCE `setMode()` function so that it now calls `mode.set()` because the former is now deprecated.
 - Patched an issue that was causing a template's visibility to change to 'organizationally_visible' when saving on the template details page.
 - Fixed an issue with the Rails 6 keyword arguments change that was causing the `paginable_sort_link` to fail
+
+## [4.0.2+portage-4.0.4] - 2024-05-15
+
+### Fixed
+
+ - Fixed an issue that was preventing users from accessing some customisable templates [#751](https://github.com/portagenetwork/roadmap/pull/751)
 
 ## [4.0.2+portage-4.0.3] - 2024-04-11
 

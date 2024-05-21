@@ -1,5 +1,5 @@
 GIT
-  remote: https://github.com/lagoan/translation_io_rails
+  remote: https://github.com/ualbertalib/translation_io_rails
   revision: 6fbb2cd619e7bf01b37b9b8916b0f345899f876b
   branch: fix/broken_db_fake_method_calls
   specs:
@@ -282,7 +282,7 @@ GEM
     listen (3.8.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    locale (2.1.3)
+    locale (2.1.4)
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)

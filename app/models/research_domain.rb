@@ -29,4 +29,14 @@ class ResearchDomain < ApplicationRecord
   # Self join
   has_many :sub_fields, class_name: 'ResearchDomain', foreign_key: 'parent_id'
   belongs_to :parent, class_name: 'ResearchDomain', optional: true
+
+  # ===========================
+  # = Public instance methods =
+  # ===========================
+
+  # label is translated through the translation gem
+  def label
+    label = read_attribute(:label)
+    _(label) unless label.blank?
+  end
 end
