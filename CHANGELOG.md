@@ -18,6 +18,12 @@
 
  - Increased the width of the research outputs file size unit dropdown [#741](https://github.com/portagenetwork/roadmap/pull/741)
 
+## [4.0.2+portage-4.0.4] - 2024-05-15
+
+### Fixed
+
+ - Fixed an issue that was preventing users from accessing some customisable templates [#751](https://github.com/portagenetwork/roadmap/pull/751)
+
 ## [4.0.2+portage-4.0.3] - 2024-04-11
 
 ### Added
