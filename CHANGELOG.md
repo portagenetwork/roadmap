@@ -124,6 +124,8 @@
 
 ### Fixed
 
+ - Address "active" indicator for various dropdowns [#668](https://github.com/portagenetwork/roadmap/pull/668)
+
  - Removed unwanted text from success notification when permissions are changed for a plan collaborator [#606](https://github.com/portagenetwork/roadmap/issues/606)
 
  - Fixed `gem install bundler` issue that was preventing Github Actions from pushing images to Docker Hub [#599](https://github.com/portagenetwork/roadmap/issues/599)
