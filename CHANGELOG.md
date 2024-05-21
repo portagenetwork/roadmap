@@ -10,6 +10,8 @@
 
  - Add .pdf handling in render_respond_to_format_with_error_message [#731](https://github.com/portagenetwork/roadmap/pull/731)
 
+ - Fixed handling of Template.visibility in some places [#759](https://github.com/portagenetwork/roadmap/pull/759)
+
 ### Changed
 
  - Deactivate Requests to External ROR API [#738](https://github.com/portagenetwork/roadmap/pull/738)
