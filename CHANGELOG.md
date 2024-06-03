@@ -21,6 +21,8 @@
  - Updated 'translation' gem URL in Gemfile to match moved repository [#725](https://github.com/portagenetwork/roadmap/pull/725)
 
  - Increased the width of the research outputs file size unit dropdown [#741](https://github.com/portagenetwork/roadmap/pull/741)
+
+ - Bump ledermann-rails-settings from 2.5.0 to 2.6.2 [#764](https://github.com/portagenetwork/roadmap/pull/764)
  
 ## V4.1.1
 
