@@ -26,6 +26,8 @@
 
  - Bump webmock from 3.19.1 to 3.23.1 [#762](https://github.com/portagenetwork/roadmap/pull/762)
  
+ - Bump docker db image from postgres:12.14 to postgres:15-alpine [#749](https://github.com/portagenetwork/roadmap/pull/749) 
+ 
 ## V4.1.1
 
 ### Added
