@@ -120,6 +120,8 @@ For more detailed explanation, please refer to this video : https://www.youtube.
 
  - Fixed an issue that was preventing users from accessing some customisable templates [#751](https://github.com/portagenetwork/roadmap/pull/751)
 
+ - Updated the "contact-us" link in some places [#660](https://github.com/portagenetwork/roadmap/pull/660)
+
 ## [4.0.2+portage-4.0.3] - 2024-04-11
 
 ### Added
