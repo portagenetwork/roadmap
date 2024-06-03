@@ -25,6 +25,8 @@
  - Bump ledermann-rails-settings from 2.5.0 to 2.6.2 [#764](https://github.com/portagenetwork/roadmap/pull/764)
 
  - Bump webmock from 3.19.1 to 3.23.1 [#762](https://github.com/portagenetwork/roadmap/pull/762)
+
+ - Bump rspec-rails from 6.0.3 to 6.1.2 [#694](https://github.com/portagenetwork/roadmap/pull/694)
  
  - Bump docker db image from postgres:12.14 to postgres:15-alpine [#749](https://github.com/portagenetwork/roadmap/pull/749) 
  
