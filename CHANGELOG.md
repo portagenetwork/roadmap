@@ -31,6 +31,8 @@
  - Bump docker db image from postgres:12.14 to postgres:15-alpine [#749](https://github.com/portagenetwork/roadmap/pull/749)
 
  - Bump danger from 9.4.2 to 9.4.3 [#681](https://github.com/portagenetwork/roadmap/pull/681)
+
+ - Bump mail from 2.7.1 to 2.8.1 [#651](https://github.com/portagenetwork/roadmap/pull/651)
  
 ## V4.1.1
 
