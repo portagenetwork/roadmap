@@ -204,7 +204,7 @@ RSpec.describe ExternalApis::RorService do
         expect(rslts.length).to eql(0)
       end
       it 'properly manages results with only one page' do
-        items = 4.times.map do
+        items = Array.new(4).map do
           {
             id: Faker::Internet.unique.url,
             name: Faker::Lorem.word,
@@ -223,7 +223,7 @@ RSpec.describe ExternalApis::RorService do
         expect(rslts.length).to eql(4)
       end
       it 'properly manages results with multiple pages' do
-        items = 7.times.map do
+        items = Array.new(7).map do
           {
             id: Faker::Internet.unique.url,
             name: Faker::Lorem.word,
@@ -245,7 +245,7 @@ RSpec.describe ExternalApis::RorService do
         expect(rslts.length).to eql(7)
       end
       it 'does not go beyond the max_pages' do
-        items = 12.times.map do
+        items = Array.new(12).map do
           {
             id: Faker::Internet.unique.url,
             name: Faker::Lorem.word,

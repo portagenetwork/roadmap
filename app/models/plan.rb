@@ -52,6 +52,8 @@ class Plan < ApplicationRecord
   # = Constants =
   # =============
 
+  DMP_ID_TYPES = %w[ark doi].freeze
+
   # Returns visibility message given a Symbol type visibility passed, otherwise
   # nil
   VISIBILITY_MESSAGE = {
@@ -60,9 +62,6 @@ class Plan < ApplicationRecord
     is_test: _('test'),
     privately_visible: _('private')
   }.freeze
-
-  VISIBILITY_ORDER = %i[privately_visible publicly_visible organisationally_visible
-                        is_test].freeze
 
   FUNDING_STATUS = {
     planned: _('Planned'),
@@ -295,7 +294,7 @@ class Plan < ApplicationRecord
   # rubocop:disable Metrics/AbcSize, Style/OptionalBooleanParameter
   def answer(qid, create_if_missing = true)
     answer = answers.select { |a| a.question_id == qid }
-                    .max { |a, b| a.created_at <=> b.created_at }
+                    .max_by(&:created_at)
     if answer.nil? && create_if_missing
       question = Question.find(qid)
       answer = Answer.new
@@ -372,7 +371,7 @@ class Plan < ApplicationRecord
   #
   # Returns Boolean
   def editable_by?(user_id)
-    roles.select { |r| r.user_id == user_id && r.active && r.editor }.any?
+    roles.any? { |r| r.user_id == user_id && r.active && r.editor }
   end
 
   ##
@@ -406,7 +405,7 @@ class Plan < ApplicationRecord
   #
   # Returns Boolean
   def commentable_by?(user_id)
-    roles.select { |r| r.user_id == user_id && r.active && r.commenter }.any? ||
+    roles.any? { |r| r.user_id == user_id && r.active && r.commenter } ||
       reviewable_by?(user_id)
   end
 
@@ -416,7 +415,7 @@ class Plan < ApplicationRecord
   #
   # Returns Boolean
   def administerable_by?(user_id)
-    roles.select { |r| r.user_id == user_id && r.active && r.administrator }.any?
+    roles.any? { |r| r.user_id == user_id && r.active && r.administrator }
   end
 
   # determines if the plan is reviewable by the specified user
@@ -445,7 +444,7 @@ class Plan < ApplicationRecord
   # Returns nil
   def owner
     r = roles.select { |rr| rr.active && rr.administrator }
-             .min { |a, b| a.created_at <=> b.created_at }
+             .min_by(&:created_at)
     r&.user
   end
 
@@ -515,7 +514,7 @@ class Plan < ApplicationRecord
   #
   # Returns Integer
   def num_answered_questions(phase = nil)
-    return answers.select(&:answered?).length unless phase.present?
+    return answers.count(&:answered?) unless phase.present?
 
     answered = answers.select do |answer|
       answer.answered? && phase.questions.include?(answer.question)
@@ -536,7 +535,7 @@ class Plan < ApplicationRecord
   #
   # Returns Boolean
   def visibility_allowed?
-    !is_test? && phases.select { |phase| phase.visibility_allowed?(self) }.any?
+    !is_test? && phases.any? { |phase| phase.visibility_allowed?(self) }
   end
 
   # Determines whether or not a question (given its id) exists for the self plan
@@ -582,7 +581,7 @@ class Plan < ApplicationRecord
 
   # Returns the plan's identifier (either a DOI/ARK)
   def landing_page
-    identifiers.select { |i| %w[doi ark].include?(i.identifier_format) }.first
+    identifiers.find { |i| DMP_ID_TYPES.include?(i.identifier_format) }
   end
 
   # Since the Grant is not a normal AR association, override the getter and setter

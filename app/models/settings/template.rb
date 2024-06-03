@@ -21,8 +21,8 @@ module Settings
       'Roboto, Arial, Sans-Serif'
     ].freeze
 
-    VALID_FONT_SIZE_RANGE = (8..14).freeze
-    VALID_MARGIN_RANGE = (5..25).freeze
+    VALID_FONT_SIZE_RANGE = (8..14)
+    VALID_MARGIN_RANGE = (5..25)
 
     VALID_ADMIN_FIELDS = %w[project_name project_identifier grant_title
                             principal_investigator project_data_contact
@@ -38,7 +38,7 @@ module Settings
           left: 12,
           right: 12
         },
-        font_face: 'Arial, Helvetica, Sans-Serif',
+        font_face: 'Roboto, Arial, Sans-Serif',
         font_size: 10 # pt
       },
       max_pages: 3,
