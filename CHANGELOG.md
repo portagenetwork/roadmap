@@ -23,6 +23,8 @@
  - Increased the width of the research outputs file size unit dropdown [#741](https://github.com/portagenetwork/roadmap/pull/741)
 
  - Bump ledermann-rails-settings from 2.5.0 to 2.6.2 [#764](https://github.com/portagenetwork/roadmap/pull/764)
+
+ - Bump webmock from 3.19.1 to 3.23.1 [#762](https://github.com/portagenetwork/roadmap/pull/762)
  
 ## V4.1.1
 
