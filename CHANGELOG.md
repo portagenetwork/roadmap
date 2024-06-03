@@ -4,6 +4,8 @@
 
 ### Added
 
+ - Merge DMPRoadmap Releases v4.1.0 and v4.1.1 [#700](https://github.com/portagenetwork/roadmap/pull/700)
+
  - Enable Translation of QuestionOption.text (and Refactor Translation of ResearchDomain.label) [#742](https://github.com/portagenetwork/roadmap/pull/742)
 
 ### Fixed
