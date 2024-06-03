@@ -28,7 +28,9 @@
 
  - Bump rspec-rails from 6.0.3 to 6.1.2 [#694](https://github.com/portagenetwork/roadmap/pull/694)
  
- - Bump docker db image from postgres:12.14 to postgres:15-alpine [#749](https://github.com/portagenetwork/roadmap/pull/749) 
+ - Bump docker db image from postgres:12.14 to postgres:15-alpine [#749](https://github.com/portagenetwork/roadmap/pull/749)
+
+ - Bump danger from 9.4.2 to 9.4.3 [#681](https://github.com/portagenetwork/roadmap/pull/681)
  
 ## V4.1.1
 
