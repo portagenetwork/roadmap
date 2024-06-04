@@ -45,6 +45,8 @@
  - Bump binding_of_caller from 1.0.0 to 1.0.1 [#767](https://github.com/portagenetwork/roadmap/pull/767)
 
  - Bump engine.io from 6.4.1 to 6.4.2 [#774](https://github.com/portagenetwork/roadmap/pull/774)
+
+ - Bump activestorage from 6.1.7.6 to 6.1.7.7 [#773](https://github.com/portagenetwork/roadmap/pull/773)
  
 ## V4.1.1
 
