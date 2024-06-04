@@ -43,6 +43,8 @@
  - Bump jsbundling-rails from 1.1.1 to 1.3.0 [#768](https://github.com/portagenetwork/roadmap/pull/768)
 
  - Bump binding_of_caller from 1.0.0 to 1.0.1 [#767](https://github.com/portagenetwork/roadmap/pull/767)
+
+ - Bump engine.io from 6.4.1 to 6.4.2 [#774](https://github.com/portagenetwork/roadmap/pull/774)
  
 ## V4.1.1
 
