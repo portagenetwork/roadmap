@@ -47,6 +47,8 @@
  - Bump engine.io from 6.4.1 to 6.4.2 [#774](https://github.com/portagenetwork/roadmap/pull/774)
 
  - Bump activestorage from 6.1.7.6 to 6.1.7.7 [#773](https://github.com/portagenetwork/roadmap/pull/773)
+
+ - Bump @babel/traverse from 7.21.4 to 7.24.6 [#772](https://github.com/portagenetwork/roadmap/pull/772)
  
 ## V4.1.1
 
