@@ -55,6 +55,8 @@
  - Bump devise_invitable from 2.0.8 to 2.0.9 [#671](https://github.com/portagenetwork/roadmap/pull/671)
  
  - Bump yard from 0.9.34 to 0.9.36 [#683](https://github.com/portagenetwork/roadmap/pull/683)
+
+ - Bump tinymce from 6.4.1 to 7.0.0 [#704](https://github.com/portagenetwork/roadmap/pull/704)
  
 ## V4.1.1
 
