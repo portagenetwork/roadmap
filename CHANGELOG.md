@@ -33,6 +33,8 @@
  - Bump danger from 9.4.2 to 9.4.3 [#681](https://github.com/portagenetwork/roadmap/pull/681)
 
  - Bump mail from 2.7.1 to 2.8.1 [#651](https://github.com/portagenetwork/roadmap/pull/651)
+
+ - Bump turbo-rails from 1.5.0 to 2.0.5 [#771](https://github.com/portagenetwork/roadmap/pull/771)
  
 ## V4.1.1
 
@@ -238,7 +240,7 @@ For more detailed explanation, please refer to this video : https://www.youtube.
 
 ### Changed
 
-  - Removed dmp-pgd.ca/?locale=fr_CA links from terms & privacy pages (they had no effect on the app's language selector) [#455](https://github.com/portagenetwork/roadmap/issues/455)
+ - Removed dmp-pgd.ca/?locale=fr_CA links from terms & privacy pages (they had no effect on the app's language selector) [#455](https://github.com/portagenetwork/roadmap/issues/455)
 
  - Updated ruby.yml workflow to use PostgreSQL database [#532](https://github.com/portagenetwork/roadmap/issues/532)
 
