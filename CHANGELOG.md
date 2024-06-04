@@ -54,6 +54,8 @@
 
  - Bump devise_invitable from 2.0.8 to 2.0.9 [#671](https://github.com/portagenetwork/roadmap/pull/671)
  
+ - Bump yard from 0.9.34 to 0.9.36 [#683](https://github.com/portagenetwork/roadmap/pull/683)
+ 
 ## V4.1.1
 
 ### Added
