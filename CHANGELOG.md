@@ -35,6 +35,8 @@
  - Bump mail from 2.7.1 to 2.8.1 [#651](https://github.com/portagenetwork/roadmap/pull/651)
 
  - Bump turbo-rails from 1.5.0 to 2.0.5 [#771](https://github.com/portagenetwork/roadmap/pull/771)
+
+ - Bump jbuilder from 2.11.5 to 2.12.0 [#770](https://github.com/portagenetwork/roadmap/pull/770)
  
 ## V4.1.1
 
