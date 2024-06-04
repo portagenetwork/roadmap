@@ -41,6 +41,8 @@
  - Bump faker from 3.2.3 to 3.4.1 [#769](https://github.com/portagenetwork/roadmap/pull/769)
 
  - Bump jsbundling-rails from 1.1.1 to 1.3.0 [#768](https://github.com/portagenetwork/roadmap/pull/768)
+
+ - Bump binding_of_caller from 1.0.0 to 1.0.1 [#767](https://github.com/portagenetwork/roadmap/pull/767)
  
 ## V4.1.1
 
