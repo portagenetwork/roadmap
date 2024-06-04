@@ -51,6 +51,8 @@
  - Bump @babel/traverse from 7.21.4 to 7.24.6 [#772](https://github.com/portagenetwork/roadmap/pull/772)
 
  - Bump follow-redirects from 1.15.4 to 1.15.6 [#690](https://github.com/portagenetwork/roadmap/pull/690)
+
+ - Bump devise_invitable from 2.0.8 to 2.0.9 [#671](https://github.com/portagenetwork/roadmap/pull/671)
  
 ## V4.1.1
 
