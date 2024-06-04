@@ -220,7 +220,7 @@ module ExportablePlan
 
     csv << [_('Research Outputs: ')]
     # Convert the hash keys to column headers
-    csv << hash[:research_outputs].first.keys.map { |key| key.to_s.capitalize.gsub('_', ' ') }
+    csv << hash[:research_outputs].first.keys.map { |key| key.to_s.capitalize.tr('_', ' ') }
     hash[:research_outputs].each do |research_output|
       csv << research_output.values
     end
@@ -238,7 +238,7 @@ module ExportablePlan
       answer = self.answer(question[:id], false)
       answer_text = ''
       if answer.present?
-        answer_text += answer.question_options.pluck(:text).join(', ') if answer.question_options.any?
+        answer_text += answer.question_options.pluck(:text).map { |x| _(x) }.join(', ') if answer.question_options.any?
         answer_text += answer.text if answer.answered? && answer.text.present?
       elsif unanswered
         answer_text += _('Not Answered')

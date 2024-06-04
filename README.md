@@ -1,8 +1,11 @@
 # DMP Assistant
 
-[![Actions Brakeman](https://github.com/portagenetwork/roadmap/workflows/Brakeman/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
-[![Actions ESLint](https://github.com/portagenetwork/roadmap/workflows/ESLint/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
-[![Actions Test - MySQL](https://github.com/portagenetwork/roadmap/workflows/Tests%20-%20MySQL/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
+[![Actions Brakeman](https://github.com/portagenetwork/roadmap/actions/workflows/brakeman.yml/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
+[![Actions ESLint](https://github.com/portagenetwork/roadmap/actions/workflows/eslint.yml/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
+[![Actions Rubocop](https://github.com/portagenetwork/roadmap/actions/workflows/rubocop.yml/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
+[![Actions Tests - PostgreSQL](https://github.com/portagenetwork/roadmap/actions/workflows/postgres.yml/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
+[![Actions Tests - MySQL](https://github.com/portagenetwork/roadmap/actions/workflows/mysql.yml/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
+[![Actions Tests - Ruby](https://github.com/portagenetwork/roadmap/actions/workflows/ruby.yml/badge.svg)](https://github.com/portagenetwork/roadmap/actions)
 [![MIT License](https://img.shields.io/github/license/portagenetwork/roadmap)](https://github.com/portagenetwork/roadmap/blob/deployment-portage/LICENSE.md)
 [![GitHub release](https://img.shields.io/github/v/release/portagenetwork/roadmap.svg)](https://GitHub.com/portagenetwork/roadmap/releases/)
 [![GitHub issues](https://img.shields.io/github/issues/portagenetwork/roadmap.svg)](https://GitHub.com/portagenetwork/roadmap/issues/)
@@ -24,7 +27,7 @@
 
 ## Latest Update
 
-- DMP Assistant will upgrade to Version 3 in Q1 2022
+- DMP Assistant upgrade to Version 4.1 (Q2 2024)
 
 ## Overview
 
@@ -39,16 +42,16 @@ See the [Installation Guide](https://github.com/portagenetwork/roadmap/wiki/Inst
 ### Pre-requisites
 
 DMP Assistant is a Ruby on Rails application and you will need to have:
-* Ruby = 2.7.6
+* Ruby = 3.0
 * Rails = 6.1
-* MySQL >= 5.0 OR PostgreSQL
+* PostgreSQL = 15
 
 Further detail on how to install Ruby on Rails applications are available from the Ruby on Rails site: http://rubyonrails.org.
 
-Further details on how to install MySQL and create your first user and database. Be sure to follow the instructions for your particular environment.
-* Install: http://dev.mysql.com/downloads/mysql/
-* Create a user: http://dev.mysql.com/doc/refman/5.7/en/create-user.html
-* Create the database: http://dev.mysql.com/doc/refman/5.7/en/creating-database.html
+Further details on how to install PostgreSQL and create your first user and database. Be sure to follow the instructions for your particular environment.
+* Install: https://www.postgresql.org/download/
+* Create a user: https://www.postgresql.org/docs/15/app-createuser.html
+* Create the database: https://www.postgresql.org/docs/15/sql-createdatabase.html
 
 You may also find the following resources handy:
 

@@ -72,7 +72,6 @@
     </script>
 
     <%= stylesheet_link_tag(stylesheet_manifest_file) %>
-    <%= javascript_pack_tag 'application', 'data-turbo-track': 'reload' %>
     <%= csrf_meta_tags %>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -80,6 +79,8 @@
 
     <%= render partial: 'layouts/analytics' %>
 
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
   </head>
   <body data-locale="<%= I18n.locale %>">
       <div class="skip">
@@ -101,7 +102,7 @@
              class="notification-area alert <%= has_alert ? 'alert-warning ' : 'alert-info ' %>
                     <%= (has_alert or has_notice) ? 'show' : 'hide' %>"
              role="<%= (has_notice ? 'status' : (has_alert ? 'alert' : '')) %>">
-          <i class="fas <%= has_alert ? ' fa-times-circle' : ' fa-check-circle' %>" aria-hidden="true"></i>
+          <i class="fas <%= has_alert ? ' fa-circle-xmark' : ' fa-circle-check' %>" aria-hidden="true"></i>
           <span class="aria-only"><%= has_alert ? _('Error:') : _('Notice:') %></span>
           <span><%= sanitize (has_alert ? alert : notice) %></span>
           <%= yield :errors %>
@@ -158,7 +159,10 @@
       AUTOCOMPLETE_ARIA_HELPER_EMPTY: _("No results are available for your entry."),
       AUTOCOMPLETE_SEARCHING: _("Searching ..."),
 
-      CURRENT_LOCALE: LocaleService.to_gettext(locale: @current_locale.to_s)
+      CURRENT_LOCALE: LocaleService.to_gettext(locale: @current_locale.to_s),
+
+      MORE_INFO: _("More info"),
+      LESS_INFO: _("Less info")
     }.to_json
     %>
 

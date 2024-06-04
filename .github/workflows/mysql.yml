@@ -19,13 +19,13 @@ jobs:
     # Install Ruby and run bundler
     - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.7.6
+        ruby-version: '3.0'
         bundler-cache: true
-
+    
     # Install Node
-    - uses: actions/setup-node@v2
+    - uses: actions/setup-node@v3
       with:
-        node-version: 16
+        node-version: '16.6.0'
         cache: 'yarn'
 
     # Copy all of the example configs over

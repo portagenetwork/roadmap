@@ -20,12 +20,22 @@
                          placement: 'right' }%>
     <div class="checkbox">
       <%= f.label(:visibility) do %>
-        <%= f.check_box(:visibility, checked: f.object.visibility == 'organisationally_visible') %>
+        <%= f.check_box(:visibility,
+                        {},
+                        f.object.class.visibilities[:organisationally_visible],
+                        f.object.class.visibilities[:publicly_visible])
+                        %>
 
         <%= _('for internal %{org_name} use only') % { org_name: f.object.org.name } %>
       <% end %>
     </div>
   </div>
+<% else %>
+  <%
+  visibility = f.object.visibility
+  visibility = f.object.org.funder? ? 'publicly_visible' : 'organisationally_visible' if visibility.nil?
+  %>
+  <%= f.hidden_field :visibility, value: visibility %>
 <% end %>
 
 <div class="form-group col-xs-8">

@@ -37,7 +37,8 @@ TranslationIO.configure do |config|
     'Section' => %w[title description],
     'Question' => %w[text default_value],
     'Annotation' => ['text'],
-    'ResearchDomain' => ['label']
+    'ResearchDomain' => ['label'],
+    'QuestionOption' => ['text']
   }
   # Find other useful usage information here:
   # https://github.com/translation/rails#readme
@@ -112,7 +113,7 @@ def default_locale
 end
 
 def available_locales
-  SUPPORTED_LOCALES.sort { |a, b| a <=> b }
+  SUPPORTED_LOCALES
 end
 
 I18n.available_locales = SUPPORTED_LOCALES
