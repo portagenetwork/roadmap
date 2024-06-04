@@ -37,6 +37,8 @@
  - Bump turbo-rails from 1.5.0 to 2.0.5 [#771](https://github.com/portagenetwork/roadmap/pull/771)
 
  - Bump jbuilder from 2.11.5 to 2.12.0 [#770](https://github.com/portagenetwork/roadmap/pull/770)
+
+ - Bump faker from 3.2.3 to 3.4.1 [#769](https://github.com/portagenetwork/roadmap/pull/769)
  
 ## V4.1.1
 
