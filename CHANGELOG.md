@@ -62,6 +62,8 @@
 
  - Bump brakeman from 5.4.1 to 6.1.2 [#781](https://github.com/portagenetwork/roadmap/pull/781)
 
+ - Bump wkhtmltopdf-binary from 0.12.6.6 to 0.12.6.7 [#779](https://github.com/portagenetwork/roadmap/pull/779)
+
 ## V4.1.1
 
 ### Added
