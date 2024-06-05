@@ -195,8 +195,7 @@ GEM
       faraday (>= 0.8)
     faraday-net_http (3.1.0)
       net-http
-    ffi (1.17.0-arm64-darwin)
-    ffi (1.17.0-x86_64-linux-gnu)
+    ffi (1.17.0)
     flag_shih_tzu (0.3.23)
     fog-aws (3.21.0)
       fog-core (~> 2.1)
