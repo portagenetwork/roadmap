@@ -64,6 +64,8 @@
 
  - Bump wkhtmltopdf-binary from 0.12.6.6 to 0.12.6.7 [#779](https://github.com/portagenetwork/roadmap/pull/779)
 
+ - Bump rack-mini-profiler from 3.3.0 to 3.3.1 [#778](https://github.com/portagenetwork/roadmap/pull/778)
+
 ## V4.1.1
 
 ### Added
