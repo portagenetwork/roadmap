@@ -57,7 +57,11 @@
  - Bump yard from 0.9.34 to 0.9.36 [#683](https://github.com/portagenetwork/roadmap/pull/683)
 
  - Bump tinymce from 6.4.1 to 7.0.0 [#704](https://github.com/portagenetwork/roadmap/pull/704)
- 
+
+ - Bump actionpack from 6.1.7.7 to 6.1.7.8 [#775](https://github.com/portagenetwork/roadmap/pull/775)
+
+ - Bump brakeman from 5.4.1 to 6.1.2 [#781](https://github.com/portagenetwork/roadmap/pull/781)
+
 ## V4.1.1
 
 ### Added
