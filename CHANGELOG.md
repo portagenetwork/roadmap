@@ -66,6 +66,8 @@
 
  - Bump rack-mini-profiler from 3.3.0 to 3.3.1 [#778](https://github.com/portagenetwork/roadmap/pull/778)
 
+ - Bump listen from 3.8.0 to 3.9.0 [#776](https://github.com/portagenetwork/roadmap/pull/776)
+
 ## V4.1.1
 
 ### Added
