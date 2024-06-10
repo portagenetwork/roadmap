@@ -10,6 +10,8 @@
 
 ### Fixed
 
+ - Set `licence_key` in TinyMCE config [#792](https://github.com/portagenetwork/roadmap/pull/792)
+
  - Add .pdf handling in render_respond_to_format_with_error_message [#731](https://github.com/portagenetwork/roadmap/pull/731)
 
  - Fixed handling of Template.visibility in some places [#759](https://github.com/portagenetwork/roadmap/pull/759)
