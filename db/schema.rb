@@ -10,18 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2026_10_26_193912) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+=======
+ActiveRecord::Schema[7.1].define(version: 2024_06_13_141451) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+>>>>>>> 6f7ce4cd1 (Updated app to rails 7)
   create_table "annotations", id: :serial, force: :cascade do |t|
     t.integer "question_id"
     t.integer "org_id"
     t.text "text"
     t.integer "type", default: 0, null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "versionable_id", limit: 36
     t.index ["org_id"], name: "fk_rails_aca7521f72"
     t.index ["question_id"], name: "index_annotations_on_question_id"
@@ -33,8 +40,8 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.integer "plan_id"
     t.integer "user_id"
     t.integer "question_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "lock_version", default: 0
     t.index ["plan_id"], name: "index_answers_on_plan_id"
     t.index ["question_id"], name: "index_answers_on_question_id"
@@ -62,13 +69,14 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.string "contact_email", null: false
     t.string "client_id", null: false
     t.string "client_secret", null: false
-    t.datetime "last_access"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "last_access", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "org_id"
     t.index ["name"], name: "index_api_clients_on_name"
   end
 
+<<<<<<< HEAD
   create_table "comments", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.integer "question_id"
@@ -80,6 +88,8 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.integer "archived_by"
   end
 
+=======
+>>>>>>> 6f7ce4cd1 (Updated app to rails 7)
   create_table "conditions", id: :serial, force: :cascade do |t|
     t.integer "question_id"
     t.text "option_list"
@@ -87,8 +97,8 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.integer "number"
     t.text "remove_data"
     t.text "webhook_data"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["question_id"], name: "index_conditions_on_question_id"
   end
 
@@ -99,8 +109,8 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.integer "roles", null: false
     t.integer "org_id"
     t.integer "plan_id", null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["email"], name: "index_contributors_on_email"
     t.index ["org_id"], name: "index_contributors_on_org_id"
     t.index ["plan_id"], name: "index_contributors_on_plan_id"
@@ -111,11 +121,12 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.string "name"
     t.string "code"
     t.integer "org_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["org_id"], name: "index_departments_on_org_id"
   end
 
+<<<<<<< HEAD
   create_table "dmptemplate_translations", id: :serial, force: :cascade do |t|
     t.integer "dmptemplate_id"
     t.string "locale", null: false
@@ -144,15 +155,18 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.integer "guidance_group_id"
   end
 
+=======
+>>>>>>> 6f7ce4cd1 (Updated app to rails 7)
   create_table "exported_plans", id: :serial, force: :cascade do |t|
     t.integer "plan_id"
     t.integer "user_id"
     t.string "format"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "phase_id"
   end
 
+<<<<<<< HEAD
   create_table "file_types", id: :serial, force: :cascade do |t|
     t.string "name"
     t.string "icon_name"
@@ -184,16 +198,34 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.index ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type"
   end
 
+=======
+  create_table "external_api_access_tokens", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "external_service_name", null: false
+    t.string "access_token", null: false
+    t.string "refresh_token"
+    t.datetime "expires_at", precision: nil
+    t.datetime "revoked_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.index ["expires_at"], name: "index_external_api_access_tokens_on_expires_at"
+    t.index ["external_service_name"], name: "index_external_api_access_tokens_on_external_service_name"
+    t.index ["user_id", "external_service_name"], name: "index_external_tokens_on_user_and_service"
+    t.index ["user_id"], name: "index_external_api_access_tokens_on_user_id"
+  end
+
+>>>>>>> 6f7ce4cd1 (Updated app to rails 7)
   create_table "guidance_groups", id: :serial, force: :cascade do |t|
     t.string "name"
     t.integer "org_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "optional_subset", default: false, null: false
     t.boolean "published", default: false, null: false
     t.index ["org_id"], name: "index_guidance_groups_on_org_id"
   end
 
+<<<<<<< HEAD
   create_table "guidance_in_group", id: false, force: :cascade do |t|
     t.integer "guidance_id", null: false
     t.integer "guidance_group_id", null: false
@@ -210,11 +242,13 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.index ["locale"], name: "index_guidance_translations_on_locale"
   end
 
+=======
+>>>>>>> 6f7ce4cd1 (Updated app to rails 7)
   create_table "guidances", id: :serial, force: :cascade do |t|
     t.text "text"
     t.integer "guidance_group_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "published"
     t.index ["guidance_group_id"], name: "index_guidances_on_guidance_group_id"
   end
@@ -223,10 +257,17 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.string "name"
     t.string "description"
     t.boolean "active"
+<<<<<<< HEAD
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text "logo_url"
     t.text "identifier_prefix"
+=======
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.string "logo_url"
+    t.string "identifier_prefix"
+>>>>>>> 6f7ce4cd1 (Updated app to rails 7)
     t.integer "context"
   end
 
@@ -236,8 +277,8 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.integer "identifier_scheme_id"
     t.integer "identifiable_id"
     t.string "identifiable_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["identifiable_type", "identifiable_id"], name: "index_identifiers_on_identifiable_type_and_identifiable_id"
     t.index ["identifier_scheme_id", "identifiable_id", "identifiable_type"], name: "index_identifiers_on_scheme_and_type_and_id"
     t.index ["identifier_scheme_id", "value"], name: "index_identifiers_on_identifier_scheme_id_and_value"
@@ -256,8 +297,8 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.string "uri", null: false
     t.boolean "osi_approved", default: false
     t.boolean "deprecated", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["identifier", "osi_approved", "deprecated"], name: "index_license_on_identifier_and_criteria"
     t.index ["identifier"], name: "index_licenses_on_identifier"
     t.index ["uri"], name: "index_licenses_on_uri"
@@ -270,8 +311,8 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.string "uri"
     t.json "locations"
     t.json "related_entities"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "metadata_standards_research_outputs", force: :cascade do |t|
@@ -287,8 +328,8 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.boolean "archived", default: false, null: false
     t.integer "answer_id"
     t.integer "archived_by"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["answer_id"], name: "index_notes_on_answer_id"
     t.index ["user_id"], name: "fk_rails_7f2323ad43"
   end
@@ -296,8 +337,8 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
   create_table "notification_acknowledgements", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.integer "notification_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["notification_id"], name: "index_notification_acknowledgements_on_notification_id"
     t.index ["user_id"], name: "index_notification_acknowledgements_on_user_id"
   end
@@ -310,11 +351,12 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.boolean "dismissable"
     t.date "starts_at"
     t.date "expires_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "enabled", default: true
   end
 
+<<<<<<< HEAD
   create_table "oauth_access_grants", force: :cascade do |t|
     t.bigint "resource_owner_id", null: false
     t.bigint "application_id", null: false
@@ -376,15 +418,18 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.datetime "updated_at", null: false
   end
 
+=======
+>>>>>>> 6f7ce4cd1 (Updated app to rails 7)
   create_table "org_token_permissions", id: :serial, force: :cascade do |t|
     t.integer "org_id"
     t.integer "token_permission_type_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["org_id"], name: "index_org_token_permissions_on_org_id"
     t.index ["token_permission_type_id"], name: "fk_rails_2aa265f538"
   end
 
+<<<<<<< HEAD
   create_table "organisation_types", id: :serial, force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -417,12 +462,14 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.string "contact_email"
   end
 
+=======
+>>>>>>> 6f7ce4cd1 (Updated app to rails 7)
   create_table "orgs", id: :serial, force: :cascade do |t|
     t.string "name"
     t.string "abbreviation"
     t.string "target_url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "is_other", default: false, null: false
     t.boolean "display_in_registration"
     t.string "logo_uid"
@@ -438,6 +485,11 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.boolean "feedback_enabled", default: false
     t.text "feedback_msg"
     t.boolean "managed", default: false, null: false
+<<<<<<< HEAD
+=======
+    t.string "api_create_plan_email_subject"
+    t.text "api_create_plan_email_body"
+>>>>>>> 6f7ce4cd1 (Updated app to rails 7)
     t.string "helpdesk_email"
     t.index ["language_id"], name: "fk_rails_5640112cab"
     t.index ["region_id"], name: "fk_rails_5a6adf6bab"
@@ -445,10 +497,11 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
 
   create_table "perms", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
+<<<<<<< HEAD
   create_table "phase_translations", id: :serial, force: :cascade do |t|
     t.integer "phase_id"
     t.string "locale", null: false
@@ -460,19 +513,22 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.index ["phase_id"], name: "index_phase_translations_on_phase_id"
   end
 
+=======
+>>>>>>> 6f7ce4cd1 (Updated app to rails 7)
   create_table "phases", id: :serial, force: :cascade do |t|
     t.string "title"
     t.text "description"
     t.integer "number"
     t.integer "template_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.boolean "modifiable"
     t.string "versionable_id", limit: 36
     t.index ["template_id"], name: "index_phases_on_template_id"
     t.index ["versionable_id"], name: "index_phases_on_versionable_id"
   end
 
+<<<<<<< HEAD
   create_table "plan_sections", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.integer "section_id"
@@ -497,11 +553,13 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.index ["plan_id"], name: "index_plan_snapshots_on_plan_id"
   end
 
+=======
+>>>>>>> 6f7ce4cd1 (Updated app to rails 7)
   create_table "plans", id: :serial, force: :cascade do |t|
     t.string "title"
     t.integer "template_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "identifier"
     t.text "description"
     t.integer "visibility", default: 3, null: false
@@ -510,13 +568,24 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.integer "org_id"
     t.integer "funder_id"
     t.integer "grant_id"
+<<<<<<< HEAD
     t.datetime "start_date"
     t.datetime "end_date"
     t.bigint "research_domain_id"
+=======
+    t.integer "api_client_id"
+    t.datetime "start_date", precision: nil
+    t.datetime "end_date", precision: nil
+>>>>>>> 6f7ce4cd1 (Updated app to rails 7)
     t.boolean "ethical_issues"
     t.text "ethical_issues_description"
     t.string "ethical_issues_report"
     t.integer "funding_status"
+<<<<<<< HEAD
+=======
+    t.bigint "research_domain_id"
+    t.index ["api_client_id"], name: "index_plans_on_api_client_id"
+>>>>>>> 6f7ce4cd1 (Updated app to rails 7)
     t.index ["funder_id"], name: "index_plans_on_funder_id"
     t.index ["grant_id"], name: "index_plans_on_grant_id"
     t.index ["org_id"], name: "index_plans_on_org_id"
@@ -536,6 +605,7 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.integer "user_id"
   end
 
+<<<<<<< HEAD
   create_table "project_groups", id: :serial, force: :cascade do |t|
     t.boolean "project_creator"
     t.boolean "project_editor"
@@ -580,11 +650,22 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.index ["question_format_id"], name: "index_question_format_translations_on_question_format_id"
   end
 
+=======
+  create_table "question_format_labels", id: false, force: :cascade do |t|
+    t.integer "id"
+    t.string "description"
+    t.integer "question_id"
+    t.integer "number"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+  end
+
+>>>>>>> 6f7ce4cd1 (Updated app to rails 7)
   create_table "question_formats", id: :serial, force: :cascade do |t|
     t.string "title"
     t.text "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "option_based", default: false
     t.integer "formattype", default: 0
   end
@@ -594,13 +675,14 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.string "text"
     t.integer "number"
     t.boolean "is_default"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "versionable_id", limit: 36
     t.index ["question_id"], name: "index_question_options_on_question_id"
     t.index ["versionable_id"], name: "index_question_options_on_versionable_id"
   end
 
+<<<<<<< HEAD
   create_table "question_translations", id: :serial, force: :cascade do |t|
     t.integer "question_id"
     t.string "locale", null: false
@@ -612,13 +694,15 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.index ["question_id"], name: "index_question_translations_on_question_id"
   end
 
+=======
+>>>>>>> 6f7ce4cd1 (Updated app to rails 7)
   create_table "questions", id: :serial, force: :cascade do |t|
     t.text "text"
     t.text "default_value"
     t.integer "number"
     t.integer "section_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "question_format_id"
     t.boolean "option_comment_display", default: true
     t.boolean "modifiable"
@@ -635,11 +719,14 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.index ["theme_id"], name: "fk_rails_0489d5eeba"
   end
 
+<<<<<<< HEAD
   create_table "region_groups", id: :serial, force: :cascade do |t|
     t.integer "super_region_id"
     t.integer "region_id"
   end
 
+=======
+>>>>>>> 6f7ce4cd1 (Updated app to rails 7)
   create_table "regions", id: :serial, force: :cascade do |t|
     t.string "abbreviation"
     t.string "description"
@@ -647,6 +734,24 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.integer "super_region_id"
   end
 
+<<<<<<< HEAD
+=======
+  create_table "related_identifiers", force: :cascade do |t|
+    t.bigint "identifier_scheme_id"
+    t.integer "identifier_type", null: false
+    t.integer "relation_type", null: false
+    t.bigint "identifiable_id"
+    t.string "identifiable_type"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.string "value", null: false
+    t.index ["identifiable_id", "identifiable_type", "relation_type"], name: "index_relateds_on_identifiable_and_relation_type"
+    t.index ["identifier_scheme_id"], name: "index_related_identifiers_on_identifier_scheme_id"
+    t.index ["identifier_type"], name: "index_related_identifiers_on_identifier_type"
+    t.index ["relation_type"], name: "index_related_identifiers_on_relation_type"
+  end
+
+>>>>>>> 6f7ce4cd1 (Updated app to rails 7)
   create_table "repositories", force: :cascade do |t|
     t.string "name", null: false
     t.text "description", null: false
@@ -654,8 +759,8 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.string "contact"
     t.string "uri", null: false
     t.json "info"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["homepage"], name: "index_repositories_on_homepage"
     t.index ["name"], name: "index_repositories_on_name"
     t.index ["uri"], name: "index_repositories_on_uri"
@@ -672,8 +777,8 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.string "identifier", null: false
     t.string "label", null: false
     t.bigint "parent_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["parent_id"], name: "index_research_domains_on_parent_id"
   end
 
@@ -687,12 +792,12 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.boolean "is_default"
     t.text "description"
     t.integer "access", default: 0, null: false
-    t.datetime "release_date"
+    t.datetime "release_date", precision: nil
     t.boolean "personal_data"
     t.boolean "sensitive_data"
     t.bigint "byte_size"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.bigint "license_id"
     t.index ["license_id"], name: "index_research_outputs_on_license_id"
     t.index ["output_type"], name: "index_research_outputs_on_output_type"
@@ -702,14 +807,15 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
   create_table "roles", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.integer "plan_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "access", default: 0, null: false
     t.boolean "active", default: true
     t.index ["plan_id"], name: "index_roles_on_plan_id"
     t.index ["user_id"], name: "index_roles_on_user_id"
   end
 
+<<<<<<< HEAD
   create_table "section_translations", id: :serial, force: :cascade do |t|
     t.integer "section_id"
     t.string "locale", null: false
@@ -721,12 +827,14 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.index ["section_id"], name: "index_section_translations_on_section_id"
   end
 
+=======
+>>>>>>> 6f7ce4cd1 (Updated app to rails 7)
   create_table "sections", id: :serial, force: :cascade do |t|
     t.string "title"
     t.text "description"
     t.integer "number"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "phase_id"
     t.boolean "modifiable"
     t.string "versionable_id", limit: 36
@@ -734,6 +842,7 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.index ["versionable_id"], name: "index_sections_on_versionable_id"
   end
 
+<<<<<<< HEAD
   create_table "settings", id: :serial, force: :cascade do |t|
     t.string "var", null: false
     t.text "value"
@@ -749,17 +858,38 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.datetime "updated_at", null: false
   end
 
+=======
+  create_table "sessions", id: :serial, force: :cascade do |t|
+    t.string "session_id", limit: 64, null: false
+    t.text "data"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
+    t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
+    t.index ["updated_at"], name: "index_sessions_on_updated_at"
+  end
+
+  create_table "settings", id: :serial, force: :cascade do |t|
+    t.string "var"
+    t.text "value"
+    t.integer "target_id", null: false
+    t.string "target_type"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+  end
+
+>>>>>>> 6f7ce4cd1 (Updated app to rails 7)
   create_table "stats", id: :serial, force: :cascade do |t|
     t.bigint "count", default: 0
     t.date "date", null: false
     t.string "type", null: false
     t.integer "org_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.text "details"
     t.boolean "filtered", default: false
   end
 
+<<<<<<< HEAD
   create_table "stylesheets", id: :serial, force: :cascade do |t|
     t.string "file_uid"
     t.string "file_name"
@@ -777,6 +907,21 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.boolean "is_example"
   end
 
+=======
+  create_table "subscriptions", force: :cascade do |t|
+    t.bigint "plan_id"
+    t.integer "subscription_types", null: false
+    t.string "callback_uri"
+    t.bigint "subscriber_id"
+    t.string "subscriber_type"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "last_notified", precision: nil
+    t.index ["plan_id"], name: "index_subscriptions_on_plan_id"
+    t.index ["subscriber_id", "subscriber_type", "plan_id"], name: "index_subscribers_on_identifiable_and_plan_id"
+  end
+
+>>>>>>> 6f7ce4cd1 (Updated app to rails 7)
   create_table "templates", id: :serial, force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -784,8 +929,8 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.integer "org_id"
     t.string "locale"
     t.boolean "is_default"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.integer "version"
     t.integer "visibility"
     t.integer "customization_of"
@@ -801,8 +946,8 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
   create_table "themes", id: :serial, force: :cascade do |t|
     t.string "title"
     t.text "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "locale"
   end
 
@@ -816,18 +961,19 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
   create_table "token_permission_types", id: :serial, force: :cascade do |t|
     t.string "token_type"
     t.text "text_description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "trackers", id: :serial, force: :cascade do |t|
     t.integer "org_id"
     t.string "code"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["org_id"], name: "index_trackers_on_org_id"
   end
 
+<<<<<<< HEAD
   create_table "user_role_types", id: :serial, force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -849,28 +995,36 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.datetime "updated_at", null: false
   end
 
+=======
+>>>>>>> 6f7ce4cd1 (Updated app to rails 7)
   create_table "users", id: :serial, force: :cascade do |t|
     t.string "firstname"
     t.string "surname"
     t.string "email", limit: 80, default: "", null: false
+<<<<<<< HEAD
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "encrypted_password", default: ""
+=======
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.string "encrypted_password"
+>>>>>>> 6f7ce4cd1 (Updated app to rails 7)
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
     t.integer "sign_in_count", default: 0
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
     t.string "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
+    t.datetime "confirmed_at", precision: nil
+    t.datetime "confirmation_sent_at", precision: nil
     t.string "invitation_token"
-    t.datetime "invitation_created_at"
-    t.datetime "invitation_sent_at"
-    t.datetime "invitation_accepted_at"
+    t.datetime "invitation_created_at", precision: nil
+    t.datetime "invitation_sent_at", precision: nil
+    t.datetime "invitation_accepted_at", precision: nil
     t.string "other_organisation"
     t.boolean "dmponline3"
     t.boolean "accept_terms"
@@ -882,7 +1036,7 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.string "recovery_email"
     t.boolean "active", default: true
     t.integer "department_id"
-    t.datetime "last_api_access"
+    t.datetime "last_api_access", precision: nil
     t.index ["department_id"], name: "fk_rails_f29bf9cdf2"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["language_id"], name: "fk_rails_45f4f12508"
@@ -970,6 +1124,9 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
   add_foreign_key "users", "departments"
   add_foreign_key "users", "languages"
   add_foreign_key "users", "orgs"
+<<<<<<< HEAD
   add_foreign_key "users_perms", "perms"
   add_foreign_key "users_perms", "users"
+=======
+>>>>>>> 6f7ce4cd1 (Updated app to rails 7)
 end
