@@ -10,7 +10,8 @@ RSpec.describe 'Plans', type: :feature do
     @org = create(:org)
     @research_org = create(:org, :organisation, :research_institute,
                            name: 'Test Research Org', templates: 1)
-    @funding_org  = create(:org, :funder, templates: 1, name: Rails.application.config.default_funder_name)
+    @funding_org  = create(:org, :funder, templates: 1)
+    Rails.application.config.default_funder_id = @funding_org.id
     @template     = create(:template, org: @org)
     @user         = create(:user, org: @org)
     sign_in(@user)
