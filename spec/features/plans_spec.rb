@@ -10,7 +10,7 @@ RSpec.describe 'Plans', type: :feature do
     @org = create(:org)
     @research_org = create(:org, :organisation, :research_institute,
                            name: 'Test Research Org', templates: 1)
-    @funding_org  = create(:org, :funder, name: 'Test Funder Org', templates: 1)
+    @funding_org  = create(:org, :funder, templates: 1, name: Rails.application.config.default_funder_name)
     @template     = create(:template, org: @org)
     @user         = create(:user, org: @org)
     sign_in(@user)
@@ -32,16 +32,14 @@ RSpec.describe 'Plans', type: :feature do
     #     )
   end
 
-  xit 'User creates a new Plan', :js do
-    # TODO: Revisit this after we start refactoring/building out or tests for
-    #       the new create plan workflow. For some reason the plans/new.js isn't
-    #       firing here but works fine in the UI with manual testing
-    # Action
+  it 'User creates a new Plan', :js do
     click_link 'Create plan'
     fill_in :plan_title, with: 'My test plan'
     choose_suggestion('plan_org_org_name', @research_org)
 
-    choose_suggestion('plan_funder_org_name', @funding_org)
+    within('#plan_template_id') do
+      select @default_template.title
+    end
     click_button 'Create plan'
 
     # Expectations
@@ -51,6 +49,6 @@ RSpec.describe 'Plans', type: :feature do
     expect(page).to have_css("input[type=text][value='#{@plan.title}']")
     expect(@plan.title).to eql('My test plan')
     expect(@plan.org_id).to eql(@research_org.id)
-    expect(@plan.funder_id).to eql(@funding_org.id)
+    expect(@plan.template_id).to eql(@default_template.id)
   end
 end
