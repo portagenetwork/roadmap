@@ -70,6 +70,8 @@
 
  - Bump listen from 3.8.0 to 3.9.0 [#776](https://github.com/portagenetwork/roadmap/pull/776)
 
+ - Bump braces from 3.0.2 to 3.0.3 [#795](https://github.com/portagenetwork/roadmap/pull/795)
+
 ## V4.1.1
 
 ### Added
