@@ -1,6 +1,6 @@
 name: Tests - PostgreSQL
 
-on: [pull_request]
+on: [push, pull_request]
 
 jobs:
   postgresql:
@@ -35,7 +35,7 @@ jobs:
     # Install Ruby and run bundler
     - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: '3.0'
+        ruby-version: '3.1.4'
         bundler-cache: true
 
     ## - run: echo 'NODE_OPTIONS="--openssl-legacy-provider"' >> $GITHUB_ENV
@@ -44,7 +44,7 @@ jobs:
     # Install Node
     - uses: actions/setup-node@v3
       with:
-        node-version: 18
+        node-version: '16.6.0'
         cache: 'yarn'
 
     # Install the Postgres developer packages
