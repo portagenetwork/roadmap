@@ -198,3 +198,9 @@ Style/StringLiterals:
     - 'config/**/*'
 Style/SwapValues: # new in 1.1
   Enabled: true
+
+Style/HashSyntax:
+  Enabled: false
+
+Style/ArrayIntersect:
+  Enabled: false
