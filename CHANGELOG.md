@@ -72,6 +72,8 @@
 
  - Bump braces from 3.0.2 to 3.0.3 [#795](https://github.com/portagenetwork/roadmap/pull/795)
 
+ - Bump Ruby from 3.0.4 to 3.1.4 [#808](https://github.com/portagenetwork/roadmap/pull/808)
+
 ## V4.1.1
 
 ### Added
