@@ -195,7 +195,8 @@ GEM
       faraday (>= 0.8)
     faraday-net_http (3.1.0)
       net-http
-    ffi (1.17.0)
+    ffi (1.17.0-arm64-darwin)
+    ffi (1.17.0-x86_64-linux-gnu)
     flag_shih_tzu (0.3.23)
     fog-aws (3.21.0)
       fog-core (~> 2.1)
@@ -648,7 +649,7 @@ DEPENDENCIES
   yard-tomdoc
 
 RUBY VERSION
-   ruby 3.0.4p208
+   ruby 3.1.4p223
 
 BUNDLED WITH
    2.4.15
