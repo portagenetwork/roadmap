@@ -35,7 +35,16 @@ RSpec.describe 'SuperAdmins Merge Orgs', type: :feature do
     fill_in(:search, with: @from_org.name)
     click_button 'Search'
 
-    first("#org-#{@from_org.id}-actions").click
+    max_tries = 5
+    tries = 0
+    begin
+      first("#org-#{@from_org.id}-actions").click
+    rescue Selenium::WebDriver::Error::StaleElementReferenceError
+      tries += 1
+      retry if tries < max_tries
+      raise "Failed to click element after #{max_tries} tries"
+    end
+
     first("a[href=\"/org/admin/#{@from_org.id}/admin_edit\"]").click
 
     click_link 'Merge'
