@@ -5,7 +5,7 @@ class OrgsController < ApplicationController
   include OrgSelectable
 
   after_action :verify_authorized, except: %w[
-    shibboleth_ds shibboleth_ds_passthru search
+    shibboleth_ds shibboleth_ds_passthru search #cilogon_ds cilogon_ds_passthru
   ]
   respond_to :html
 
@@ -151,6 +151,61 @@ class OrgsController < ApplicationController
 
     end
   end
+
+  # This action is used by installations that have the following config enabled:
+  #   Rails.configuration.x.cilogon.use_filtered_discovery_service
+  # rubocop:disable Metrics/AbcSize
+  #   def cilogon_ds
+  #     byebug
+  #     unless current_user.nil?
+  #       redirect_to root_path
+  #       return
+  #     end
+
+  #   @user = User.new
+  #   # Display the custom cilogon discovery service page.
+  #   @orgs = Identifier.by_scheme_name('cilogon', 'Org')
+  #                     .sort { |a, b| a.identifiable.name <=> b.identifiable.name }
+  #                     .map(&:identifiable)
+
+  #   byebug
+  #   # Disabling the rubocop check here because it would not be clear what happens
+  #   # if the ``@orgs` array has items ... it renders the cilogon_ds view
+  #   # rubocop:disable Style/GuardClause, Style/RedundantReturn
+  #   if @orgs.empty?
+  #     flash.now[:alert] = _('No organisations are currently registered.')
+  #     redirect_to user_cilogon_omniauth_authorize_path
+  #     return
+  #   end
+  #   # rubocop:enable Style/GuardClause, Style/RedundantReturn
+  # end
+
+  # This action is used to redirect a user to the cilogon IdP
+  # POST /orgs/cilogon_ds
+  # def cilogon_ds_passthru
+  #   byebug
+
+  #   if cilogon_params[:org_id].blank?
+  #     redirect_to cilogon_ds_path, notice: _('Please choose an organisation')
+  #   else
+  #     session['org_id'] = cilogon_params[:org_id]
+
+  #     org = Org.where(id: cilogon_params[:org_id])
+  #     cilogon_entity = Identifier.by_scheme_name('cilogon', 'Org')
+  #                             .where(identifiable: org)
+
+  #     if cilogon_entity.empty?
+  #       failure = _('Your organisation does not seem to be properly configured.')
+  #       redirect_to cilogon_ds_path, alert: failure
+  #     else
+  #       # initiate shibboleth login sequence
+  #       entity_param = "entityID=#{cilogon_entity.first.value}"
+  #       redirect_to "#{cilogon_login_url}?#{cilogon_callback_url}&#{entity_param}"
+  #     end
+
+  #   end
+  # end
+
   # rubocop:enable Metrics/AbcSize
 
   # POST /orgs  (via AJAX from Org Typeaheads ... see below for specific pages)
@@ -236,6 +291,10 @@ class OrgsController < ApplicationController
     params.permit('org_id')
   end
 
+  def cilogon_params
+    params.permit('org_id')
+  end
+
   def search_params
     params.require(:org).permit(:name, :type)
   end
@@ -248,6 +307,16 @@ class OrgsController < ApplicationController
   def shib_callback_url
     "target=#{user_shibboleth_omniauth_callback_url.gsub('http:', 'https:')}"
   end
+
+
+  # def cilogon_login_url
+  #   cilogon_login = Rails.configuration.x.cilgon.login_url
+  #   "#{request.base_url.gsub('http:', 'https:')}#{shib_login}"
+  # end
+
+  # def cilogon_callback_url
+  #   "target=#{user_cilogon_omniauth_callback_url.gsub('http:', 'https:')}"
+  # end
 
   # Destroy the identifier if it exists and was blanked out, replace the
   # identifier if it was updated, create the identifier if its new, or
