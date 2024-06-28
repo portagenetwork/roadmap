@@ -260,6 +260,7 @@ Devise.setup do |config|
   # Any entries here MUST match a corresponding entry in the identifier_schemes table as
   # well as an identifier_schemes.schemes section in each locale file!
   OmniAuth.config.full_host = Rails.application.secrets.omniauth_full_host
+  OmniAuth.config.silence_get_warning = true
 
   config.omniauth :orcid, Rails.application.secrets.orcid_client_id,
                   Rails.application.secrets.orcid_client_secret,
@@ -279,6 +280,27 @@ Devise.setup do |config|
                     },
                     extra_fields: []
                   }
+
+
+                    
+  config.omniauth :openid_connect,  {
+                    name: :cilogon,
+                    issuer: 'https://cilogon.org/',
+                    scope: [:openid, :email, :profile],
+                    response_type: :code,
+                    uid_field: "sub",
+                    client_options: {
+                      port: 443,
+                      scheme: "https",
+                      host: 'cilogon.org',
+                      identifier: ENV["CILOGON_CLIENT_ID"],
+                      secret: ENV["CILOGON_SECRET_KEY"],
+                      redirect_uri: "https://localhost:3000/users/auth/openid_connect", # This is not it
+                      authorization_endpoint: '/authorize',
+                      token_endpoint: '/oauth2/token',
+                      userinfo_endpoint: '/oauth2/userinfo'
+                  }
+                }
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
