@@ -4,7 +4,6 @@ module AutoCompleteHelper
   def select_an_org(autocomplete_id, org)
     # Set the Org Name
     find(autocomplete_id).set org.name
-    sleep(0.3)
 
     # The controllers are expecting the org_id though, so lets
     # populate it

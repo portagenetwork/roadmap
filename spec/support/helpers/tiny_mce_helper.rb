@@ -15,7 +15,6 @@ module TinyMceHelper
     x = 0
     until x == 50 || page.evaluate_script("tinyMCE.get('#{id}') !== null")
       x += 1
-      sleep 0.2
     end
     begin
       page.execute_script <<~JS

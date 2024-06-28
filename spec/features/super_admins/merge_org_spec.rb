@@ -30,29 +30,22 @@ RSpec.describe 'SuperAdmins Merge Orgs', type: :feature do
   scenario 'Super admin merges an Org into another Org', :js do
     org_name = @from_org.name
     click_link 'Admin'
-    sleep(0.5)
     click_link 'Organisations'
 
     fill_in(:search, with: @from_org.name)
     click_button 'Search'
-    sleep(0.5)
 
     first("#org-#{@from_org.id}-actions").click
     first("a[href=\"/org/admin/#{@from_org.id}/admin_edit\"]").click
 
     click_link 'Merge'
-    sleep(0.3)
     expect(page).to have_text('Merge Organisations')
     choose_suggestion('org_org_name', @to_org)
 
     click_button 'Analyze'
-    # Wait for response
-    sleep(0.3)
     expect(page).to have_text('Summary:')
 
     click_button 'Merge records'
-    # Wait for redirect
-    sleep(0.3)
     expect(page).to have_text('Organisations')
     expect(page).to have_text('Successfully merged')
 
@@ -64,14 +57,12 @@ RSpec.describe 'SuperAdmins Merge Orgs', type: :feature do
     find('#search').click
     fill_in(:search, with: org_name)
     click_button 'Search'
-    sleep(0.3)
     expect(page).to have_text('There are no records associated')
 
     # Make sure the Org we merged into is findable
     find('#search').click
     fill_in(:search, with: @to_org.name)
     click_button 'Search'
-    sleep(0.3)
     expect(page).to have_text(@to_org.name)
   end
 end

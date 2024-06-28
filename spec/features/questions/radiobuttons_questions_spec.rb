@@ -34,7 +34,6 @@ RSpec.describe 'Questions::Tadio button questions', type: :feature do
     within("#answer-form-#{@question.id}") do
       choose @question.question_options.first.text
       click_button 'Save'
-      sleep(0.2)
     end
 
     # Expectations

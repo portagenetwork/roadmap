@@ -34,7 +34,6 @@ RSpec.describe 'Questions::Text Field questions', type: :feature do
     within("#answer-form-#{@question.id}") do
       fill_in :answer_text, with: 'My test answer'
       click_button 'Save'
-      sleep(0.2)
     end
 
     # Expectations
