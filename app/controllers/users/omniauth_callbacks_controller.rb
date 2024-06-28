@@ -42,6 +42,14 @@ module Users
           # Until ORCID becomes supported as a login method
           set_flash_message(:notice, :success, kind: scheme.description) if is_navigational_format?
           sign_in_and_redirect user, event: :authentication
+        elsif schema.name == "cilogon"
+          if user.persisted?
+            sign_in_and_redirect user, event: :authentication
+            set_flash_message(:notice, :success, kind: "CILogon") if is_navigational_format?
+          else
+            session["devise.cilogon_data"] = request.env["omniauth.auth"]
+            redirect_to new_user_registration_url
+          end
         else
           flash[:notice] = _('Successfully signed in')
           redirect_to new_user_registration_url
@@ -76,6 +84,9 @@ module Users
         redirect_to edit_user_registration_path
       end
     end
+
+
+
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
     # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
