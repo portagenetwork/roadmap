@@ -33,6 +33,16 @@
  - Bump danger from 9.4.2 to 9.4.3 [#681](https://github.com/portagenetwork/roadmap/pull/681)
 
  - Bump mail from 2.7.1 to 2.8.1 [#651](https://github.com/portagenetwork/roadmap/pull/651)
+
+ - Bump turbo-rails from 1.5.0 to 2.0.5 [#771](https://github.com/portagenetwork/roadmap/pull/771)
+
+ - Bump jbuilder from 2.11.5 to 2.12.0 [#770](https://github.com/portagenetwork/roadmap/pull/770)
+
+ - Bump faker from 3.2.3 to 3.4.1 [#769](https://github.com/portagenetwork/roadmap/pull/769)
+
+ - Bump jsbundling-rails from 1.1.1 to 1.3.0 [#768](https://github.com/portagenetwork/roadmap/pull/768)
+
+ - Bump binding_of_caller from 1.0.0 to 1.0.1 [#767](https://github.com/portagenetwork/roadmap/pull/767)
  
 ## V4.1.1
 
@@ -238,7 +248,7 @@ For more detailed explanation, please refer to this video : https://www.youtube.
 
 ### Changed
 
-  - Removed dmp-pgd.ca/?locale=fr_CA links from terms & privacy pages (they had no effect on the app's language selector) [#455](https://github.com/portagenetwork/roadmap/issues/455)
+ - Removed dmp-pgd.ca/?locale=fr_CA links from terms & privacy pages (they had no effect on the app's language selector) [#455](https://github.com/portagenetwork/roadmap/issues/455)
 
  - Updated ruby.yml workflow to use PostgreSQL database [#532](https://github.com/portagenetwork/roadmap/issues/532)
 
