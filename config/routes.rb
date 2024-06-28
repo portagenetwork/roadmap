@@ -20,6 +20,12 @@ Rails.application.routes.draw do
   get '/orgs/shibboleth/:org_id', to: 'orgs#shibboleth_ds_passthru'
   post '/orgs/shibboleth', to: 'orgs#shibboleth_ds_passthru'
 
+
+  devise_scope :user do
+    get 'users/auth/openid_connect', to: 'users/omniauth_callbacks#cilogon'
+  end
+
+
   resources :users, path: 'users', only: [] do
     resources :org_swaps, only: [:create],
                           controller: 'super_admin/org_swaps'
