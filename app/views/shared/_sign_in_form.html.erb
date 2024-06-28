@@ -34,4 +34,20 @@
     <% end %>
   <% end %>
 
+
+  <% if Rails.configuration.x.cilogon.enabled %>
+    <% if session['devise.cilogon_data'].nil? %>
+      <p class="text-center fontsize-h4">- <%= _('or') %> -</p>
+      <div class="form-group">
+        <span class="center-block btn-group-justified">
+        <% target = user_cilogon_omniauth_authorize_path %>
+        <%= link_to _('Sign in with your institutional credentials'), target, method: :post, class: 'btn btn-default' %>
+          <%#= button_to 'Login with CILogon', user_cilogon_omniauth_authorize_path, method: :post, class: 'btn btn-default' %>
+        </span>
+      </div>
+    <% else %>
+      <%= f.hidden_field :cilogon_id, :value => session['devise.cilogon_data']['uid'] %>
+    <% end %>
+<% end %>
+
 <% end %>
