@@ -108,6 +108,6 @@ module DMPRoadmap
     # removed the option for selecting a funder. A funder is needed to show the
     # customized templates. For this reason we are specifying in the
     # documentation the funder that
-    config.default_funder_name = Rails.application.secrets.default_funder_name
+    config.default_funder_id = Rails.application.secrets.default_funder_id.to_i
   end
 end
