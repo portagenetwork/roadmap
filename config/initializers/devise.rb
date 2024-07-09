@@ -20,6 +20,7 @@ Devise.setup do |config|
   # :mongoid (bson_ext recommended) by default. Other ORMs may be
   # available as additional gems.
   require 'devise/orm/active_record'
+  require 'omniauth_openid_connect'
 
   # ==> Configuration for any authentication mechanism
   # Configure which keys are used when authenticating a user. The default is
@@ -291,16 +292,18 @@ Devise.setup do |config|
                     uid_field: "sub",
                     client_options: {
                       port: 443,
-                      scheme: "https",
-                      host: 'cilogon.org',
+                      scheme: "http",
+                      host:'cilogon.org',
                       identifier: ENV["CILOGON_CLIENT_ID"],
                       secret: ENV["CILOGON_SECRET_KEY"],
-                      redirect_uri: "https://localhost:3000/users/auth/openid_connect", # This is not it
+                      redirect_uri: "http://localhost:3000/users/auth/openid_connect", # This is not it
                       authorization_endpoint: '/authorize',
                       token_endpoint: '/oauth2/token',
                       userinfo_endpoint: '/oauth2/userinfo'
                   }
                 }
+
+
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

@@ -11,6 +11,11 @@ module Users
         handle_omniauth(scheme)
       end
     end
+  
+    def cilogon
+      Rails.logger.debug request.env['omniauth.auth'].inspect
+      handle_omniauth "cilogon"
+    end
 
     # Processes callbacks from an omniauth provider and directs the user to
     # the appropriate page:
@@ -66,6 +71,7 @@ module Users
             flash[:notice] =
               format(_('Your account has been successfully linked to %{scheme}.'),
                      scheme: scheme.description)
+            redirect_to new_user_registration_url
 
           else
             flash[:alert] = format(_('Unable to link your account to %{scheme}.'),

@@ -178,13 +178,13 @@ class User < ApplicationRecord
   # Load the user based on the scheme and id provided by the Omniauth call
   def self.from_omniauth(auth)
     Identifier.by_scheme_name(auth.provider.downcase, 'User')
-              # .where(value: auth.uid)
-              # .first&.identifiable
-              .where(provider: auth.provider, value: auth.uid).first_or_create do |user|
-                user.email = auth.info.email
-                user.password = Devise.friendly_token[0, 20]
-                user.name = auth.info.name   # if the User model has a name
-              end
+              .where(value: auth.uid)
+              .first&.identifiable
+              # .where(value: auth.uid).first_or_create do |user|
+                # user.email = auth.info.email
+                # user.password = Devise.friendly_token[0, 20]
+                # user.name = auth.info.name   # if the User model has a name
+              # end
   end
 
   def self.to_csv(users)
