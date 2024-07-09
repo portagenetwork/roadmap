@@ -154,7 +154,7 @@ class Org < ApplicationRecord
   before_validation :check_for_missing_logo_file
 
   # This gives all managed orgs api access whenever saved or updated.
-  before_save :ensure_api_access, if: ->(org) { org.managed? }
+  before_save :ensure_api_access, if: -> { managed? }
 
   before_validation lambda { |data|
     data.sanitize_fields(:name)
