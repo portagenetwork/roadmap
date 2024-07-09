@@ -36,9 +36,9 @@ jobs:
         cp config/initializers/wicked_pdf.rb.example config/initializers/wicked_pdf.rb
         cp .env.mysql2 .env
 
-    # Stub out the Rails credentials file so that we can start the Rails app
-    - name: 'Setup Credentials'
-      run: EDITOR='echo "$(cat config/credentials.yml.mysql2)" >' bundle exec rails credentials:edit
+    # # Stub out the Rails credentials file so that we can start the Rails app
+    # - name: 'Setup Credentials'
+    #   run: EDITOR='echo "$(cat config/credentials.yml.mysql2)" >' bundle exec rails credentials:edit
 
     # Set the path to the wkhtmltopdf executable
     - name: 'Determine wkhtmltopdf location'
