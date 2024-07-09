@@ -9,6 +9,7 @@ jobs:
     # Define environment variables for MySQL and Rails
     env:
       DB_ADAPTER: mysql2
+      DB_USERNAME: root
       MYSQL_PWD: root
       RAILS_ENV: test
 
