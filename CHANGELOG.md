@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [4.1.1+portage-4.1.0] - 2024-07-08
 
 ### Added
 
@@ -9,6 +9,8 @@
  - Enable Translation of QuestionOption.text (and Refactor Translation of ResearchDomain.label) [#742](https://github.com/portagenetwork/roadmap/pull/742)
 
 ### Fixed
+
+ - Set `licence_key` in TinyMCE config [#792](https://github.com/portagenetwork/roadmap/pull/792)
 
  - Add .pdf handling in render_respond_to_format_with_error_message [#731](https://github.com/portagenetwork/roadmap/pull/731)
 
@@ -43,7 +45,35 @@
  - Bump jsbundling-rails from 1.1.1 to 1.3.0 [#768](https://github.com/portagenetwork/roadmap/pull/768)
 
  - Bump binding_of_caller from 1.0.0 to 1.0.1 [#767](https://github.com/portagenetwork/roadmap/pull/767)
+
+ - Bump engine.io from 6.4.1 to 6.4.2 [#774](https://github.com/portagenetwork/roadmap/pull/774)
+
+ - Bump activestorage from 6.1.7.6 to 6.1.7.7 [#773](https://github.com/portagenetwork/roadmap/pull/773)
+
+ - Bump @babel/traverse from 7.21.4 to 7.24.6 [#772](https://github.com/portagenetwork/roadmap/pull/772)
+
+ - Bump follow-redirects from 1.15.4 to 1.15.6 [#690](https://github.com/portagenetwork/roadmap/pull/690)
+
+ - Bump devise_invitable from 2.0.8 to 2.0.9 [#671](https://github.com/portagenetwork/roadmap/pull/671)
  
+ - Bump yard from 0.9.34 to 0.9.36 [#683](https://github.com/portagenetwork/roadmap/pull/683)
+
+ - Bump tinymce from 6.4.1 to 7.0.0 [#704](https://github.com/portagenetwork/roadmap/pull/704)
+
+ - Bump actionpack from 6.1.7.7 to 6.1.7.8 [#775](https://github.com/portagenetwork/roadmap/pull/775)
+
+ - Bump brakeman from 5.4.1 to 6.1.2 [#781](https://github.com/portagenetwork/roadmap/pull/781)
+
+ - Bump wkhtmltopdf-binary from 0.12.6.6 to 0.12.6.7 [#779](https://github.com/portagenetwork/roadmap/pull/779)
+
+ - Bump rack-mini-profiler from 3.3.0 to 3.3.1 [#778](https://github.com/portagenetwork/roadmap/pull/778)
+
+ - Bump listen from 3.8.0 to 3.9.0 [#776](https://github.com/portagenetwork/roadmap/pull/776)
+
+ - Bump braces from 3.0.2 to 3.0.3 [#795](https://github.com/portagenetwork/roadmap/pull/795)
+
+ - Bump Ruby from 3.0.4 to 3.1.4 [#808](https://github.com/portagenetwork/roadmap/pull/808)
+
 ## V4.1.1
 
 ### Added
