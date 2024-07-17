@@ -4,6 +4,8 @@
 
  - Bump jwt from 2.7.1 to 2.8.2 [#803](https://github.com/portagenetwork/roadmap/pull/803)
 
+ - Bump cssbundling-rails from 1.3.3 to 1.4.0 [#796](https://github.com/portagenetwork/roadmap/pull/796)
+
 ## [4.1.1+portage-4.1.0] - 2024-07-08, [4.1.1+portage-4.1.1] - 2024-07-09
 
 ### Added
