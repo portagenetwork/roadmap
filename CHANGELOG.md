@@ -16,6 +16,8 @@
 
  - Bump socket.io from 4.6.1 to 4.7.5 [#804](https://github.com/portagenetwork/roadmap/pull/804)
 
+ - Bump tinymce from 7.0.0 to 7.2.0 [#801](https://github.com/portagenetwork/roadmap/pull/801)
+
 ## [4.1.1+portage-4.1.0] - 2024-07-08, [4.1.1+portage-4.1.1] - 2024-07-09
 
 ### Added
