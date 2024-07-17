@@ -1,0 +1,38 @@
+# Use a base image with Ruby, Node.js, and Yarn pre-installed
+FROM ruby:2.6.7
+# Install essential dependencies
+RUN apt-get update -qq && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    nodejs \
+    npm \
+    yarn \
+    apache2 \
+    apache2-dev \
+    libcurl4-openssl-dev \
+    libssl-dev
+# Set up a directory for the Rails application
+WORKDIR /app
+# Copy the Gemfile and Gemfile.lock to the container and install gems
+COPY Gemfile Gemfile.lock ./
+RUN bundle install
+# Copy the package.json and yarn.lock to the container and install Node.js dependencies
+COPY package.json yarn.lock ./
+RUN yarn install
+# Copy the Rails application code to the container
+COPY . .
+# Precompile assets
+RUN RAILS_ENV=production bundle exec rails assets:precompile
+# Configure Apache for Shibboleth
+# COPY apache/shibboleth2.conf /etc/apache2/sites-available/dev.dmp-pgd.conf
+# COPY apache/shibboleth2.xml.template /etc/shibboleth/shibboleth2.xml
+# COPY apache/shibd.logger /etc/shibboleth/shibd.logger
+# COPY apache/native.logger /etc/shibboleth/native.logger
+COPY console.logger /etc/shibboleth/console.logger
+
+# Expose port 80 for Apache
+EXPOSE 80
+
+# Start Apache and run the Rails application
+CMD ["apachectl", "-D", "FOREGROUND"]
+
