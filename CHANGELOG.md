@@ -10,6 +10,8 @@
 
  - Bump omniauth-rails_csrf_protection from 1.0.1 to 1.0.2 [#802](https://github.com/portagenetwork/roadmap/pull/802)
 
+ - Bump pundit from 2.3.1 to 2.3.2 [#786](https://github.com/portagenetwork/roadmap/pull/786)
+
 ## [4.1.1+portage-4.1.0] - 2024-07-08, [4.1.1+portage-4.1.1] - 2024-07-09
 
 ### Added
