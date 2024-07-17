@@ -8,6 +8,8 @@
 
  - Bump devise from 4.9.3 to 4.9.4 [#822](https://github.com/portagenetwork/roadmap/pull/822)
 
+ - Bump omniauth-rails_csrf_protection from 1.0.1 to 1.0.2 [#802](https://github.com/portagenetwork/roadmap/pull/802)
+
 ## [4.1.1+portage-4.1.0] - 2024-07-08, [4.1.1+portage-4.1.1] - 2024-07-09
 
 ### Added
