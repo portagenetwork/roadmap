@@ -6,6 +6,8 @@
 
  - Bump cssbundling-rails from 1.3.3 to 1.4.0 [#796](https://github.com/portagenetwork/roadmap/pull/796)
 
+ - Bump devise from 4.9.3 to 4.9.4 [#822](https://github.com/portagenetwork/roadmap/pull/822)
+
 ## [4.1.1+portage-4.1.0] - 2024-07-08, [4.1.1+portage-4.1.1] - 2024-07-09
 
 ### Added
