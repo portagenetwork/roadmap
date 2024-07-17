@@ -12,6 +12,8 @@
 
  - Bump pundit from 2.3.1 to 2.3.2 [#786](https://github.com/portagenetwork/roadmap/pull/786)
 
+ - Bump rollbar from 3.5.1 to 3.5.2 [#784](https://github.com/portagenetwork/roadmap/pull/784)
+
 ## [4.1.1+portage-4.1.0] - 2024-07-08, [4.1.1+portage-4.1.1] - 2024-07-09
 
 ### Added
