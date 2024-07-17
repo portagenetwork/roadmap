@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+ - Use "id" instead of "name" for `default_funder` Org [#814](https://github.com/portagenetwork/roadmap/pull/814)
+
  - Bump jwt from 2.7.1 to 2.8.2 [#803](https://github.com/portagenetwork/roadmap/pull/803)
 
  - Bump cssbundling-rails from 1.3.3 to 1.4.0 [#796](https://github.com/portagenetwork/roadmap/pull/796)
