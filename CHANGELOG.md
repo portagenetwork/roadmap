@@ -14,6 +14,8 @@
 
  - Bump rollbar from 3.5.1 to 3.5.2 [#784](https://github.com/portagenetwork/roadmap/pull/784)
 
+ - Bump socket.io from 4.6.1 to 4.7.5 [#804](https://github.com/portagenetwork/roadmap/pull/804)
+
 ## [4.1.1+portage-4.1.0] - 2024-07-08, [4.1.1+portage-4.1.1] - 2024-07-09
 
 ### Added
