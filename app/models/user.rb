@@ -178,7 +178,7 @@ class User < ApplicationRecord
   # Load the user based on the scheme and id provided by the Omniauth call
   def self.from_omniauth(auth)
     Identifier.by_scheme_name(auth.provider.downcase, 'User')
-              .where(value: auth.uid)
+              .where(value: auth.info.eppn) #need to add a cilogon condition for this
               .first&.identifiable
               # .where(value: auth.uid).first_or_create do |user|
                 # user.email = auth.info.email
