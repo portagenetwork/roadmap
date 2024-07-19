@@ -13,9 +13,44 @@ module Users
     end
   
     def cilogon
-      Rails.logger.debug request.env['omniauth.auth'].inspect
-      handle_omniauth "cilogon"
-    end
+      # XXX These loggers needs to be removed and other way around. XXX
+      Rails.logger.debug request.env['rack.session']['omniauth.state'].inspect
+      # handle_omniauth "cilogonauth"
+
+        auth = request.env['omniauth.auth']
+        Rails.logger.info "OmniAuth Auth Hash: #{auth.inspect}"
+        if auth
+          access_token = auth['credentials']['token']
+    
+          # Store the access token in the session or database
+          session[:access_token] = access_token
+    
+          # Find or create the user based on the auth data 
+          # XXX This will be going to the user model once we have this fully funtioning. XXX
+          @user = User.find_or_create_by(uid: auth['info']['eppn']) do |user|
+            user.email = auth['info']['email']
+            user.password = Devise.friendly_token[0, 20]
+            user.name = auth['info']['name']
+          end
+    
+          if @user.persisted?
+            sign_in_and_redirect @user, event: :authentication
+            set_flash_message(:notice, :success, kind: 'CILogon') if is_navigational_format?
+          else
+            session["devise.cilogon_data"] = auth.except("extra")
+            redirect_to new_user_registration_url
+          end
+        else
+          Rails.logger.error "OmniAuth Auth Hash is nil"
+          redirect_to new_user_session_path, alert: "Authentication failed."
+        end
+      end
+    
+      def failure
+        #XXX handling the failue of nil value on omniauth would be here XXX
+        Rails.logger.error "OmniAuth Authentication Failure: #{params[:message]}"
+        redirect_to root_path, alert: "Authentication failed."
+      end
 
     # Processes callbacks from an omniauth provider and directs the user to
     # the appropriate page:
@@ -31,8 +66,8 @@ module Users
     def handle_omniauth(scheme)
       user = if request.env['omniauth.auth'].nil?
                User.from_omniauth(request.env)
-             else
-               User.from_omniauth(request.env['omniauth.auth'])
+            else 
+               User.from_omniauth(request.env['rack.session'] )
              end
 
       # If the user isn't logged in
@@ -52,7 +87,7 @@ module Users
             sign_in_and_redirect user, event: :authentication
             set_flash_message(:notice, :success, kind: "CILogon") if is_navigational_format?
           else
-            session["devise.cilogon_data"] = request.env["omniauth.auth"]
+            session["devise.cilogon_data"] = request.env['rack.session']['omniauth.nonce']
             redirect_to new_user_registration_url
           end
         else
@@ -65,8 +100,8 @@ module Users
         # If the user could not be found by that uid then attach it to their record
         if user.nil?
           if Identifier.create(identifier_scheme: scheme,
-                               value: request.env['omniauth.auth'].uid,
-                               attrs: request.env['omniauth.auth'],
+                               value: request.env['rack.session']['omniauth.state'],#request.env['omniauth.auth'].uid,
+                               attrs: request.env['rack.session']['omniauth.nonce'],#request.env['omniauth.auth'],
                                identifiable: current_user)
             flash[:notice] =
               format(_('Your account has been successfully linked to %{scheme}.'),
