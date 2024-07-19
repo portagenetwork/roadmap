@@ -283,26 +283,60 @@ Devise.setup do |config|
                   }
 
 
-                    
-  config.omniauth :openid_connect,  {
-                    name: :cilogon,
-                    issuer: 'https://cilogon.org/',
-                    scope: [:openid, :email, :profile],
-                    response_type: :code,
-                    uid_field: "sub",
-                    client_options: {
-                      port: 443,
-                      scheme: "http",
-                      host:'cilogon.org',
-                      identifier: ENV["CILOGON_CLIENT_ID"],
-                      secret: ENV["CILOGON_SECRET_KEY"],
-                      redirect_uri: "http://localhost:3000/users/auth/openid_connect", # This is not it
-                      authorization_endpoint: '/authorize',
-                      token_endpoint: '/oauth2/token',
-                      userinfo_endpoint: '/oauth2/userinfo'
-                  }
-                }
+  # XXX First attempt of the openid_connect XXX                  
+  # config.omniauth :openid_connect,  {
+  #                   name: :cilogon,
+  #                   issuer: 'https://cilogon.org/',
+  #                   scope: [:openid, :email, :profile, 'org.cilogon.userinfo'],
+  #                   response_type: :code,
+  #                   uid_field: ["sub", "preferred_username"],
+  #                   client_options: {
+  #                     port: 443,
+  #                     scheme: "https",
+  #                     host:'cilogon.org',
+  #                     identifier: ENV["CILOGON_CLIENT_ID"],
+  #                     secret: ENV["CILOGON_SECRET_KEY"],
+  #                     redirect_uri: "http://localhost:3000/users/auth/openid_connect", # This is not it
+  #                     authorization_endpoint: '/authorize',
+  #                     token_endpoint: '/oauth2/token',
+  #                     userinfo_endpoint: '/oauth2/userinfo'
+  #                 }
+  #               }
 
+  # XXX Second attempt of the openid_connect XXX
+  # config.omniauth :openid_connect, {
+  #                   name: :cilogon,
+  #                   issuer: 'https://cilogon.org/',
+  #                   scope: [:openid, :profile, :email, 'org.cilogon.userinfo'],
+  #                   response_type: :code,
+  #                   client_options: {
+  #                     identifier: ENV['CILOGON_CLIENT_ID'],
+  #                     secret: ENV['CILOGON_SECRET_KEY'],
+  #                     redirect_uri: "http://localhost:3000/users/auth/openid_connect",
+  #                     host: 'cilogon.org',
+  #                     authorization_endpoint: '/authorize',
+  #                     token_endpoint: '/oauth2/token',
+  #                     userinfo_endpoint: '/oauth2/userinfo'
+  #                   }
+  #                 }
+
+
+  # XXX Third attempt of the openid_connect XXX
+      config.omniauth :openid_connect, {
+                      name: :cilogon,
+                      issuer: 'https://cilogon.org/',
+                      scope: [:openid, :profile, :email, 'org.cilogon.userinfo'],
+                      response_type: :code,
+                      client_options: {
+                        identifier: ENV['CILOGON_CLIENT_ID'],
+                        secret: ENV['CILOGON_SECRET_KEY'],
+                        redirect_uri: "http://localhost:3000/users/auth/openid_connect",
+                        host: 'cilogon.org',
+                        authorization_endpoint: '/authorize',
+                        token_endpoint: '/oauth2/token',
+                        userinfo_endpoint: '/oauth2/userinfo'
+                      }
+                    }
 
 
   # ==> Warden configuration
