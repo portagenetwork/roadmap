@@ -17,7 +17,7 @@ class TemplateOptionsController < ApplicationController
     authorize Template.new, :template_options?
 
     org = org_from_params(params_in: { org_id: org_hash.to_json }) if org_hash.present?
-    funder = Org.find_by(name: Rails.application.config.default_funder_name)
+    funder = Org.find(Rails.application.config.default_funder_id)
 
     @templates = []
 
