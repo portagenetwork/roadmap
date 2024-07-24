@@ -1,6 +1,28 @@
 # Changelog
 
-## [4.1.1+portage-4.1.0] - 2024-07-08
+## [Unreleased]
+
+### Changed
+
+ - Use "id" instead of "name" for `default_funder` Org [#814](https://github.com/portagenetwork/roadmap/pull/814)
+
+ - Bump jwt from 2.7.1 to 2.8.2 [#803](https://github.com/portagenetwork/roadmap/pull/803)
+
+ - Bump cssbundling-rails from 1.3.3 to 1.4.0 [#796](https://github.com/portagenetwork/roadmap/pull/796)
+
+ - Bump devise from 4.9.3 to 4.9.4 [#822](https://github.com/portagenetwork/roadmap/pull/822)
+
+ - Bump omniauth-rails_csrf_protection from 1.0.1 to 1.0.2 [#802](https://github.com/portagenetwork/roadmap/pull/802)
+
+ - Bump pundit from 2.3.1 to 2.3.2 [#786](https://github.com/portagenetwork/roadmap/pull/786)
+
+ - Bump rollbar from 3.5.1 to 3.5.2 [#784](https://github.com/portagenetwork/roadmap/pull/784)
+
+ - Bump socket.io from 4.6.1 to 4.7.5 [#804](https://github.com/portagenetwork/roadmap/pull/804)
+
+ - Bump tinymce from 7.0.0 to 7.2.0 [#801](https://github.com/portagenetwork/roadmap/pull/801)
+
+## [4.1.1+portage-4.1.0] - 2024-07-08, [4.1.1+portage-4.1.1] - 2024-07-09
 
 ### Added
 
