@@ -69,9 +69,9 @@ class IdentifierScheme < ApplicationRecord
   # = Instance Methods =
   # ===========================
 
-  # def self.for_authentication
-  #   [
-  #     OpenStruct.new(name: 'CILogon')
-  #   ]
-  # end
+  def self.for_authentication
+    [
+      OpenStruct.new(name: 'openid_connect')
+    ]
+  end
 end

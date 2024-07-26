@@ -157,12 +157,12 @@ module DMPRoadmap
     # ------------------- #
 
     # Enable CILogon as an alternative authentication method
-    # Requires server configuration and omniauth opendid_connect provider configuration
+    # Requires server configuration and omniauth openid_connect provider configuration
     # See config/initializers/devise.rb
-    config.x.cilogon.enabled = true
+    config.x.openid_connect.enabled = true
 
     # # Relative path to CILogon SSO Logouts
-    config.x.cilogon.login_url = 'https://cilogon.org/oauth2/device_authorization'
+    # config.x.openid_connect.login_url = 'https://cilogon.org/authorization'
     # config.x.cilogon.logout_url = '/users/sign_out'
 
     # If this value is set to true your users will be presented with a list of orgs that have a
@@ -170,7 +170,7 @@ module DMPRoadmap
     # will be driven out to your federation's discovery service
     #
     # A super admin will also be able to associate orgs with their CILogon entityIds if this is set to true
-    config.x.cilogon.use_filtered_discovery_service = true
+    config.x.openid_connect.use_filtered_discovery_service = true
 
 
     # ------- #

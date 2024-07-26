@@ -283,7 +283,7 @@ Devise.setup do |config|
                   }
 
 
-  # XXX First attempt of the openid_connect XXX                  
+  # XXX First attempt of the openid_connect XXX         
   # config.omniauth :openid_connect,  {
   #                   name: :cilogon,
   #                   issuer: 'https://cilogon.org/',
@@ -322,22 +322,45 @@ Devise.setup do |config|
 
 
   # XXX Third attempt of the openid_connect XXX
+      # config.omniauth :openid_connect, {
+                    #   name: :cilogon,
+                    #   issuer: ' https://cilogon.org/oauth2/device_authorization',
+                    #   scope: [:openid, :profile, :email, 'org.cilogon.userinfo'],
+                    #   uid_field: :sub,
+                    #   response_type: :code,
+                    #   client_options: {
+                    #     identifier: ENV['CILOGON_CLIENT_ID'],
+                    #     secret: ENV['CILOGON_SECRET_KEY'],
+                    #     redirect_uri: "http://localhost:3000/users/auth/openid_connect/callback",
+                    #     host: 'cilogon.org',
+                    #     authorization_endpoint:"https://cilogon.org/authorize",
+                    #     token_endpoint:"https://cilogon.org/oauth2/token",
+                    #     registration_endpoint:"https://cilogon.org/oauth2/oidc-cm",
+                    #     userinfo_endpoint:"https://cilogon.org/oauth2/userinfo",
+                    #     # authorization_endpoint: '/oauth2/device_authorization',
+                    #     # token_endpoint: '/oauth2/token',
+                    #     # userinfo_endpoint: '/oauth2/userinfo'
+                    #   }
+                    # }
+
+  # XXX the 4th attempt of this is final final XXX
+
       config.omniauth :openid_connect, {
-                      name: :cilogon,
-                      issuer: 'https://cilogon.org/',
-                      scope: [:openid, :profile, :email, 'org.cilogon.userinfo'],
+                      name: :openid_connect,
+                      scope: [:openid, :email, :profile, :"org.cilogon.userinfo"],
                       response_type: :code,
+                      issuer: "https://cilogon.org",
+                      discovery: true,
                       client_options: {
+                        uid_field: "sub",
+                        port: 443,
+                        scheme: "https",
+                        host: "cilogon.org",
                         identifier: ENV['CILOGON_CLIENT_ID'],
                         secret: ENV['CILOGON_SECRET_KEY'],
-                        redirect_uri: "http://localhost:3000/users/auth/openid_connect",
-                        host: 'cilogon.org',
-                        authorization_endpoint: '/authorize',
-                        token_endpoint: '/oauth2/token',
-                        userinfo_endpoint: '/oauth2/userinfo'
-                      }
+                        redirect_uri: "http://localhost:3000/users/auth/openid_connect/callback"
+                      },
                     }
-
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

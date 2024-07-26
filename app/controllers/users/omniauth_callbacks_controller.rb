@@ -11,46 +11,21 @@ module Users
         handle_omniauth(scheme)
       end
     end
-  
-    def cilogon
-      # XXX These loggers needs to be removed and other way around. XXX
-      Rails.logger.debug request.env['rack.session']['omniauth.state'].inspect
-      # handle_omniauth "cilogonauth"
 
-        auth = request.env['omniauth.auth']
-        Rails.logger.info "OmniAuth Auth Hash: #{auth.inspect}"
-        if auth
-          access_token = auth['credentials']['token']
-    
-          # Store the access token in the session or database
-          session[:access_token] = access_token
-    
-          # Find or create the user based on the auth data 
-          # XXX This will be going to the user model once we have this fully funtioning. XXX
-          @user = User.find_or_create_by(uid: auth['info']['eppn']) do |user|
-            user.email = auth['info']['email']
-            user.password = Devise.friendly_token[0, 20]
-            user.name = auth['info']['name']
-          end
-    
-          if @user.persisted?
-            sign_in_and_redirect @user, event: :authentication
-            set_flash_message(:notice, :success, kind: 'CILogon') if is_navigational_format?
-          else
-            session["devise.cilogon_data"] = auth.except("extra")
-            redirect_to new_user_registration_url
-          end
-        else
-          Rails.logger.error "OmniAuth Auth Hash is nil"
-          redirect_to new_user_session_path, alert: "Authentication failed."
-        end
+
+    def openid_connect
+      Rails.logger.info "The has of auth is ====>>> #{request.env["omniauth.auth"]}"
+      @user = User.from_omniauth(request.env["omniauth.auth"])
+      Rails.logger.info "OmniAuth Auth Hash: #{request.env["omniauth.auth"]}"
+
+      if @user.persisted?
+          sign_in_and_redirect @user, event: :authentication
+          set_flash_message(:notice, :success, kind: "OpenID Connect") if is_navigational_format?
+      else
+          session["devise.openid_connect_data"] = request.env["omniauth.auth"]
+          redirect_to new_user_registration_url
       end
-    
-      def failure
-        #XXX handling the failue of nil value on omniauth would be here XXX
-        Rails.logger.error "OmniAuth Authentication Failure: #{params[:message]}"
-        redirect_to root_path, alert: "Authentication failed."
-      end
+  end
 
     # Processes callbacks from an omniauth provider and directs the user to
     # the appropriate page:
@@ -82,13 +57,16 @@ module Users
           # Until ORCID becomes supported as a login method
           set_flash_message(:notice, :success, kind: scheme.description) if is_navigational_format?
           sign_in_and_redirect user, event: :authentication
-        elsif schema.name == "cilogon"
-          if user.persisted?
-            sign_in_and_redirect user, event: :authentication
-            set_flash_message(:notice, :success, kind: "CILogon") if is_navigational_format?
+        elsif schema.name == "openid_connect"
+          @user = User.from_omniauth(request.env["omniauth.auth"])
+          Rails.logger.info "OmniAuth Auth Hash: #{request.env["omniauth.auth"]}"
+  
+          if @user.persisted?
+              sign_in_and_redirect @user, event: :authentication
+              set_flash_message(:notice, :success, kind: "OpenID Connect") if is_navigational_format?
           else
-            session["devise.cilogon_data"] = request.env['rack.session']['omniauth.nonce']
-            redirect_to new_user_registration_url
+              session["devise.openid_connect_data"] = request.env["omniauth.auth"]
+              redirect_to new_user_registration_url
           end
         else
           flash[:notice] = _('Successfully signed in')

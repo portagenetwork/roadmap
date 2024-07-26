@@ -66,7 +66,7 @@ class User < ApplicationRecord
   #   :lockable, :timeoutable and :omniauthable
   devise :invitable, :database_authenticatable, :registerable, :recoverable,
          :rememberable, :trackable, :validatable, :omniauthable,
-         omniauth_providers: %i[shibboleth orcid cilogon]
+         omniauth_providers: %i[shibboleth orcid openid_connect]
 
   ##
   # User Notification Preferences
@@ -176,15 +176,33 @@ class User < ApplicationRecord
 
   ##
   # Load the user based on the scheme and id provided by the Omniauth call
+  # def self.from_omniauth(auth)
+  #   Identifier.by_scheme_name(auth.provider.downcase, 'User')
+  #             Rails.logger.info "OmniAuth Auth Hash: #{auth.inspect}"
+  #             where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+  #               user.provider = auth.provider
+  #               user.uid = auth.uid
+  #               user.email = auth.info.email
+  #               user.password = Devise.friendly_token[0,20]
+  #             end
+  #             # # .where(value: auth.info.eppn) #need to add a cilogon condition for this
+  #             # .first&.identifiable
+  #             # .where(value: auth.uid).first_or_create do |user|
+  #             #   user.email = auth.info.email
+  #             #   user.password = Devise.friendly_token[0, 20]
+  #             #   user.name = auth.info.name   # if the User model has a name
+  #             # end
+  # end
+
+
   def self.from_omniauth(auth)
-    Identifier.by_scheme_name(auth.provider.downcase, 'User')
-              .where(value: auth.info.eppn) #need to add a cilogon condition for this
-              .first&.identifiable
-              # .where(value: auth.uid).first_or_create do |user|
-                # user.email = auth.info.email
-                # user.password = Devise.friendly_token[0, 20]
-                # user.name = auth.info.name   # if the User model has a name
-              # end
+    Rails.logger.info "OmniAuth Auth Hash: #{auth.inspect}"
+	  where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+		  user.provider = auth.provider
+		  user.uid = auth.uid
+		  user.email = auth.info.email if !auth.info.email_verified.nil?
+		  user.password = Devise.friendly_token[0,20]
+	  end
   end
 
   def self.to_csv(users)

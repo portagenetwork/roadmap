@@ -182,6 +182,8 @@ GEM
       fog-aws
     ecma-re-validator (0.4.0)
       regexp_parser (~> 2.2)
+    email_validator (2.2.4)
+      activemodel
     erubi (1.13.0)
     excon (0.104.0)
     execjs (2.9.1)
