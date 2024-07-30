@@ -14,11 +14,9 @@ module Users
 
 
     def openid_connect
-      Rails.logger.info "The has of auth is ====>>> #{request.env["omniauth.auth"]}"
       @user = User.from_omniauth(request.env["omniauth.auth"])
-      Rails.logger.info "OmniAuth Auth Hash: #{request.env["omniauth.auth"]}"
 
-      if @user.persisted?
+      if @user.present?
           sign_in_and_redirect @user, event: :authentication
           set_flash_message(:notice, :success, kind: "OpenID Connect") if is_navigational_format?
       else

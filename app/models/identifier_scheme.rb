@@ -21,7 +21,7 @@ class IdentifierScheme < ApplicationRecord
 
   ##
   # The maximum length for a name
-  NAME_MAXIMUM_LENGTH = 30
+  NAME_MAXIMUM_LENGTH = 50
 
   has_many :identifiers
 
@@ -69,9 +69,9 @@ class IdentifierScheme < ApplicationRecord
   # = Instance Methods =
   # ===========================
 
-  def self.for_authentication
-    [
-      OpenStruct.new(name: 'openid_connect')
-    ]
-  end
+  # def self.for_authentication
+  #   [
+  #     OpenStruct.new(name: 'openid_connect')
+  #   ]
+  # end
 end

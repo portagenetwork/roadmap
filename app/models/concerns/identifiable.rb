@@ -54,6 +54,7 @@ module Identifiable
     # gets the identifier for the scheme
     def identifier_for_scheme(scheme:)
       scheme = IdentifierScheme.by_name(scheme.downcase).first if scheme.is_a?(String)
+      # byebug
       identifiers.reverse.find { |id| id.identifier_scheme == scheme }
     end
 

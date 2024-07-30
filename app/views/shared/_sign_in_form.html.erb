@@ -47,7 +47,8 @@
         </span>
       </div>
     <% else %>
-      <%= f.hidden_field :openid_connect_id, :value => session['devise.openid_connect_data']['uid'] %>
+      <%#= debug session %>
+      <%#= f.hidden_field :openid_connect_id, :value => session['devise.openid_connect_data']['uid'] %>
     <% end %>
 <% end %>
 
