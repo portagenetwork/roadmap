@@ -66,7 +66,7 @@ class User < ApplicationRecord
   #   :lockable, :timeoutable and :omniauthable
   devise :invitable, :database_authenticatable, :registerable, :recoverable,
          :rememberable, :trackable, :validatable, :omniauthable,
-         omniauth_providers: %i[shibboleth orcid]
+         omniauth_providers: %i[shibboleth orcid openid_connect]
 
   ##
   # User Notification Preferences

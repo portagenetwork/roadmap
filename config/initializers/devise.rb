@@ -279,6 +279,44 @@ Devise.setup do |config|
                     },
                     extra_fields: []
                   }
+  # Omar
+  # config.omniauth :openid_connect, {
+  #   name: :openid_connect,
+  #   issuer: 'https://cilogon.org/',
+  #   scope: %i[openid email profile],
+  #   response_type: :code,
+  #   # uid_field: "preferred_username",
+  #   client_options: {
+  #     port: 443,
+  #     scheme: "https",
+  #     host: "cilogon.org",
+  #     identifier: ENV.fetch('CILOGON_CLIENT_ID', nil),
+  #     secret: ENV.fetch('CILOGON_SECRET_KEY', nil),
+  #     # This is the difference between not defined passthrough and the failure method
+  #     # redirect_uri: "http://127.0.0.1:3000/users/auth/openid_connect"
+  #     redirect_uri: "http://127.0.0.1:3000/users/auth/openid_connect/callback"
+  #     # authorization_endpoint: '/oauth2/device_authorization'
+  #   }
+  # }
+
+  # Yashu
+  #
+  config.omniauth :openid_connect, {
+    name: :openid_connect,
+    scope: %i[openid email profile],
+    response_type: :code,
+    issuer: "https://cilogon.org",
+    discovery: true,
+    client_options: {
+      uid_field: "sub",
+      port: 443,
+      scheme: "https",
+      host: "cilogon.org",
+      identifier: ENV.fetch('CILOGON_CLIENT_ID', nil),
+      secret: ENV.fetch('CILOGON_SECRET_KEY', nil),
+      redirect_uri: "http://127.0.0.1:3000/users/auth/openid_connect/callback"
+    }
+  }
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

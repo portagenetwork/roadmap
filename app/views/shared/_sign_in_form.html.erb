@@ -20,6 +20,19 @@
   </div>
   <%= f.button(_('Sign in'), class: "btn btn-default", type: "submit") %>
 
+<% if session['devise.cilogon_data'].nil? %>
+      <p class="text-center fontsize-h4">- <%= _('or') %> -</p>
+      <div class="form-group">
+        <span class="center-block btn-group-justified">
+        <% target = user_openid_connect_omniauth_authorize_path %>
+        <%= link_to _('Sign in with CILogon'), target, method: :post, class: 'btn btn-default' %>
+          
+        </span>
+      </div>
+    <% else %>
+      <%= f.hidden_field :cilogon_id, :value => session['devise.cilogon_data']['uid'] %>
+    <% end %>
+
   <% if Rails.configuration.x.shibboleth.enabled %>
     <% if session['devise.shibboleth_data'].nil? %>
       <p class="text-center fontsize-h4">- <%= _('or') %> -</p>
