@@ -8,11 +8,11 @@
           &nbsp;
           <%= _("Create or connect your ORCID iD") %>
         <% end %>
-    <% elsif scheme.name.downcase == 'shibboleth' %>
+    <% elsif scheme.name.downcase == 'openid_connect' %>
         <i class="fas fa-user" title="<%= _('Institutional credentials') %>" aria-hidden="true"></i>
         &nbsp;
         <%= link_to _('Link your institutional credentials'),
-                    Rails.application.routes.url_helpers.send("user_shibboleth_omniauth_authorize_path"),
+                    Rails.application.routes.url_helpers.send("user_openid_connect_omniauth_authorize_path"),
                     title: _("Link your institutional credentials to access your account with them."),
                     'data-toggle': "tooltip", method: :post %>
     <% end %>

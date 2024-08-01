@@ -280,20 +280,24 @@ Devise.setup do |config|
                     extra_fields: []
                   }
 
-  config.omniauth :openid_connect, {
-    name: :my_provider,
-    scope: [:openid, :email, :profile, :address],
-    response_type: :code,
-    uid_field: "preferred_username",
-    client_options: {
-      port: 443,
-      scheme: "https",
-      host: "myprovider.com",
-      identifier: ENV["OP_CLIENT_ID"],
-      secret: ENV["OP_SECRET_KEY"],
-      redirect_uri: "http://myapp.com/users/auth/openid_connect/callback",
-    },
-  }
+  config.omniauth :openid_connect,
+                  {
+                    name: :openid_connect,
+                    scope: %i[openid email],
+                    response_type: :code,
+                    uid_field: "preferred_username",
+                    discovery: true,
+                    issuer: "https://cilogon.org",
+                    client_options: {
+                      port: 443,
+                      scheme: "https",
+                      host: "cilogon.org",
+                      issuer: "https://cilogon.org/",
+                      identifier: ENV.fetch("CILOGON_CLIENT_ID", nil),
+                      secret: ENV.fetch("CILOGON_SECRET_KEY", nil),
+                      redirect_uri: "http://127.0.0.1:3000/users/auth/openid_connect/callback"
+                    }
+                  }
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

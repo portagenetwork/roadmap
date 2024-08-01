@@ -23,6 +23,11 @@ module Users
     #
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+
+    def openid_connect
+      handle_omniauth(IdentifierScheme.find_by(name: 'openid_connect'))
+    end
+
     def handle_omniauth(scheme)
       user = if request.env['omniauth.auth'].nil?
                User.from_omniauth(request.env)
@@ -38,7 +43,7 @@ module Users
           redirect_to new_user_registration_url
 
         # Otherwise sign them in
-        elsif scheme.name == 'shibboleth'
+        elsif scheme.name == 'openid_connect'
           # Until ORCID becomes supported as a login method
           set_flash_message(:notice, :success, kind: scheme.description) if is_navigational_format?
           sign_in_and_redirect user, event: :authentication
