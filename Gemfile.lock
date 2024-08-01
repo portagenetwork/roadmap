@@ -57,6 +57,13 @@ GEM
       activesupport (= 6.1.7.8)
     activerecord-nulldb-adapter (1.0.1)
       activerecord (>= 5.2.0, < 7.2)
+    activerecord-session_store (2.1.0)
+      actionpack (>= 6.1)
+      activerecord (>= 6.1)
+      cgi (>= 0.3.6)
+      multi_json (~> 1.11, >= 1.11.2)
+      rack (>= 2.0.8, < 4)
+      railties (>= 6.1)
     activerecord_json_validator (2.1.5)
       activerecord (>= 4.2.0, < 8)
       json_schemer (~> 0.2.18)
@@ -120,6 +127,7 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
+    cgi (0.4.1)
     claide (1.1.0)
     claide-plugins (0.9.2)
       cork
@@ -622,6 +630,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-nulldb-adapter
+  activerecord-session_store
   activerecord_json_validator
   annotate
   annotate_gem

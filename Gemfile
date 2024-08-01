@@ -77,6 +77,8 @@ gem 'activerecord-nulldb-adapter', group: :nulldb, require: false
 # Bit fields for ActiveRecord (https://github.com/pboling/flag_shih_tzu)
 gem 'flag_shih_tzu' # , "~> 0.3.23"
 
+gem 'activerecord-session_store'
+
 # ======== #
 # SECURITY #
 # ======== #
