@@ -182,6 +182,27 @@ class User < ApplicationRecord
               .first&.identifiable
   end
 
+  ##
+  # Omar's method to handle user creation
+  def self.create_from_provider_data(provider_data)
+    # where(provider: provider_data.provider.downcase, uid: provider_data.uid).first_or_create do |user|
+    # #<OmniAuth::AuthHash::InfoHash email="orodrigu@ualberta.ca" email_verified=nil first_name=nil gender=nil image=nil last_name="Rodriguez-Arenas" name="Omar" nickname=nil phone=nil urls=#<OmniAuth::AuthHash website=nil>>
+    # XXX Review data that comes from omniauth, what can we assume is there?
+    user = User.find_by email: provider_data.info.email
+
+    return user if user
+
+    user = User.new
+    user.firstname = provider_data.info.name
+    user.surname = provider_data.info.last_name
+    user.email = provider_data.info.email
+    user.org = Org.first
+    user.accept_terms = true
+    user.password = Devise.friendly_token[0, 20]
+
+    user.save!
+  end
+
   def self.to_csv(users)
     User::AtCsv.new(users).to_csv
   end
