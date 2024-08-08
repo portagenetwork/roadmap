@@ -347,7 +347,7 @@ Devise.setup do |config|
 
       config.omniauth :openid_connect, {
                       name: :openid_connect,
-                      # scope: [:openid], #:email], #:profile],#, :"org.cilogon.userinfo"],
+                      scope: [:openid], #:email], #:profile],#, :"org.cilogon.userinfo"],
                       response_type: :code,
                       issuer: "https://cilogon.org",
                       discovery: true,
@@ -358,7 +358,7 @@ Devise.setup do |config|
                         host: "cilogon.org",
                         identifier: ENV['CILOGON_CLIENT_ID'],
                         secret: ENV['CILOGON_SECRET_KEY'],
-                        redirect_uri: "http://localhost:3000/users/auth/openid_connect/callback"
+                        redirect_uri: "http://127.0.0.1:3000/users/auth/openid_connect/callback"
                       },
                     }
 
