@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+ - Bump rexml from 3.2.8 to 3.3.3 [#839](https://github.com/portagenetwork/roadmap/pull/839)
+
+ - Update "Welcome" and "About" Pages For Alliance Rebrand [#844](https://github.com/portagenetwork/roadmap/pull/844)
+
+### Fixed
+
+ - Remove Vulnerable ws@8.11.0 Dependency by Upgrading `karma` [#841](https://github.com/portagenetwork/roadmap/pull/841)
+
 ## [4.1.1+portage-4.1.2] - 2024-07-24
 
 ### Changed

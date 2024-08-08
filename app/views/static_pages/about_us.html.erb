@@ -22,7 +22,7 @@
 
       <h2 class="fontsize-h3"><%= _('How the tool works') %></h2>
       
-      <p><%= _('Currently, this tool includes a generic Portage Data Stewardship template for researchers to use. Guidance is provided to help you interpret and answer the questions.') %></p>
+      <p><%= _('Currently, this tool includes a generic Alliance template for researchers to use. Guidance is provided to help you interpret and answer the questions.') %></p>
     
 
       <p>
@@ -41,10 +41,14 @@
           <% sign_up_url = request.base_url %>
           <%= sanitize(_('If you do not have a DMP Assistant account, click on <a href="%{sign_up_url}"> \'Sign up\' </a> on the homepage.') % { sign_up_url: sign_up_url} ) %>
         </p>
+
+        <p>
+          <%= _('You may sign up for an account as part of your institution, or if you do not have one you may sign up under the Digital Research Alliance of Canada.') %>
+        </p>
       <% end %>
 
       <p>
-        <%= _('Please note that we are currently working on single sign-in authentication with your campus ID. You will have the option to link your existing account to your campus ID when that feature becomes available.') %>
+        <%= _('Please note that we are currently working on single sign-in authentication with your institutional accounts (such as your college or university sign on). You will have the option to link your existing account to your  institutional account when that feature becomes available.') %>
       </p>
 
       <p>
@@ -58,14 +62,14 @@
         <%= sanitize(_('If you have any questions or comments about the DMP Assistant, <a href="%{contact_your_institution_url}"> contact your local institution </a> or email us at  <a href="mailto:%{email_link}?Subject=%{email_subject}">%{email_link}</a>.') % { contact_your_institution_url: contact_your_institution_url, email_link: email_link, email_subject: email_subject} )  %>
       </p>
 
-      <h2 class="fontsize-h3"><%= _('Portage data stewardship template') %></h2>
+      <h2 class="fontsize-h3"><%= _('About templates') %></h2>
       
       <p>
-        <%= _('The Portage Data Stewardship template is based on internationally accepted standards and best practices. It has been prepared and is maintained by a group of research data management experts from research libraries across Canada.') %>
+        <%= _('The Alliance template is based on internationally accepted standards and best practices. It has been prepared and is maintained by a group of research data management experts from research libraries across Canada. It was developed by the Data Management Planning Expert Group, then part of the Portage Network. Portage became part of the Digital Research Alliance of Canada in 2021.') %>
       </p>
 
       <p>
-        <%= _('Organizations may provide their own DMP templates. The Portage template is the default DMP. Select templates from other organizations from the drop-down Organization list.') %>
+        <%= _('Organizations may provide their own DMP templates. The Alliance is the default DMP. Select templates from other organizations from the drop-down Organization list when creating your plan. Users can make use of templates in any available organization, and collaborate across organizations.') %>
       </p>
 
       <p>
