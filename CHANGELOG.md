@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [4.1.1+portage-4.1.3] - 2024-08-08
 
 ### Changed
 
