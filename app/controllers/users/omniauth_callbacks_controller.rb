@@ -5,17 +5,27 @@ module Users
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     def openid_connect
       # First or create
-      user = User.from_omniauth(request.env['omniauth.auth'])
+      auth = request.env['omniauth.auth']
+      user = User.from_omniauth(auth)
 
-      if current_user.nil?
+
+      if auth.info.email.nil? && user.nil?
+        #If email is missing we need to request the user to register with DMP. 
+        #User email can be missing if the user email id is set to private or trusted clients only we won't get the value. 
+        #USer email id is one of the mandatory field which is must required.
+        flash[:notice] = 'provided user email is wrong or ORCID private email. Please try again with ORCID public email OR try sign-up with DMP assistant.'
+        redirect_to new_user_registration_path
+      elsif current_user.nil?
         # We need to register
 
         if user.nil?
           # Register and sign in
-          user = User.create_from_provider_data(request.env['omniauth.auth'])
-          Identifier.create(identifier_scheme: IdentifierScheme.last,
-                            value: request.env['omniauth.auth'].uid,
-                            attrs: request.env['omniauth.auth'],
+
+          user = User.create_from_provider_data(auth)
+          identifier_scheme = IdentifierScheme.find_by_name(auth.provider)
+          Identifier.create(identifier_scheme: identifier_scheme, #auth.provider, #scheme, #IdentifierScheme.last.id,
+                            value: auth.uid,
+                            attrs: auth,
                             identifiable: user)
 
         end
@@ -26,8 +36,8 @@ module Users
 
         # we need to link
         Identifier.create(identifier_scheme: scheme,
-                          value: request.env['omniauth.auth'].uid,
-                          attrs: request.env['omniauth.auth'],
+                          value: auth.uid,
+                          attrs: auth,
                           identifiable: current_user)
 
         flash[:notice] = 'linked succesfully'
