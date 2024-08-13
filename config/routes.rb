@@ -204,6 +204,10 @@ Rails.application.routes.draw do
       resources :plans, only: %i[create show index]
       resources :templates, only: [:index]
     end
+
+    namespace :ca_dashboard do
+      resources :stats, only: [:index]
+    end
   end
 
   namespace :paginable do
