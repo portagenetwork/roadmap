@@ -3,51 +3,33 @@
 module Users
   # Controller that handles callbacks from OmniAuth integrations (e.g. Shibboleth and ORCID)
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
-    ##
-    # Dynamically build a handler for each omniauth provider
-    # -------------------------------------------------------------
-    IdentifierScheme.for_authentication.each do |scheme|
-      define_method(scheme.name.downcase) do
-        handle_omniauth(scheme)
-      end
-    end
-
-
-  #   def openid_connect
-  #     @user = User.from_omniauth(request.env["omniauth.auth"])
-
-  #     if @user.present?
-  #         sign_in_and_redirect @user, event: :authentication
-  #         set_flash_message(:notice, :success, kind: "OpenID Connect") if is_navigational_format?
-  #     else
-  #         session["devise.openid_connect_data"] = request.env["omniauth.auth"]
-  #         redirect_to new_user_registration_url
-  #     end
-  # end
-
-
-
-
-    #This is for the OpenidConnect CILogon
-
+    # This is for the OpenidConnect CILogon
     def openid_connect
       # First or create
       auth = request.env['omniauth.auth']
       user = User.from_omniauth(auth)
-      identifier_scheme = IdentifierScheme.find_by_name(auth.provider)
 
       if auth.info.email.nil? && user.nil?
-        #If email is missing we need to request the user to register with DMP. 
-        #User email can be missing if the user email id is set to private or trusted clients only we won't get the value. 
-        #USer email id is one of the mandatory field which is must required.
-        flash[:notice] = 'Please try sign-up with DMP assistant.'
+        # If email is missing we need to request the user to register with DMP.
+        # User email can be missing if the user email id is set to private or
+        # trusted clients only we won't get the value.
+        # User email id is one of the mandatory field which is must required.
+
+        flash[:notice] =
+          "Your institution's current settings do not provide an email address, which is necessary for registration. " \
+          'To proceed, please update your settings to make your email address visible. Alternatively, you can ' \
+          'create an account directly on DMP Assistant.'
         redirect_to new_user_registration_path
-      elsif current_user.nil?
+      end
+
+      identifier_scheme = IdentifierScheme.find_by_name(auth.provider)
+
+      if current_user.nil?
         # We need to register
         if user.nil?
           # Register and sign in
           user = User.create_from_provider_data(auth)
-          Identifier.create(identifier_scheme: identifier_scheme, #auth.provider, #scheme, #IdentifierScheme.last.id,
+          Identifier.create(identifier_scheme: identifier_scheme, # auth.provider, #scheme, #IdentifierScheme.last.id,
                             value: auth.uid,
                             attrs: auth,
                             identifiable: user)
@@ -59,14 +41,12 @@ module Users
         Identifier.create(identifier_scheme: identifier_scheme,
                           value: auth.uid,
                           attrs: auth,
-                          identifiable: current_user)
+                          identifiable: user)
 
         flash[:notice] = 'linked succesfully'
         redirect_to root_path
       end
     end
-
-
 
     # Processes callbacks from an omniauth provider and directs the user to
     # the appropriate page:
@@ -82,8 +62,8 @@ module Users
     def handle_omniauth(scheme)
       user = if request.env['omniauth.auth'].nil?
                User.from_omniauth(request.env)
-            else 
-               User.from_omniauth(request.env['rack.session'] )
+             else
+               User.from_omniauth(request.env['omniauth.auth'])
              end
 
       # If the user isn't logged in
@@ -91,6 +71,7 @@ module Users
         # If the uid didn't have a match in the system send them to register
         if user.nil?
           session["devise.#{scheme.name.downcase}_data"] = request.env['omniauth.auth']
+
           redirect_to new_user_registration_url
 
         # Otherwise sign them in
@@ -98,17 +79,6 @@ module Users
           # Until ORCID becomes supported as a login method
           set_flash_message(:notice, :success, kind: scheme.description) if is_navigational_format?
           sign_in_and_redirect user, event: :authentication
-        elsif schema.name == "openid_connect"
-          @user = User.from_omniauth(request.env["omniauth.auth"])
-          Rails.logger.info "OmniAuth Auth Hash: #{request.env["omniauth.auth"]}"
-  
-          if @user.persisted?
-              sign_in_and_redirect @user, event: :authentication
-              set_flash_message(:notice, :success, kind: "OpenID Connect") if is_navigational_format?
-          else
-              session["devise.openid_connect_data"] = request.env["omniauth.auth"]
-              redirect_to new_user_registration_url
-          end
         else
           flash[:notice] = _('Successfully signed in')
           redirect_to new_user_registration_url
@@ -119,13 +89,12 @@ module Users
         # If the user could not be found by that uid then attach it to their record
         if user.nil?
           if Identifier.create(identifier_scheme: scheme,
-                               value: request.env['rack.session']['omniauth.state'],#request.env['omniauth.auth'].uid,
-                               attrs: request.env['rack.session']['omniauth.nonce'],#request.env['omniauth.auth'],
+                               value: request.env['omniauth.auth'].uid,
+                               attrs: request.env['omniauth.auth'],
                                identifiable: current_user)
             flash[:notice] =
               format(_('Your account has been successfully linked to %{scheme}.'),
                      scheme: scheme.description)
-            redirect_to new_user_registration_url
 
           else
             flash[:alert] = format(_('Unable to link your account to %{scheme}.'),
@@ -145,7 +114,13 @@ module Users
       end
     end
 
+    def orcid
+      handle_omniauth(IdentifierScheme.for_authentication.find_by(name: 'orcid'))
+    end
 
+    def shibboleth
+      handle_omniauth(IdentifierScheme.for_authentication.find_by(name: 'shibboleth'))
+    end
 
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
     # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity

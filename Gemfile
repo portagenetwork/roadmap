@@ -107,8 +107,7 @@ gem 'omniauth-orcid'
 #   https://nvd.nist.gov/vuln/detail/CVE-2015-9284
 gem 'omniauth-rails_csrf_protection'
 
-#This gem provides cilogon support with devise login authentication
-#This is a part of omniauth
+# This gem provides cilogon support with devise login authentication
 gem 'omniauth_openid_connect'
 
 # A ruby implementation of the RFC 7519 OAuth JSON Web Token (JWT) standard.
