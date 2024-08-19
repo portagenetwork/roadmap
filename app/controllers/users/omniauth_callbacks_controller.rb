@@ -12,24 +12,7 @@ module Users
       end
     end
 
-
-  #   def openid_connect
-  #     @user = User.from_omniauth(request.env["omniauth.auth"])
-
-  #     if @user.present?
-  #         sign_in_and_redirect @user, event: :authentication
-  #         set_flash_message(:notice, :success, kind: "OpenID Connect") if is_navigational_format?
-  #     else
-  #         session["devise.openid_connect_data"] = request.env["omniauth.auth"]
-  #         redirect_to new_user_registration_url
-  #     end
-  # end
-
-
-
-
     #This is for the OpenidConnect CILogon
-
     def openid_connect
       # First or create
       auth = request.env['omniauth.auth']
@@ -40,7 +23,7 @@ module Users
         #If email is missing we need to request the user to register with DMP. 
         #User email can be missing if the user email id is set to private or trusted clients only we won't get the value. 
         #USer email id is one of the mandatory field which is must required.
-        flash[:notice] = 'Please try sign-up with DMP assistant.'
+        flash[:notice] = 'Something went wrong, Please try signing-up here.'
         redirect_to new_user_registration_path
       elsif current_user.nil?
         # We need to register
@@ -51,7 +34,6 @@ module Users
                             value: auth.uid,
                             attrs: auth,
                             identifiable: user)
-
         end
         sign_in_and_redirect user, event: :authentication
       elsif user.nil?
@@ -61,12 +43,18 @@ module Users
                           attrs: auth,
                           identifiable: current_user)
 
-        flash[:notice] = 'linked succesfully'
-        redirect_to root_path
+        flash[:notice] = 'Linked succesfully'
+        redirect_to root_path    
       end
     end
 
+    def orcid
+      handle_omniauth(IdentifierScheme.for_authentication.find_by(name: 'orcid'))
+    end
 
+    def shibboleth
+      handle_omniauth(IdentifierScheme.for_authentication.find_by(name: 'shibboleth'))
+    end
 
     # Processes callbacks from an omniauth provider and directs the user to
     # the appropriate page:

@@ -8,7 +8,6 @@ class IdentifiersController < ApplicationController
   # DELETE /users/identifiers
   # rubocop:disable Metrics/AbcSize
   def destroy
-    # byebug
     authorize Identifier
     user = User.find(current_user.id)
     identifier = Identifier.find(params[:id])
