@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Fixed
+
+ - Fix triggering and title of autosent email when a user's admin privileges are changed [#858](https://github.com/portagenetwork/roadmap/pull/858)
+
+## [4.1.1+portage-4.1.3] - 2024-08-08
+
 ### Changed
 
  - Bump rexml from 3.2.8 to 3.3.3 [#839](https://github.com/portagenetwork/roadmap/pull/839)
