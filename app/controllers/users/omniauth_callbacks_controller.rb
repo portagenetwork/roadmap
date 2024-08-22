@@ -38,7 +38,7 @@ module Users
 
       if auth.info.email.nil? && user.nil?
         #If email is missing we need to request the user to register with DMP. 
-        #User email can be missing if the user email id is set to private or trusted clients only we won't get the value. 
+        #User email can be missing if the usFFvate or trusted clients only we won't get the value. 
         #USer email id is one of the mandatory field which is must required.
         flash[:notice] = 'Something went wrong, Please try signing-up here.'
         redirect_to new_user_registration_path
@@ -142,11 +142,6 @@ module Users
         # Redirect to the User Profile page
         redirect_to edit_user_registration_path
       end
-    end
-
-
-    def shibboleth
-      handle_omniauth(IdentifierScheme.for_authentication.find_by(name: 'shibboleth'))
     end
 
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
