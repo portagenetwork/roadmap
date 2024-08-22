@@ -189,7 +189,7 @@ class User < ApplicationRecord
 
     return user if user
 
-    user = User.new(
+    User.create!(
       firstname: provider_data.info.first_name,
       surname: provider_data.info.last_name,
       email: provider_data.info.email,
@@ -198,8 +198,6 @@ class User < ApplicationRecord
       accept_terms: true,
       password: Devise.friendly_token[0, 20]
     )
-
-    user.save!
   end
 
   def self.to_csv(users)
@@ -239,7 +237,6 @@ class User < ApplicationRecord
   # Returns String
   # rubocop:disable Style/OptionalBooleanParameter
   def name(use_email = true)
-    # byebug
     if (firstname.blank? && surname.blank?) || use_email
       email
     else
