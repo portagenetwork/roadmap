@@ -4,11 +4,11 @@ module Api
   module CaDashboard
     # Handles CRUD operations for "/api/ca_dashboard/stats"
     class StatsController < Api::V1::BaseApiController
+      # Allow public access / bypass JWT authentication via "POST /api/v1/authenticate"
+      skip_before_action :authorize_request, only: [:index]
 
       # GET /api/ca_dashboard/stats
       def index
-        # To access this endpoint, the user must provide a valid JWT
-        # JWT is acquired by authenticating via POST /api/v1/authenticate
         base_hash = {
           'plans' => Plan.all,
           'orgs' => Org.where(managed: true).all,
