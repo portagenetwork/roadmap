@@ -10,46 +10,10 @@ RSpec.describe 'Openid_connection SSO', type: :feature do
                                   description: 'CILogon',
                                   active: true,
                                   identifier_prefix: 'https://www.cilogon.org/')
-      # OmniAuth.config.add_mock(openid_connect: {
-      #                            provider: 'openid_connect',
-      #                            uid: '12345',
-      #                            info:
-      #     { email: 'user@organization.ca',
-      #       first_name: 'John',
-      #       last_name: 'Doe' }
-      #                          })
 
-      #                       OmniAuth.config.add_mock(openid_connect: {
-      #                       'provider' => 'openid_connect',
-      #                       'uid' => '12345',
-      #                       'info' =>
-      # { 'email' => 'user@organization.ca',
-      #   'first_name' => 'John',
-      #   'last_name' => 'Doe' }
-      #                     })
-
-      # OmniAuth.config.add_mock(:openid_connect, {
-      #                            provider: 'openid_connect',
-      #                            uid: '12345',
-      #                            info: {
-      #                              email: 'user@organization.ca',
-      #                              first_name: 'John',
-      #                              last_name: 'Doe'
-      #                            }
-      #                          })
-      #       OmniAuth.config.mock_auth[:openid_connect] = OmniAuth::AuthHash.new({
-      #                                                                       provider: 'openid_connect',
-      #                                                                       uid: '12345',
-      #                                                                       info:
-      # { email: 'user@organization.ca',
-      #   first_name: 'John',
-      #   last_name: 'Doe' }
       Rails.application.env_config['devise.mapping'] = Devise.mappings[:user]
       Rails.application.env_config['omniauth.auth'] = OmniAuth.config.mock_auth[:openid_connect]
     end
-
-    # it 'links external credentials with existing account' do
-    # end
 
     it 'creates account from external credentials' do
       visit root_path
@@ -62,7 +26,8 @@ RSpec.describe 'Openid_connection SSO', type: :feature do
       expect(identifiable.firstname).to eql('John')
       expect(identifiable.surname).to eql('Doe')
 
-      # XXX Check notice message
+      # Check logged in name
+      expect(page).to have_content('John Doe')
     end
 
     it 'links account from external credentails' do
@@ -75,6 +40,8 @@ RSpec.describe 'Openid_connection SSO', type: :feature do
       identifiable = identifier.identifiable
       # We will find the new user with the email specified above
       expect(identifiable.email).to eql('user@organization.ca')
+
+      # XXX Check for flash notice message linked successfully
     end
   end
 end
