@@ -2,6 +2,7 @@
 
 require 'capybara/rspec'
 require 'mocha'
+require 'omniauth'
 
 $LOAD_PATH.unshift(File.expand_path(__dir__))
 
@@ -119,3 +120,17 @@ RSpec.configure do |config|
     # Capybara::Webmock.stop if example.metadata[:type] == :feature
   end
 end
+
+OmniAuth.config.test_mode = true
+
+OmniAuth.config.mock_auth[:openid_connect] = OmniAuth::AuthHash.new(
+  {
+    provider: 'openid_connect',
+    uid: '12345',
+    info: {
+      email: 'user@organization.ca',
+      first_name: 'John',
+      last_name: 'Doe'
+    }
+  }
+)
