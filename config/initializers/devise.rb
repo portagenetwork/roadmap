@@ -343,9 +343,28 @@ Devise.setup do |config|
 
   # XXX the 4th attempt of this is final final XXX
 
+  # config.omniauth :openid_connect, {
+  #   name: :openid_connect,
+  #   scope: %i[openid email profile org.cilogon.userinfo],
+  #   response_type: :code,
+  #   issuer: "https://cilogon.org",
+  #   discovery: true,
+  #   client_options: {
+  #     uid_field: "sub",
+  #     port: 443,
+  #     scheme: "https",
+  #     host: "cilogon.org",
+  #     identifier: ENV['CILOGON_CLIENT_ID'],
+  #     secret: ENV['CILOGON_SECRET_KEY'],
+  #     redirect_uri: "http://127.0.0.1:3000/users/auth/openid_connect/callback"
+  #   }
+  # }
+
+
+
   config.omniauth :openid_connect, {
     name: :openid_connect,
-    scope: %i[openid email profile org.cilogon.userinfo],
+    scope: [:openid], #:email], #:profile],#, :"org.cilogon.userinfo"],
     response_type: :code,
     issuer: "https://cilogon.org",
     discovery: true,
@@ -354,10 +373,10 @@ Devise.setup do |config|
       port: 443,
       scheme: "https",
       host: "cilogon.org",
-      identifier: ENV.fetch('CILOGON_CLIENT_ID', nil),
-      secret: ENV.fetch('CILOGON_SECRET_KEY', nil),
+      identifier: ENV['CILOGON_CLIENT_ID'],
+      secret: ENV['CILOGON_SECRET_KEY'],
       redirect_uri: "http://127.0.0.1:3000/users/auth/openid_connect/callback"
-    }
+    },
   }
 
   # ==> Warden configuration
