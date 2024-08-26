@@ -42,6 +42,7 @@ module Users
         #USer email id is one of the mandatory field which is must required.
         flash[:notice] = 'Something went wrong, Please try signing-up here.'
         redirect_to new_user_registration_path
+        return
       end
 
       identifier_scheme = IdentifierScheme.find_by_name(auth.provider)
