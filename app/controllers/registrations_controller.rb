@@ -20,7 +20,6 @@ class RegistrationsController < Devise::RegistrationsController
   # GET /resource
   # rubocop:disable Metrics/AbcSize
   def new
-    # byebug
     oauth = { provider: nil, uid: nil }
     IdentifierScheme.for_users.each do |scheme|
       oauth = session["devise.#{scheme.name.downcase}_data"] unless session["devise.#{scheme.name.downcase}_data"].nil?
@@ -43,10 +42,8 @@ class RegistrationsController < Devise::RegistrationsController
   # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
   # POST /resource
   def create
-    # byebug
     oauth = { provider: nil, uid: nil }
     IdentifierScheme.for_users.each do |scheme|
-      # byebug
       oauth = session["devise.#{scheme.name.downcase}_data"] unless session["devise.#{scheme.name.downcase}_data"].nil?
     end
 
@@ -127,7 +124,6 @@ class RegistrationsController < Devise::RegistrationsController
         end
         # rubocop:enable Metrics/BlockNesting
       else
-        # byebug
         clean_up_passwords resource
         redirect_to after_sign_up_error_path_for(resource),
                     alert: _("Unable to create your account.#{errors_for_display(resource)}")
@@ -140,7 +136,6 @@ class RegistrationsController < Devise::RegistrationsController
 
   # rubocop:disable Metrics/AbcSize
   def update
-    # byebug
     if user_signed_in?
       @prefs = @user.get_preferences(:email)
       @orgs = Org.order('name')
@@ -165,7 +160,6 @@ class RegistrationsController < Devise::RegistrationsController
   # ie if password or email was changed
   # extend this as needed
   def needs_password?(user)
-    # byebug
     user.email != update_params[:email] || update_params[:password].present?
   end
 
@@ -173,7 +167,6 @@ class RegistrationsController < Devise::RegistrationsController
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   # rubocop:disable Style/OptionalBooleanParameter
   def do_update(require_password = true, confirm = false)
-    # byebug
     restrict_orgs = Rails.configuration.x.application.restrict_orgs
     mandatory_params = true
     # added to by below, overwritten otherwise
