@@ -373,8 +373,8 @@ Devise.setup do |config|
       port: 443,
       scheme: "https",
       host: "cilogon.org",
-      identifier: ENV['CILOGON_CLIENT_ID'],
-      secret: ENV['CILOGON_SECRET_KEY'],
+      identifier: Rails.application.secrets.cilogon_client_id,
+      secret: Rails.application.secrets.cilogon_secret_key,
       redirect_uri: "http://127.0.0.1:3000/users/auth/openid_connect/callback"
     },
   }
