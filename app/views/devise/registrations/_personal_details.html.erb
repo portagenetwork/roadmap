@@ -87,6 +87,19 @@
   <% end %>
 
   <div class="form-group col-xs-8">
+        <label class='control-label'>
+          <span class="aria-only" aria-hidden="false"><%= _('Institutional credentials') %></span>
+        </label>
+        <div class='identifier-scheme'>
+          <%byebug%>
+        <%= render partial: 'external_openid_connection',
+                   locals: { scheme: IdentifierScheme.find_by( name: 'openid_connect'),
+                             id: current_user.identifier_for('openid_connect')} %>
+        </div>
+  </div>
+
+
+  <div class="form-group col-xs-8">
     <%= f.button(_('Save'), class: 'btn btn-default', type: "submit", id: "personal_details_registration_form_submit") %>
   </div>
 

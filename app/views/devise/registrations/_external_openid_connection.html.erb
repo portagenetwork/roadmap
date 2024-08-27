@@ -1,0 +1,21 @@
+<% if id.nil? || id.value == '' %>
+<%# If we dont have an id we need to link %>
+<i class="fas fa-user" title="<%= _('Institutional credentials') %>" aria-hidden="true"></i>
+        &nbsp;
+        <%= link_to _('Link your institutional credentials'),
+                    Rails.application.routes.url_helpers.send("user_openid_connect_omniauth_authorize_path"),
+                    title: _("Link your institutional credentials to access your account with them."),
+                    'data-toggle': "tooltip", method: :post %>
+<% else %>
+<%# If We do have and id we need to present the option to unlink %>
+<% unlinktext = _("Unlink your account from #{scheme.description}. You can link again at any time.") %>
+<% unlinkconf = _("Are you sure you want to unlink #{scheme.description} ID?") %>
+<%= id.value %>
+<%= link_to '<i class="fas fa-fw fa-circle-xmark" aria-hidden="true"></i>'.html_safe,
+                destroy_user_identifier_path(id),
+                method: :delete,
+                title: unlinktext,
+                data: {confirm: unlinkconf},
+                'aria-label': unlinktext,
+                'data-toggle': "tooltip" %>
+<% end %>

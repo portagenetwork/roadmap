@@ -29,19 +29,18 @@ module Users
         if user.nil?
           # Register and sign in
           user = User.create_from_provider_data(auth)
-          Identifier.create(identifier_scheme: identifier_scheme, # auth.provider, #scheme, #IdentifierScheme.last.id,
-                            value: auth.uid,
-                            attrs: auth,
-                            identifiable: user)
-
+          user.identifiers << Identifier.create(identifier_scheme: identifier_scheme, # auth.provider, #scheme, #IdentifierScheme.last.id,
+                                                value: auth.uid,
+                                                attrs: auth,
+                                                identifiable: user)
         end
         sign_in_and_redirect user, event: :authentication
       elsif user.nil?
         # we need to link
-        Identifier.create(identifier_scheme: identifier_scheme,
-                          value: auth.uid,
-                          attrs: auth,
-                          identifiable: user)
+        current_user.identifiers << Identifier.create(identifier_scheme: identifier_scheme,
+                                                      value: auth.uid,
+                                                      attrs: auth,
+                                                      identifiable: user)
 
         flash[:notice] = 'linked succesfully'
         redirect_to root_path
