@@ -17,7 +17,7 @@ RSpec.describe 'Openid_connection SSO', type: :feature do
 
     it 'creates account from external credentials' do
       visit root_path
-      click_link 'Sign in with ORCID iD'
+      click_link 'Sign in with CILogon'
 
       identifier = Identifier.last
       expect(identifier.value).to eql('https://www.cilogon.org/12345')
@@ -34,7 +34,7 @@ RSpec.describe 'Openid_connection SSO', type: :feature do
       # Create existing user
       create(:user, :org_admin, org: @org, email: 'user@organization.ca')
       visit root_path
-      click_link 'Sign in with ORCID iD'
+      click_link 'Sign in with CILogon'
       identifier = Identifier.last
       expect(identifier.value).to eql('https://www.cilogon.org/12345')
       identifiable = identifier.identifiable

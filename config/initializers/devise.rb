@@ -375,7 +375,7 @@ Devise.setup do |config|
       host: "cilogon.org",
       identifier: Rails.application.secrets.cilogon_client_id,
       secret: Rails.application.secrets.cilogon_secret_key,
-      redirect_uri: Rails.application.secrets.cilogon_full_host
+      redirect_uri: "http://"+Rails.application.secrets.dmproadmap_host+"/users/auth/openid_connect/callback"
     },
   }
 
