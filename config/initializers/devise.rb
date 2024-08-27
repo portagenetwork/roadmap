@@ -364,7 +364,7 @@ Devise.setup do |config|
 
   config.omniauth :openid_connect, {
     name: :openid_connect,
-    scope: [:openid], #:email], #:profile],#, :"org.cilogon.userinfo"],
+    scope: [:openid, :email], #:profile],#, :"org.cilogon.userinfo"],
     response_type: :code,
     issuer: "https://cilogon.org",
     discovery: true,
@@ -375,7 +375,7 @@ Devise.setup do |config|
       host: "cilogon.org",
       identifier: Rails.application.secrets.cilogon_client_id,
       secret: Rails.application.secrets.cilogon_secret_key,
-      redirect_uri: "http://127.0.0.1:3000/users/auth/openid_connect/callback"
+      redirect_uri: Rails.application.secrets.cilogon_full_host
     },
   }
 
@@ -387,7 +387,6 @@ Devise.setup do |config|
   #   manager.intercept_401 = false
   #   manager.default_strategies(:scope => :user).unshift :some_external_strategy
   # end
-
   # ==> Mountable engine configurations
   # When using Devise inside an engine, let's call it `MyEngine`, and this engine
   # is mountable, there are some extra configurations to be taken into account.

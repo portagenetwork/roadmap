@@ -45,7 +45,6 @@ class Identifier < ApplicationRecord
   # ===============
 
   def self.by_scheme_name(scheme, identifiable_type)
-    # byebug
     scheme_id = if scheme.instance_of?(IdentifierScheme)
                   scheme.id
                 else
@@ -124,14 +123,12 @@ class Identifier < ApplicationRecord
 
   # Simple check used by :validate methods above
   def schemed?
-    # byebug
     identifier_scheme.present?
   end
 
   # Verify the uniqueness of :value across :identifiable
   def value_uniqueness_without_scheme
     # if scheme is nil, then just unique for identifiable
-    # byebug
     return unless Identifier.where(identifiable: identifiable, value: value).any?
 
     errors.add(:value, _('must be unique'))
@@ -139,7 +136,6 @@ class Identifier < ApplicationRecord
 
   # Ensure that the identifiable only has one identifier for the scheme
   def value_uniqueness_with_scheme
-    # byebug
     if new_record? && Identifier.where(identifier_scheme: identifier_scheme,
                                        identifiable: identifiable).any?
       errors.add(:identifier_scheme, _('already assigned a value'))
