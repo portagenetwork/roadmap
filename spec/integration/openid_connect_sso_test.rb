@@ -1,6 +1,7 @@
 require 'rails_helper'
+require 'byebug'
 
-RSpec.describe 'Openid_connection SSO', type: :feature do
+RSpec.describe 'Openid_connection SSO', type: :feature, js: true do
   context 'with correct credentials' do
     before do
       create(:org, managed: false, is_other: true)
@@ -27,18 +28,24 @@ RSpec.describe 'Openid_connection SSO', type: :feature do
       expect(identifiable.surname).to eql('Doe')
 
       # Check logged in name
+      byebug
       expect(page).to have_content('John Doe')
     end
 
     it 'links account from external credentails' do
       # Create existing user
-      create(:user, :org_admin, org: @org, email: 'user@organization.ca')
+      user = create(:user, :org_admin, org: @org, email: 'user@organization.ca')
+      sign_in(user)
+      # where do we find link credentials ?
+
       visit root_path
+      byebug
       click_link 'Sign in with CILogon'
       identifier = Identifier.last
       expect(identifier.value).to eql('https://www.cilogon.org/12345')
       identifiable = identifier.identifiable
       # We will find the new user with the email specified above
+      byebug
       expect(identifiable.email).to eql('user@organization.ca')
 
       # XXX Check for flash notice message linked successfully
