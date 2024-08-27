@@ -150,8 +150,6 @@ module DMPRoadmap
     # A super admin will also be able to associate orgs with their shibboleth entityIds if this is set to true
     config.x.shibboleth.use_filtered_discovery_service = false
 
-
-
     # ------------------- #
     # OPENID_CONNECT/CILOGON SETTINGS #
     # ------------------- #
@@ -171,7 +169,6 @@ module DMPRoadmap
     #
     # A super admin will also be able to associate orgs with their CILogon entityIds if this is set to true
     config.x.openid_connect.use_filtered_discovery_service = true
-
 
     # ------- #
     # LOCALES #

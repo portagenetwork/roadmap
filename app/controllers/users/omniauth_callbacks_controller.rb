@@ -12,7 +12,7 @@ module Users
       end
     end
 
-    #This is for the OpenidConnect CILogon
+    # This is for the OpenidConnect CILogon
     def openid_connect
       # First or create
       auth = request.env['omniauth.auth']
@@ -20,9 +20,9 @@ module Users
       identifier_scheme = IdentifierScheme.find_by_name(auth.provider)
 
       if auth.info.email.nil? && user.nil?
-        #If email is missing we need to request the user to register with DMP. 
-        #User email can be missing if the user email id is set to private or trusted clients only we won't get the value. 
-        #USer email id is one of the mandatory field which is must required.
+        # If email is missing we need to request the user to register with DMP.
+        # User email can be missing if the user email id is set to private or trusted clients only we won't get the value.
+        # USer email id is one of the mandatory field which is must required.
         flash[:notice] = 'Something went wrong, Please try signing-up here.'
         redirect_to new_user_registration_path
       elsif current_user.nil?
@@ -30,21 +30,21 @@ module Users
         if user.nil?
           # Register and sign in
           user = User.create_from_provider_data(auth)
-          Identifier.create(identifier_scheme: identifier_scheme, #auth.provider, #scheme, #IdentifierScheme.last.id,
-                            value: auth.uid,
-                            attrs: auth,
-                            identifiable: user)
+          user.identifiers << Identifier.create(identifier_scheme: identifier_scheme, # auth.provider, #scheme, #IdentifierScheme.last.id,
+                                                value: auth.uid,
+                                                attrs: auth,
+                                                identifiable: user)
         end
         sign_in_and_redirect user, event: :authentication
       elsif user.nil?
         # we need to link
-        Identifier.create(identifier_scheme: identifier_scheme,
-                          value: auth.uid,
-                          attrs: auth,
-                          identifiable: current_user)
+        current_user.identifiers << Identifier.create(identifier_scheme: identifier_scheme,
+                                                      value: auth.uid,
+                                                      attrs: auth,
+                                                      identifiable: current_user)
 
         flash[:notice] = 'Linked succesfully'
-        redirect_to root_path    
+        redirect_to root_path
       end
     end
 
@@ -70,8 +70,8 @@ module Users
     def handle_omniauth(scheme)
       user = if request.env['omniauth.auth'].nil?
                User.from_omniauth(request.env)
-            else 
-               User.from_omniauth(request.env['rack.session'] )
+             else
+               User.from_omniauth(request.env['rack.session'])
              end
 
       # If the user isn't logged in
@@ -86,16 +86,16 @@ module Users
           # Until ORCID becomes supported as a login method
           set_flash_message(:notice, :success, kind: scheme.description) if is_navigational_format?
           sign_in_and_redirect user, event: :authentication
-        elsif schema.name == "openid_connect"
-          @user = User.from_omniauth(request.env["omniauth.auth"])
-          Rails.logger.info "OmniAuth Auth Hash: #{request.env["omniauth.auth"]}"
-  
+        elsif schema.name == 'openid_connect'
+          @user = User.from_omniauth(request.env['omniauth.auth'])
+          Rails.logger.info "OmniAuth Auth Hash: #{request.env['omniauth.auth']}"
+
           if @user.persisted?
-              sign_in_and_redirect @user, event: :authentication
-              set_flash_message(:notice, :success, kind: "OpenID Connect") if is_navigational_format?
+            sign_in_and_redirect @user, event: :authentication
+            set_flash_message(:notice, :success, kind: 'OpenID Connect') if is_navigational_format?
           else
-              session["devise.openid_connect_data"] = request.env["omniauth.auth"]
-              redirect_to new_user_registration_url
+            session['devise.openid_connect_data'] = request.env['omniauth.auth']
+            redirect_to new_user_registration_url
           end
         else
           flash[:notice] = _('Successfully signed in')
@@ -107,8 +107,8 @@ module Users
         # If the user could not be found by that uid then attach it to their record
         if user.nil?
           if Identifier.create(identifier_scheme: scheme,
-                               value: request.env['rack.session']['omniauth.state'],#request.env['omniauth.auth'].uid,
-                               attrs: request.env['rack.session']['omniauth.nonce'],#request.env['omniauth.auth'],
+                               value: request.env['rack.session']['omniauth.state'],  # request.env['omniauth.auth'].uid,
+                               attrs: request.env['rack.session']['omniauth.nonce'],  # request.env['omniauth.auth'],
                                identifiable: current_user)
             flash[:notice] =
               format(_('Your account has been successfully linked to %{scheme}.'),
@@ -132,8 +132,6 @@ module Users
         redirect_to edit_user_registration_path
       end
     end
-
-
 
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
     # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity

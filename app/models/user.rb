@@ -178,28 +178,26 @@ class User < ApplicationRecord
   # Load the user based on the scheme and id provided by the Omniauth call
   def self.from_omniauth(auth)
     Identifier.by_scheme_name(auth.provider.downcase.to_s, 'User')
-                .where(value: auth.uid)
-                .first&.identifiable
+              .where(value: auth.uid)
+              .first&.identifiable
   end
 
+  # Handle user creation from provider
+  def self.create_from_provider_data(provider_data)
+    user = User.find_by email: provider_data.info.email
 
-    # Handle user creation from provider
-    def self.create_from_provider_data(provider_data)
-      user = User.find_by email: provider_data.info.email
-  
-      return user if user
-  
-      user = User.new(
-        firstname: provider_data.info.first_name,
-        surname: provider_data.info.last_name,
-        email: provider_data.info.email,
-        # We don't know which organization to setup so we will use other
-        org: Org.find_by(is_other: true),
-        accept_terms: true,
-        password: Devise.friendly_token[0, 20]
-      )
-      user.save
-    end
+    return user if user
+
+    User.create!(
+      firstname: provider_data.info.first_name,
+      surname: provider_data.info.last_name,
+      email: provider_data.info.email,
+      # We don't know which organization to setup so we will use other
+      org: Org.find_by(is_other: true),
+      accept_terms: true,
+      password: Devise.friendly_token[0, 20]
+    )
+  end
 
   def self.to_csv(users)
     User::AtCsv.new(users).to_csv
