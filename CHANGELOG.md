@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+ - Create GET "/api/ca_dashboard/stats" endpoint to fetch Plan, User, and Org-related statistics [#852](https://github.com/portagenetwork/roadmap/pull/852)
+
 ### Changed
 
  - Bump rexml from 3.2.8 to 3.3.3 [#839](https://github.com/portagenetwork/roadmap/pull/839)
