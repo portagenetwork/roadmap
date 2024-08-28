@@ -21,7 +21,7 @@ class IdentifierScheme < ApplicationRecord
 
   ##
   # The maximum length for a name
-  NAME_MAXIMUM_LENGTH = 50
+  NAME_MAXIMUM_LENGTH = 30
 
   has_many :identifiers
 
