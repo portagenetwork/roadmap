@@ -4,6 +4,8 @@
 
 ### Changed
 
+ - Update Favicons and Associated HTML Code [#868](https://github.com/portagenetwork/roadmap/pull/868)
+
  - Drop Sessions Table and Delete `lib/tasks/sessions.rake` [#859](https://github.com/portagenetwork/roadmap/pull/859)
 
 ### Fixed
