@@ -23,6 +23,6 @@ RSpec.configure do |config|
 
   # Use the Selenium headless Chrome driver for feature tests
   config.before(:each, type: :feature, js: true) do
-    Capybara.current_driver = :selenium_chrome
+    Capybara.current_driver = :selenium_chrome_headless_add_window_size
   end
 end
