@@ -15,7 +15,6 @@ class IdentifierPresenter
   end
 
   def id_for_scheme(scheme:)
-    # byebug
     @identifiable.identifiers.find_or_initialize_by(identifier_scheme: scheme)
   end
 
@@ -29,7 +28,6 @@ class IdentifierPresenter
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def load_schemes
     # Load the schemes for the current context
-    # byebug
     schemes = IdentifierScheme.for_orgs if @identifiable.is_a?(Org)
     schemes = IdentifierScheme.for_plans if @identifiable.is_a?(Plan)
     schemes = IdentifierScheme.for_users if @identifiable.is_a?(User)

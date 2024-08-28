@@ -177,11 +177,12 @@ class User < ApplicationRecord
   ##
   # Load the user based on the scheme and id provided by the Omniauth call
   def self.from_omniauth(auth)
-    Identifier.by_scheme_name(auth.provider.downcase.to_s, 'User')
+    Identifier.by_scheme_name(auth.provider.downcase, 'User')
               .where(value: auth.uid)
               .first&.identifiable
   end
 
+  ##
   # Handle user creation from provider
   def self.create_from_provider_data(provider_data)
     user = User.find_by email: provider_data.info.email
@@ -236,7 +237,6 @@ class User < ApplicationRecord
   # Returns String
   # rubocop:disable Style/OptionalBooleanParameter
   def name(use_email = true)
-    # byebug
     if (firstname.blank? && surname.blank?) || use_email
       email
     else
