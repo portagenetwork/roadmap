@@ -360,11 +360,9 @@ Devise.setup do |config|
   #   }
   # }
 
-
-
   config.omniauth :openid_connect, {
     name: :openid_connect,
-    scope: [:openid, :email], #:profile],#, :"org.cilogon.userinfo"],
+    scope: %i[openid email profile], # , :"org.cilogon.userinfo"],
     response_type: :code,
     issuer: "https://cilogon.org",
     discovery: true,
@@ -375,8 +373,8 @@ Devise.setup do |config|
       host: "cilogon.org",
       identifier: Rails.application.secrets.cilogon_client_id,
       secret: Rails.application.secrets.cilogon_secret_key,
-      redirect_uri: "http://"+Rails.application.secrets.dmproadmap_host+"/users/auth/openid_connect/callback"
-    },
+      redirect_uri: "http://" + Rails.application.secrets.dmproadmap_host + "/users/auth/openid_connect/callback"
+    }
   }
 
   # ==> Warden configuration
