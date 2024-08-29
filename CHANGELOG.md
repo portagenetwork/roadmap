@@ -10,6 +10,8 @@
 
  - Fix triggering and title of autosent email when a user's admin privileges are changed [#858](https://github.com/portagenetwork/roadmap/pull/858)
 
+ - Fix flaky tests / Optimize Checking Of `plan.title` Within `spec/features/plans/exports_spec.rb` [#871](https://github.com/portagenetwork/roadmap/pull/871)
+
 ## [4.1.1+portage-4.1.3] - 2024-08-08
 
 ### Changed
