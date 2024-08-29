@@ -18,7 +18,6 @@ module Users
       # First or create
       auth = request.env['omniauth.auth']
       user = User.from_omniauth(auth)
-      identifier_scheme = IdentifierScheme.find_by_name(auth.provider)
 
       if auth.info.email.nil? && user.nil?
         # If email is missing we need to request the user to register with DMP.
