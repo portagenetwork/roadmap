@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+ - Create GET "/api/ca_dashboard/stats" endpoint to fetch Plan, User, and Org-related statistics [#852](https://github.com/portagenetwork/roadmap/pull/852)
+
 ### Changed
 
  - Drop Sessions Table and Delete `lib/tasks/sessions.rake` [#859](https://github.com/portagenetwork/roadmap/pull/859)
