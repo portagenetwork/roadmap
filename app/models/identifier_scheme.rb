@@ -64,14 +64,4 @@ class IdentifierScheme < ApplicationRecord
   def name=(value)
     super(value&.downcase&.gsub(/[^a-z|_]/, ''))
   end
-
-  # ===========================
-  # = Instance Methods =
-  # ===========================
-
-  # def self.for_authentication
-  #   [
-  #     OpenStruct.new(name: 'openid_connect')
-  #   ]
-  # end
 end
