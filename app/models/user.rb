@@ -190,8 +190,8 @@ class User < ApplicationRecord
     return user if user
 
     User.create!(
-      firstname: provider_data.info.first_name,
-      surname: provider_data.info.last_name,
+      firstname: provider_data.info&.first_name.present? ? provider_data.info.first_name : 'First name',
+      surname: provider_data.info&.last_name.present? ? provider_data.info.last_name : 'Last name',
       email: provider_data.info.email,
       # We don't know which organization to setup so we will use other
       org: Org.find_by(is_other: true),

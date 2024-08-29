@@ -12,23 +12,7 @@ module Users
       end
     end
 
-
-  #   def openid_connect
-  #     @user = User.from_omniauth(request.env["omniauth.auth"])
-
-  #     if @user.present?
-  #         sign_in_and_redirect @user, event: :authentication
-  #         set_flash_message(:notice, :success, kind: "OpenID Connect") if is_navigational_format?
-  #     else
-  #         session["devise.openid_connect_data"] = request.env["omniauth.auth"]
-  #         redirect_to new_user_registration_url
-  #     end
-  # end
-
-
-
-
-    #This is for the OpenidConnect CILogon
+    # This is for the OpenidConnect CILogon
 
     def openid_connect
       # First or create
@@ -37,9 +21,9 @@ module Users
       identifier_scheme = IdentifierScheme.find_by_name(auth.provider)
 
       if auth.info.email.nil? && user.nil?
-        #If email is missing we need to request the user to register with DMP. 
-        #User email can be missing if the usFFvate or trusted clients only we won't get the value. 
-        #USer email id is one of the mandatory field which is must required.
+        # If email is missing we need to request the user to register with DMP.
+        # User email can be missing if the usFFvate or trusted clients only we won't get the value.
+        # USer email id is one of the mandatory field which is must required.
         flash[:notice] = 'Something went wrong, Please try signing-up here.'
         redirect_to new_user_registration_path
         return
