@@ -5,7 +5,7 @@ class OrgsController < ApplicationController
   include OrgSelectable
 
   after_action :verify_authorized, except: %w[
-    shibboleth_ds shibboleth_ds_passthru search #cilogon_ds cilogon_ds_passthru
+    shibboleth_ds shibboleth_ds_passthru search
   ]
   respond_to :html
 
@@ -236,10 +236,6 @@ class OrgsController < ApplicationController
   def shib_params
     params.permit('org_id')
   end
-
-  # def cilo_params
-  #   params.permit('org_id')
-  # end
 
   def search_params
     params.require(:org).permit(:name, :type)

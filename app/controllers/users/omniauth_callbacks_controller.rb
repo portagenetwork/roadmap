@@ -23,7 +23,7 @@ module Users
       if auth.info.email.nil? && user.nil?
         # If email is missing we need to request the user to register with DMP.
         # User email can be missing if the usFFvate or trusted clients only we won't get the value.
-        # USer email id is one of the mandatory field which is must required.
+        # User email id is one of the mandatory field which is must required.
         flash[:notice] = 'Something went wrong, Please try signing-up here.'
         redirect_to new_user_registration_path
         return
@@ -36,7 +36,7 @@ module Users
         if user.nil?
           # Register and sign in
           user = User.create_from_provider_data(auth)
-          user.identifiers << Identifier.create(identifier_scheme: identifier_scheme, # auth.provider, #scheme, #IdentifierScheme.last.id,
+          user.identifiers << Identifier.create(identifier_scheme: identifier_scheme,
                                                 value: auth.uid,
                                                 attrs: auth,
                                                 identifiable: user)
@@ -89,7 +89,7 @@ module Users
           redirect_to new_user_registration_url
 
         # Otherwise sign them in
-        elsif scheme.name == 'shibboleth' || scheme.name == 'cilogon'
+        elsif scheme.name == 'shibboleth'
           # Until ORCID becomes supported as a login method
           set_flash_message(:notice, :success, kind: scheme.description) if is_navigational_format?
           sign_in_and_redirect user, event: :authentication
