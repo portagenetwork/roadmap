@@ -184,14 +184,15 @@ class User < ApplicationRecord
 
   ##
   # Handle user creation from provider
+  # rubocop:disable Metrics/AbcSize
   def self.create_from_provider_data(provider_data)
     user = User.find_by email: provider_data.info.email
 
     return user if user
 
     User.create!(
-      firstname: provider_data.info&.first_name.present? ? provider_data.info.first_name : 'First name',
-      surname: provider_data.info&.last_name.present? ? provider_data.info.last_name : 'Last name',
+      firstname: provider_data.info&.first_name.present? ? provider_data.info.first_name : _('First name'),
+      surname: provider_data.info&.last_name.present? ? provider_data.info.last_name : _('Last name'),
       email: provider_data.info.email,
       # We don't know which organization to setup so we will use other
       org: Org.find_by(is_other: true),
@@ -199,6 +200,7 @@ class User < ApplicationRecord
       password: Devise.friendly_token[0, 20]
     )
   end
+  # rubocop:enable Metrics/AbcSize
 
   def self.to_csv(users)
     User::AtCsv.new(users).to_csv
