@@ -161,17 +161,6 @@ class ApplicationController < ActionController::Base
   end
   # -------------------------------------------------------------
 
-  ##
-  # Sign out of cilogon  SSO local session too.
-  # # -------------------------------------------------------------
-  # def after_sign_out_path_for(resource_or_scope)
-  #   url = "#{Rails.configuration.x.openid_connect&.logout_url}#{root_url}"
-  #   return url if Rails.configuration.x.openid_connect&.enabled
-
-  #   super
-  # end
-  # # -------------------------------------------------------------
-
   def from_external_domain?
     if request.referer.present?
       referer = URI.parse(request.referer)
