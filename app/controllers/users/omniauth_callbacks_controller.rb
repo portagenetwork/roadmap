@@ -50,6 +50,11 @@ module Users
 
         flash[:notice] = 'Linked succesfully'
         redirect_to root_path
+      elsif user.id != current_user.id
+        # If a user was found but does NOT match the current user then the identifier has
+        # already been attached to another account (likely the user has 2 accounts)
+        flash[:alert] = _("The current #{identifier_scheme.description} iD has been already linked to a user with email #{user.email}")
+        redirect_to edit_user_registration_path
       end
     end
 
