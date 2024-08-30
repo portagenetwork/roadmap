@@ -40,7 +40,7 @@
       <p class="text-center fontsize-h4">- <%= _('or') %> -</p>
       <div class="form-group">
         <span class="center-block btn-group-justified">
-          <%= link_to "Sign in with CILogon", user_openid_connect_omniauth_authorize_path, method: :post, data: { turbo: false }, class: 'btn btn-default' %>
+          <%= link_to _("Sign in with CILogon"), user_openid_connect_omniauth_authorize_path, method: :post, data: { turbo: false }, class: 'btn btn-default' %>
         </span>
       </div>
     <% else %>
