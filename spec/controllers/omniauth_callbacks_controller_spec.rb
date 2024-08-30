@@ -98,7 +98,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
           current_user.reload # Ensure we have the latest state of the user
         }.to change(current_user.identifiers, :count).by(1)
 
-        expect(flash[:notice]).to eq('Linked succesfully')
+        expect(flash[:notice]).to eq('Linked successfully')
         expect(response).to redirect_to(root_path)
       end
     end

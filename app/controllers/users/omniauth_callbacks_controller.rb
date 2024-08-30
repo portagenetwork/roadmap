@@ -49,7 +49,7 @@ module Users
                                                       attrs: auth,
                                                       identifiable: current_user)
 
-        flash[:notice] = _('Linked succesfully')
+        flash[:notice] = _('Linked successfully')
         redirect_to root_path
       elsif user.id != current_user.id
         # If a user was found but does NOT match the current user then the identifier has
