@@ -14,6 +14,7 @@ module Users
 
     # This is for the OpenidConnect CILogon
 
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def openid_connect
       # First or create
       auth = request.env['omniauth.auth']
@@ -23,12 +24,12 @@ module Users
         # If email is missing we need to request the user to register with DMP.
         # User email can be missing if the usFFvate or trusted clients only we won't get the value.
         # User email id is one of the mandatory field which is must required.
-        flash[:notice] = 'Something went wrong, Please try signing-up here.'
+        flash[:notice] = _('Something went wrong, Please try signing-up here.')
         redirect_to new_user_registration_path
         return
       end
 
-      identifier_scheme = IdentifierScheme.find_by_name(auth.provider)
+      identifier_scheme = IdentifierScheme.find_by(name: auth.provider)
 
       if current_user.nil?
         # We need to register
@@ -52,6 +53,7 @@ module Users
         redirect_to root_path
       end
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     def orcid
       handle_omniauth(IdentifierScheme.for_authentication.find_by(name: 'orcid'))
