@@ -81,27 +81,53 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
 
     context 'when the user is signed in and needs to link their OpenID Connect account' do
       let!(:user) {  User.create(email: 'test@example.com', firstname: 'Test', surname: 'User',  org: @org) }
+      let(:current_user) { create(:user) }
 
       before do
-        sign_in user
+        sign_in current_user
 
-        def User.from_omniauth(_auth)
+        # Ensure from_omniauth returns nil, indicating no user is associated with the auth
+        User.define_singleton_method(:from_omniauth) do |_auth|
           nil
-        end
-
-        def IdentifierScheme.find_by_name(provider_name)
-          IdentifierScheme.find_by(name: provider_name)
         end
       end
 
-      # it 'links the user account and redirects to root_path' do
-      #   expect {
-      #     get :openid_connect
-      #   }.to change(user.identifiers, :count).by(1)
-      #   expect(response).to redirect_to(root_path)
-      #   expect(flash[:notice]).to eq('Linked succesfully')
-      # end
+      it "links identifier to current user, sets flash notice, and redirects to root path" do
+        expect {
+          get :openid_connect
+          current_user.reload # Ensure we have the latest state of the user
+        }.to change(current_user.identifiers, :count).by(1)
+
+        expect(flash[:notice]).to eq('Linked succesfully')
+        expect(response).to redirect_to(root_path)
+      end
     end
+
+    context 'when the user found via omniauth is different from the current_user' do
+      let(:current_user) { create(:user) }
+      let!(:different_user) { create(:user, email: 'different_user@example.com') } # Ensure different_user is created before test runs
+
+      before do
+        sign_in current_user
+
+        # Mocking the from_omniauth method to return a different user
+        # We use `let!` to ensure `different_user` is accessible here
+        User.define_singleton_method(:from_omniauth) do |_auth|
+          User.find_by(email: 'different_user@example.com')
+        end
+      end
+
+      it "sets flash alert and redirects to edit user registration path" do
+        get :openid_connect
+
+        expect(flash[:alert]).to eq(
+          "The current #{@identifier_scheme.description} iD has been already linked to a user with email #{different_user.email}"
+        )
+        expect(response).to redirect_to(edit_user_registration_path)
+      end
+    end
+
+    
 
     context 'when an unknown error occurs' do
       before do
