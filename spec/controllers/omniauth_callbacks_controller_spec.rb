@@ -1,7 +1,5 @@
 # frozen_string_literal: true
-
 require 'rails_helper'
-require 'byebug'
 
 RSpec.describe Users::OmniauthCallbacksController, type: :controller do
   before do
