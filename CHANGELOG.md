@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Test cases for the CILogon changes in Omniauth controller - [#869](https://github.com/portagenetwork/roadmap/pull/869/)
+
 ### Changed
 
  - Bump rexml from 3.2.8 to 3.3.3 [#839](https://github.com/portagenetwork/roadmap/pull/839)
