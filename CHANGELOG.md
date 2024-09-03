@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+ - Implemented openid_connection SSO with CILogon
+
 ### Changed
 
  - Bump rexml from 3.2.8 to 3.3.3 [#839](https://github.com/portagenetwork/roadmap/pull/839)
