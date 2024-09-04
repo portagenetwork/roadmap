@@ -41,10 +41,6 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         # Simulate missing email
         OmniAuth.config.mock_auth[:openid_connect].info.email = nil
         @request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:openid_connect]
-
-        def User.from_omniauth(_auth)
-          nil
-        end
       end
 
       it 'redirects to the registration page with a flash message' do
@@ -62,10 +58,6 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
       before do
         def User.from_omniauth(_auth)
           User.find_by(email: 'test@example.com')
-        end
-
-        def IdentifierScheme.find_by_name(provider_name)
-          IdentifierScheme.find_by(name: provider_name)
         end
       end
 
@@ -85,9 +77,9 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         sign_in current_user
 
         # Ensure from_omniauth returns nil, indicating no user is associated with the auth
-        User.define_singleton_method(:from_omniauth) do |_auth|
-          nil
-        end
+        # User.define_singleton_method(:from_omniauth) do |_auth|
+        #   nil
+        # end
       end
 
       it "links identifier to current user, sets flash notice, and redirects to root path" do
