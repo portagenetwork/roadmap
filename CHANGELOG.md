@@ -6,6 +6,8 @@
 
  - Implemented openid_connection SSO with CILogon
 
+ - Added SSO changes updates to the About and Help pages. [#877](https://github.com/portagenetwork/roadmap/issues/877)
+
 ### Changed
 
  - Bump rexml from 3.2.8 to 3.3.3 [#839](https://github.com/portagenetwork/roadmap/pull/839)
