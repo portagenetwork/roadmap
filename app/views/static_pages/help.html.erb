@@ -19,12 +19,12 @@
           </p>
 
           <p>
-            <% sso_english_guidlines_url = sso_english_guidlines_path%>
-            <% sso_french_guidlines_url = sso_french_guidlines_path%>
-            <%= sanitize(_('For help with single sign-on, help documents are available in <a href="%{sso_english_guidlines_url}"> English </a> and in <a href="%{sso_french_guidlines_url}"> French</a>.') %
-            {sso_french_guidlines_url: sso_french_guidlines_url, sso_english_guidlines_url: sso_english_guidlines_url } )%>
+            <% sso_english_guidelines_url = 'https://drive.google.com/file/d/11m2lepJF7207uwqKwR0TzWDcPAZyq6Kb/view?usp=drive_link'%>
+            <% sso_french_guidelines_url = 'https://drive.google.com/file/d/1QIVhN6P566xUaOyVZMwtfz8a7fI4X1D_/view?usp=drive_link'%>
+            <%= sanitize(_('For help with single sign-on, help documents are available in <a href="%{sso_english_guidelines_url}"> English </a> and in <a href="%{sso_french_guidelines_url}"> French</a>.') %
+            {sso_french_guidelines_url: sso_french_guidelines_url, sso_english_guidelines_url: sso_english_guidelines_url } )%>
           </p>
-
+          
           <h2 class="fontsize-h3"><%= _("Create a plan") %></h2>
 
           <p><%= _("To create a plan, click the 'Create plan' button from the 'My Dashboard' page or the top menu. Select options from the menus and tickboxes to determine what questions and guidance you should be presented with. Confirm your selection by clicking 'Create plan.'") %></p>
