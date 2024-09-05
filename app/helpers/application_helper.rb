@@ -90,7 +90,7 @@ module ApplicationHelper
       'https://alliancecan.ca/en/services/research-data-management/learning-and-training/institutional-contacts'
     end
   end
-  
+
   def training_resources_path
     if I18n.locale == :'fr-CA'
       'https://alliancecan.ca/fr/services/gestion-des-donnees-de-recherche/apprentissage-et-ressources/ressources-de-formation'
