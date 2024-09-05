@@ -261,7 +261,6 @@ Devise.setup do |config|
   # Any entries here MUST match a corresponding entry in the identifier_schemes table as
   # well as an identifier_schemes.schemes section in each locale file!
   OmniAuth.config.full_host = Rails.application.secrets.omniauth_full_host
-  OmniAuth.config.silence_get_warning = true
 
   config.omniauth :orcid, Rails.application.secrets.orcid_client_id,
                   Rails.application.secrets.orcid_client_secret,
