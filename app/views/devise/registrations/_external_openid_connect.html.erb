@@ -8,8 +8,8 @@
                     'data-toggle': "tooltip", method: :post %>
 <% else %>
 <%# If We do have and id we need to present the option to unlink %>
-<% unlinktext = _("Unlink your account from #{scheme.description}. You can link again at any time.") %>
-<% unlinkconf = _("Are you sure you want to unlink #{scheme.description} ID?") %>
+<% unlinktext = _("Unlink your account from %{scheme_description}. You can link again at any time.") % { scheme_description: scheme.description} %>
+<% unlinkconf = _("Are you sure you want to unlink %{scheme_description} ID?") % { scheme_description: scheme.description } %>
 <%= id.value %>
 <%= link_to '<i class="fas fa-fw fa-circle-xmark" aria-hidden="true"></i>'.html_safe,
                 destroy_user_identifier_path(id),
