@@ -6,6 +6,22 @@
 
  - Implemented openid_connection SSO with CILogon [#872](https://github.com/portagenetwork/roadmap/pull/872)
 
+ - Create GET "/api/ca_dashboard/stats" endpoint to fetch Plan, User, and Org-related statistics [#852](https://github.com/portagenetwork/roadmap/pull/852)
+
+### Changed
+
+ - Update Favicons and Associated HTML Code [#873](https://github.com/portagenetwork/roadmap/pull/873)
+
+ - Drop Sessions Table and Delete `lib/tasks/sessions.rake` [#859](https://github.com/portagenetwork/roadmap/pull/859)
+
+### Fixed
+
+ - Fix triggering and title of autosent email when a user's admin privileges are changed [#858](https://github.com/portagenetwork/roadmap/pull/858)
+
+ - Fix flaky tests / Optimize Checking Of `plan.title` Within `spec/features/plans/exports_spec.rb` [#871](https://github.com/portagenetwork/roadmap/pull/871)
+
+## [4.1.1+portage-4.1.3] - 2024-08-08
+
 ### Changed
 
  - Bump rexml from 3.2.8 to 3.3.3 [#839](https://github.com/portagenetwork/roadmap/pull/839)
