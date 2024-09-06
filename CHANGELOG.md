@@ -4,7 +4,7 @@
 
 ### Added
 
- - Implemented openid_connection SSO with CILogon
+ - Implemented openid_connection SSO with CILogon [#872](https://github.com/portagenetwork/roadmap/pull/872)
 
 ### Changed
 
