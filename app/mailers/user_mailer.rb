@@ -195,7 +195,7 @@ class UserMailer < ActionMailer::Base
 
     I18n.with_locale I18n.locale do
       mail(to: user.email,
-           subject: format(_('Administrator privileges granted in %{tool_name}'),
+           subject: format(_('Administrator privileges updated in %{tool_name}'),
                            tool_name: tool_name))
     end
   end
