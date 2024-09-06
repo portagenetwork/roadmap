@@ -8,8 +8,7 @@ class RegistrationsController < Devise::RegistrationsController
     @user = current_user
     @prefs = @user.get_preferences(:email)
     @languages = Language.sorted_by_abbreviation
-    @orgs = Org.order('name')
-    @other_organisations = Org.where(is_other: true).pluck(:id)
+    @orgs = Org.includes(identifiers: :identifier_scheme).order('name')
     @identifier_schemes = IdentifierScheme.for_users.order(:name)
     @default_org = current_user.org
 
@@ -138,9 +137,8 @@ class RegistrationsController < Devise::RegistrationsController
   def update
     if user_signed_in?
       @prefs = @user.get_preferences(:email)
-      @orgs = Org.order('name')
+      @orgs = Org.includes(identifiers: :identifier_scheme).order('name')
       @default_org = current_user.org
-      @other_organisations = Org.where(is_other: true).pluck(:id)
       @identifier_schemes = IdentifierScheme.for_users.order(:name)
       @languages = Language.sorted_by_abbreviation
       if params[:skip_personal_details] == 'true'
@@ -254,7 +252,7 @@ class RegistrationsController < Devise::RegistrationsController
 
     else
       flash[:alert] = message.blank? ? failure_message(current_user, _('save')) : message
-      @orgs = Org.order('name')
+      @orgs = Org.includes(identifiers: :identifier_scheme).order('name')
       render 'edit'
     end
   end
