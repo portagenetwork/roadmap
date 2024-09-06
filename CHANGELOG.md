@@ -6,7 +6,7 @@
 
  - Implemented openid_connection SSO with CILogon
 
- - Added SSO changes updates to the About and Help pages.
+ - Added SSO changes updates to the About and Help pages. [#822](https://github.com/portagenetwork/roadmap/pull/882)
 
 ### Changed
 
