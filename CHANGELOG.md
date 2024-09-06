@@ -8,7 +8,7 @@
 
  - Create GET "/api/ca_dashboard/stats" endpoint to fetch Plan, User, and Org-related statistics [#852](https://github.com/portagenetwork/roadmap/pull/852)
  
- - Added SSO changes updates to the About and Help pages. [#822](https://github.com/portagenetwork/roadmap/pull/882)
+ - Added SSO changes updates to the About and Help pages. [#882](https://github.com/portagenetwork/roadmap/pull/882)
 
 ### Changed
 
