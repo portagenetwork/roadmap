@@ -22,6 +22,8 @@
 
 ## [4.1.1+portage-4.1.3] - 2024-08-08
 
+ - Added SSO changes updates to the About and Help pages. [#822](https://github.com/portagenetwork/roadmap/pull/882)
+
 ### Changed
 
  - Bump rexml from 3.2.8 to 3.3.3 [#839](https://github.com/portagenetwork/roadmap/pull/839)
