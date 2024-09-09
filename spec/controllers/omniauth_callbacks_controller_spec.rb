@@ -3,8 +3,6 @@ require 'rails_helper'
 
 RSpec.describe Users::OmniauthCallbacksController, type: :controller do
   before do
-    # Enable test mode for OmniAuth
-    OmniAuth.config.test_mode = true
 
     # Setup Devise mapping
     @request.env["devise.mapping"] = Devise.mappings[:user]
@@ -32,7 +30,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
     @request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:openid_connect]
   end
 
-  describe 'GET #openid_connect' do
+  describe 'POST #openid_connect' do
     let(:auth) { request.env['omniauth.auth'] }
     let!(:identifier_scheme) { IdentifierScheme.create(name: auth.provider) }
 
@@ -42,14 +40,15 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         OmniAuth.config.mock_auth[:openid_connect].info.email = nil
         @request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:openid_connect]
       end
-
+    
       it 'redirects to the registration page with a flash message' do
-        get :openid_connect
-
+        post :openid_connect
+    
         expect(response).to redirect_to(new_user_registration_path)
         expect(flash[:notice]).to eq('Something went wrong, Please try signing-up here.')
       end
     end
+    
 
     context 'when the user is not signed in but already exists' do
       # let!(:user) { User.create(email: auth.info.email, password: 'password123') }
@@ -62,7 +61,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
       end
 
       it 'signs in the existing user' do
-        get :openid_connect
+        post :openid_connect
         # expect(subject.current_user).to eq(user)
         expect(response).to redirect_to(root_path)
         expect(flash[:notice]).to be_nil
@@ -84,7 +83,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
 
       it "links identifier to current user, sets flash notice, and redirects to root path" do
         expect {
-          get :openid_connect
+          post :openid_connect
           current_user.reload # Ensure we have the latest state of the user
         }.to change(current_user.identifiers, :count).by(1)
 
@@ -108,7 +107,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
       end
 
       it "sets flash alert and redirects to edit user registration path" do
-        get :openid_connect
+        post :openid_connect
 
         expect(flash[:alert]).to eq(
           "The current #{@identifier_scheme.description} iD has been already linked to a user with email #{different_user.email}"
@@ -128,7 +127,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
 
       it 'handles the error and raises an exception' do
         expect {
-          get :openid_connect
+          post :openid_connect
         }.to raise_error(StandardError, 'Unexpected error')
       end
     end
