@@ -50,6 +50,7 @@ module Users
                                                       identifiable: current_user)
 
         flash[:notice] = _('Linked successfully')
+
         redirect_to root_path
       elsif user.id != current_user.id
         # If a user was found but does NOT match the current user then the identifier has
@@ -126,7 +127,7 @@ module Users
           # If a user was found but does NOT match the current user then the identifier has
           # already been attached to another account (likely the user has 2 accounts)
           # rubocop:disable Layout/LineLength
-          flash[:alert] = _("The current #{scheme.description} iD has been already linked to a user with email #{identifier.user.email}")
+          flash[:alert] = format(_('The current %{scheme_description} iD has been already linked to a user with email %{identifier_user_email}'), scheme_description: scheme.description, identifier_user_email: identifier.user.email)
           # rubocop:enable Layout/LineLength
         end
 
