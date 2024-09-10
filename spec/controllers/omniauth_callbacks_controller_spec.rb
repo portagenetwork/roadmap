@@ -19,7 +19,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
       provider: 'openid_connect',
       uid: '12345',
       info: {
-        email: 'test@example.com',
+        email: 'user@organization.ca',
         first_name: 'Test',
         last_name: 'User',
         name: 'Test User'
@@ -29,6 +29,15 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
     # Assign the mocked authentication hash to the request environment
     @request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:openid_connect]
   end
+
+
+  after do
+    # Reset the `from_omniauth` method after each test
+    User.define_singleton_method(:from_omniauth) do |auth|
+      User.find_by(email: auth.info.email)
+    end
+  end
+
 
   describe 'POST #openid_connect' do
     let(:auth) { request.env['omniauth.auth'] }
@@ -52,11 +61,12 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
 
     context 'when the user is not signed in but already exists' do
       # let!(:user) { User.create(email: auth.info.email, password: 'password123') }
-      let!(:user) { User.create(email: 'test@example.com', firstname: 'Test', surname: 'User',  org: @org) }
+      let!(:user) { User.create(email: 'user@organization.ca', firstname: 'Test', surname: 'User',  org: @org) }
+      
 
       before do
         def User.from_omniauth(_auth)
-          User.find_by(email: 'test@example.com')
+          User.find_by(email: 'user@organization.ca')
         end
       end
 
@@ -69,7 +79,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
     end
 
     context 'when the user is signed in and needs to link their OpenID Connect account' do
-      let!(:user) {  User.create(email: 'test@example.com', firstname: 'Test', surname: 'User',  org: @org) }
+      let!(:user) {  User.create(email: 'user@organization.ca', firstname: 'Test', surname: 'User',  org: @org) }
       let(:current_user) { create(:user) }
 
       before do
