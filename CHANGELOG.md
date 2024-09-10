@@ -22,6 +22,8 @@
 
  - Fix flaky tests / Optimize Checking Of `plan.title` Within `spec/features/plans/exports_spec.rb` [#871](https://github.com/portagenetwork/roadmap/pull/871)
 
+ - Patch to Put Back ORCID Linking Functionality [#891](https://github.com/portagenetwork/roadmap/pull/891)
+
 ## [4.1.1+portage-4.1.3] - 2024-08-08
 
 ### Changed
