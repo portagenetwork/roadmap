@@ -67,6 +67,16 @@
   <% end %>
 
   <div class="form-group col-xs-8">
+    <% scheme = IdentifierScheme.find_by(name: 'orcid')%> 
+    <%= label_tag(:scheme_name, 'ORCID', class: 'control-label') %>
+    <div class='identifier-scheme'>
+        <%= render partial: "external_identifier",
+                   locals: { scheme: scheme,
+                             id: current_user.identifier_for(scheme.name)} %>
+    </div>
+  </div>
+
+  <div class="form-group col-xs-8">
         <label class='control-label'>
           <span class="aria-only" aria-hidden="false"><%= _('Institutional credentials') %></span>
         </label>
