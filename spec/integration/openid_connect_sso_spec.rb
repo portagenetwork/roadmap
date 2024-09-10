@@ -13,6 +13,13 @@ RSpec.describe 'Openid_connection SSO', type: :feature do
                                   active: true,
                                   identifier_prefix: 'https://www.cilogon.org/')
 
+      # Adding this identifier scheme as it is needed in view but we are not testing for it
+      create(:identifier_scheme,
+             name: 'orcid',
+             description: 'ORCID',
+             active: true,
+             identifier_prefix: 'https://orcid.org/')
+
       Rails.application.env_config['devise.mapping'] = Devise.mappings[:user]
       Rails.application.env_config['omniauth.auth'] = OmniAuth.config.mock_auth[:openid_connect]
     end
