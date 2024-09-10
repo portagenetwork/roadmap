@@ -55,8 +55,8 @@ module Users
       elsif user.id != current_user.id
         # If a user was found but does NOT match the current user then the identifier has
         # already been attached to another account (likely the user has 2 accounts)
-        flash[:alert] = format(_("The current %{description} iD has been already linked to a user with email %{email}"),
-                         description: identifier_scheme.description, email: user.email)
+        flash[:alert] = format(_('The current %{description} iD has been already linked to a user with email %{email}'),
+                               description: identifier_scheme.description, email: user.email)
         redirect_to edit_user_registration_path
       end
     end

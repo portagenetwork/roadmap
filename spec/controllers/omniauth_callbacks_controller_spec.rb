@@ -1,11 +1,11 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Users::OmniauthCallbacksController, type: :controller do
   before do
-
     # Setup Devise mapping
-    @request.env["devise.mapping"] = Devise.mappings[:user]
+    @request.env['devise.mapping'] = Devise.mappings[:user]
     create(:org, managed: false, is_other: true)
     @org = create(:org, managed: true)
     @identifier_scheme = create(:identifier_scheme,
@@ -16,20 +16,19 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
 
     # Mock OmniAuth data for OpenID Connect with necessary info
     OmniAuth.config.mock_auth[:openid_connect] = OmniAuth::AuthHash.new({
-      provider: 'openid_connect',
-      uid: '12345',
-      info: {
-        email: 'user@organization.ca',
-        first_name: 'Test',
-        last_name: 'User',
-        name: 'Test User'
-      }
-    })
+                                                                          provider: 'openid_connect',
+                                                                          uid: '12345',
+                                                                          info: {
+                                                                            email: 'user@organization.ca',
+                                                                            first_name: 'Test',
+                                                                            last_name: 'User',
+                                                                            name: 'Test User'
+                                                                          }
+                                                                        })
 
     # Assign the mocked authentication hash to the request environment
-    @request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:openid_connect]
+    @request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:openid_connect]
   end
-
 
   after do
     # Reset the `from_omniauth` method after each test
@@ -37,7 +36,6 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
       User.find_by(email: auth.info.email)
     end
   end
-
 
   describe 'POST #openid_connect' do
     let(:auth) { request.env['omniauth.auth'] }
@@ -47,22 +45,20 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
       before do
         # Simulate missing email
         OmniAuth.config.mock_auth[:openid_connect].info.email = nil
-        @request.env["omniauth.auth"] = OmniAuth.config.mock_auth[:openid_connect]
+        @request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:openid_connect]
       end
-    
+
       it 'redirects to the registration page with a flash message' do
         post :openid_connect
-    
+
         expect(response).to redirect_to(new_user_registration_path)
         expect(flash[:notice]).to eq('Something went wrong, Please try signing-up here.')
       end
     end
-    
 
     context 'when the user is not signed in but already exists' do
       # let!(:user) { User.create(email: auth.info.email, password: 'password123') }
-      let!(:user) { User.create(email: 'user@organization.ca', firstname: 'Test', surname: 'User',  org: @org) }
-      
+      let!(:user) { User.create(email: 'user@organization.ca', firstname: 'Test', surname: 'User', org: @org) }
 
       before do
         def User.from_omniauth(_auth)
@@ -79,7 +75,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
     end
 
     context 'when the user is signed in and needs to link their OpenID Connect account' do
-      let!(:user) {  User.create(email: 'user@organization.ca', firstname: 'Test', surname: 'User',  org: @org) }
+      let!(:user) { User.create(email: 'user@organization.ca', firstname: 'Test', surname: 'User', org: @org) }
       let(:current_user) { create(:user) }
 
       before do
@@ -91,11 +87,11 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         # end
       end
 
-      it "links identifier to current user, sets flash notice, and redirects to root path" do
-        expect {
+      it 'links identifier to current user, sets flash notice, and redirects to root path' do
+        expect do
           post :openid_connect
           current_user.reload # Ensure we have the latest state of the user
-        }.to change(current_user.identifiers, :count).by(1)
+        end.to change(current_user.identifiers, :count).by(1)
 
         expect(flash[:notice]).to eq('Linked successfully')
         expect(response).to redirect_to(root_path)
@@ -104,8 +100,10 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
 
     context 'when the user found via omniauth is different from the current_user' do
       let(:current_user) { create(:user) }
-      let!(:different_user) { create(:user, email: 'different_user@example.com') } # Ensure different_user is created before test runs
-
+      # Ensure different_user is created before test runs
+      let!(:different_user) do
+        create(:user, email: 'different_user@example.com')
+      end
       before do
         sign_in current_user
 
@@ -116,29 +114,28 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         end
       end
 
-      it "sets flash alert and redirects to edit user registration path" do
+      it 'sets flash alert and redirects to edit user registration path' do
         post :openid_connect
 
         expect(flash[:alert]).to eq(
-          "The current #{@identifier_scheme.description} iD has been already linked to a user with email #{different_user.email}"
+          "The current #{@identifier_scheme.description} iD has been already linked " \
+          "to a user with email #{different_user.email}"
         )
         expect(response).to redirect_to(edit_user_registration_path)
       end
     end
 
-    
-
     context 'when an unknown error occurs' do
       before do
         def User.from_omniauth(_auth)
-          raise StandardError.new('Unexpected error')
+          raise StandardError, 'Unexpected error'
         end
       end
 
       it 'handles the error and raises an exception' do
-        expect {
+        expect do
           post :openid_connect
-        }.to raise_error(StandardError, 'Unexpected error')
+        end.to raise_error(StandardError, 'Unexpected error')
       end
     end
   end
