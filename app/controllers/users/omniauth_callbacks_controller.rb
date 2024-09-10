@@ -3,15 +3,6 @@
 module Users
   # Controller that handles callbacks from OmniAuth integrations (e.g. Shibboleth and ORCID)
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
-    ##
-    # Dynamically build a handler for each omniauth provider
-    # -------------------------------------------------------------
-    IdentifierScheme.for_authentication.each do |scheme|
-      define_method(scheme.name.downcase) do
-        handle_omniauth(scheme)
-      end
-    end
-
     # This is for the OpenidConnect CILogon
 
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
