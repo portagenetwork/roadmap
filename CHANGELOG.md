@@ -4,7 +4,6 @@
 
 ### Added
 
-<<<<<<< HEAD
  - Test cases for CILogon(openid_connection) changes in Omniauth controller - [#869](https://github.com/portagenetwork/roadmap/pull/869/)
 
  - Implemented openid_connection SSO with CILogon [#872](https://github.com/portagenetwork/roadmap/pull/872)
