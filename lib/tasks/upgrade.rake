@@ -6,6 +6,21 @@ require 'set'
 
 # rubocop:disable Naming/VariableNumber
 namespace :upgrade do
+  desc 'Upgrade to DMP Assistant 4.1.1+portage-4.2.0'
+  task dmp_assistant_v4_2_0: :environment do
+    p 'Executing upgrade tasks for DMP Assistant 4.1.1+portage-4.2.0'
+    p '------------------------------------------------------------------------'
+    p 'Adding/updating the openid_connect entry in the identifier_schemes table'
+    p '------------------------------------------------------------------------'
+    Rake::Task['upgrade:add_openid_connect_identifier_scheme'].execute
+    p '------------------------------------------------------------------------'
+    p 'DMP Assistant 4.1.1+portage-4.2.0 includes a migration to drop the sessions table'
+    p 'Executing db:migrate'
+    p '------------------------------------------------------------------------'
+    Rake::Task['db:migrate'].execute
+    p 'Upgrade tasks completed for DMP Assistant 4.1.1+portage-4.2.0'
+  end
+
   desc 'upgrade to Rails 5, rename task after naming release'
   task v2_3_0: :environment do
     Rake::Task['upgrade:column_defaults'].execute
@@ -745,6 +760,24 @@ namespace :upgrade do
           end
         end
       end
+    end
+  end
+
+  # -------------------------------------------------
+  # TASKS FOR DMP ASSISTANT 4.1.1+portage-4.2.0
+  desc 'add openid_connect identifier scheme'
+  task add_openid_connect_identifier_scheme: :environment do
+    openid = IdentifierScheme.find_or_initialize_by(name: 'openid_connect')
+    openid.description = 'CILogon'
+    openid.active = true
+    openid.context = 1 # equivalent to `openid.for_authentication = true`
+    openid.identifier_prefix = 'http://cilogon.org/serverE/users/'
+    if openid.save
+      puts 'Successfully added/updated the following identifier_schemes entry:'
+      # Output the attribute values for verification
+      puts IdentifierScheme.find_by(name: 'openid_connect').attributes
+    else
+      puts "Failed to add/update the openid_connect entry: #{openid.errors.full_messages.join(', ')}"
     end
   end
 

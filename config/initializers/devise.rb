@@ -20,6 +20,7 @@ Devise.setup do |config|
   # :mongoid (bson_ext recommended) by default. Other ORMs may be
   # available as additional gems.
   require 'devise/orm/active_record'
+  require 'omniauth_openid_connect'
 
   # ==> Configuration for any authentication mechanism
   # Configure which keys are used when authenticating a user. The default is
@@ -280,6 +281,23 @@ Devise.setup do |config|
                     extra_fields: []
                   }
 
+  config.omniauth :openid_connect, {
+    name: :openid_connect,
+    scope: %i[openid email profile],
+    response_type: :code,
+    issuer: "https://cilogon.org",
+    discovery: true,
+    client_options: {
+      uid_field: "sub",
+      port: 443,
+      scheme: "https",
+      host: "cilogon.org",
+      identifier: Rails.application.secrets.cilogon_client_id,
+      secret: Rails.application.secrets.cilogon_secret_key,
+      redirect_uri: "#{Rails.application.secrets.omniauth_full_host}/users/auth/openid_connect/callback"
+    }
+  }
+
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.
@@ -288,7 +306,6 @@ Devise.setup do |config|
   #   manager.intercept_401 = false
   #   manager.default_strategies(:scope => :user).unshift :some_external_strategy
   # end
-
   # ==> Mountable engine configurations
   # When using Devise inside an engine, let's call it `MyEngine`, and this engine
   # is mountable, there are some extra configurations to be taken into account.

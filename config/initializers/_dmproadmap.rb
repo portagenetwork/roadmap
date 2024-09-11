@@ -150,6 +150,26 @@ module DMPRoadmap
     # A super admin will also be able to associate orgs with their shibboleth entityIds if this is set to true
     config.x.shibboleth.use_filtered_discovery_service = false
 
+    # ------------------- #
+    # OPENID_CONNECT/CILOGON SETTINGS #
+    # ------------------- #
+
+    # Enable CILogon as an alternative authentication method
+    # Requires server configuration and omniauth openid_connect provider configuration
+    # See config/initializers/devise.rb
+    config.x.openid_connect.enabled = true
+
+    # # Relative path to CILogon SSO Logouts
+    # config.x.openid_connect.login_url = 'https://cilogon.org/authorization'
+    # config.x.cilogon.logout_url = '/users/sign_out'
+
+    # If this value is set to true your users will be presented with a list of orgs that have a
+    # CILogon identifier in the orgs_identifiers table. If it is set to false (default), the user
+    # will be driven out to your federation's discovery service
+    #
+    # A super admin will also be able to associate orgs with their CILogon entityIds if this is set to true
+    config.x.openid_connect.use_filtered_discovery_service = true
+
     # ------- #
     # LOCALES #
     # ------- #

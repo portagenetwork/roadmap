@@ -6,7 +6,7 @@
 
 <div class="row">
   <div id="dual_columns" class="container" style="display:table">
-    <% unless session["devise.shibboleth_data"].nil? %>
+    <% if session["devise.shibboleth_data"].present? %>
         <% cookies[:show_shib_link] = { value: 'show_shib_link',
                                         expires: 3.hours.from_now } %>
 
@@ -52,6 +52,8 @@
             </p>
           </div>
         </div>
+        
+    <% #elsif session["devise.openid_connect_data"].present? ?%>
     <% else %>
       <div>
         <h2>
