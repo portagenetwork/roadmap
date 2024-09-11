@@ -15,7 +15,7 @@ module Users
         # If email is missing we need to request the user to register with DMP.
         # User email can be missing if the usFFvate or trusted clients only we won't get the value.
         # User email id is one of the mandatory field which is must required.
-        flash[:notice] = _('Something went wrong, Please try signing-up here.')
+        flash[:notice] = _('Something went wrong, Please try signing up here.')
         redirect_to new_user_registration_path
         return
       end

@@ -52,7 +52,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         post :openid_connect
 
         expect(response).to redirect_to(new_user_registration_path)
-        expect(flash[:notice]).to eq('Something went wrong, Please try signing-up here.')
+        expect(flash[:notice]).to eq('Something went wrong, Please try signing up here.')
       end
     end
 
