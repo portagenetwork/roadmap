@@ -62,10 +62,6 @@ class IdentifierScheme < ApplicationRecord
   #    { "ror": "12345" }
   # so we cannot allow spaces or non alpha characters!
   def name=(value)
-    super(value&.downcase&.gsub(/[^a-z]/, ''))
+    super(value&.downcase&.gsub(/[^a-z|_]/, ''))
   end
-
-  # ===========================
-  # = Instance Methods =
-  # ===========================
 end

@@ -68,6 +68,12 @@ identifier_schemes = [
     logo_url: 'http://newsite.shibboleth.net/wp-content/uploads/2017/01/Shibboleth-logo_2000x1200-1.png',
     identifier_prefix: "https://example.com"
   },
+  {
+    name: "openid_connect",
+    description: "CILogon",
+    active: true,
+    identifier_prefix: "https://www.cilogon.org/",
+  },
 ]
 identifier_schemes.each { |is| IdentifierScheme.create!(is) }
 
@@ -249,7 +255,13 @@ orgs = [
    abbreviation: 'UOS',
    org_type: 1, links: {"org":[]},
    language: default_language, region: region,
-   is_other: false, managed: true}
+   is_other: false, managed: true},
+   {name: 'Other organisation',
+   abbreviation: 'OO',
+   org_type: 1, links: {"org":[]},
+   language: default_language, region: region,
+   is_other: true, managed: true}
+
 ]
 orgs.each { |o| Org.create!(o) }
 

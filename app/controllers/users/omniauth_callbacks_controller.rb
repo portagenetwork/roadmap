@@ -3,13 +3,62 @@
 module Users
   # Controller that handles callbacks from OmniAuth integrations (e.g. Shibboleth and ORCID)
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
-    ##
-    # Dynamically build a handler for each omniauth provider
-    # -------------------------------------------------------------
-    IdentifierScheme.for_authentication.each do |scheme|
-      define_method(scheme.name.downcase) do
-        handle_omniauth(scheme)
+    # This is for the OpenidConnect CILogon
+
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    def openid_connect
+      # First or create
+      auth = request.env['omniauth.auth']
+      user = User.from_omniauth(auth)
+
+      if auth.info.email.nil? && user.nil?
+        # If email is missing we need to request the user to register with DMP.
+        # User email can be missing if the usFFvate or trusted clients only we won't get the value.
+        # User email id is one of the mandatory field which is must required.
+        flash[:notice] = _('Something went wrong, Please try signing up here.')
+        redirect_to new_user_registration_path
+        return
       end
+
+      identifier_scheme = IdentifierScheme.find_by(name: auth.provider)
+
+      if current_user.nil?
+        # We need to register
+        if user.nil?
+          # Register and sign in
+          user = User.create_from_provider_data(auth)
+          user.identifiers << Identifier.create(identifier_scheme: identifier_scheme,
+                                                value: auth.uid,
+                                                attrs: auth,
+                                                identifiable: user)
+        end
+        sign_in_and_redirect user, event: :authentication
+      elsif user.nil?
+        # we need to link
+        current_user.identifiers << Identifier.create(identifier_scheme: identifier_scheme,
+                                                      value: auth.uid,
+                                                      attrs: auth,
+                                                      identifiable: current_user)
+
+        flash[:notice] = _('Linked successfully')
+
+        redirect_to root_path
+      elsif user.id != current_user.id
+        # If a user was found but does NOT match the current user then the identifier has
+        # already been attached to another account (likely the user has 2 accounts)
+        flash[:alert] = format(_('The current %{description} iD has been already linked to a user with email %{email}'),
+                               description: identifier_scheme.description, email: user.email)
+        redirect_to edit_user_registration_path
+      end
+    end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+
+    def orcid
+      handle_omniauth(IdentifierScheme.for_authentication.find_by(name: 'orcid'))
+    end
+
+    def shibboleth
+      handle_omniauth(IdentifierScheme.for_authentication.find_by(name: 'shibboleth'))
     end
 
     # Processes callbacks from an omniauth provider and directs the user to
@@ -35,6 +84,7 @@ module Users
         # If the uid didn't have a match in the system send them to register
         if user.nil?
           session["devise.#{scheme.name.downcase}_data"] = request.env['omniauth.auth']
+
           redirect_to new_user_registration_url
 
         # Otherwise sign them in
@@ -68,7 +118,7 @@ module Users
           # If a user was found but does NOT match the current user then the identifier has
           # already been attached to another account (likely the user has 2 accounts)
           # rubocop:disable Layout/LineLength
-          flash[:alert] = _("The current #{scheme.description} iD has been already linked to a user with email #{identifier.user.email}")
+          flash[:alert] = format(_('The current %{scheme_description} iD has been already linked to a user with email %{identifier_user_email}'), scheme_description: scheme.description, identifier_user_email: identifier.user.email)
           # rubocop:enable Layout/LineLength
         end
 
@@ -76,6 +126,7 @@ module Users
         redirect_to edit_user_registration_path
       end
     end
+
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
     # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 

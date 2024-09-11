@@ -151,6 +151,7 @@ class OrgsController < ApplicationController
 
     end
   end
+
   # rubocop:enable Metrics/AbcSize
 
   # POST /orgs  (via AJAX from Org Typeaheads ... see below for specific pages)
