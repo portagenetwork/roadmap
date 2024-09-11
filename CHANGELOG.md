@@ -4,6 +4,8 @@
 
 ### Added
 
+ - Add Rake Upgrade Task For `4.1.1+portage-4.2.0` [#892](https://github.com/portagenetwork/roadmap/pull/892)
+
  - Test cases for CILogon(openid_connection) changes in Omniauth controller - [#869](https://github.com/portagenetwork/roadmap/pull/869/)
 
  - Implemented openid_connection SSO with CILogon [#872](https://github.com/portagenetwork/roadmap/pull/872)
