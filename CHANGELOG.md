@@ -22,6 +22,8 @@
 
  - Optimise Load Time of "Edit Profile" Page [#883](https://github.com/portagenetwork/roadmap/pull/883)
 
+ - Update ruby workflow command for executing tests [#896](https://github.com/portagenetwork/roadmap/pull/896)
+
 ### Fixed
 
  - Fix triggering and title of autosent email when a user's admin privileges are changed [#858](https://github.com/portagenetwork/roadmap/pull/858)
