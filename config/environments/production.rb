@@ -2,6 +2,7 @@
 
 require 'syslog/logger'
 
+# rubocop:disable Metrics/BlockLength
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -102,5 +103,6 @@ Rails.application.configure do
     config.hosts << host
   end
 end
+# rubocop:enable Metrics/BlockLength
 # Used by Rails' routes url_helpers (typically when including a link in an email)
 Rails.application.routes.default_url_options[:host] = Rails.application.secrets.dmproadmap_host
