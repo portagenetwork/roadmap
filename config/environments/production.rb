@@ -96,7 +96,11 @@ Rails.application.configure do
   # This allows us to define the hostname and add it to the whitelist. If you attempt
   # to access the site and receive a 'Blocked host' error then you will need to
   # set this environment variable
-  config.hosts << Rails.application.secrets.dmproadmap_host if Rails.application.secrets.dmproadmap_host.present?
+  # Convert comma-separated string to array
+  dmproadmap_hosts = Rails.application.secrets.dmproadmap_host.to_s.split(',').map(&:strip)
+  dmproadmap_hosts.each do |host|
+    config.hosts << host
+  end
 end
 # Used by Rails' routes url_helpers (typically when including a link in an email)
 Rails.application.routes.default_url_options[:host] = Rails.application.secrets.dmproadmap_host
