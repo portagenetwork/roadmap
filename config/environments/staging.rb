@@ -88,6 +88,10 @@ Rails.application.configure do
     authentication: Rails.application.secrets.smtp_authentication || 'plain',
     enable_starttls_auto: true
   }
-  config.hosts << Rails.application.secrets.dmproadmap_host if Rails.application.secrets.dmproadmap_host.present?
+  # Convert comma-separated string to array
+  dmproadmap_hosts = Rails.application.secrets.dmproadmap_host.to_s.split(',').map(&:strip)
+  dmproadmap_hosts.each do |host|
+    config.hosts << host
+  end
 end
 Rails.application.routes.default_url_options[:host] = Rails.application.secrets.dmproadmap_host
