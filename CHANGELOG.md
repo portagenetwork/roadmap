@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.1.1+portage-4.2.1] - 2024-09-12
+
+### Changed
+
+ - Patch to allow multiple hosts when setting config of some environments [#899](https://github.com/portagenetwork/roadmap/pull/899)
+
 ## [4.1.1+portage-4.2.0] - 2024-09-11
 
 ### Added
