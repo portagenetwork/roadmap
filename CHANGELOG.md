@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+ - Modified the way the users are created on SSO sign in [portagenetwork/roadmap#900](https://github.com/portagenetwork/roadmap/issues/900)
+
 ## [4.1.1+portage-4.2.1] - 2024-09-12
 
 ### Changed
