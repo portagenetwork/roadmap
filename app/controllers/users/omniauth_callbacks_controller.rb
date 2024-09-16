@@ -5,7 +5,7 @@ module Users
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     # This is for the OpenidConnect CILogon
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def openid_connect
       # First or create
       auth = request.env['omniauth.auth']
@@ -59,7 +59,7 @@ module Users
         redirect_to edit_user_registration_path
       end
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
     def orcid
       handle_omniauth(IdentifierScheme.for_authentication.find_by(name: 'orcid'))
