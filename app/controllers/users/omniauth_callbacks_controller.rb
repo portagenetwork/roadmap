@@ -22,9 +22,8 @@ module Users
 
       identifier_scheme = IdentifierScheme.find_by(name: auth.provider)
 
-      if current_user.nil?
-        # We need to register
-        if user.nil?
+      if current_user.nil? # if user is not signed in (They clicked the SSO sign in button)
+        if user.nil? # If an entry does not exist in the identifiers table for the chosen SSO account
           # Register and sign in
           user = User.create_from_provider_data(auth)
           user.identifiers << Identifier.create(identifier_scheme: identifier_scheme,
