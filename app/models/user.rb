@@ -188,7 +188,7 @@ class User < ApplicationRecord
   def self.create_from_provider_data(provider_data)
     user = User.find_by email: provider_data.info.email
 
-    return user if user
+    return if user
 
     User.create!(
       firstname: provider_data.info&.first_name.present? ? provider_data.info.first_name : _('First name'),

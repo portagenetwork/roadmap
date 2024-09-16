@@ -24,8 +24,17 @@ module Users
 
       if current_user.nil? # if user is not signed in (They clicked the SSO sign in button)
         if user.nil? # If an entry does not exist in the identifiers table for the chosen SSO account
-          # Register and sign in
           user = User.create_from_provider_data(auth)
+          if user.nil? # if a user was NOT created (a match was found for User.find_by(email: auth.info.email)
+            # Do not link SSO credentials for the signed out, existing user
+            flash[:alert] = _('The email you selected has not yet been linked to an existing account.<br>' \
+                              "Please sign in via the 'Sign in' button and navigate to the " \
+                              "'Edit Profile' section of DMP Assistant.<br>" \
+                              'From there you can link an email and enable single sign on access.<br>')
+            redirect_to root_path
+            return
+          end
+          # A new user was created, link the SSO credentials (we can do this for a newly created user)
           user.identifiers << Identifier.create(identifier_scheme: identifier_scheme,
                                                 value: auth.uid,
                                                 attrs: auth,
