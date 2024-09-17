@@ -27,10 +27,9 @@ module Users
           user = User.create_from_provider_data(auth)
           if user.nil? # if a user was NOT created (a match was found for User.find_by(email: auth.info.email)
             # Do not link SSO credentials for the signed out, existing user
-            flash[:alert] = _('The email you selected has not yet been linked to an existing account.<br>' \
-                              "Please sign in via the 'Sign in' button and navigate to the " \
-                              "'Edit Profile' section of DMP Assistant.<br>" \
-                              'From there you can link an email and enable single sign on access.<br>')
+            flash[:alert] = _('That email appears to be associated with an existing account.<br>' \
+                              'Sign into your existing account, and you can link that ' \
+                              "account with SSO from the 'Edit Profile' page.")
             redirect_to root_path
             return
           end
