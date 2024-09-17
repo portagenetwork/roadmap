@@ -26,7 +26,7 @@ RSpec.describe 'Openid_connection SSO', type: :feature do
 
     it 'creates account from external credentials' do
       visit root_path
-      click_link 'Sign in with CILogon'
+      click_link 'Sign in with institutional or social ID'
 
       identifier = Identifier.last
       expect(identifier.value).to eql('https://www.cilogon.org/12345')
