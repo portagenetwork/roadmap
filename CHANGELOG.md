@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+ - Update Handling of SSO Linking [#907](https://github.com/portagenetwork/roadmap/pull/907)
+
 ## [4.1.1+portage-4.2.1] - 2024-09-12
 
 ### Changed
