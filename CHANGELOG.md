@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+ - Updated SSO button string [portagenetwork/roadmap#903](https://github.com/portagenetwork/roadmap/issues/903)
+
 ## [4.1.1+portage-4.2.1] - 2024-09-12
 
 ### Changed
