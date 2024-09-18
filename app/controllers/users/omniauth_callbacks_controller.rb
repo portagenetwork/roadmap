@@ -5,7 +5,7 @@ module Users
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     # This is for the OpenidConnect CILogon
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def openid_connect
       # First or create
       auth = request.env['omniauth.auth']
@@ -22,11 +22,18 @@ module Users
 
       identifier_scheme = IdentifierScheme.find_by(name: auth.provider)
 
-      if current_user.nil?
-        # We need to register
-        if user.nil?
-          # Register and sign in
+      if current_user.nil? # if user is not signed in (They clicked the SSO sign in button)
+        if user.nil? # If an entry does not exist in the identifiers table for the chosen SSO account
           user = User.create_from_provider_data(auth)
+          if user.nil? # if a user was NOT created (a match was found for User.find_by(email: auth.info.email)
+            # Do not link SSO credentials for the signed out, existing user
+            flash[:alert] = _('That email appears to be associated with an existing account.<br>' \
+                              'Sign into your existing account, and you can link that ' \
+                              "account with SSO from the 'Edit Profile' page.")
+            redirect_to root_path
+            return
+          end
+          # A new user was created, link the SSO credentials (we can do this for a newly created user)
           user.identifiers << Identifier.create(identifier_scheme: identifier_scheme,
                                                 value: auth.uid,
                                                 attrs: auth,
@@ -51,7 +58,7 @@ module Users
         redirect_to edit_user_registration_path
       end
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
     def orcid
       handle_omniauth(IdentifierScheme.for_authentication.find_by(name: 'orcid'))
