@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_08_20_190548) do
+ActiveRecord::Schema.define(version: 2024_09_19_191444) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -824,6 +824,7 @@ ActiveRecord::Schema.define(version: 2024_08_20_190548) do
     t.boolean "active", default: true
     t.integer "department_id"
     t.datetime "last_api_access"
+    t.string "unconfirmed_email"
     t.index ["department_id"], name: "fk_rails_f29bf9cdf2"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["language_id"], name: "fk_rails_45f4f12508"
