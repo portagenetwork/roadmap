@@ -17,6 +17,7 @@ public/javascripts/*
 public/stylesheets/*
 public/system/*
 public/videos/*
+public/tinymce/skins/*
 
 # Ignore PO/POT backups
 *.po.bak
