@@ -186,11 +186,11 @@ class User < ApplicationRecord
   # Handle user creation from provider
   # rubocop:disable Metrics/AbcSize
   def self.create_from_provider_data(provider_data)
-    user = User.find_by email: provider_data.info.email
+    user = User.find_or_initialize_by(email: provider_data.info.email)
 
-    return user if user
+    return unless user.new_record?
 
-    User.create!(
+    user.update!(
       firstname: provider_data.info&.first_name.present? ? provider_data.info.first_name : _('First name'),
       surname: provider_data.info&.last_name.present? ? provider_data.info.last_name : _('Last name'),
       email: provider_data.info.email,
@@ -199,6 +199,7 @@ class User < ApplicationRecord
       accept_terms: true,
       password: Devise.friendly_token[0, 20]
     )
+    user
   end
   # rubocop:enable Metrics/AbcSize
 
