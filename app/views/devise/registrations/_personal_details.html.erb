@@ -8,7 +8,7 @@
 
   <div class="form-group col-xs-8">
     <%= f.label(:email, _('Email'), class: 'control-label') %>
-    <%= f.email_field(:email, class: "form-control", "aria-required": true, value: @user.email) %>
+    <%= f.email_field(:email, class: "form-control", "aria-required": true, value: @user.email, "disabled": true) %>
     <%= hidden_field_tag :original_email, @user.email %>
   </div>
 
