@@ -72,7 +72,7 @@ identifier_schemes = [
     name: "openid_connect",
     description: "CILogon",
     active: true,
-    identifier_prefix: "https://www.cilogon.org/",
+    identifier_prefix: "",
   },
 ]
 identifier_schemes.each { |is| IdentifierScheme.create!(is) }

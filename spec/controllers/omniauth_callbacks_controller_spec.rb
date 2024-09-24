@@ -12,12 +12,12 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
                                 name: 'openid_connect',
                                 description: 'CILogon',
                                 active: true,
-                                identifier_prefix: 'https://www.cilogon.org/')
+                                identifier_prefix: '')
 
     # Mock OmniAuth data for OpenID Connect with necessary info
     OmniAuth.config.mock_auth[:openid_connect] = OmniAuth::AuthHash.new({
                                                                           provider: 'openid_connect',
-                                                                          uid: '12345',
+                                                                          uid: 'https://www.cilogon.org/12345',
                                                                           info: {
                                                                             email: 'user@organization.ca',
                                                                             first_name: 'Test',
