@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fix
+
+ - Clean up database entries for CILogon [portagenetwork/roadmap#912](https://github.com/portagenetwork/roadmap/issues/912)
+
 ## [4.1.1+portage-4.2.2] - 2024-09-18
 
 ### Changed

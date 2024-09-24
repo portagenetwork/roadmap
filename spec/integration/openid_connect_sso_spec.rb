@@ -11,7 +11,7 @@ RSpec.describe 'Openid_connection SSO', type: :feature do
                                   name: 'openid_connect',
                                   description: 'CILogon',
                                   active: true,
-                                  identifier_prefix: 'https://www.cilogon.org/')
+                                  identifier_prefix: '')
 
       # Adding this identifier scheme as it is needed in view but we are not testing for it
       create(:identifier_scheme,
@@ -45,7 +45,7 @@ RSpec.describe 'Openid_connection SSO', type: :feature do
                                        surname: 'DMP Lastname')
       expect(user.identifiers.count).to eql(0)
       visit root_path
-      click_link 'Sign in with CILogon'
+      click_link 'Sign in with institutional or social ID'
       error_message = 'That email appears to be associated with an existing account'
       expect(page).to have_content(error_message)
       expect(user.identifiers.count).to eql(0)
