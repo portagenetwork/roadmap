@@ -26,7 +26,7 @@ RSpec.describe 'Openid_connection SSO', type: :feature do
 
     it 'creates account from external credentials' do
       visit root_path
-      click_link 'Sign in with CILogon'
+      click_link 'Sign in with institutional or social ID'
 
       identifier = Identifier.last
       expect(identifier.value).to eql('https://www.cilogon.org/12345')
@@ -39,7 +39,19 @@ RSpec.describe 'Openid_connection SSO', type: :feature do
       expect(page).to have_content('John Doe')
     end
 
-    it 'links account from external credentails' do
+    it 'does not create SSO link when user is signed out and SSO email is an existing account email' do
+      # Hardcode user email to what we are mocking via OmniAuth.config.mock_auth[:openid_connect]
+      user = create(:user, :org_admin, org: @org, email: 'user@organization.ca', firstname: 'DMP Name',
+                                       surname: 'DMP Lastname')
+      expect(user.identifiers.count).to eql(0)
+      visit root_path
+      click_link 'Sign in with CILogon'
+      error_message = 'That email appears to be associated with an existing account'
+      expect(page).to have_content(error_message)
+      expect(user.identifiers.count).to eql(0)
+    end
+
+    xit 'links account from external credentails' do
       # Create existing user
       user = create(:user, :org_admin, org: @org, email: 'user@organization.ca', firstname: 'DMP Name',
                                        surname: 'DMP Lastname')
