@@ -15,16 +15,18 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
                                 identifier_prefix: 'https://www.cilogon.org/')
 
     # Mock OmniAuth data for OpenID Connect with necessary info
-    OmniAuth.config.mock_auth[:openid_connect] = OmniAuth::AuthHash.new({
-                                                                          provider: 'openid_connect',
-                                                                          uid: '12345',
-                                                                          info: {
-                                                                            email: 'user@organization.ca',
-                                                                            first_name: 'Test',
-                                                                            last_name: 'User',
-                                                                            name: 'Test User'
-                                                                          }
-                                                                        })
+    OmniAuth.config.mock_auth[:openid_connect] = OmniAuth::AuthHash.new(
+      {
+        provider: 'openid_connect',
+        uid: '12345',
+        info: {
+          email: 'user@organization.ca',
+          first_name: 'Test',
+          last_name: 'User',
+          name: 'Test User'
+        }
+      }
+    )
 
     # Assign the mocked authentication hash to the request environment
     @request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:openid_connect]
@@ -57,7 +59,6 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
     end
 
     context 'when the user is not signed in but already exists' do
-      # let!(:user) { User.create(email: auth.info.email, password: 'password123') }
       let!(:user) { User.create(email: 'user@organization.ca', firstname: 'Test', surname: 'User', org: @org) }
 
       before do
@@ -68,7 +69,6 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
 
       it 'signs in the existing user' do
         post :openid_connect
-        # expect(subject.current_user).to eq(user)
         expect(response).to redirect_to(root_path)
         expect(flash[:notice]).to be_nil
       end
@@ -80,17 +80,13 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
 
       before do
         sign_in current_user
-
-        # Ensure from_omniauth returns nil, indicating no user is associated with the auth
-        # User.define_singleton_method(:from_omniauth) do |_auth|
-        #   nil
-        # end
       end
 
       it 'links identifier to current user, sets flash notice, and redirects to root path' do
         expect do
           post :openid_connect
-          current_user.reload # Ensure we have the latest state of the user
+          # Ensure we have the latest state of the user
+          current_user.reload
         end.to change(current_user.identifiers, :count).by(1)
 
         expect(flash[:notice]).to eq('Linked successfully')
@@ -101,6 +97,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
     context 'when the user found via omniauth is different from the current_user' do
       let(:current_user) { create(:user) }
       # Ensure different_user is created before test runs
+      # We use `let!` to ensure `different_user` is accessible here
       let!(:different_user) do
         create(:user, email: 'different_user@example.com')
       end
@@ -108,7 +105,6 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         sign_in current_user
 
         # Mocking the from_omniauth method to return a different user
-        # We use `let!` to ensure `different_user` is accessible here
         User.define_singleton_method(:from_omniauth) do |_auth|
           User.find_by(email: 'different_user@example.com')
         end

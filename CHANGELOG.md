@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+ - General code cleanup
+
 ## [4.1.1+portage-4.2.2] - 2024-09-18
 
 ### Changed
