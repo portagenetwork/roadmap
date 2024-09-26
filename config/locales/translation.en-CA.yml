@@ -232,7 +232,7 @@ en-CA:
       invited: You have a pending invitation, accept it to finish creating your account.
     mailer:
       confirmation_instructions:
-        subject: Confirm your DMPonline account
+        subject: Confirm your DMP Assistant account
       reset_password_instructions:
         subject: Reset password instructions
       unlock_instructions:
