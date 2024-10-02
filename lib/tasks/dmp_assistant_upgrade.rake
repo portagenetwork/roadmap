@@ -17,6 +17,9 @@ namespace :dmp_assistant_upgrade do
     p 'Beginning task 1a: Handle email confirmation statuses for users with outstanding invitations'
     p '------------------------------------------------------------------------'
     handle_unconfirmed_users_with_outstanding_invitations
+    p 'Beginning task 1b: Handle email confirmation statuses of user accounts created via SSO'
+    p '------------------------------------------------------------------------'
+    handle_unconfirmed_users_created_via_sso
     p 'Task 1 completed successfully'
   end
 
@@ -42,5 +45,27 @@ namespace :dmp_assistant_upgrade do
     unconfirmed_users.update_all(confirmation_token: nil, confirmation_sent_at: nil)
     p '------------------------------------------------------------------------'
     p 'Task 1a completed successfully'
+  end
+
+  # Fetches users "created via SSO" and updates confirmed_at = Time.now for those users
+  # We define a user as "created via SSO" if BOTH of the following conditions are true:
+  # 1. An Identifier corresponding to the "openid_connect" IdentifierScheme exists for the user
+  # 2. For the identifier and corresponding user found in 1.,
+  #    identifier.created_at AND user.created_at are within 1 second of each other
+  def handle_unconfirmed_users_created_via_sso
+    openid_connect_scheme = IdentifierScheme.find_by(name: 'openid_connect')
+    p 'Querying for all users created via SSO'
+    p '------------------------------------------------------------------------'
+    sql_where = 'ABS(EXTRACT(EPOCH FROM users.created_at) - EXTRACT(EPOCH FROM identifiers.created_at)) <= 1'
+    users_created_via_sso = User.joins(:identifiers)
+                                .where(identifiers: { identifier_scheme_id: openid_connect_scheme.id })
+                                .where(sql_where)
+                                .distinct
+    p "Found #{users_created_via_sso.count} users created via SSO"
+    confirmed_at = Time.now
+    p "Updating these users as confirmed with 'confirmed_at = #{confirmed_at}'"
+    p '------------------------------------------------------------------------'
+    users_created_via_sso.update_all(confirmed_at: confirmed_at)
+    p 'Task 1b completed successfully'
   end
 end

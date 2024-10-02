@@ -197,7 +197,10 @@ class User < ApplicationRecord
       # We don't know which organization to setup so we will use other
       org: Org.find_by(is_other: true),
       accept_terms: true,
-      password: Devise.friendly_token[0, 20]
+      password: Devise.friendly_token[0, 20],
+      # provider_data.info.email comes from CILogon sign-in, which requires email confirmation
+      # It follows that we can set `confirmed_at: Time.now` and bypass Devise's email confirmation step
+      confirmed_at: Time.now
     )
     user
   end
