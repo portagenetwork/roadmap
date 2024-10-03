@@ -185,10 +185,10 @@ class User < ApplicationRecord
   ##
   # Handle user creation from provider
   # rubocop:disable Metrics/AbcSize
-  def self.create_from_provider_data(provider_data)
+  def self.find_or_create_from_provider_data(provider_data)
     user = User.find_or_initialize_by(email: provider_data.info.email)
 
-    return unless user.new_record?
+    return user unless user.new_record?
 
     user.update!(
       firstname: provider_data.info&.first_name.present? ? provider_data.info.first_name : _('First name'),

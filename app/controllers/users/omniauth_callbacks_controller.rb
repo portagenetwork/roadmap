@@ -24,20 +24,13 @@ module Users
 
       if current_user.nil? # if user is not signed in (They clicked the SSO sign in button)
         if user.nil? # If an entry does not exist in the identifiers table for the chosen SSO account
-          user = User.create_from_provider_data(auth)
-          if user.nil? # if a user was NOT created (a match was found for User.find_by(email: auth.info.email)
-            # Do not link SSO credentials for the signed out, existing user
-            flash[:alert] = _('That email appears to be associated with an existing account.<br>' \
-                              'Sign into your existing account, and you can link that ' \
-                              "account with SSO from the 'Edit Profile' page.")
-            redirect_to root_path
-            return
+          user = User.find_or_create_from_provider_data(auth)
+          if user.confirmed? # Only create the Identifier entry if user.email is confirmed
+            user.identifiers << Identifier.create(identifier_scheme: identifier_scheme,
+                                                  value: auth.uid,
+                                                  attrs: auth,
+                                                  identifiable: user)
           end
-          # A new user was created, link the SSO credentials (we can do this for a newly created user)
-          user.identifiers << Identifier.create(identifier_scheme: identifier_scheme,
-                                                value: auth.uid,
-                                                attrs: auth,
-                                                identifiable: user)
         end
         sign_in_and_redirect user, event: :authentication
       elsif user.nil?
