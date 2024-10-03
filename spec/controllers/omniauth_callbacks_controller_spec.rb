@@ -15,19 +15,17 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
                                 identifier_prefix: 'https://www.cilogon.org/')
 
     # Mock OmniAuth data for OpenID Connect with necessary info
-    OmniAuth.config.mock_auth[:openid_connect] = OmniAuth::AuthHash.new({
-                                                                          provider: 'openid_connect',
-                                                                          uid: '12345',
-                                                                          info: {
-                                                                            email: 'user@organization.ca',
-                                                                            first_name: 'Test',
-                                                                            last_name: 'User',
-                                                                            name: 'Test User'
-                                                                          }
-                                                                        })
-
     # Assign the mocked authentication hash to the request environment
-    @request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:openid_connect]
+    @request.env['omniauth.auth'] = OmniAuth::AuthHash.new({
+                                                             provider: 'openid_connect',
+                                                             uid: '12345',
+                                                             info: {
+                                                               email: 'user@organization.ca',
+                                                               first_name: 'Test',
+                                                               last_name: 'User',
+                                                               name: 'Test User'
+                                                             }
+                                                           })
   end
 
   after do
@@ -44,8 +42,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
     context 'when the email is missing and the user does not exist' do
       before do
         # Simulate missing email
-        OmniAuth.config.mock_auth[:openid_connect].info.email = nil
-        @request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:openid_connect]
+        @request.env['omniauth.auth'].info.email = nil
       end
 
       it 'redirects to the registration page with a flash message' do
