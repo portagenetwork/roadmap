@@ -5,7 +5,7 @@ module Users
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     # This is for the OpenidConnect CILogon
 
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def openid_connect
       # First or create
       auth = request.env['omniauth.auth']
@@ -23,15 +23,8 @@ module Users
       identifier_scheme = IdentifierScheme.find_by(name: auth.provider)
 
       if current_user.nil? # if user is not signed in (They clicked the SSO sign in button)
-        if user.nil? # If an entry does not exist in the identifiers table for the chosen SSO account
-          user = User.find_or_create_from_provider_data(auth)
-          if user.confirmed? # Only create the Identifier entry if user.email is confirmed
-            user.identifiers << Identifier.create(identifier_scheme: identifier_scheme,
-                                                  value: auth.uid,
-                                                  attrs: auth,
-                                                  identifiable: user)
-          end
-        end
+        # user.nil? is true if the chosen CILogon email is not currently linked to an existing user account
+        user = handle_new_sso_email_for_signed_out_user(auth, identifier_scheme) if user.nil?
         sign_in_and_redirect user, event: :authentication
       elsif user.nil?
         # we need to link
@@ -51,7 +44,7 @@ module Users
         redirect_to edit_user_registration_path
       end
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     def orcid
       handle_omniauth(IdentifierScheme.for_authentication.find_by(name: 'orcid'))
@@ -132,6 +125,23 @@ module Users
 
     def failure
       redirect_to root_path
+    end
+
+    private
+
+    # This method is executed when a user performs the following two steps:
+    # 1) clicks "Sign in with institutional or social ID"
+    # 2) Within CILogon, selects an email that is not currently linked to an existing user account
+    def handle_new_sso_email_for_signed_out_user(auth, identifier_scheme)
+      # Find or create the user with user.email == email selected via SSO
+      user = User.find_or_create_from_provider_data(auth)
+      if user.confirmed? # Only link the SSO email if user.email is confirmed
+        user.identifiers << Identifier.create(identifier_scheme: identifier_scheme,
+                                              value: auth.uid,
+                                              attrs: auth,
+                                              identifiable: user)
+      end
+      user
     end
   end
 end
