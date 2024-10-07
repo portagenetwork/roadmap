@@ -65,7 +65,7 @@ class User < ApplicationRecord
   #   :token_authenticatable, :confirmable,
   #   :lockable, :timeoutable and :omniauthable
   devise :invitable, :database_authenticatable, :registerable, :recoverable,
-         :rememberable, :trackable, :validatable, :omniauthable,
+         :rememberable, :trackable, :validatable, :omniauthable, :confirmable,
          omniauth_providers: %i[shibboleth orcid openid_connect]
 
   ##
@@ -185,10 +185,10 @@ class User < ApplicationRecord
   ##
   # Handle user creation from provider
   # rubocop:disable Metrics/AbcSize
-  def self.create_from_provider_data(provider_data)
+  def self.find_or_create_from_provider_data(provider_data)
     user = User.find_or_initialize_by(email: provider_data.info.email)
 
-    return unless user.new_record?
+    return user unless user.new_record?
 
     user.update!(
       firstname: provider_data.info&.first_name.present? ? provider_data.info.first_name : _('First name'),
@@ -197,7 +197,10 @@ class User < ApplicationRecord
       # We don't know which organization to setup so we will use other
       org: Org.find_by(is_other: true),
       accept_terms: true,
-      password: Devise.friendly_token[0, 20]
+      password: Devise.friendly_token[0, 20],
+      # provider_data.info.email comes from CILogon sign-in, which requires email confirmation
+      # It follows that we can set `confirmed_at: Time.now` and bypass Devise's email confirmation step
+      confirmed_at: Time.now
     )
     user
   end
@@ -405,6 +408,14 @@ class User < ApplicationRecord
     super(options.merge(subject: format(_('A Data Management Plan in %{application_name} has been shared with you'),
                                         application_name: ApplicationService.application_name))
     )
+  end
+
+  # If this method returns false, then one of the following two scenarios must be true:
+  # 1) The user was created while the app wasn't using Devise :confirmable (a confirmation_token was never generated)
+  # 2) An outdated confirmation_token existed, but was set to nil via `rake dmp_assistant_upgrade:v4_2_3`
+  #    (see `def handle_email_confirmations_for_existing_users`` in `lib/tasks/dmp_assistant_upgrade.rake`)
+  def confirmation_instructions_handled?
+    confirmed? || confirmation_token.present?
   end
 
   # Case insensitive search over User model

@@ -8,10 +8,15 @@ class SessionsController < Devise::SessionsController
 
   # Capture the user's shibboleth id if they're coming in from an IDP
   # ---------------------------------------------------------------------
-  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def create
     existing_user = User.find_by(email: params[:user][:email])
     unless existing_user.nil?
+
+      unless existing_user.confirmation_instructions_handled?
+        handle_confirmation_instructions(existing_user)
+        return
+      end
 
       # Until ORCID login is supported
       unless session['devise.shibboleth_data'].nil?
@@ -36,7 +41,7 @@ class SessionsController < Devise::SessionsController
       end
     end
   end
-  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
   def destroy
     super
@@ -44,4 +49,12 @@ class SessionsController < Devise::SessionsController
     # Method defined at controllers/application_controller.rb
     set_locale
   end
+end
+
+private
+
+def handle_confirmation_instructions(user)
+  user.send_confirmation_instructions
+  flash[:notice] = I18n.t('devise.registrations.signed_up_but_unconfirmed')
+  redirect_to root_path
 end
