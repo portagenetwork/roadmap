@@ -109,6 +109,26 @@ namespace :data_cleanup do
     p 'Done'
   end
 
+  desc 'Remove deprecated permissions from users and delete them from perms table'
+  task remove_deprecated_perms: :environment do
+    deprecated_perms = Perm.where(name: %w[admin user org_admin])
+    deprecated_perms_ids = deprecated_perms.pluck(:id)
+    users_with_deprecated_perms = User.includes(:perms).where(perms: { id: deprecated_perms_ids })
+    p "#{users_with_deprecated_perms.count} users have deprecated permissions"
+    p '----------------------------------------------------------------------'
+    p 'Deleting the following deprecated permissions for the following users:'
+    users_with_deprecated_perms.each do |user|
+      perms_to_delete = user.perms.where(id: deprecated_perms_ids)
+      p "#{user.email}: #{perms_to_delete.pluck(:name)}"
+      p '----------------------------------------------------------------------'
+      user.perms.delete(perms_to_delete)
+    end
+    p "Removing #{deprecated_perms.count} deprecated permissions from perms table:"
+    p '----------------------------------------------------------------------'
+    deprecated_perms.destroy_all
+    p 'Done'
+  end
+
   private
 
   def report_known_invalidations(results, model_name, validation_error)
