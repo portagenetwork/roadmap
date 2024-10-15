@@ -53,6 +53,7 @@ export const defaultOptions = {
   // is not supported, see issue https://github.com/tinymce/tinymce/issues/358
   skin_url: '/tinymce/skins/oxide',
   content_css: ['/tinymce/tinymce.css'],
+  ...(window.i18nLocale === 'fr-CA' && { language: 'fr_FR' }) // handles language switching for DMP Assistant
 };
 
 /*
