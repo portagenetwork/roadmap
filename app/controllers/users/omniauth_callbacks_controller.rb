@@ -26,10 +26,8 @@ module Users
       if current_user.nil? # if user is not signed in (They clicked the SSO sign in button)
         # user.nil? is true if the chosen CILogon email is not currently linked to an existing user account
         user = handle_new_sso_email_for_signed_out_user(auth, identifier_scheme) if user.nil?
-        unless user.confirmation_instructions_handled?
-          handle_confirmation_instructions(user)
-          return
-        end
+        return if missing_confirmation_instructions_handled?(user)
+
         sign_in_and_redirect user, event: :authentication
       elsif user.nil?
         # we need to link
