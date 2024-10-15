@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+ - Fix User Lookup Via SSO Email: Make Query Case-Insensitive [#924](https://github.com/portagenetwork/roadmap/pull/924)
+
 ## [4.1.1+portage-4.2.2] - 2024-09-18
 
 ### Changed
