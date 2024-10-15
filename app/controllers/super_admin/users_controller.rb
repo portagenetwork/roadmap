@@ -119,8 +119,7 @@ module SuperAdmin
     private
 
     def user_params
-      params.require(:user).permit(:email,
-                                   :firstname,
+      params.require(:user).permit(:firstname,
                                    :surname,
                                    :org_id, :org_name, :org_crosswalk,
                                    :department_id,
