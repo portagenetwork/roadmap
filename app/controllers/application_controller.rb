@@ -22,6 +22,12 @@ class ApplicationController < ActionController::Base
   # When we are in production reroute Record Not Found errors to the branded 404 page
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
 
+  def route_not_found
+    msg = "404 Error: [#{request.method}] \"#{request.path}\" was not found."
+    Rails.logger.warn msg
+    render file: Rails.public_path.join('404.html'), status: :not_found, layout: false
+  end
+
   private
 
   def current_org
