@@ -18,18 +18,31 @@ $color-alliance-light-grey: #999;
    box-shadow: 5px 5px 5px $color-alliance-light-grey, 0px -5px 5px $color-alliance-light-grey;
   }
 
-  /* This styles links that start with 'https' and have text more than '#' in the link and
-  the ones with the mail */
-  a[href^="https"]:not([href*="#"]),
-  a[href^="mailto"] {
-      text-decoration: underline;
-      color: $color-alliance-darker-teal;
-    &:hover,
-    &:focus{
-      color: $color-alliance-darkest-yellow;
-      }
-    }
+/* General styling for link visibility/accessibility */
+a,
+.btn.btn-link.dropdown-toggle, // "Actions" dropdown buttons
+.dropdown-menu > li > a {
+  text-decoration: underline;
+  color: $color-alliance-darker-teal;
+  &:hover,
+  &:focus {
+    color: $color-alliance-darkest-yellow;
+  }
+}
 
+/* Exceptions to general link visibility/accessibility styling */
+#app-navbar-menu .nav > li > a,
+#org-navbar-menu > .nav.navbar-nav.navbar-right > li > a,
+#app-navbar-menu .nav > .dropdown > .dropdown-menu > li > a,
+#org-navbar-menu .nav > .dropdown > .dropdown-menu > li > a {
+  text-decoration: none;
+  color: $color-alliance-digital-grey;
+}
+  
+a.btn,
+.nav > li > a:not(#org-navbar-menu .nav > li > a) {
+  text-decoration: none;
+}
 
   /* This is added to the header of the Write Plan section in the Plans*/
   .heading-button > .panel-heading,
