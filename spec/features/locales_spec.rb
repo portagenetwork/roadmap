@@ -18,12 +18,6 @@ RSpec.feature 'Locales', type: :feature, js: true do
 
       Language.where(
         default_language: false,
-        name: 'English (GB)',
-        abbreviation: 'en-GB'
-      ).first_or_create,
-
-      Language.where(
-        default_language: false,
         name: 'Français (CA)',
         abbreviation: 'fr-CA'
       ).first_or_create
@@ -34,7 +28,7 @@ RSpec.feature 'Locales', type: :feature, js: true do
   let!(:user) { create(:user, language: languages.first) }
 
   before do
-    locales = %w[en-GB en-CA fr-CA]
+    locales = %w[en-CA fr-CA]
     I18n.available_locales = locales
     I18n.locale = locales.first
     sign_in(user)
@@ -49,13 +43,15 @@ RSpec.feature 'Locales', type: :feature, js: true do
 
   context 'when new locale has no region' do
     scenario 'user changes their locale' do
-      skip 'We are now expecting locales to have region'
-      create_plan_text = 'Créer des plans'
+      create_plan_text = I18n.with_locale(:'fr-CA') do
+        _('Create plan')
+      end
+
       click_link 'Language'
       expect(current_path).to eql(plans_path)
       expect(page).not_to have_text(create_plan_text)
 
-      click_link 'German'
+      click_link 'Français (CA)'
       expect(current_path).to eql(plans_path)
       expect(page).to have_text(create_plan_text)
     end
@@ -63,7 +59,9 @@ RSpec.feature 'Locales', type: :feature, js: true do
 
   context 'when new locale has region' do
     scenario 'user changes their locale' do
-      create_plan_text = 'Créer des plans'
+      create_plan_text = I18n.with_locale('fr-CA') do
+        _('Create plan')
+      end
       click_link 'Language'
       expect(current_path).to eql(plans_path)
       expect(page).not_to have_text(create_plan_text)
