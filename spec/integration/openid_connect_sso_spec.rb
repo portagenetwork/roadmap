@@ -24,7 +24,7 @@ RSpec.describe 'Openid_connection SSO', type: :feature do
       Rails.application.env_config['omniauth.auth'] = OmniAuth.config.mock_auth[:openid_connect]
     end
 
-    it 'creates account from external credentials' do
+    it 'creates account from external credentials', :js do
       visit root_path
       click_link 'Sign in with institutional or social ID'
 
@@ -51,7 +51,7 @@ RSpec.describe 'Openid_connection SSO', type: :feature do
       expect(user.identifiers.count).to eql(0)
     end
 
-    xit 'links account from external credentails' do
+    it 'links account from external credentails', :js do
       # Create existing user
       user = create(:user, :org_admin, org: @org, email: 'user@organization.ca', firstname: 'DMP Name',
                                        surname: 'DMP Lastname')
