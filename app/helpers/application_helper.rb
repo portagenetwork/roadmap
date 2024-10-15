@@ -55,10 +55,10 @@ module ApplicationHelper
 
   def contact_us_path
     if I18n.locale == :'fr-CA'
-      'https://portagenetwork.ca/fr/contactez-nous/'
+      'fr/contactez-nous'
     else
       # Handling :'en-CA' locale
-      'https://portagenetwork.ca/contact-us/'
+      'contact-us'
     end
   end
 
