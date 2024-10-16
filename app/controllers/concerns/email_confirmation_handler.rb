@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 # EmailConfirmationHandler
 
 # Some users in our db are both unconfirmed AND have no outstanding confirmation_token
 # This is true for those users due to the following:
-#   - We have not always used Devise's :confirmable module (:confirmable generates a confirmation_token at the time of User creation)
+#   - We haven't always used Devise's :confirmable module (it generates a confirmation_token when a user is created)
 #   - We have set `confirmed_at` and `confirmation_token` to nil via Rake tasks
 # This concern is meant to improve the confirmation process for those users
 module EmailConfirmationHandler

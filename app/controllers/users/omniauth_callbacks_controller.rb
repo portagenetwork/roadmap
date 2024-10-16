@@ -24,11 +24,7 @@ module Users
       identifier_scheme = IdentifierScheme.find_by(name: auth.provider)
 
       if current_user.nil? # if user is not signed in (They clicked the SSO sign in button)
-        # user.nil? is true if the chosen CILogon email is not currently linked to an existing user account
-        user = handle_new_sso_email_for_signed_out_user(auth, identifier_scheme) if user.nil?
-        return if missing_confirmation_instructions_handled?(user)
-
-        sign_in_and_redirect user, event: :authentication
+        handle_openid_connect_for_signed_out_user(user, auth, identifier_scheme)
       elsif user.nil?
         # we need to link
         current_user.identifiers << Identifier.create(identifier_scheme: identifier_scheme,
@@ -131,6 +127,14 @@ module Users
     end
 
     private
+
+    def handle_openid_connect_for_signed_out_user(user, auth, identifier_scheme)
+      # user.nil? is true if the chosen CILogon email is not currently linked to an existing user account
+      user = handle_new_sso_email_for_signed_out_user(auth, identifier_scheme) if user.nil?
+      return if missing_confirmation_instructions_handled?(user)
+
+      sign_in_and_redirect user, event: :authentication
+    end
 
     # This method is executed when a user performs the following two steps:
     # 1) clicks "Sign in with institutional or social ID"
