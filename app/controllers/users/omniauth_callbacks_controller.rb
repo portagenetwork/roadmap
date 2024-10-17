@@ -131,7 +131,8 @@ module Users
     def handle_openid_connect_for_signed_out_user(user, auth, identifier_scheme)
       # user.nil? is true if the chosen CILogon email is not currently linked to an existing user account
       user = handle_new_sso_email_for_signed_out_user(auth, identifier_scheme) if user.nil?
-      return if missing_confirmation_instructions_handled?(user)
+      # See app/controllers/concerns/email_confirmation_handler.rb
+      return if confirmation_instructions_missing_and_handled?(user)
 
       sign_in_and_redirect user, event: :authentication
     end
@@ -142,7 +143,8 @@ module Users
     def handle_new_sso_email_for_signed_out_user(auth, identifier_scheme)
       # Find or create the user with user.email == email selected via SSO
       user = User.find_or_create_from_provider_data(auth)
-      if user.confirmed? # Only link the SSO email if user.email is confirmed
+      if user.confirmed?
+        # Only link the SSO email if user.email is confirmed
         user.identifiers << Identifier.create(identifier_scheme: identifier_scheme,
                                               value: auth.uid,
                                               attrs: auth,
