@@ -39,6 +39,21 @@ RSpec.describe 'Openid_connection SSO', type: :feature do
       expect(page).to have_content('John Doe')
     end
 
+    scenario 'A user attempts to sign in via the "Sign in with institutional
+              or social ID" button with an email that is not currently linked
+              to any account. The chosen SSO email matches an existing user account email.', :js do
+      user = create(:user, :org_admin, org: @org, email: 'user@organization.ca',
+                                       firstname: 'DMP Name', surname: 'DMP Lastname')
+      visit root_path
+      click_link 'Sign in with institutional or social ID'
+
+      # The user is signed in
+      expect(current_path).to eql(plans_path)
+      # The SSO email is linked to the user
+      expect(user.identifiers.count).to eql(1)
+      expect(Identifier.last.identifiable).to eql(user)
+    end
+
     xit 'links account from external credentails' do
       # Create existing user
       user = create(:user, :org_admin, org: @org, email: 'user@organization.ca', firstname: 'DMP Name',
