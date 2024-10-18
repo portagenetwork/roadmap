@@ -13,19 +13,6 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
                                 description: 'CILogon',
                                 active: true,
                                 identifier_prefix: 'https://www.cilogon.org/')
-
-    # Mock OmniAuth data for OpenID Connect with necessary info
-    # Assign the mocked authentication hash to the request environment
-    @request.env['omniauth.auth'] = OmniAuth::AuthHash.new({
-                                                             provider: 'openid_connect',
-                                                             uid: '12345',
-                                                             info: {
-                                                               email: 'user@organization.ca',
-                                                               first_name: 'Test',
-                                                               last_name: 'User',
-                                                               name: 'Test User'
-                                                             }
-                                                           })
   end
 
   after do
@@ -36,12 +23,15 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
   end
 
   describe 'POST #openid_connect' do
-    let(:auth) { request.env['omniauth.auth'] }
-    let!(:identifier_scheme) { IdentifierScheme.create(name: auth.provider) }
+    let(:auth) { @request.env['omniauth.auth'] }
+    let!(:identifier_scheme) { @identifier_scheme }
 
     context 'when the email is missing and the user does not exist' do
       before do
         # Simulate missing email
+        @request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:openid_connect]
+        # We will be restoring the email after this test
+        @info_email = OmniAuth.config.mock_auth[:openid_connect].info.email
         @request.env['omniauth.auth'].info.email = nil
       end
 
@@ -51,10 +41,13 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         expect(response).to redirect_to(new_user_registration_path)
         expect(flash[:notice]).to eq('Something went wrong, Please try signing up here.')
       end
+
+      after do
+        OmniAuth.config.mock_auth[:openid_connect].info.email = @info_email
+      end
     end
 
     context 'when the user is not signed in but already exists' do
-      # let!(:user) { User.create(email: auth.info.email, password: 'password123') }
       let!(:user) { User.create(email: 'user@organization.ca', firstname: 'Test', surname: 'User', org: @org) }
 
       before do
