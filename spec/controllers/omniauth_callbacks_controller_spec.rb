@@ -4,6 +4,8 @@ require 'rails_helper'
 
 RSpec.describe Users::OmniauthCallbacksController, type: :controller do
   before do
+    # Capture User.from_omniauth before redefining it
+    @from_omniauth_method = User.method(:from_omniauth)
     # Setup Devise mapping
     @request.env['devise.mapping'] = Devise.mappings[:user]
     create(:org, managed: false, is_other: true)
@@ -29,10 +31,8 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
   end
 
   after do
-    # Reset the `from_omniauth` method after each test
-    User.define_singleton_method(:from_omniauth) do |auth|
-      User.find_by(email: auth.info.email)
-    end
+    # Restore the actual User.from_omniauth method
+    User.define_singleton_method(:from_omniauth, @from_omniauth_method)
   end
 
   describe 'POST #openid_connect' do
