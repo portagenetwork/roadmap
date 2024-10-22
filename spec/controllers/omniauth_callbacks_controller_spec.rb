@@ -10,11 +10,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
     @request.env['devise.mapping'] = Devise.mappings[:user]
     create(:org, managed: false, is_other: true)
     @org = create(:org, managed: true)
-    @identifier_scheme = create(:identifier_scheme,
-                                name: 'openid_connect',
-                                description: 'CILogon',
-                                active: true,
-                                identifier_prefix: 'https://www.cilogon.org/')
+    @identifier_scheme = create(:identifier_scheme, :openid_connect)
 
     # Mock OmniAuth data for OpenID Connect with necessary info
     # Assign the mocked authentication hash to the request environment
@@ -37,7 +33,6 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
 
   describe 'POST #openid_connect' do
     let(:auth) { request.env['omniauth.auth'] }
-    let!(:identifier_scheme) { IdentifierScheme.create(name: auth.provider) }
 
     context 'when the email is missing and the user does not exist' do
       before do
