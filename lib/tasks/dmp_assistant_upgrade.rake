@@ -25,7 +25,7 @@ namespace :dmp_assistant_upgrade do
     set_confirmable_cols_to_nil_for_all_users
     p '------------------------------------------------------------------------'
     p 'Updating superusers so that they are not required to confirm their email addresses'
-    p '(i.e. Setting `confirmed_at = Time.now`` for superusers)'
+    p '(i.e. Setting `confirmed_at = Time.now.utc` for superusers)'
     p '------------------------------------------------------------------------'
     confirm_superusers
   end
@@ -39,9 +39,9 @@ namespace :dmp_assistant_upgrade do
     p ":confirmable columns updated to nil for #{count} users"
   end
 
-  # Sets `confirmed_at` to `Time.now` for all superusers
+  # Sets `confirmed_at` to `Time.now.utc` for all superusers
   def confirm_superusers
-    confirmed_at = Time.now
+    confirmed_at = Time.now.utc
     count = User.joins(:perms).where(perms: { id: super_admin_perm_ids })
                 .distinct
                 .update_all(confirmed_at: confirmed_at)

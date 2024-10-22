@@ -60,7 +60,7 @@ FactoryBot.define do
     email        { Faker::Internet.unique.email }
     password     { 'password' }
     accept_terms { true }
-    confirmed_at { Time.now }
+    confirmed_at { Time.now.utc }
 
     trait :org_admin do
       after(:create) do |user, _evaluator|

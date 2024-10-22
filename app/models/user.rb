@@ -199,8 +199,8 @@ class User < ApplicationRecord
       accept_terms: true,
       password: Devise.friendly_token[0, 20],
       # provider_data.info.email comes from CILogon sign-in, which requires email confirmation
-      # It follows that we can set `confirmed_at: Time.now` and bypass Devise's email confirmation step
-      confirmed_at: Time.now
+      # It follows that we can set `confirmed_at: Time.now.utc` and bypass Devise's email confirmation step
+      confirmed_at: Time.now.utc
     )
     user
   end
