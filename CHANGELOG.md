@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+ - Disable Updating of User Emails [#917](https://github.com/portagenetwork/roadmap/pull/917)
+
 ## [4.1.1+portage-4.2.2] - 2024-09-18
 
 ### Changed
