@@ -29,17 +29,20 @@ TranslationIO.configure do |config|
 
   # Uncomment this if you already use gettext or fast_gettext
   config.locales_path = File.join('config', 'locale')
-  config.db_fields = {
-    'Theme' => %w[title description],
-    'QuestionFormat' => %w[title description],
-    'Template' => %w[title description],
-    'Phase' => %w[title description],
-    'Section' => %w[title description],
-    'Question' => %w[text default_value],
-    'Annotation' => ['text'],
-    'ResearchDomain' => ['label'],
-    'QuestionOption' => ['text']
-  }
+
+  unless Rails.env.in?(%w[test development uat])
+    config.db_fields = {
+      'Theme' => %w[title description],
+      'QuestionFormat' => %w[title description],
+      'Template' => %w[title description],
+      'Phase' => %w[title description],
+      'Section' => %w[title description],
+      'Question' => %w[text default_value],
+      'Annotation' => ['text'],
+      'ResearchDomain' => ['label'],
+      'QuestionOption' => ['text']
+    }
+  end
   # Find other useful usage information here:
   # https://github.com/translation/rails#readme
 end
