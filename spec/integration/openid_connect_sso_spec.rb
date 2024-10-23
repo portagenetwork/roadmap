@@ -45,7 +45,7 @@ RSpec.describe 'Openid_connection SSO', type: :feature do
                                        surname: 'DMP Lastname')
       expect(user.identifiers.count).to eql(0)
       visit root_path
-      click_link 'Sign in with CILogon'
+      click_link 'Sign in with institutional or social ID'
       error_message = 'That email appears to be associated with an existing account'
       expect(page).to have_content(error_message)
       expect(user.identifiers.count).to eql(0)
