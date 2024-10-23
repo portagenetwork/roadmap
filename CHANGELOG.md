@@ -10,6 +10,8 @@
 
  - Fix User Lookup Via SSO Email: Make Query Case-Insensitive [#924](https://github.com/portagenetwork/roadmap/pull/924)
 
+ - Fixes to CILogon / `openid_connect` Tests [#922](https://github.com/portagenetwork/roadmap/pull/922)
+
 ## [4.1.1+portage-4.2.2] - 2024-09-18
 
 ### Changed
