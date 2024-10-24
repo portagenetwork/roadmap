@@ -38,11 +38,9 @@
       <% end %>
     </div>
   <% end %>
-  <% unless @funder.present? %>
     <div class="col-md-3">
       <%= link_to usage_org_statistics_path(sep: ",", filtered: @filtered), class: 'stat btn btn-default pull-right', role: 'button', target: '_blank' do %>
         <%= _('Download Monthly Usage') %> <i class="fas fa-download" aria-hidden="true"></i>
       <% end %>
     </div>
-  <% end %>
 </div>

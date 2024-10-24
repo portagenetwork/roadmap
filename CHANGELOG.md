@@ -110,6 +110,8 @@
 
 ### Changed
 
+ - Enabled "Download Monthly Usage" Functionality For "Portage Network" [#761](https://github.com/portagenetwork/roadmap/pull/761)
+
  - Deactivate Requests to External ROR API [#738](https://github.com/portagenetwork/roadmap/pull/738)
 
  - Updated 'translation' gem URL in Gemfile to match moved repository [#725](https://github.com/portagenetwork/roadmap/pull/725)
