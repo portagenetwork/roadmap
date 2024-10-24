@@ -17,6 +17,21 @@ def ignore_paths
   Dir['**/'] - Dir['app/**/']
 end
 
+def templates_data_for_default_org_proc
+  proc do
+    # Return all templates data pertaining to default_org
+    Template.includes(phases: { sections: { questions: %i[annotations question_options] } })
+            .where(org_id: Rails.application.secrets.default_funder_id)
+            .pluck(:title, :description,
+                   'phases.title', 'phases.description',
+                   'sections.title', 'sections.description',
+                   'questions.text', 'questions.default_value',
+                   'annotations.text',
+                   'question_options.text')
+            .flatten.uniq
+  end
+end
+
 TranslationIO.configure do |config|
   config.api_key        = Rails.application.secrets.translation_io_api_key
   config.source_locale  = 'en'
@@ -32,13 +47,8 @@ TranslationIO.configure do |config|
   config.db_fields = {
     'Theme' => %w[title description],
     'QuestionFormat' => %w[title description],
-    'Template' => %w[title description],
-    'Phase' => %w[title description],
-    'Section' => %w[title description],
-    'Question' => %w[text default_value],
-    'Annotation' => ['text'],
-    'ResearchDomain' => ['label'],
-    'QuestionOption' => ['text']
+    'ResearchDomain' => %w[label],
+    'CallableQueries' => [templates_data_for_default_org_proc] # array elements are ActiveRecord query procs
   }
   # Find other useful usage information here:
   # https://github.com/translation/rails#readme
