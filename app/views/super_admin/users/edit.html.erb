@@ -13,7 +13,7 @@
     <%= form_for(@user, namespace: :superadmin, as: :user, url: super_admin_user_path(@user), html: {method: :put, id: 'super_admin_user_edit' }) do |f| %>
       <div class="form-group col-xs-12">
         <%= f.label(:email, _('Email'), class: 'control-label') %>
-        <%= f.email_field(:email, class: "form-control", "aria-required": true) %>
+        <%= f.email_field(:email, class: "form-control", "aria-required": true, "disabled": true) %>
       </div>
 
       <div class="form-group col-xs-12">
