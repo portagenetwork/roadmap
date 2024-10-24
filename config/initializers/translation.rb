@@ -29,17 +29,20 @@ TranslationIO.configure do |config|
 
   # Uncomment this if you already use gettext or fast_gettext
   config.locales_path = File.join('config', 'locale')
-  config.db_fields = {
-    'Theme' => %w[title description],
-    'QuestionFormat' => %w[title description],
-    'Template' => %w[title description],
-    'Phase' => %w[title description],
-    'Section' => %w[title description],
-    'Question' => %w[text default_value],
-    'Annotation' => ['text'],
-    'ResearchDomain' => ['label'],
-    'QuestionOption' => ['text']
-  }
+
+  unless Rails.env.in?(%w[test development uat])
+    config.db_fields = {
+      'Theme' => %w[title description],
+      'QuestionFormat' => %w[title description],
+      'Template' => %w[title description],
+      'Phase' => %w[title description],
+      'Section' => %w[title description],
+      'Question' => %w[text default_value],
+      'Annotation' => ['text'],
+      'ResearchDomain' => ['label'],
+      'QuestionOption' => ['text']
+    }
+  end
   # Find other useful usage information here:
   # https://github.com/translation/rails#readme
 end
@@ -47,66 +50,6 @@ end
 I18n.enforce_available_locales = false
 I18n.default_locale = :'en-CA'
 
-# # Here we define the translation domains for the Roadmap application, `app` will
-# # contain translations from the open-source repository and ignore the contents
-# # of the `app/views/branded` directory.  The `client` domain will
-# #
-# # When running the application, the `app` domain should be specified in your environment.
-# # the `app` domain will be searched first, falling back to `client`
-# #
-# # When generating the translations, the rake:tasks will need to be run with each
-# # domain specified in order to generate both sets of translation keys.
-# if !ENV['DOMAIN'] || ENV['DOMAIN'] == 'app'
-#   TranslationIO.configure do |config|
-#     config.api_key              = ENV.fetch('TRANSLATION_API_ROADMAP', nil)
-#     config.source_locale        = 'en'
-#     config.target_locales       = SUPPORTED_LOCALES
-#     config.text_domain          = 'app'
-#     config.bound_text_domains   = %w[app client]
-#     config.ignored_source_paths = ['app/views/branded/', 'node_modules/']
-#     config.locales_path         = Rails.root.join('config', 'locale')
-#   end
-# elsif ENV['DOMAIN'] == 'client'
-#   TranslationIO.configure do |config|
-#     config.api_key              = ENV.fetch('TRANSLATION_API_CLIENT', nil)
-#     config.source_locale        = 'en'
-#     config.target_locales       = CLIENT_LOCALES
-#     config.text_domain          = 'client'
-#     config.bound_text_domains = ['client']
-#     config.ignored_source_paths = ignore_paths
-#     config.disable_yaml         = true
-#     config.locales_path         = Rails.root.join('config', 'locale')
-#   end
-# end
-
-# # Setup languages
-#
-# table = ActiveRecord::Base.connection.table_exists?("languages") rescue false
-# # if table
-#   def default_locale
-#     Language.default.try(:abbreviation) || "en-GB"
-#   end
-
-#   def available_locales
-#     Language.sorted_by_abbreviation.pluck(:abbreviation).presence || [default_locale]
-#   end
-
-#   I18n.available_locales = Language.all.pluck(:abbreviation)
-
-#   I18n.default_locale = Language.default.try(:abbreviation) || "en-GB"
-# else
-#   def default_locale
-#     Rails.application.config.i18n.available_locales.first || "en-GB"
-#   end
-
-#   def available_locales
-#     Rails.application.config.i18n.available_locales = %w[en-GB en-US]
-#   end
-
-#   I18n.available_locales = ["en-GB"]
-
-#   I18n.default_locale = "en-GB"
-# end
 # Setup languages
 def default_locale
   DEFAULT_LOCALE
