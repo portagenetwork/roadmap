@@ -7,11 +7,7 @@ RSpec.describe 'Openid_connection SSO', type: :feature do
     before do
       create(:org, managed: false, is_other: true)
       @org = create(:org, managed: true)
-      @identifier_scheme = create(:identifier_scheme,
-                                  name: 'openid_connect',
-                                  description: 'CILogon',
-                                  active: true,
-                                  identifier_prefix: 'https://www.cilogon.org/')
+      @identifier_scheme = create(:identifier_scheme, :openid_connect)
 
       # Adding this identifier scheme as it is needed in view but we are not testing for it
       create(:identifier_scheme,
@@ -24,7 +20,7 @@ RSpec.describe 'Openid_connection SSO', type: :feature do
       Rails.application.env_config['omniauth.auth'] = OmniAuth.config.mock_auth[:openid_connect]
     end
 
-    it 'creates account from external credentials' do
+    it 'creates account from external credentials', :js do
       visit root_path
       click_link 'Sign in with institutional or social ID'
 
@@ -54,7 +50,7 @@ RSpec.describe 'Openid_connection SSO', type: :feature do
       expect(Identifier.last.identifiable).to eql(user)
     end
 
-    xit 'links account from external credentails' do
+    it 'links account from external credentails', :js do
       # Create existing user
       user = create(:user, :org_admin, org: @org, email: 'user@organization.ca', firstname: 'DMP Name',
                                        surname: 'DMP Lastname')

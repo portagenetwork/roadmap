@@ -144,7 +144,7 @@ class RegistrationsController < Devise::RegistrationsController
       if params[:skip_personal_details] == 'true'
         do_update_password(current_user, update_params)
       else
-        do_update(needs_password?(current_user))
+        do_update
       end
     else
       render(file: File.join(Rails.root, 'public/403.html'), status: 403, layout: false)
@@ -154,27 +154,15 @@ class RegistrationsController < Devise::RegistrationsController
 
   private
 
-  # check if we need password to update user data
-  # ie if password or email was changed
-  # extend this as needed
-  def needs_password?(user)
-    user.email != update_params[:email] || update_params[:password].present?
-  end
-
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   # rubocop:disable Style/OptionalBooleanParameter
-  def do_update(require_password = true, confirm = false)
+  def do_update(confirm = false)
     restrict_orgs = Rails.configuration.x.application.restrict_orgs
     mandatory_params = true
     # added to by below, overwritten otherwise
     message = _('Save Unsuccessful. ')
     # ensure that the required fields are present
-
-    if update_params[:email].blank?
-      message += _('Please enter an email address. ')
-      mandatory_params &&= false
-    end
     if update_params[:firstname].blank?
       message += _('Please enter a First name. ')
       mandatory_params &&= false
@@ -194,39 +182,11 @@ class RegistrationsController < Devise::RegistrationsController
       attrs = update_params
       attrs = handle_org(attrs: attrs)
 
-      # user is changing email or password
-      if require_password
-        # if user is changing email
-        if current_user.email == attrs[:email]
-          # remove the current_password because its not actuallyt part of the User record
-          attrs.delete(:current_password)
+      # password not required
+      # remove the current_password because its not actuallyt part of the User record
+      attrs.delete(:current_password)
+      successfully_updated = current_user.update_without_password(attrs)
 
-          # This case is never reached since this method when called with
-          # require_password = true is because the email changed.
-          # The case for password changed goes to do_update_password instead
-          successfully_updated = current_user.update_without_password(attrs)
-        elsif attrs[:password].blank?
-          # password needs to be present
-          message = _('Please enter your password to change email address.')
-          successfully_updated = false
-        elsif current_user.valid_password?(attrs[:current_password])
-          successfully_updated = current_user.update_with_password(attrs)
-          # rubocop:disable Metrics/BlockNesting
-          unless successfully_updated
-            message = _("Save unsuccessful. \
-                That email address is already registered. \
-                You must enter a unique email address.")
-          end
-          # rubocop:enable Metrics/BlockNesting
-        else
-          message = _('Invalid password')
-        end
-      else
-        # password not required
-        # remove the current_password because its not actuallyt part of the User record
-        attrs.delete(:current_password)
-        successfully_updated = current_user.update_without_password(attrs)
-      end
     else
       successfully_updated = false
     end
@@ -296,7 +256,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def update_params
-    params.require(:user).permit(:email, :firstname, :org_id, :language_id,
+    params.require(:user).permit(:firstname, :org_id, :language_id,
                                  :current_password, :password, :password_confirmation,
                                  :surname, :department_id, :org_id,
                                  :org_name, :org_crosswalk)

@@ -32,5 +32,11 @@ FactoryBot.define do
         identifier_scheme.update("#{identifier_scheme.all_context[idx]}": true)
       end
     end
+
+    trait :openid_connect do
+      name { 'openid_connect' }
+      description { 'CILogon' }
+      identifier_prefix { 'https://www.cilogon.org/' }
+    end
   end
 end
