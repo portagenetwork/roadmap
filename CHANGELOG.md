@@ -4,6 +4,8 @@
 
 ### Changed
 
+ - Email Confirmation Changes [#923](https://github.com/portagenetwork/roadmap/pull/923)
+
  - Disable Updating of User Emails [#917](https://github.com/portagenetwork/roadmap/pull/917)
 
 ### Fixed
