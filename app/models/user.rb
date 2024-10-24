@@ -65,7 +65,7 @@ class User < ApplicationRecord
   #   :token_authenticatable, :confirmable,
   #   :lockable, :timeoutable and :omniauthable
   devise :invitable, :database_authenticatable, :registerable, :recoverable,
-         :rememberable, :trackable, :validatable, :omniauthable,
+         :rememberable, :trackable, :validatable, :omniauthable, :confirmable,
          omniauth_providers: %i[shibboleth orcid openid_connect]
 
   ##
@@ -185,10 +185,10 @@ class User < ApplicationRecord
   ##
   # Handle user creation from provider
   # rubocop:disable Metrics/AbcSize
-  def self.create_from_provider_data(provider_data)
+  def self.find_or_create_from_provider_data(provider_data)
     user = User.find_or_initialize_by(email: provider_data.info.email.downcase)
 
-    return unless user.new_record?
+    return user unless user.new_record?
 
     user.update!(
       firstname: provider_data.info&.first_name.presence || _('First name'),
@@ -196,7 +196,10 @@ class User < ApplicationRecord
       # We don't know which organization to setup so we will use other
       org: Org.find_by(is_other: true),
       accept_terms: true,
-      password: Devise.friendly_token[0, 20]
+      password: Devise.friendly_token[0, 20],
+      # provider_data.info.email comes from CILogon sign-in, which requires email confirmation
+      # It follows that we can set `confirmed_at: Time.now.utc` and bypass Devise's email confirmation step
+      confirmed_at: Time.now.utc
     )
     user
   end
