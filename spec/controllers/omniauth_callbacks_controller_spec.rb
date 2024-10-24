@@ -4,48 +4,26 @@ require 'rails_helper'
 
 RSpec.describe Users::OmniauthCallbacksController, type: :controller do
   before do
+    # Capture User.from_omniauth before redefining it
+    @from_omniauth_method = User.method(:from_omniauth)
     # Setup Devise mapping
     @request.env['devise.mapping'] = Devise.mappings[:user]
     create(:org, managed: false, is_other: true)
     @org = create(:org, managed: true)
-    @identifier_scheme = create(:identifier_scheme,
-                                name: 'openid_connect',
-                                description: 'CILogon',
-                                active: true,
-                                identifier_prefix: 'https://www.cilogon.org/')
-
-    # Mock OmniAuth data for OpenID Connect with necessary info
-    OmniAuth.config.mock_auth[:openid_connect] = OmniAuth::AuthHash.new({
-                                                                          provider: 'openid_connect',
-                                                                          uid: '12345',
-                                                                          info: {
-                                                                            email: 'user@organization.ca',
-                                                                            first_name: 'Test',
-                                                                            last_name: 'User',
-                                                                            name: 'Test User'
-                                                                          }
-                                                                        })
-
-    # Assign the mocked authentication hash to the request environment
-    @request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:openid_connect]
+    @identifier_scheme = create(:identifier_scheme, :openid_connect)
+    @request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:openid_connect].dup
   end
 
   after do
-    # Reset the `from_omniauth` method after each test
-    User.define_singleton_method(:from_omniauth) do |auth|
-      User.find_by(email: auth.info.email)
-    end
+    # Restore the actual User.from_omniauth method
+    User.define_singleton_method(:from_omniauth, @from_omniauth_method)
   end
 
   describe 'POST #openid_connect' do
-    let(:auth) { request.env['omniauth.auth'] }
-    let!(:identifier_scheme) { IdentifierScheme.create(name: auth.provider) }
-
     context 'when the email is missing and the user does not exist' do
       before do
         # Simulate missing email
-        OmniAuth.config.mock_auth[:openid_connect].info.email = nil
-        @request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:openid_connect]
+        @request.env['omniauth.auth'].info.email = nil
       end
 
       it 'redirects to the registration page with a flash message' do
@@ -57,8 +35,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
     end
 
     context 'when the user is not signed in but already exists' do
-      # let!(:user) { User.create(email: auth.info.email, password: 'password123') }
-      let!(:user) { User.create(email: 'user@organization.ca', firstname: 'Test', surname: 'User', org: @org) }
+      let!(:user) { User.create(email: 'user@organization.ca', firstname: 'John', surname: 'Doe', org: @org) }
 
       before do
         def User.from_omniauth(_auth)
@@ -75,16 +52,11 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
     end
 
     context 'when the user is signed in and needs to link their OpenID Connect account' do
-      let!(:user) { User.create(email: 'user@organization.ca', firstname: 'Test', surname: 'User', org: @org) }
+      let!(:user) { User.create(email: 'user@organization.ca', firstname: 'John', surname: 'Doe', org: @org) }
       let(:current_user) { create(:user) }
 
       before do
         sign_in current_user
-
-        # Ensure from_omniauth returns nil, indicating no user is associated with the auth
-        # User.define_singleton_method(:from_omniauth) do |_auth|
-        #   nil
-        # end
       end
 
       it 'links identifier to current user, sets flash notice, and redirects to root path' do
