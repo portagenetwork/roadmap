@@ -16,6 +16,7 @@ public/images/*
 public/javascripts/*
 public/stylesheets/*
 public/system/*
+public/tinymce/skins
 public/videos/*
 
 deployments/kestrel.crt
