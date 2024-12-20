@@ -8,6 +8,9 @@ name: Publish Docker image
 on:
   release:
     types: [published]
+  push:
+    tags: 
+      - '*-uat-*'
 
 jobs:
   push_to_registry:
@@ -28,9 +31,16 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: ualbertalib/dmp_roadmap
+          # GitHub tag matching and Docker tag generation are contingent on the event type
+          # (The event type is either 'release' or 'push' of a '*-uat-*' tag)
           tags: |
+            ${{ github.event_name == 'release' && '
             type=match,pattern=.+portage-(\d\.\d\.\d),group=1
             type=raw,value=production
+            ' || '
+            type=match,pattern=.+portage-(\d+\.\d+\.\d+-uat-\d+),group=1
+            type=raw,value=uat
+            ' }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
