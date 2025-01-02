@@ -4,6 +4,8 @@
 
 ### Changed
 
+ - Bump pg from 1.5.4 to 1.5.9 [#934](https://github.com/portagenetwork/roadmap/pull/934)
+
  - Bump recaptcha from 5.16.0 to 5.18.0 [#964](https://github.com/portagenetwork/roadmap/pull/964)
 
 ## [4.1.1+portage-4.2.3] - 2024-11-20
