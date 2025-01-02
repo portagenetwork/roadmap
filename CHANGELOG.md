@@ -4,6 +4,8 @@
 
 ### Changed
 
+ - Bump httparty from 0.21.0 to 0.22.0 [#823](https://github.com/portagenetwork/roadmap/pull/823)
+
  - Bump spring from 4.1.3 to 4.2.1 [#825](https://github.com/portagenetwork/roadmap/pull/825)
 
  - Bump parallel from 1.24.0 to 1.26.3 [#855](https://github.com/portagenetwork/roadmap/pull/855)
