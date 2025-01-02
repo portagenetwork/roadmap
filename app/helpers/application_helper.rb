@@ -53,15 +53,6 @@ module ApplicationHelper
     end
   end
 
-  def contact_us_path
-    if I18n.locale == :'fr-CA'
-      'https://portagenetwork.ca/fr/contactez-nous/'
-    else
-      # Handling :'en-CA' locale
-      'https://portagenetwork.ca/contact-us/'
-    end
-  end
-
   # TODO: Replace function body with the commented-out code when French version of this path is made available.
   def terms_of_use_path
     'https://dmp-pgd.ca/terms' # TEMPORARY FIX
