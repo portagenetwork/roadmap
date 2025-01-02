@@ -4,6 +4,8 @@
 
 ### Changed
 
+ - Bump spring from 4.1.3 to 4.2.1 [#825](https://github.com/portagenetwork/roadmap/pull/825)
+
  - Bump parallel from 1.24.0 to 1.26.3 [#855](https://github.com/portagenetwork/roadmap/pull/855)
 
  - Bump pg from 1.5.4 to 1.5.9 [#934](https://github.com/portagenetwork/roadmap/pull/934)
