@@ -4,6 +4,8 @@
 
 ### Changed
 
+ - Bump parallel from 1.24.0 to 1.26.3 [#855](https://github.com/portagenetwork/roadmap/pull/855)
+
  - Bump pg from 1.5.4 to 1.5.9 [#934](https://github.com/portagenetwork/roadmap/pull/934)
 
  - Bump recaptcha from 5.16.0 to 5.18.0 [#964](https://github.com/portagenetwork/roadmap/pull/964)
