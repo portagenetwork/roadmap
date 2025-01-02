@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+ - Refactor Logic For Allowing Multiple Hosts [#972](https://github.com/portagenetwork/roadmap/pull/972)
+
 ## [4.1.1+portage-4.2.3] - 2024-11-20
 
 ### Added
