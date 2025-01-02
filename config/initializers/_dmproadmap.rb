@@ -40,10 +40,10 @@ module DMPRoadmap
     # Your organisation's address - used on the contact us page
     # rubocop:disable Naming/VariableNumber
     config.x.organisation.address = {
-      line_1: nil,
-      line_2: nil,
-      line_3: nil,
-      line_4: nil,
+      line1: nil,
+      line2: nil,
+      line3: nil,
+      line4: nil,
       country: 'Canada'
     }
     # rubocop:enable Naming/VariableNumber
