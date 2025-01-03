@@ -4,6 +4,8 @@
 
 ### Changed
 
+ - Bump wicked_pdf from 2.7.0 to 2.8.2 [#973](https://github.com/portagenetwork/roadmap/pull/973)
+
  - Bump brakeman from 6.1.2 to 7.0.0 [#975](https://github.com/portagenetwork/roadmap/pull/975)
 
  - Bump autoprefixer-rails from 10.4.16.0 to 10.4.19.0 [#976](https://github.com/portagenetwork/roadmap/pull/976)
