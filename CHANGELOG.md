@@ -4,6 +4,8 @@
 
 ### Changed
 
+ - Bump mocha from 2.1.0 to 2.7.1 [#977](https://github.com/portagenetwork/roadmap/pull/977)
+
  - Bump httparty from 0.21.0 to 0.22.0 [#823](https://github.com/portagenetwork/roadmap/pull/823)
 
  - Bump spring from 4.1.3 to 4.2.1 [#825](https://github.com/portagenetwork/roadmap/pull/825)
