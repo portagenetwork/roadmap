@@ -38,7 +38,6 @@ module DMPRoadmap
     # Your organisation's telephone number - used on the contact us page
     config.x.organisation.telephone = nil
     # Your organisation's address - used on the contact us page
-    # rubocop:disable Naming/VariableNumber
     config.x.organisation.address = {
       line1: nil,
       line2: nil,
@@ -46,8 +45,6 @@ module DMPRoadmap
       line4: nil,
       country: 'Canada'
     }
-    # rubocop:enable Naming/VariableNumber
-
     # The Google maps link to your organisation's location - used to display the
     # Google map on the contact us page.
     # To find your organisation's Google maps URL, open maps.google.com, search for
