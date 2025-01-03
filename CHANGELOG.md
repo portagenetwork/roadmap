@@ -4,6 +4,8 @@
 
 ### Changed
 
+ - Bump autoprefixer-rails from 10.4.16.0 to 10.4.19.0 [#976](https://github.com/portagenetwork/roadmap/pull/976)
+
  - Bump mocha from 2.1.0 to 2.7.1 [#977](https://github.com/portagenetwork/roadmap/pull/977)
 
  - Bump httparty from 0.21.0 to 0.22.0 [#823](https://github.com/portagenetwork/roadmap/pull/823)
