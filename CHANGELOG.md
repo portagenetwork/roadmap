@@ -4,6 +4,8 @@
 
 ### Changed
 
+ - Bump yard from 0.9.36 to 0.9.37 [#983](https://github.com/portagenetwork/roadmap/pull/983)
+
  - Bump rspec-rails from 6.1.2 to 6.1.5 [#985](https://github.com/portagenetwork/roadmap/pull/985)
 
  - Bump wicked_pdf from 2.7.0 to 2.8.2 [#973](https://github.com/portagenetwork/roadmap/pull/973)
