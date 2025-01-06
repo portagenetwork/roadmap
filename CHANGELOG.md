@@ -4,6 +4,8 @@
 
 ### Changed
 
+ - Bump pundit-matchers from 2.0.0 to 4.0.0 [#981](https://github.com/portagenetwork/roadmap/pull/981)
+
  - Bump yard from 0.9.36 to 0.9.37 [#983](https://github.com/portagenetwork/roadmap/pull/983)
 
  - Bump rspec-rails from 6.1.2 to 6.1.5 [#985](https://github.com/portagenetwork/roadmap/pull/985)
