@@ -4,6 +4,8 @@
 
 ### Changed
 
+ - Bump wkhtmltopdf-binary from 0.12.6.7 to 0.12.6.8 [#989](https://github.com/portagenetwork/roadmap/pull/989)
+
  - Bump pundit-matchers from 2.0.0 to 4.0.0 [#981](https://github.com/portagenetwork/roadmap/pull/981)
 
  - Bump yard from 0.9.36 to 0.9.37 [#983](https://github.com/portagenetwork/roadmap/pull/983)
