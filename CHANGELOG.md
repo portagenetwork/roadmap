@@ -4,6 +4,8 @@
 
 ### Changed
 
+ - Bump dragonfly from 1.4.0 to 1.4.1 [#988](https://github.com/portagenetwork/roadmap/pull/988)
+
  - Bump activerecord-nulldb-adapter from 1.0.1 to 1.1.1 [#987](https://github.com/portagenetwork/roadmap/pull/987)
 
  - Bump cssbundling-rails from 1.4.0 to 1.4.1 [#990](https://github.com/portagenetwork/roadmap/pull/990)
