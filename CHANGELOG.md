@@ -4,6 +4,8 @@
 
 ### Changed
 
+ - Bump cssbundling-rails from 1.4.0 to 1.4.1 [#990](https://github.com/portagenetwork/roadmap/pull/990)
+
  - Bump wkhtmltopdf-binary from 0.12.6.7 to 0.12.6.8 [#989](https://github.com/portagenetwork/roadmap/pull/989)
 
  - Bump pundit-matchers from 2.0.0 to 4.0.0 [#981](https://github.com/portagenetwork/roadmap/pull/981)
