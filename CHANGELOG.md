@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+ - Fix and Refactor Querying of `template.phases` and Associations Within `OrgAdmin TemplatesController` [#991](https://github.com/portagenetwork/roadmap/pull/991)
+
 ### Changed
 
  - Bump wkhtmltopdf-binary from 0.12.6.7 to 0.12.6.8 [#989](https://github.com/portagenetwork/roadmap/pull/989)
