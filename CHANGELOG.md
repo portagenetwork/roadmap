@@ -4,6 +4,8 @@
 
 ### Changed
 
+ - Bump activerecord-nulldb-adapter from 1.0.1 to 1.1.1 [#987](https://github.com/portagenetwork/roadmap/pull/987)
+
  - Bump cssbundling-rails from 1.4.0 to 1.4.1 [#990](https://github.com/portagenetwork/roadmap/pull/990)
 
  - Bump wkhtmltopdf-binary from 0.12.6.7 to 0.12.6.8 [#989](https://github.com/portagenetwork/roadmap/pull/989)
