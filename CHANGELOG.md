@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+ - Fix Handling of "Only Show Admins" Filter [#996](https://github.com/portagenetwork/roadmap/pull/996)
+
 ### Changed
 
  - Bump jwt from 2.8.2 to 2.10.1 [#984](https://github.com/portagenetwork/roadmap/pull/984)
