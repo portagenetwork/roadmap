@@ -4,6 +4,8 @@
 
 ### Changed
 
+ - Bump jwt from 2.8.2 to 2.10.1 [#984](https://github.com/portagenetwork/roadmap/pull/984)
+
  - Bump dragonfly from 1.4.0 to 1.4.1 [#988](https://github.com/portagenetwork/roadmap/pull/988)
 
  - Bump activerecord-nulldb-adapter from 1.0.1 to 1.1.1 [#987](https://github.com/portagenetwork/roadmap/pull/987)
