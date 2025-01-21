@@ -16,8 +16,7 @@ module Users
         # If email is missing we need to request the user to register with DMP.
         # User email can be missing if the usFFvate or trusted clients only we won't get the value.
         # User email id is one of the mandatory field which is must required.
-        flash[:notice] = _('Something went wrong, Please try signing up here.')
-        redirect_to new_user_registration_path
+        handle_missing_email_for_new_sso_entry
         return
       end
 
@@ -127,6 +126,33 @@ module Users
     end
 
     private
+
+    def handle_missing_email_for_new_sso_entry
+      flash[:alert] = generate_flash_message_for_missing_email
+      # Signed out user stays on 'Sign in' page
+      # Signed in user stays on 'Edit profile' page
+      path = current_user.nil? ? root_path : edit_user_registration_path
+      redirect_to path
+    end
+
+    def generate_flash_message_for_missing_email
+      url = 'https://cilogon.org/testidp/'
+      # if user tried to sign in via SSO
+      if current_user.nil?
+        format(
+          _('Unable to sign in with the selected identity provider. Please visit %{url} to verify ' \
+            'that all required fields are provided, or try signing in with another identity provider.'),
+          url: view_context.link_to(nil, url)
+        )
+      # user is signed in and attempted to link a new SSO account
+      else
+        format(
+          _('Unable to link with the selected identity provider. Please visit %{url} to verify ' \
+            'that all required fields are provided, or try linking with another identity provider.'),
+          url: view_context.link_to(nil, url)
+        )
+      end
+    end
 
     def handle_openid_connect_for_signed_out_user(user, auth, identifier_scheme)
       # user.nil? is true if the chosen CILogon email is not currently linked to an existing user account
