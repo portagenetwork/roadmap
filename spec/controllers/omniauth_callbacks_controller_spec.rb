@@ -26,11 +26,13 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         @request.env['omniauth.auth'].info.email = nil
       end
 
-      it 'redirects to the registration page with a flash message' do
+      it 'Redirects signed out user to root path and renders correct flash message' do
         post :openid_connect
-
-        expect(response).to redirect_to(new_user_registration_path)
-        expect(flash[:notice]).to eq('Something went wrong, Please try signing up here.')
+        expect(response).to redirect_to(root_path)
+        msg = 'Unable to sign in with the selected identity provider. Please visit ' \
+              '<a href="https://cilogon.org/testidp/">https://cilogon.org/testidp/</a> to verify ' \
+              'that all required fields are provided, or try signing in with another identity provider.'
+        expect(flash[:alert]).to eq(msg)
       end
     end
 
