@@ -6,7 +6,6 @@ module Users
     include EmailConfirmationHandler
 
     # This is for the OpenidConnect CILogon
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def openid_connect
       auth = request.env['omniauth.auth']
       user = User.from_omniauth(auth)
@@ -22,22 +21,11 @@ module Users
       # if user is not signed in (They clicked the SSO sign in button)
       if current_user.nil?
         handle_openid_connect_for_signed_out_user(user, auth, identifier_scheme)
-      elsif user.nil?
-        # we need to link
-        current_user.identifiers << Identifier.create(identifier_scheme: identifier_scheme,
-                                                      value: auth.uid,
-                                                      attrs: auth,
-                                                      identifiable: current_user)
-        flash[:notice] = _('Linked successfully')
-        redirect_to root_path
-      # elsif user is signed in and trying to link via SSO, but the auth creds are already linked to another account
-      elsif user.id != current_user.id
-        flash[:alert] = format(_('The current %{description} iD has been already linked to a user with email %{email}'),
-                               description: identifier_scheme.description, email: user.email)
-        redirect_to edit_user_registration_path
+      # else user is signed in (They clicked the SSO link account button)
+      else
+        handle_openid_connect_for_signed_in_user(user, auth, identifier_scheme)
       end
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     def orcid
       handle_omniauth(IdentifierScheme.for_authentication.find_by(name: 'orcid'))
@@ -172,6 +160,23 @@ module Users
                                               identifiable: user)
       end
       user
+    end
+
+    def handle_openid_connect_for_signed_in_user(user, auth, identifier_scheme)
+      if user.nil?
+        # we need to link
+        current_user.identifiers << Identifier.create(identifier_scheme: identifier_scheme,
+                                                      value: auth.uid,
+                                                      attrs: auth,
+                                                      identifiable: current_user)
+        flash[:notice] = _('Linked successfully')
+        redirect_to root_path
+      # elsif user is signed in and trying to link via SSO, but the auth creds are already linked to another account
+      elsif user.id != current_user.id
+        flash[:alert] = format(_('The current %{description} iD has been already linked to a user with email %{email}'),
+                               description: identifier_scheme.description, email: user.email)
+        redirect_to edit_user_registration_path
+      end
     end
   end
 end
