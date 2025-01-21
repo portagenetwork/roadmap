@@ -20,7 +20,8 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
   end
 
   describe 'POST #openid_connect' do
-    context 'when the email is missing and the user does not exist' do
+    context 'email is missing from IdP and no user with these auth creds exists in DB' do
+      let(:current_user) { create(:user) }
       before do
         # Simulate missing email
         @request.env['omniauth.auth'].info.email = nil
@@ -32,6 +33,16 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         msg = 'Unable to sign in with the selected identity provider. Please visit ' \
               '<a href="https://cilogon.org/testidp/">https://cilogon.org/testidp/</a> to verify ' \
               'that all required fields are provided, or try signing in with another identity provider.'
+        expect(flash[:alert]).to eq(msg)
+      end
+
+      it 'Redirects signed in user to Edit Profile path and renders correct flash message' do
+        sign_in current_user
+        post :openid_connect
+        expect(response).to redirect_to(edit_user_registration_path)
+        msg = 'Unable to link with the selected identity provider. Please visit ' \
+              '<a href="https://cilogon.org/testidp/">https://cilogon.org/testidp/</a> to verify ' \
+              'that all required fields are provided, or try linking with another identity provider.'
         expect(flash[:alert]).to eq(msg)
       end
     end
