@@ -164,19 +164,27 @@ module Users
 
     def handle_openid_connect_for_signed_in_user(user, auth, identifier_scheme)
       if user.nil?
-        # we need to link
-        current_user.identifiers << Identifier.create(identifier_scheme: identifier_scheme,
-                                                      value: auth.uid,
-                                                      attrs: auth,
-                                                      identifiable: current_user)
-        flash[:notice] = _('Linked successfully')
-        redirect_to root_path
+        # We need to link the new auth creds
+        handle_new_sso_email_for_signed_in_user(auth, identifier_scheme)
       # elsif user is signed in and trying to link via SSO, but the auth creds are already linked to another account
       elsif user.id != current_user.id
-        flash[:alert] = format(_('The current %{description} iD has been already linked to a user with email %{email}'),
-                               description: identifier_scheme.description, email: user.email)
-        redirect_to edit_user_registration_path
+        handle_conflicting_sso_email_for_signed_in_user(identifier_scheme, user)
       end
+    end
+
+    def handle_new_sso_email_for_signed_in_user(auth, identifier_scheme)
+      current_user.identifiers << Identifier.create(identifier_scheme: identifier_scheme,
+                                                    value: auth.uid,
+                                                    attrs: auth,
+                                                    identifiable: current_user)
+      flash[:notice] = _('Linked successfully')
+      redirect_to root_path
+    end
+
+    def handle_conflicting_sso_email_for_signed_in_user(identifier_scheme, user)
+      flash[:alert] = format(_('The current %{description} iD has been already linked to a user with email %{email}'),
+                             description: identifier_scheme.description, email: user.email)
+      redirect_to edit_user_registration_path
     end
   end
 end
