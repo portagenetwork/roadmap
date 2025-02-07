@@ -57,6 +57,8 @@
         </div>
       <% end %>
 
+      <%= render 'email_confirmation_status', f: f %>
+
       <div class="form-group col-xs-12">
         <%= f.button(_('Save'), class: 'btn btn-default', type: "submit", id: "personal_details_registration_form_submit") %>
 
