@@ -57,6 +57,15 @@ class ApiClient < ApplicationRecord
   validates :client_id, presence: { message: PRESENCE_MESSAGE }
   validates :client_secret, presence: { message: PRESENCE_MESSAGE }
 
+  # ==========
+  # = Scopes =
+  # ==========
+
+  scope :search, lambda { |term|
+                   search_pattern = "%#{term}%"
+                   where('lower(name) LIKE lower(?)', search_pattern)
+                 }
+
   # =========================
   # = Custom Accessor Logic =
   # =========================
