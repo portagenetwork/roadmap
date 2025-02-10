@@ -12,6 +12,8 @@
 
  - Added Arbutus Cloud and UVic logos to footer and added institutional sign in explanation [#1059](https://github.com/portagenetwork/roadmap/pull/1059)
 
+ - Add Functionality Allowing Super Admins to Confirm/Unconfirm User Emails [#1009](https://github.com/portagenetwork/roadmap/pull/1009)
+
 ### Changed
 
  - Bump net-imap from 0.4.19 to 0.4.20 [#1037](https://github.com/portagenetwork/roadmap/pull/1037)
