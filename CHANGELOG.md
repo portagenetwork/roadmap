@@ -10,6 +10,10 @@
 
  - Refactor: Implement Host-Based Routing and Remove Subpath URL Configuration [#1038](https://github.com/portagenetwork/roadmap/pull/1038)
 
+### Added
+
+ - Add Functionality Allowing Super Admins to Confirm/Unconfirm User Emails [#1009](https://github.com/portagenetwork/roadmap/pull/1009)
+
 ### Changed
 
  - Bump net-imap from 0.4.19 to 0.4.20 [#1037](https://github.com/portagenetwork/roadmap/pull/1037)
