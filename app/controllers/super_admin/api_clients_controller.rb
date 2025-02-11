@@ -12,7 +12,7 @@ module SuperAdmin
     # GET /api_clients
     def index
       authorize(ApiClient)
-      @api_clients = ApiClient.all.page(1)
+      @api_clients = ApiClient.includes(:org).page(1)
     end
 
     # GET /api_clients/new

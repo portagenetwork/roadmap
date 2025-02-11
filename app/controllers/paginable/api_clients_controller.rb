@@ -10,7 +10,7 @@ module Paginable
     # GET /paginable/api_clients
     def index
       authorize(ApiClient)
-      @api_clients = ApiClient.all
+      @api_clients = ApiClient.includes(:org).all
 
       paginable_renderise(
         partial: 'index',
