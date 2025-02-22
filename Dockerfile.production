@@ -50,7 +50,7 @@ COPY . $INSTALL_PATH
 RUN bundle exec rake assets:precompile && \
 rm -rf ${INSTALL_PATH}/node_modules ${INSTALL_PATH}/tmp/*
 
-FROM ruby:$RUBY_VERSION AS production
+FROM ruby:$RUBY_VERSION AS api
 
 ARG NODE_VERSION
 ARG BASE_URL
@@ -118,3 +118,25 @@ EXPOSE 3000
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
     CMD wget -qO- $HEALTHCHECK_URL || exit 1
+
+
+# nginx stage to serve static assets and proxy requests to api container
+FROM nginx:alpine AS web
+
+ARG SERVER_NAME
+
+ENV SERVER_NAME=$SERVER_NAME \
+    INSTALL_PATH=/usr/src/app
+
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=api ${INSTALL_PATH}/public/assets /usr/share/nginx/html/assets
+
+# Perform envsubst substitution at runtime to set `server_name` value in nginx.conf
+CMD envsubst '${SERVER_NAME}' < /etc/nginx/nginx.conf > /tmp/nginx.conf \
+    # Using a temporary file ensures the configuration is fully generated before Nginx starts.
+    && mv /tmp/nginx.conf /etc/nginx/nginx.conf \
+    # Run Nginx in the foreground, allowing the Docker container to remain active.
+    && nginx -g 'daemon off;'
+
+
+EXPOSE 80

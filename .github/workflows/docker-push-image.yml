@@ -11,7 +11,7 @@ on:
 
 jobs:
   push_to_registry:
-    name: Push Docker image to Docker Hub
+    name: Push Docker images to Docker Hub
     runs-on: ubuntu-20.04
     steps:
       - name: Check out the repo
@@ -26,16 +26,33 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      
-      - name: Extract metadata (tags) for Docker
-        id: meta
+
+      # Extract metadata for api image
+      - name: Extract metadata (tags) for Docker api Image
+        id: meta_api
         uses: docker/metadata-action@v3
         with:
           images: ualbertalib/dmp_roadmap
+          flavor: |
+            suffix=-api,onlatest=true
           tags: |
             type=match,pattern=.+portage-(\d\.\d\.\d),group=1
             type=raw,value=production
 
+      # Extract metadata for web image
+      - name: Extract metadata (tags) for Docker web image
+        id: meta_web
+        uses: docker/metadata-action@v3
+        with:
+          images: ualbertalib/dmp_roadmap
+          flavor: |
+            suffix=-web,onlatest=true
+          tags: |
+            type=match,pattern=.+portage-(\d\.\d\.\d),group=1
+            type=raw,value=production
+
+      # The `web` and `api` images depend on the same Dockerfile.production `builder` stage (where the Gemfile.lock is handled)
+      # Since both images share this stage, they can use the same job step for caching dependencies
       - name: Cache Gem dependencies
         uses: actions/cache@v3
         with:
@@ -48,17 +65,35 @@ jobs:
             ${{ runner.os }}-gems-${{ hashFiles('Gemfile') }}
             ${{ runner.os }}-gems-
 
-      - name: Build and push Docker image
+      - name: Build and push the api stage image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: .
           file: Dockerfile.production
+          target: api
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: |
+            ${{ steps.meta_api.outputs.tags }}
           # Fetch existing build cache from Docker Hub, if available
-          cache-from: type=registry,ref=ualbertalib/dmp_roadmap:build-cache
+          cache-from: type=registry,ref=ualbertalib/dmp_roadmap:build-cache-api
           # Push the updated build cache to Docker Hub
-          cache-to: type=registry,ref=ualbertalib/dmp_roadmap:build-cache,mode=max
-          # TODO: BASE_URL eventually needs to be set to the production URL
+          cache-to: type=registry,ref=ualbertalib/dmp_roadmap:build-cache-api,mode=max
           build-args: |
-            BASE_URL=https://uat.library.ualberta.ca:3000
+            SERVER_NAME=uat.library.ualberta.ca
+
+      - name: Build and push the web stage image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          file: Dockerfile.production
+          target: web
+          push: true
+          tags: |
+            ${{ steps.meta_web.outputs.tags }}
+          # Fetch existing build cache from Docker Hub, if available
+          # else, built `api` layer will be used as a fallback cache
+          cache-from: type=registry,ref=ualbertalib/dmp_roadmap:build-cache-web
+          # Push the updated build cache to Docker Hub
+          cache-to: type=registry,ref=ualbertalib/dmp_roadmap:build-cache-web,mode=max
+          build-args: |
+            SERVER_NAME=uat.library.ualberta.ca

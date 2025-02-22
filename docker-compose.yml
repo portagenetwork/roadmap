@@ -10,10 +10,11 @@ services:
     ports:
       - '5432:5432'
 
-  web:
+  api:
     build:
       context: .
       dockerfile: Dockerfile.production
+      target: api
     env_file:
       - ./.env
     environment:
@@ -28,6 +29,19 @@ services:
     depends_on:
       - db
     command: ["bundle", "exec", "rails", "s"]
+  
+  # web service to serve static files via Nginx and proxy requests to api service (Rails app)
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+      target: web
+      args:
+        SERVER_NAME: '127.0.0.1'
+    ports:
+      - "80:80"
+    depends_on:
+      - api
 
 volumes:
   db_volume:
