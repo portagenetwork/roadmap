@@ -78,8 +78,8 @@ jobs:
           cache-from: type=registry,ref=ualbertalib/dmp_roadmap:build-cache-api
           # Push the updated build cache to Docker Hub
           cache-to: type=registry,ref=ualbertalib/dmp_roadmap:build-cache-api,mode=max
-          build-args: |
-            SERVER_NAME=uat.library.ualberta.ca
+          # build-args: |
+          #   SERVER_NAME=uat.library.ualberta.ca
 
       - name: Build and push the web stage image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
@@ -95,5 +95,5 @@ jobs:
           cache-from: type=registry,ref=ualbertalib/dmp_roadmap:build-cache-web
           # Push the updated build cache to Docker Hub
           cache-to: type=registry,ref=ualbertalib/dmp_roadmap:build-cache-web,mode=max
-          build-args: |
-            SERVER_NAME=uat.library.ualberta.ca
+          # build-args: |
+          #   SERVER_NAME=uat.library.ualberta.ca
