@@ -24,6 +24,7 @@ services:
       RAILS_ENV: production
       NODE_ENV: production
       LC_ALL: en_CA.UTF-8
+      BASE_URL: http://127.0.0.1:3000/
     ports:
       - "3000:3000"
     depends_on:
@@ -36,8 +37,8 @@ services:
       context: .
       dockerfile: Dockerfile.production
       target: web
-      args:
-        SERVER_NAME: '127.0.0.1'
+    environment:
+      SERVER_NAME: 127.0.0.1
     ports:
       - "80:80"
     depends_on:
