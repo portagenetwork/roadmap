@@ -52,20 +52,6 @@ jobs:
             type=match,pattern=.+portage-(\d+\.\d+\.\d+-uat-\d+),group=1
             type=raw,value=uat
 
-      # The `web` and `api` images depend on the same Dockerfile.production `builder` stage (where the Gemfile.lock is handled)
-      # Since both images share this stage, they can use the same job step for caching dependencies
-      - name: Cache Gem dependencies
-        uses: actions/cache@v3
-        with:
-          path: vendor/bundle
-          # The unique cache key is the OS plus the Gemfile.lock hash
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-          # Fallback keys if the unique cache key is not found
-          # - Helps speed up builds when Gemfile.lock changes slightly
-          restore-keys: |
-            ${{ runner.os }}-gems-${{ hashFiles('Gemfile') }}
-            ${{ runner.os }}-gems-
-
       - name: Build and push the api stage image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
