@@ -7,6 +7,7 @@ name: Publish Docker image
 
 on:
   release:
+    # `published` type is triggered for both `latest` and `prerelease` releases
     types: [published]
 
 jobs:
@@ -34,11 +35,16 @@ jobs:
         with:
           images: ualbertalib/dmp_roadmap
           flavor: |
-            suffix=-api,onlatest=true
+            latest=false
+            suffix=-api
+          # conditional tagging based on release type
+          # prerelease corresponds to staging, latest to production
           tags: |
-            type=match,pattern=.+portage-(\d\.\d\.\d),group=1
-            type=raw,value=production
-
+            ${{ github.event.release.prerelease && 
+                'type=match,pattern=.+portage-(\d+\.\d+\.\d+-alpha-\d+)$,group=1' || 
+                (!github.event.release.prerelease && 
+                'type=match,pattern=.+portage-(\d+\.\d+\.\d+)$,group=1') }}
+      
       # Extract metadata for web image
       - name: Extract metadata (tags) for Docker web image
         id: meta_web
@@ -46,10 +52,16 @@ jobs:
         with:
           images: ualbertalib/dmp_roadmap
           flavor: |
-            suffix=-web,onlatest=true
+            latest=false
+            suffix=-web
+          # conditional tagging based on release type
+          # prerelease corresponds to staging, latest to production
           tags: |
-            type=match,pattern=.+portage-(\d\.\d\.\d),group=1
-            type=raw,value=production
+            ${{ github.event.release.prerelease && 
+                'type=match,pattern=.+portage-(\d+\.\d+\.\d+-alpha-\d+)$,group=1' || 
+                (!github.event.release.prerelease && 
+                'type=match,pattern=.+portage-(\d+\.\d+\.\d+)$,group=1') }}
+
 
       - name: Build and push the api stage image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
