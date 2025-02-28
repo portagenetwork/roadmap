@@ -1,6 +1,7 @@
 ARG RUBY_VERSION=3.1.4-alpine
 ARG NODE_VERSION=20.15.1-r0
 ARG WKHTMLTOPDF_VERSION=3.21.2-0.12.6-small
+ARG NGINX_VERSION=1.27.4-alpine
 
 FROM surnet/alpine-wkhtmltopdf:$WKHTMLTOPDF_VERSION AS wkhtmltopdf
 
@@ -119,7 +120,7 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
 
 
 # nginx stage to serve static assets and proxy requests to api container
-FROM nginx:alpine AS web
+FROM nginx:$NGINX_VERSION AS web
 
 ENV INSTALL_PATH=/usr/src/app
 
