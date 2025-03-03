@@ -127,12 +127,4 @@ ENV INSTALL_PATH=/usr/src/app
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=api ${INSTALL_PATH}/public/assets /usr/share/nginx/html/assets
 
-# Perform envsubst substitution at runtime to set `server_name` value in nginx.conf
-CMD envsubst '${SERVER_NAME}' < /etc/nginx/nginx.conf > /tmp/nginx.conf \
-    # Using a temporary file ensures the configuration is fully generated before Nginx starts.
-    && mv /tmp/nginx.conf /etc/nginx/nginx.conf \
-    # Run Nginx in the foreground, allowing the Docker container to remain active.
-    && nginx -g 'daemon off;'
-
-
 EXPOSE 80

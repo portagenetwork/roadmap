@@ -37,8 +37,6 @@ services:
       context: .
       dockerfile: Dockerfile.production
       target: web
-    environment:
-      SERVER_NAME: 127.0.0.1
     ports:
       - "80:80"
     depends_on:
