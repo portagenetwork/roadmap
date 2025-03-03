@@ -37,6 +37,8 @@ services:
       context: .
       dockerfile: Dockerfile.production
       target: web
+    environment:
+      API_URL: http://api:3000
     ports:
       - "80:80"
     depends_on:
