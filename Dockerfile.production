@@ -16,6 +16,10 @@ ENV INSTALL_PATH=/usr/src/app \
     DATABASE_URL=nulldb://nohost \
     SECRET_KEY_BASE=foo
 
+# Create non-root user early
+RUN addgroup -g 3000 -S dmpgroup && \
+    adduser -u 1000 -S dmpuser -G dmpgroup
+
 # - build-base && musl-dev: required for compiling native extensions
 # - postgresql16-dev: required to compile pg gem
 # - shared-mime-info:: required to compile mimemagic gem
@@ -33,7 +37,7 @@ RUN apk update && apk add --no-cache \
 WORKDIR $INSTALL_PATH
 
 # For Bundler caching
-COPY Gemfile* $INSTALL_PATH
+COPY --chown=dmpuser:dmpgroup Gemfile* $INSTALL_PATH
 RUN gem install bundler -v "$(tail -1 Gemfile.lock | tr -d " ")" && \
     bundle config set --local frozen 'true' && \
     # `deployment` flag installs gems to `vendor/bundle` directory
@@ -42,19 +46,30 @@ RUN gem install bundler -v "$(tail -1 Gemfile.lock | tr -d " ")" && \
     bundle install --jobs=3 --retry=3
 
 # For Yarn caching
-COPY package.json yarn.lock $INSTALL_PATH
+COPY --chown=dmpuser:dmpgroup package.json yarn.lock $INSTALL_PATH
 RUN yarn install --prod --frozen-lockfile --check-files
 
-COPY . $INSTALL_PATH
+COPY --chown=dmpuser:dmpgroup . $INSTALL_PATH
 
-# Precompile assets within builder stage
-RUN bundle exec rake assets:precompile && \
-rm -rf ${INSTALL_PATH}/node_modules ${INSTALL_PATH}/tmp/*
+# Precompile assets as non-root user
+# (tmp directory with correct permissions is required)
+RUN mkdir -p $INSTALL_PATH/tmp && chown -R dmpuser:dmpgroup $INSTALL_PATH/tmp
+USER dmpuser
+RUN bundle exec rake assets:precompile
+
+# Temporarily switch back to root user to delete /node_modules and tmp/*
+USER root
+RUN rm -rf ${INSTALL_PATH}/node_modules ${INSTALL_PATH}/tmp/*
+USER dmpuser
 
 FROM ruby:$RUBY_VERSION AS api
 
 ARG NODE_VERSION
 ENV INSTALL_PATH=/usr/src/app
+
+# Create non-root user with same UID/GID as builder
+RUN addgroup -g 3000 -S dmpgroup && \
+    adduser -u 1000 -S dmpuser -G dmpgroup
 
 # - postgresql16-client: Required for pg gem to connect to PostgreSQL
 # - imagemagick: Required for dragonfly gem to process images
@@ -98,18 +113,24 @@ COPY --from=wkhtmltopdf /bin/wkhtmltopdf /usr/bin/wkhtmltopdf
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=builder /usr/share/mime /usr/share/mime
 # Copy application code and dependencies from builder stage
-COPY --from=builder $INSTALL_PATH $INSTALL_PATH
+COPY --from=builder --chown=dmpuser:dmpgroup $INSTALL_PATH $INSTALL_PATH
 
-# Run container as non-root user
-RUN addgroup -S dmpgroup && adduser -S dmpuser -G dmpgroup && \
-    # Create env-specific directory for dragonfly datastore
-    mkdir -p ${INSTALL_PATH}/public/system/dragonfly/${RAILS_ENV} && \
-    # Update ownership of files that need to be writable during production runtime
-    chown -R dmpuser:dmpgroup ${INSTALL_PATH}/tmp \
-    ${INSTALL_PATH}/public/ \
-    # For executing translation:sync
-    ${INSTALL_PATH}/config/locale \
-    ${INSTALL_PATH}/config/locales
+# Create required directories with correct ownerships & permissions
+RUN mkdir -p ${INSTALL_PATH}/tmp/cache \
+        ${INSTALL_PATH}/tmp/pids \
+        ${INSTALL_PATH}/tmp/sockets \
+        # Create env-specific directory for dragonfly datastore
+        ${INSTALL_PATH}/public/system/dragonfly/${RAILS_ENV} \
+        # For executing translation:sync
+        ${INSTALL_PATH}/config/locale && \
+    chown -R dmpuser:dmpgroup \
+        ${INSTALL_PATH}/tmp \
+        ${INSTALL_PATH}/public \
+        ${INSTALL_PATH}/config/locale  && \
+    chmod -R 755 \
+        ${INSTALL_PATH}/tmp \
+        ${INSTALL_PATH}/public \
+        ${INSTALL_PATH}/config/locale
 
 USER dmpuser
 
@@ -118,13 +139,26 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
     CMD wget -qO- ${BASE_URL}/api/v1/heartbeat || exit 1
 
-
 # nginx stage to serve static assets and proxy requests to api container
 FROM nginx:$NGINX_VERSION AS web
 
 ENV INSTALL_PATH=/usr/src/app
 
+# Create non-root user
+RUN addgroup -g 3000 -S dmpgroup && \
+    adduser -u 1000 -S dmpuser -G dmpgroup && \
+    # Create required nginx directories with correct permissions
+    mkdir -p /var/cache/nginx /var/run && \
+    chown -R dmpuser:dmpgroup /var/cache/nginx /var/run && \
+    # Update nginx config to run as non-root
+    sed -i 's/user  nginx/user  dmpuser/g' /etc/nginx/nginx.conf && \
+    # Make nginx.pid writable
+    touch /var/run/nginx.pid && \
+    chown dmpuser:dmpgroup /var/run/nginx.pid
+
 COPY nginx.conf /etc/nginx/nginx.conf
-COPY --from=api ${INSTALL_PATH}/public/assets /usr/share/nginx/html/assets
+COPY --from=api --chown=dmpuser:dmpgroup ${INSTALL_PATH}/public/assets /usr/share/nginx/html/assets
+
+USER dmpuser
 
 EXPOSE 80
