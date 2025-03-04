@@ -1,5 +1,8 @@
 /.bundle
 /.github
+
+/deployments
+
 app/assets/videos
 config/branding.yml.sample
 config/credentials.yml.mysql2
