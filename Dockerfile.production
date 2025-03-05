@@ -151,28 +151,14 @@ RUN addgroup -g 3000 -S dmpgroup && \
     adduser -u 1000 -S dmpuser -G dmpgroup && \
     # Create required nginx directories with correct permissions
     mkdir -p /var/cache/nginx /var/run && \
-    chown -R dmpuser:dmpgroup /var/cache/nginx /var/run && \
-    # Update nginx config to run as non-root
-    sed -i 's/user  nginx/user  dmpuser/g' /etc/nginx/nginx.conf && \
-    # Make nginx.pid writable
-    touch /var/run/nginx.pid && \
-    chown dmpuser:dmpgroup /var/run/nginx.pid
-
-COPY --from=api --chown=dmpuser:dmpgroup ${INSTALL_PATH}/public/assets /usr/share/nginx/html/assets
-COPY nginx.conf /etc/nginx/nginx.conf
-
-# Grant dmpuser ownership and write permissions to nginx.conf (Required for `CMD envsubst...` to work)
-RUN chown dmpuser:dmpgroup /etc/nginx/nginx.conf && \
-    chmod 664 /etc/nginx/nginx.conf
-
-# Set up an entrypoint script to replace variables dynamically
-COPY nginx-entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+    chown -R dmpuser:dmpgroup /var/cache/nginx /var/run /etc/nginx
 
 USER dmpuser
 
-EXPOSE 80
+COPY --from=api --chown=dmpuser:dmpgroup ${INSTALL_PATH}/public/assets /usr/share/nginx/html/assets
+COPY --chown=dmpuser:dmpgroup nginx.conf /etc/nginx/nginx.conf
+COPY --chown=dmpuser:dmpgroup nginx.conf.template /etc/nginx/templates/default.conf.template
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+EXPOSE 8080
 
 CMD ["nginx", "-g", "daemon off;"]
