@@ -13,7 +13,7 @@ on:
 jobs:
   push_to_registry:
     name: Push Docker UAT image to Docker Hub
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3

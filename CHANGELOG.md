@@ -1,5 +1,45 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+ - Bump `runs-on:` to `ubuntu-22.04` Within all `.github/workflows` Files [#1017](https://github.com/portagenetwork/roadmap/pull/1017)
+
+ - Bump jwt from 2.8.2 to 2.10.1 [#984](https://github.com/portagenetwork/roadmap/pull/984)
+
+ - Bump dragonfly from 1.4.0 to 1.4.1 [#988](https://github.com/portagenetwork/roadmap/pull/988)
+
+ - Bump activerecord-nulldb-adapter from 1.0.1 to 1.1.1 [#987](https://github.com/portagenetwork/roadmap/pull/987)
+
+ - Bump cssbundling-rails from 1.4.0 to 1.4.1 [#990](https://github.com/portagenetwork/roadmap/pull/990)
+
+ - Bump wkhtmltopdf-binary from 0.12.6.7 to 0.12.6.8 [#989](https://github.com/portagenetwork/roadmap/pull/989)
+
+ - Bump pundit-matchers from 2.0.0 to 4.0.0 [#981](https://github.com/portagenetwork/roadmap/pull/981)
+
+ - Bump yard from 0.9.36 to 0.9.37 [#983](https://github.com/portagenetwork/roadmap/pull/983)
+
+ - Bump rspec-rails from 6.1.2 to 6.1.5 [#985](https://github.com/portagenetwork/roadmap/pull/985)
+
+ - Bump wicked_pdf from 2.7.0 to 2.8.2 [#973](https://github.com/portagenetwork/roadmap/pull/973)
+
+ - Bump brakeman from 6.1.2 to 7.0.0 [#975](https://github.com/portagenetwork/roadmap/pull/975)
+
+ - Bump autoprefixer-rails from 10.4.16.0 to 10.4.19.0 [#976](https://github.com/portagenetwork/roadmap/pull/976)
+
+ - Bump mocha from 2.1.0 to 2.7.1 [#977](https://github.com/portagenetwork/roadmap/pull/977)
+
+ - Bump httparty from 0.21.0 to 0.22.0 [#823](https://github.com/portagenetwork/roadmap/pull/823)
+
+ - Bump spring from 4.1.3 to 4.2.1 [#825](https://github.com/portagenetwork/roadmap/pull/825)
+
+ - Bump parallel from 1.24.0 to 1.26.3 [#855](https://github.com/portagenetwork/roadmap/pull/855)
+
+ - Bump pg from 1.5.4 to 1.5.9 [#934](https://github.com/portagenetwork/roadmap/pull/934)
+
+ - Bump recaptcha from 5.16.0 to 5.18.0 [#964](https://github.com/portagenetwork/roadmap/pull/964)
+
 ## [4.1.1+portage-4.2.3] - 2024-11-20
 
 ### Added
