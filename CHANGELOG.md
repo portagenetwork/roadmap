@@ -4,6 +4,8 @@
 
 ### Changed
 
+ - Bump nokogiri from 1.16.8 to 1.18.3 [#1024](https://github.com/portagenetwork/roadmap/pull/1024)
+
  - Bump rack from 2.2.11 to 2.2.12 [#1023](https://github.com/portagenetwork/roadmap/pull/1023)
 
  - Bump net-imap from 0.4.12 to 0.4.19 [#1008](https://github.com/portagenetwork/roadmap/pull/1008)
