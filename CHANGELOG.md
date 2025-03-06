@@ -40,6 +40,18 @@
 
  - Bump recaptcha from 5.16.0 to 5.18.0 [#964](https://github.com/portagenetwork/roadmap/pull/964)
 
+ - Bump uri from 0.13.0 to 0.13.2 [#1025](https://github.com/portagenetwork/roadmap/pull/1025)
+
+ - Bump nokogiri from 1.16.8 to 1.18.3 [#1024](https://github.com/portagenetwork/roadmap/pull/1024)
+
+ - Bump rack from 2.2.11 to 2.2.12 [#1023](https://github.com/portagenetwork/roadmap/pull/1023)
+
+ - Bump net-imap from 0.4.12 to 0.4.19 [#1008](https://github.com/portagenetwork/roadmap/pull/1008)
+
+ - Bump rack from 2.2.10 to 2.2.11 [#1018](https://github.com/portagenetwork/roadmap/pull/1018)
+
+ - Bump serialize-javascript from 6.0.1 to 6.0.2 [#1015](https://github.com/portagenetwork/roadmap/pull/1015)
+
 ## [4.1.1+portage-4.2.3] - 2024-11-20
 
 ### Added
