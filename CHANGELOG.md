@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+ - Bump net-imap from 0.4.12 to 0.4.19 [#1008](https://github.com/portagenetwork/roadmap/pull/1008)
+
+ - Bump rack from 2.2.10 to 2.2.11 [#1018](https://github.com/portagenetwork/roadmap/pull/1018)
+
 ## [4.1.1+portage-4.2.3] - 2024-11-20
 
 ### Added
