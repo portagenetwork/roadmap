@@ -2,12 +2,15 @@ ARG RUBY_VERSION=3.1.4-alpine
 ARG NODE_VERSION=20.15.1-r0
 ARG WKHTMLTOPDF_VERSION=3.21.2-0.12.6-small
 ARG NGINX_VERSION=1.27.4-alpine
+ARG RAILS_RELATIVE_URL_ROOT="/dmp-pgd-staging"
 
 FROM surnet/alpine-wkhtmltopdf:$WKHTMLTOPDF_VERSION AS wkhtmltopdf
 
 FROM ruby:$RUBY_VERSION AS builder
 
 ARG NODE_VERSION
+ARG RAILS_RELATIVE_URL_ROOT
+
 ENV INSTALL_PATH=/usr/src/app \
     RAILS_ENV=production \
     NODE_ENV=production \
