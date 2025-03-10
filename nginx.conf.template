@@ -2,11 +2,6 @@ server {
   listen 8080;
   server_name _;
 
-  location /healthz {
-    access_log off;
-    return 200 "healthy\n";
-  }
-
   location ~ ^${RAILS_RELATIVE_URL_ROOT}/assets/ {
     alias /usr/share/nginx/html/assets/;
     expires 1y;
