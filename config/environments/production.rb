@@ -100,9 +100,9 @@ Rails.application.configure do
     config.hosts << host
   end
 
-  # Exclude healthz path from host authorization to allow readiness check to pass
+  # Exclude api/v1/heartbeat path from host authorization to allow readiness check to pass
   Rails.application.config.host_authorization = {
-    exclude: ->(request) { request.path.include?("healthz") }
+    exclude: ->(request) { request.path.include?("api/v1/heartbeat") }
   }
 end
 # rubocop:enable Metrics/BlockLength
