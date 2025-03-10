@@ -99,6 +99,11 @@ Rails.application.configure do
   dmproadmap_hosts.each do |host|
     config.hosts << host
   end
+
+  # Exclude healthz path from host authorization to allow readiness check to pass
+  Rails.application.config.host_authorization = {
+    exclude: ->(request) { request.path.include?("healthz") }
+  }
 end
 # rubocop:enable Metrics/BlockLength
 # Used by Rails' routes url_helpers (typically when including a link in an email)
