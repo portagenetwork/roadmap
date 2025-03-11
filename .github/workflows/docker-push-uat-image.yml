@@ -33,7 +33,7 @@ jobs:
         id: meta_app
         uses: docker/metadata-action@v3
         with:
-          images: ualbertalib/dmp_roadmap
+          images: aaronskiba/roadmap
           flavor: |
             suffix=-app,onlatest=true
           tags: |
@@ -45,7 +45,7 @@ jobs:
         id: meta_assets
         uses: docker/metadata-action@v3
         with:
-          images: ualbertalib/dmp_roadmap
+          images: aaronskiba/roadmap
           flavor: |
             suffix=-assets,onlatest=true
           tags: |
@@ -62,9 +62,9 @@ jobs:
           tags: |
             ${{ steps.meta_app.outputs.tags }}
           # Fetch existing build cache from Docker Hub, if available
-          cache-from: type=registry,ref=ualbertalib/dmp_roadmap:build-cache-app
+          cache-from: type=registry,ref=aaronskiba/roadmap:build-cache-app
           # Push the updated build cache to Docker Hub
-          cache-to: type=registry,ref=ualbertalib/dmp_roadmap:build-cache-app,mode=max
+          cache-to: type=registry,ref=aaronskiba/roadmap:build-cache-app,mode=max
 
       - name: Build and push the assets stage image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
@@ -77,6 +77,6 @@ jobs:
             ${{ steps.meta_assets.outputs.tags }}
           # Fetch existing build cache from Docker Hub, if available
           # else, built `app` layer will be used as a fallback cache
-          cache-from: type=registry,ref=ualbertalib/dmp_roadmap:build-cache-assets
+          cache-from: type=registry,ref=aaronskiba/roadmap:build-cache-assets
           # Push the updated build cache to Docker Hub
-          cache-to: type=registry,ref=ualbertalib/dmp_roadmap:build-cache-assets,mode=max
+          cache-to: type=registry,ref=aaronskiba/roadmap:build-cache-assets,mode=max
