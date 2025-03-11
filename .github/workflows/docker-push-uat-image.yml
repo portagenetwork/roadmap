@@ -37,7 +37,7 @@ jobs:
           flavor: |
             suffix=-app,onlatest=true
           tags: |
-            type=match,pattern=.+portage-(\d+\.\d+\.\d+-uat-\d+),group=1
+            type=match,pattern=.+portage-(\d+\.\d+\.\d+-uat-\d+\.\d+\.\d+),group=1
             type=raw,value=uat
 
       # Extract metadata for assets image
@@ -49,7 +49,7 @@ jobs:
           flavor: |
             suffix=-assets,onlatest=true
           tags: |
-            type=match,pattern=.+portage-(\d+\.\d+\.\d+-uat-\d+),group=1
+            type=match,pattern=.+portage-(\d+\.\d+\.\d+-uat-\d+\.\d+\.\d+),group=1
             type=raw,value=uat
 
       - name: Build and push the app stage image
