@@ -19,6 +19,7 @@ import 'tinymce/plugins/advlist';
 
 // Other dependencies
 import { isObject, isString, isUndefined } from './isType';
+const railsRelativeUrlRoot = '/dmp-pgd-staging';
 
 // // Configuration extracted from
 // // https://www.tinymce.com/docs/advanced/usage-with-module-loaders/
@@ -51,8 +52,8 @@ export const defaultOptions = {
   },
   // editorManager.baseURL is not resolved properly for IE since document.currentScript
   // is not supported, see issue https://github.com/tinymce/tinymce/issues/358
-  skin_url: '/tinymce/skins/oxide',
-  content_css: ['/tinymce/tinymce.css'],
+  skin_url: `${railsRelativeUrlRoot}/tinymce/skins/oxide`,
+  content_css: [`${railsRelativeUrlRoot}/tinymce/tinymce.css`],
 };
 
 /*
