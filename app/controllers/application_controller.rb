@@ -69,7 +69,7 @@ class ApplicationController < ActionController::Base
        referer_path.nil?
       root_path
     else
-      request.referer
+      handle_referer_path(referer_path, request.referer)
     end
   end
   # rubocop:enable Metrics/AbcSize
@@ -193,5 +193,14 @@ class ApplicationController < ActionController::Base
         render '/api/v1/error', status: http_status
       end
     end
+  end
+
+  def handle_referer_path(referer_path, request_referer)
+    relative_root = ENV['RAILS_RELATIVE_URL_ROOT'] || ''
+    # Pre-append relative root to referer_path if missing
+    return "#{relative_root}#{referer_path}" unless referer_path.start_with?(relative_root)
+
+    # else return request_referer
+    request_referer
   end
 end
