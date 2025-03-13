@@ -1,0 +1,605 @@
+---
+# Default values for dmp-roadmap.
+
+# -- Provide a name in place of `dmp-roadmap`
+nameOverride: ''
+# -- String to fully override `dmp-roadmap.fullname`
+fullnameOverride: ''
+# -- Override the namespace
+# @default -- `.Release.Namespace`
+namespaceOverride: ''
+global:
+  # -- Global domain configuration
+  domain:
+    # -- Main domain name used throughout the chart
+    name: dmp-pgd.ca
+    # -- Application path/context (e.g., /staging)
+    path: ''
+
+  # -- Default image used by all components
+  image:
+    # -- If defined, a repository applied to all DMP Roadmap deployments
+    repository: ualbertalib/dmp_roadmap
+    # -- Overrides the global DMP Roadmap image tag whose default is the chart appVersion
+    tag: ''
+    # -- If defined, a imagePullPolicy applied to all DMP Roadmap deployments
+    imagePullPolicy: IfNotPresent
+
+  # -- Common labels for the all resources
+  additionalLabels: {}
+    # app: dmp-r
+
+  # -- Secrets with credentials to pull images from a private registry
+  imagePullSecrets: []
+
+  # -- Annotations for the all deployed Statefulsets
+  statefulsetAnnotations: {}
+
+  # -- Annotations for the all deployed Deployments
+  deploymentAnnotations: {}
+
+  # -- Annotations for the all deployed pods
+  podAnnotations: {}
+
+  # -- Labels for the all deployed pods
+  podLabels: {}
+
+  # -- Default priority class for all components
+  priorityClassName: ''
+
+  # -- Environment variables to pass to all deployed Deployments
+  env: []
+app:
+  # -- Number of app replicas
+  replicas: 1
+
+  ## DMP Roadmap app image
+  image:
+    # -- Repository to use for the DMP Roadmap app
+    # @default -- global.image.repository
+    repository: ''
+    # -- Tag to use for the DMP Roadmap app
+    # @default -- global.image.tag or chart appVersion
+    tag: ''
+    # -- Image pull policy for the DMP Roadmap app
+    # @default -- global.image.imagePullPolicy
+    imagePullPolicy: ''
+
+  # -- Secrets with credentials to pull images from a private registry
+  # @default -- global.imagePullSecrets
+  imagePullSecrets: []
+
+  # -- Environment variables to pass to DMP Roadmap app
+  env: []
+
+  # -- envFrom to pass to DMP Roadmap app
+  envFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
+  serviceAccount:
+    # -- Specifies whether a service account should be created
+    create: true
+    # -- Automatically mount a ServiceAccount's API credentials?
+    automount: true
+    # -- Annotations to add to the service account
+    annotations: {}
+    # -- The name of the service account to use.
+    # @default -- If not set and create is true, a name is generated using the fullname template
+    name: ''
+
+  # -- Pod annotations for the app deployment
+  podAnnotations: {}
+  # -- Pod labels for the app deployment
+  podLabels: {}
+
+  # -- Pod security context for the app deployment
+  podSecurityContext:
+    fsGroup: 3000
+
+  # -- Container security context for the app deployment
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    privileged: false
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 1000
+    seccompProfile:
+      type: RuntimeDefault
+  service:
+    # -- Service type for the app
+    type: ClusterIP
+    # -- Service port for the app
+    port: 8080
+    # -- Target port for the app container
+    targetPort: 3000
+
+  # -- Resource requests and limits for the app
+  resources:
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+
+  # -- Liveness probe configuration for the app
+  livenessProbe:
+    httpGet:
+      path: /api/v1/heartbeat
+      port: http
+    initialDelaySeconds: 120
+    periodSeconds: 20
+    timeoutSeconds: 10
+    failureThreshold: 6
+    successThreshold: 1
+
+  # -- Readiness probe configuration for the app
+  readinessProbe:
+    httpGet:
+      path: /api/v1/heartbeat
+      port: http
+    initialDelaySeconds: 60
+    periodSeconds: 20
+    timeoutSeconds: 10
+    failureThreshold: 6
+    successThreshold: 1
+
+  # -- Autoscaling configuration for the app
+  autoscaling:
+    # -- Enable autoscaling for the app
+    enabled: false
+    # -- Minimum number of replicas
+    minReplicas: 1
+    # -- Maximum number of replicas
+    maxReplicas: 100
+    # -- Target CPU utilization percentage
+    targetCPUUtilizationPercentage: 80
+    # -- Target memory utilization percentage
+    # targetMemoryUtilizationPercentage: 80
+
+  # -- Additional volumes for the app deployment
+  volumes: []
+  # - name: foo
+  #   secret:
+  #     secretName: mysecret
+  #     optional: false
+
+  # -- Additional volume mounts for the app deployment
+  volumeMounts: []
+  # - name: foo
+  #   mountPath: "/etc/foo"
+  #   readOnly: true
+
+  # -- Node selector for the app deployment
+  nodeSelector: {}
+
+  # -- Tolerations for the app deployment
+  tolerations: []
+
+  # -- Affinity settings for the app deployment
+  affinity: {}
+assets:
+  # -- Number of assets replicas
+  replicas: 1
+
+  ## DMP Roadmap assets image
+  image:
+    # -- Repository to use for the DMP Roadmap assets
+    # @default -- global.image.repository
+    repository: ''
+    # -- Tag to use for the DMP Roadmap assets
+    # @default -- global.image.tag or chart appVersion
+    tag: ''
+    # -- Image pull policy for the DMP Roadmap assets
+    # @default -- global.image.imagePullPolicy
+    imagePullPolicy: ''
+
+  # -- Secrets with credentials to pull images from a private registry
+  # @default -- global.imagePullSecrets
+  imagePullSecrets: []
+
+  # -- Environment variables to pass to DMP Roadmap assets
+  env: []
+
+  # -- envFrom to pass to DMP Roadmap assets
+  envFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
+  serviceAccount:
+    # -- Specifies whether a service account should be created
+    create: true
+    # -- Automatically mount a ServiceAccount's API credentials?
+    automount: true
+    # -- Annotations to add to the service account
+    annotations: {}
+    # -- The name of the service account to use.
+    # @default -- If not set and create is true, a name is generated using the fullname template
+    name: ''
+
+  # -- Pod annotations for the assets deployment
+  podAnnotations: {}
+  # -- Pod labels for the assets deployment
+  podLabels: {}
+
+  # -- Pod security context for the assets deployment
+  podSecurityContext:
+    fsGroup: 3000
+
+  # -- Container security context for the assets deployment
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    privileged: false
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 1000
+    seccompProfile:
+      type: RuntimeDefault
+  service:
+    # -- Service type for the assets
+    type: ClusterIP
+    # -- Service port for the assets
+    port: 8080
+    # -- Target port for the assets container
+    targetPort: 8080
+
+  # -- Resource requests and limits for the assets
+  resources:
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+  # -- Liveness probe configuration for the assets
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: http
+    initialDelaySeconds: 120
+    periodSeconds: 20
+    timeoutSeconds: 10
+    failureThreshold: 6
+    successThreshold: 1
+
+  # -- Readiness probe configuration for the assets
+  readinessProbe:
+    httpGet:
+      path: /healthz
+      port: http
+    initialDelaySeconds: 60
+    periodSeconds: 20
+    timeoutSeconds: 10
+    failureThreshold: 6
+    successThreshold: 1
+
+  # -- Autoscaling configuration for the assets
+  autoscaling:
+    # -- Enable autoscaling for the assets
+    enabled: false
+    # -- Minimum number of replicas
+    minReplicas: 1
+    # -- Maximum number of replicas
+    maxReplicas: 100
+    # -- Target CPU utilization percentage
+    targetCPUUtilizationPercentage: 80
+    # -- Target memory utilization percentage
+    # targetMemoryUtilizationPercentage: 80
+
+  # -- Additional volumes for the assets deployment
+  volumes: []
+  # - name: foo
+  #   secret:
+  #     secretName: mysecret
+  #     optional: false
+
+  # -- Additional volume mounts for the assets deployment
+  volumeMounts: []
+  # - name: foo
+  #   mountPath: "/etc/foo"
+  #   readOnly: true
+
+  # -- Node selector for the assets deployment
+  nodeSelector: {}
+
+  # -- Tolerations for the assets deployment
+  tolerations: []
+
+  # -- Affinity settings for the assets deployment
+  affinity: {}
+ingress:
+  # -- Enable or disable the ingress
+  enabled: false
+
+  # -- Annotations for the ingress resource
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+
+  # -- Ingress class name
+  className: ''
+
+  # -- Host configuration for the ingress
+  hosts:
+    - host: kestrel.arbutus.cloud
+      paths:
+        - path: /
+          pathType: Prefix
+
+  # -- TLS configuration for the ingress
+  tls: []
+  #  - secretName: dmp-roadmap-tls
+  #    hosts:
+  #      - kestrel.arbutus.cloud
+## Storage Configuration
+# -- Storage configuration for the application
+storage:
+  # -- Storage type (cephfs)
+  type: cephfs
+
+  # -- CephFS storage configuration
+  cephfs:
+    # -- Storage reclaim policy
+    persistentVolumeReclaimPolicy: Retain
+    # -- Volume mode
+    volumeMode: Filesystem
+    # -- Access modes for the volumes
+    accessModes:
+      - ReadWriteMany
+    # -- CephFS monitors
+    monitors: []
+
+    # -- Volume definitions for CephFS
+    volumes:
+      # -- Locales volume configuration
+      locales:
+        # -- Path for the locales volume
+        path: ''
+        # -- Size for the locales volume
+        size: 5Gi
+        # -- Mount path for the locales volume
+        mountPath: /usr/src/app/config/locale
+        # -- Secret reference for the locales volume
+        secretRef: cephfs-locales-key
+
+      # -- Uploads volume configuration
+      uploads:
+        # -- Path for the uploads volume
+        path: ''
+        # -- Size for the uploads volume
+        size: 5Gi
+        # -- Mount path for the uploads volume
+        mountPath: /usr/src/app/public/system/dragonfly
+        # -- Secret reference for the uploads volume
+        secretRef: cephfs-uploads-key
+# -- Configuration values for the application
+config:
+  # -- Application and host settings
+  application:
+    # -- Main hostname for the application
+    # @default -- global.domain.name
+    dmproadmapHost: ''
+    # -- Set to true for sandbox mode
+    onSandbox: 'false'
+    # -- HTTP proxy if needed
+    httpProxy: ''
+    # -- HTTP proxy port if needed
+    httpProxyPort: ''
+
+  # -- Mailer and SMTP settings
+  mailer:
+    # -- Default host for mailer
+    # @default -- https://global.domain.name
+    defaultHost: ''
+    # -- From address for emails
+    from: support@portagenetwork.ca
+    # -- To address for system emails
+    to: support@portagenetwork.ca
+    # -- SMTP server address
+    smtpAddress: smtp.gmail.com
+    # -- SMTP authentication method
+    smtpAuthentication: plain
+    # -- SMTP domain
+    smtpDomain: portagenetwork.ca
+    # -- SMTP port
+    smtpPort: 587
+
+  # -- Environment-specific settings
+  environment:
+    # -- OAuth callback URL
+    # @default -- https://global.domain.name/global.domain.path
+    omniauthFullHost: ''
+    # -- Path to wkhtmltopdf binary
+    wickedPdfPath: /usr/bin/wkhtmltopdf
+    # -- Proxy for wkhtmltopdf if needed
+    wickedPdfProxy: ''
+    # -- Default funder ID
+    defaultFunderId: 8
+    # -- Funder organization ID
+    funderOrgId: ''
+    # -- French organization ID
+    frenchOrgId: ''
+    # -- English organization ID
+    englishOrgId: ''
+    # -- Whether ORCID client is a member
+    orcidClientMember: 'false'
+    # -- Rails environment
+    railsEnv: production
+    # -- Rake environment
+    rakeEnv: production
+    # -- Node environment
+    nodeEnv: production
+    # -- Locale
+    locale: en_CA.UTF-8
+    # -- Bundle path
+    bundlePath: vendor/bundle
+    # -- Bundle without
+    bundleWithout: development:test:mysql:aws:sandbox:ci:wkhtmltopdf
+    # -- Base URL
+    # @default -- https://global.domain.name/global.domain.path
+    baseUrl: ''
+    # -- Rollbar environment
+    rollbarEnv: arbutus-test
+    # -- Rails relative URL root
+    # @default -- global.domain.path
+    railsRelativeUrlRoot: ''
+    # -- Rails log to stdout
+    railsLogToStdout: 'true'
+    # -- Rails serve static files
+    railsServeStaticFiles: 'false'
+    # -- Rails skip asset compilation
+    railsSkipAssetCompilation: 'true'
+    # -- Asset host
+    # @default -- https://global.domain.name
+    assetHost: ''
+## CronJobs Configuration
+# -- Scheduled tasks for the application
+cronjobs:
+  # -- Translation Sync CronJob configuration
+  translationSync:
+    # -- Enable or disable the translation sync CronJob
+    enabled: true
+    # -- Schedule for the CronJob (cron format)
+    schedule: '*/5 * * * *'
+    # -- Concurrency policy for CronJob (Allow, Forbid, Replace)
+    concurrencyPolicy: Forbid
+    # -- Number of successful job history to keep
+    successfulJobsHistoryLimit: 3
+    # -- Number of failed job history to keep
+    failedJobsHistoryLimit: 1
+    # -- Whether to suspend the job execution
+    suspend: false
+    # -- Restart policy for the job pods
+    restartPolicy: OnFailure
+    # -- Pod annotations for the CronJob pods
+    podAnnotations: {}
+    # -- Pod labels for the CronJob pods
+    podLabels: {}
+    # -- Priority class name for the CronJob
+    # @default -- app.priorityClassName or global.priorityClassName
+    priorityClassName: ''
+    # -- Additional environment variables for the CronJob
+    env: []
+    # -- Additional volume mounts for the CronJob
+    volumeMounts: []
+    # -- Additional volumes for the CronJob
+    volumes: []
+    # -- Resource limits and requests for the CronJob
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 200m
+        memory: 512Mi
+    # -- Node selector for the CronJob
+    # @default -- app.nodeSelector
+    nodeSelector: {}
+    # -- Affinity rules for the CronJob
+    # @default -- app.affinity
+    affinity: {}
+    # -- Tolerations for the CronJob
+    # @default -- app.tolerations
+    tolerations: []
+
+  # -- Research Data Output CronJob configuration
+  researchDataOutput:
+    # -- Enable or disable the research data output CronJob
+    enabled: true
+    # -- Schedule for the CronJob (cron format)
+    schedule: 0 0 * * *
+    # -- Concurrency policy for CronJob (Allow, Forbid, Replace)
+    concurrencyPolicy: Forbid
+    # -- Number of successful job history to keep
+    successfulJobsHistoryLimit: 3
+    # -- Number of failed job history to keep
+    failedJobsHistoryLimit: 1
+    # -- Whether to suspend the job execution
+    suspend: false
+    # -- Restart policy for the job pods
+    restartPolicy: OnFailure
+    # -- Pod annotations for the CronJob pods
+    podAnnotations: {}
+    # -- Pod labels for the CronJob pods
+    podLabels: {}
+    # -- Priority class name for the CronJob
+    # @default -- app.priorityClassName or global.priorityClassName
+    priorityClassName: ''
+    # -- Additional environment variables for the CronJob
+    env: []
+    # -- Additional volume mounts for the CronJob
+    volumeMounts: []
+    # -- Additional volumes for the CronJob
+    volumes: []
+    # -- Resource limits and requests for the CronJob
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 200m
+        memory: 512Mi
+    # -- Node selector for the CronJob
+    # @default -- app.nodeSelector
+    nodeSelector: {}
+    # -- Affinity rules for the CronJob
+    # @default -- app.affinity
+    affinity: {}
+    # -- Tolerations for the CronJob
+    # @default -- app.tolerations
+    tolerations: []
+# -- Extra Kubernetes objects to deploy
+extraObjects: []
+## Network Policies
+# -- Network policy configuration
+networkPolicy:
+  # -- Enable network policies
+  enabled: false
+
+  # -- Ingress source configuration
+  ingressSource:
+    # -- Namespace selector for ingress controller
+    namespaceSelector: {}
+      # kubernetes.io/metadata.name: traefik
+    # -- Pod selector for ingress controller
+    podSelector: {}
+      # app.kubernetes.io/name: traefik
+
+  # -- Components to create network policies for
+  components:
+    # -- App component
+    - name: app
+      # -- Component label
+      component: app
+      # -- Target port
+      port: 3000
+    # -- Assets component
+    - name: assets
+      # -- Component label
+      component: assets
+      # -- Target port
+      port: 8080
+    # -- CronJobs component
+    - name: cronjobs
+      # -- Component label
+      partOf: cronjob
+      # -- Target port
+      port: 3000

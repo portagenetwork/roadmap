@@ -1,0 +1,21 @@
+{{- if eq .Values.storage.type "cephfs" }}
+{{- range $name, $volume := .Values.storage.cephfs.volumes }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "dmp-roadmap.fullname" $ }}-{{ $name }}
+  labels:
+    {{- include "dmp-roadmap.labels" $ | nindent 4 }}
+spec:
+  accessModes:
+    {{- toYaml $.Values.storage.cephfs.accessModes | nindent 4 }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: {{ $name }}
+  storageClassName: ""
+  resources:
+    requests:
+      storage: {{ $volume.size }}
+{{- end }}
+{{- end }}

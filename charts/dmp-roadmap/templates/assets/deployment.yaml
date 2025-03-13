@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "dmp-roadmap.fullname" . }}-assets
+  labels:
+    {{- $_ := set . "component" "assets" }}
+    {{- include "dmp-roadmap.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.assets.autoscaling.enabled }}
+  replicas: {{ .Values.assets.replicas }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- $_ := set . "component" "assets" }}
+      {{- include "dmp-roadmap.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.assets.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- $_ := set . "component" "assets" }}
+        {{- include "dmp-roadmap.labels" . | nindent 8 }}
+        {{- with .Values.assets.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.assets.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.assets.priorityClassName | default .Values.global.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
+      serviceAccountName: {{ include "dmp-roadmap.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.assets.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.assets.image.repository | default .Values.global.image.repository }}:{{ .Values.assets.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.assets.image.imagePullPolicy }}
+          env:
+            - name: API_URL
+              value: "http://{{ include "dmp-roadmap.fullname" . }}-app.{{ .Release.Namespace }}:{{ .Values.app.service.port }}"
+            - name: API_SERVICE_HOST
+              value: "{{ include "dmp-roadmap.fullname" . }}-app.{{ .Release.Namespace }}"
+            - name: API_SERVICE_PORT
+              value: "{{ .Values.app.service.port }}"
+            - name: RAILS_RELATIVE_URL_ROOT
+              value: {{ include "dmp-roadmap.railsRelativeUrlRoot" . }}
+            {{- with (concat .Values.global.env .Values.assets.env) }}
+              {{- toYaml . | nindent 10 }}
+            {{- end }}
+          {{- with .Values.assets.envFrom }}
+          envFrom:
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
+          securityContext:
+            {{- toYaml .Values.assets.securityContext | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.assets.service.targetPort }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: {{ .Values.assets.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.assets.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.assets.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.assets.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.assets.livenessProbe.successThreshold }}
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: {{ .Values.assets.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.assets.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.assets.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.assets.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.assets.readinessProbe.successThreshold }}
+          resources:
+            {{- toYaml .Values.assets.resources | nindent 12 }}
+          volumeMounts:
+            # Required tmp directories for Rails
+            - name: tmp
+              mountPath: /tmp
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
+            {{- with .Values.assets.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+      volumes:
+        # Tmp directories required for Rails
+        - name: tmp
+          emptyDir: {}
+        - name: nginx-config
+          emptyDir: {}
+        {{- with .Values.volumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.assets.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.assets.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.assets.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

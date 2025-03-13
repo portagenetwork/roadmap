@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "dmp-roadmap.fullname" . }}-app
+  labels:
+    {{- $_ := set . "component" "app" }}
+    {{- include "dmp-roadmap.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.app.service.type }}
+  ports:
+    - port: {{ .Values.app.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- $_ := set . "component" "app" }}
+    {{- include "dmp-roadmap.selectorLabels" . | nindent 4 }}
