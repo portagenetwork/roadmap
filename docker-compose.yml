@@ -29,7 +29,6 @@ services:
       - "3000:3000"
     depends_on:
       - db
-    command: ["bundle", "exec", "rails", "s"]
   
   # assets service to serve static files via Nginx
   assets:
