@@ -265,8 +265,7 @@ Devise.setup do |config|
   config.omniauth :orcid, Rails.application.secrets.orcid_client_id,
                   Rails.application.secrets.orcid_client_secret,
                   {
-                    member: Rails.application.secrets.orcid_member,
-                    redirect_uri: "#{Rails.application.secrets.omniauth_full_host}/users/auth/orcid/callback"
+                    member: Rails.application.secrets.orcid_member
                   }
 
   config.omniauth :shibboleth,
