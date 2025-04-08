@@ -89,7 +89,7 @@ $(() => {
         //   initAutocomplete('#org-details-org-controls .autocomplete');
         // }
 
-        $.get('/dmp-pgd-staging/research_projects.json', (data) => {
+        $.get('/research_projects.json', (data) => {
           window.researchProjects = data;
           const descriptionData = $.map((dataIn, datum) => datum.description);
           grantIdField.typeahead({ source: descriptionData });
