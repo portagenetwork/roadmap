@@ -4,6 +4,10 @@
 
 ### Changed
 
+ - Lower PostgreSQL GitHub Action Chrome Version to Address Breaking Changes Between Latest Chrome Version (134) and `/features` Tests [#1033](https://github.com/portagenetwork/roadmap/pull/1033)
+
+ - Bump nokogiri from 1.16.8 to 1.18.3 [#1012](https://github.com/portagenetwork/roadmap/pull/1012)
+
  - Bump `runs-on:` to `ubuntu-22.04` Within all `.github/workflows` Files [#1017](https://github.com/portagenetwork/roadmap/pull/1017)
 
  - Bump jwt from 2.8.2 to 2.10.1 [#984](https://github.com/portagenetwork/roadmap/pull/984)
