@@ -1,0 +1,30 @@
+global:
+  priorityClassName: uber-user-preempt-high
+  domain:
+    name: "kestrel.arbutus.cloud"
+app:
+  envFrom:
+    - secretRef:
+        name: dmp-roadmap-db
+    - secretRef:
+        name: dmp-roadmap-devise-secrets
+    - secretRef:
+        name: dmp-roadmap-integrations
+assets:
+cronjobs:
+  translationSync:
+    priorityClassName: uber-user-preempt-medium
+  researchDataOutput:
+    priorityClassName: uber-user-preempt-medium
+ingress:
+  enabled: true
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.tls.certresolver: rcs_powerdns
+storage:
+  cephfs:
+    monitors:
+      - 10.30.201.3:6789
+      - 10.30.202.3:6789
+      - 10.30.203.3:6789
