@@ -67,18 +67,14 @@ spec:
                 {{- toYaml .Values.cronjobs.researchDataOutput.resources | nindent 16 }}
               volumeMounts:
                 # Required tmp directories for Rails
-                - name: tmp
+                - name: rails-tmp
                   mountPath: /usr/src/app/tmp
-                - name: cache
-                  mountPath: /usr/src/app/tmp/cache
                 {{- with .Values.cronjobs.researchDataOutput.volumeMounts }}
                 {{- toYaml . | nindent 16 }}
                 {{- end }}
           volumes:
             # Tmp directories required for Rails
-            - name: tmp
-              emptyDir: {}
-            - name: cache
+            - name: rails-tmp
               emptyDir: {}
             {{- with .Values.cronjobs.researchDataOutput.volumes }}
             {{- toYaml . | nindent 12 }}

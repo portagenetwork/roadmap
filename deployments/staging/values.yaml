@@ -1,6 +1,6 @@
 global:
   domain:
-    path: "/dmp-pgd-staging"
+    prefix: staging
 app:
   image:
     tag: "4.3.0-uat-0.1.0-app"
@@ -8,11 +8,8 @@ assets:
   image:
     tag: "4.3.0-uat-0.1.0-assets"
 ingress:
-  hosts:
-    - host: kestrel.arbutus.cloud
-      paths:
-        - path: /dmp-pgd-staging
-          pathType: Prefix
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-staging
 storage:
   cephfs:
     volumes:

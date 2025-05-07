@@ -68,10 +68,8 @@ spec:
                   mountPath: {{ .Values.storage.cephfs.volumes.locales.mountPath }}
                 {{- end }}
                 # Required tmp directories for Rails
-                - name: tmp
+                - name: rails-tmp
                   mountPath: /usr/src/app/tmp
-                - name: cache
-                  mountPath: /usr/src/app/tmp/cache
                 {{- with .Values.cronjobs.translationSync.volumeMounts }}
                 {{- toYaml . | nindent 16 }}
                 {{- end }}
@@ -82,9 +80,7 @@ spec:
                 claimName: {{ include "dmp-roadmap.fullname" $ }}-locales
             {{- end }}
             # Tmp directories required for Rails
-            - name: tmp
-              emptyDir: {}
-            - name: cache
+            - name: rails-tmp
               emptyDir: {}
             {{- with .Values.cronjobs.translationSync.volumes }}
             {{- toYaml . | nindent 12 }}

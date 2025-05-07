@@ -68,22 +68,21 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
-Create default domain URL
+Get the hostname
+e.g., staging.dmp-pgd.ca or dmp-pgd.ca
+*/}}
+{{- define "dmp-roadmap.hostname" -}}
+{{- if .Values.global.domain.prefix -}}
+{{- printf "%s.%s" .Values.global.domain.prefix .Values.global.domain.name -}}
+{{- else -}}
+{{- .Values.global.domain.name -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Create default domain URL (scheme + hostname)
+e.g., https://staging.dmp-pgd.ca or https://dmp-pgd.ca
 */}}
 {{- define "dmp-roadmap.domainUrl" -}}
-{{- printf "https://%s" .Values.global.domain.name -}}
-{{- end -}}
-
-{{/*
-Create default full URL with path
-*/}}
-{{- define "dmp-roadmap.fullUrl" -}}
-{{- printf "%s%s" (include "dmp-roadmap.domainUrl" .) .Values.global.domain.path -}}
-{{- end -}}
-
-{{/*
-Get the Rails relative URL root
-*/}}
-{{- define "dmp-roadmap.railsRelativeUrlRoot" -}}
-{{- .Values.config.environment.railsRelativeUrlRoot | default .Values.global.domain.path -}}
+{{- printf "https://%s" (include "dmp-roadmap.hostname" .) -}}
 {{- end -}}

@@ -7,7 +7,7 @@ metadata:
     {{- include "dmp-roadmap.labels" . | nindent 4 }}
 data:
   # Application & Host Config
-  {{- $dmproadmapHost := .Values.config.application.dmproadmapHost | default .Values.global.domain.name }}
+  {{- $dmproadmapHost := .Values.config.application.dmproadmapHost | default (include "dmp-roadmap.hostname" .) }}
   {{- if $dmproadmapHost }}
   DMPROADMAP_HOST: {{ $dmproadmapHost | quote }}
   {{- end }}
@@ -55,7 +55,7 @@ data:
   {{- end }}
 
   # Environment-specific Settings
-  {{- $omniauthFullHost := .Values.config.environment.omniauthFullHost | default (include "dmp-roadmap.fullUrl" .) }}
+  {{- $omniauthFullHost := .Values.config.environment.omniauthFullHost | default (include "dmp-roadmap.domainUrl" .) }}
   {{- if $omniauthFullHost }}
   OMNIAUTH_FULL_HOST: {{ $omniauthFullHost | quote }}
   {{- end }}
@@ -112,18 +112,13 @@ data:
   BUNDLE_WITHOUT: {{ .Values.config.environment.bundleWithout | quote }}
   {{- end }}
 
-  {{- $baseUrl := .Values.config.environment.baseUrl | default (include "dmp-roadmap.fullUrl" .) }}
+  {{- $baseUrl := .Values.config.environment.baseUrl | default (include "dmp-roadmap.domainUrl" .) }}
   {{- if $baseUrl }}
   BASE_URL: {{ $baseUrl | quote }}
   {{- end }}
 
   {{- if .Values.config.environment.rollbarEnv }}
   ROLLBAR_ENV: {{ .Values.config.environment.rollbarEnv | quote }}
-  {{- end }}
-
-  {{- $railsRelativeUrlRoot := include "dmp-roadmap.railsRelativeUrlRoot" . }}
-  {{- if $railsRelativeUrlRoot }}
-  RAILS_RELATIVE_URL_ROOT: {{ $railsRelativeUrlRoot | quote }}
   {{- end }}
 
   {{- if .Values.config.environment.railsLogToStdout }}
@@ -141,4 +136,8 @@ data:
   {{- $assetHost := .Values.config.environment.assetHost | default (include "dmp-roadmap.domainUrl" .) }}
   {{- if $assetHost }}
   ASSET_HOST: {{ $assetHost | quote }}
+  {{- end }}
+
+  {{- if .Values.config.environment.tmpDir }}
+  TMPDIR: {{ .Values.config.environment.tmpDir | quote }}
   {{- end }}

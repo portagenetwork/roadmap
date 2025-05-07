@@ -15,6 +15,8 @@ global:
     name: dmp-pgd.ca
     # -- Application path/context (e.g., /staging)
     path: ''
+    # -- Application prefix (e.g., staging)
+    prefix: ''
 
   # -- Default image used by all components
   image:
@@ -458,9 +460,6 @@ config:
     baseUrl: ''
     # -- Rollbar environment
     rollbarEnv: arbutus-test
-    # -- Rails relative URL root
-    # @default -- global.domain.path
-    railsRelativeUrlRoot: ''
     # -- Rails log to stdout
     railsLogToStdout: 'true'
     # -- Rails serve static files
@@ -470,6 +469,8 @@ config:
     # -- Asset host
     # @default -- https://global.domain.name
     assetHost: ''
+    # -- Tmp directory
+    tmpDir: /usr/src/app/tmp
 ## CronJobs Configuration
 # -- Scheduled tasks for the application
 cronjobs:

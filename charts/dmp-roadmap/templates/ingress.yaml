@@ -4,7 +4,6 @@
 {{- $appSvcPort := .Values.app.service.port -}}
 {{- $assetsSvcName := printf "%s-assets" $fullName -}}
 {{- $assetsSvcPort := .Values.assets.service.port -}}
-{{- $appRoot := include "dmp-roadmap.railsRelativeUrlRoot" . -}}
 {{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
   {{- if not (hasKey .Values.ingress.annotations "kubernetes.io/ingress.class") }}
   {{- $_ := set .Values.ingress.annotations "kubernetes.io/ingress.class" .Values.ingress.className}}
@@ -47,7 +46,7 @@ spec:
       http:
         paths:
           # Route to assets deployment for /assets
-          - path: {{ $appRoot }}/assets
+          - path: /assets
             {{- if semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion }}
             pathType: Prefix
             {{- end }}
@@ -62,7 +61,7 @@ spec:
               servicePort: {{ $assetsSvcPort }}
               {{- end }}
           # Route everything else to the app
-          - path: {{ $appRoot }}
+          - path: /
             {{- if semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion }}
             pathType: Prefix
             {{- end }}
