@@ -6,6 +6,9 @@
 name: Publish Docker image
 
 on:
+  push:
+    tags: 
+      - '*-dev.*'
   release:
     # `published` type is triggered for both `latest` and `prerelease` releases
     types: [published]
@@ -37,13 +40,17 @@ jobs:
           flavor: |
             latest=false
             suffix=-app
-          # conditional tagging based on release type
-          # prerelease corresponds to staging, latest to production
+          # Conditional tagging logic based on event type and git tag pattern:
+          # - If this is a prerelease and the tag matches:     portage-(<version>-rc.<n>)   → tag as <version>-rc.<n>-app
+          # - If this is a latest release and the tag matches: portage-(<version>)          → tag as <version>-app
+          # - If this is a push event and the tag matches:     portage-(<version>-dev.<n>)  → tag as <version>-dev.<n>-app
           tags: |
             ${{ github.event.release.prerelease && 
-                'type=match,pattern=.+portage-(\d+\.\d+\.\d+-alpha-\d+)$,group=1' || 
-                (!github.event.release.prerelease && 
-                'type=match,pattern=.+portage-(\d+\.\d+\.\d+)$,group=1') }}
+                'type=match,pattern=.+portage-(\d+\.\d+\.\d+-rc.\d+)$,group=1' || 
+                (github.event_name == 'release' && !github.event.release.prerelease && 
+                'type=match,pattern=.+portage-(\d+\.\d+\.\d+)$,group=1') ||
+                (github.event_name == 'push' &&
+                'type=match,pattern=.+portage-(\d+\.\d+\.\d+-dev.\d+),group=1') }}
       
       # Extract metadata for assets image
       - name: Extract metadata (tags) for Docker assets image
@@ -54,13 +61,17 @@ jobs:
           flavor: |
             latest=false
             suffix=-assets
-          # conditional tagging based on release type
-          # prerelease corresponds to staging, latest to production
+          # conditional tagging logic based on event type and git tag pattern:
+          # - If a prerelease and the tag matches:    portage-(<version>-rc.<n>)   → tag as <version>-rc.<n>-assets
+          # - If latest release and the tag matches:  portage-(<version>)          → tag as <version>-assets
+          # - If a push event and the tag matches:    portage-(<version>-dev.<n>)  → tag as <version>-dev.<n>-assets
           tags: |
             ${{ github.event.release.prerelease && 
-                'type=match,pattern=.+portage-(\d+\.\d+\.\d+-alpha-\d+)$,group=1' || 
-                (!github.event.release.prerelease && 
-                'type=match,pattern=.+portage-(\d+\.\d+\.\d+)$,group=1') }}
+                'type=match,pattern=.+portage-(\d+\.\d+\.\d+-rc.\d+)$,group=1' || 
+                (github.event_name == 'release' && !github.event.release.prerelease && 
+                'type=match,pattern=.+portage-(\d+\.\d+\.\d+)$,group=1') ||
+                (github.event_name == 'push' &&
+                'type=match,pattern=.+portage-(\d+\.\d+\.\d+-dev.\d+),group=1') }}
 
 
       - name: Build and push the app stage image
