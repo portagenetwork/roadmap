@@ -34,7 +34,7 @@ spec:
   {{- end }}
   tls:
     - hosts:
-        {{ $hostname }}
+        - {{ $hostname }}
       secretName: {{ $tlsSecretName }}
   rules:
     - host: {{ $hostname }}
