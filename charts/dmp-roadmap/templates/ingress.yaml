@@ -42,7 +42,6 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    {{- range .Values.ingress.hosts }}
     - host: {{ $hostname }}
       http:
         paths:
@@ -76,5 +75,4 @@ spec:
               serviceName: {{ $appSvcName }}
               servicePort: {{ $appSvcPort }}
               {{- end }}
-    {{- end }}
 {{- end }}
