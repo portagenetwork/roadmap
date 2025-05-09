@@ -339,13 +339,6 @@ ingress:
   # -- Ingress class name
   className: ''
 
-  # -- Host configuration for the ingress
-  hosts:
-    - host: kestrel.arbutus.cloud
-      paths:
-        - path: /
-          pathType: Prefix
-
   # -- TLS configuration for the ingress
   tls: []
   #  - secretName: dmp-roadmap-tls
