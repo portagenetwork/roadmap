@@ -9,7 +9,7 @@ assets:
     tag: "4.3.0-dev.1-assets"
 ingress:
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-staging-cloudflare
+    cert-manager.io/issuer: letsencrypt-staging-cloudflare
 storage:
   cephfs:
     volumes:
