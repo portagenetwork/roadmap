@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Added
+
+ - Update for Migration to UVic's Arbutus Cloud / Kubernetes Cluster [#1002](https://github.com/portagenetwork/roadmap/pull/1002)
+
+ - DMP Roadmap Helm Chart and Staging Environment Configuration [#1028](https://github.com/portagenetwork/roadmap/pull/1028)
+
+ - Refactor: Implement Host-Based Routing and Remove Subpath URL Configuration [#1038](https://github.com/portagenetwork/roadmap/pull/1038)
+
 ### Changed
 
  - Lower PostgreSQL GitHub Action Chrome Version to Address Breaking Changes Between Latest Chrome Version (134) and `/features` Tests [#1033](https://github.com/portagenetwork/roadmap/pull/1033)
