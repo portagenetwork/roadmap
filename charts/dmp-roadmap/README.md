@@ -83,13 +83,13 @@ Helm chart for DMP Roadmap - A Data Management Planning tool that helps research
 | assets.tolerations | list | `[]` | Tolerations for the assets deployment |
 | assets.volumeMounts | list | `[]` | Additional volume mounts for the assets deployment |
 | assets.volumes | list | `[]` | Additional volumes for the assets deployment |
-| config | object | `{"application":{"dmproadmapHost":"","httpProxy":"","httpProxyPort":"","onSandbox":"false"},"environment":{"assetHost":"","baseUrl":"","bundlePath":"vendor/bundle","bundleWithout":"development:test:mysql:aws:sandbox:ci:wkhtmltopdf","defaultFunderId":8,"englishOrgId":"","frenchOrgId":"","funderOrgId":"","locale":"en_CA.UTF-8","nodeEnv":"production","omniauthFullHost":"","orcidClientMember":"false","railsEnv":"production","railsLogToStdout":"true","railsRelativeUrlRoot":"","railsServeStaticFiles":"false","railsSkipAssetCompilation":"true","rakeEnv":"production","rollbarEnv":"arbutus-test","wickedPdfPath":"/usr/bin/wkhtmltopdf","wickedPdfProxy":""},"mailer":{"defaultHost":"","from":"support@portagenetwork.ca","smtpAddress":"smtp.gmail.com","smtpAuthentication":"plain","smtpDomain":"portagenetwork.ca","smtpPort":587,"to":"support@portagenetwork.ca"}}` | Configuration values for the application |
+| config | object | `{"application":{"dmproadmapHost":"","httpProxy":"","httpProxyPort":"","onSandbox":"false"},"environment":{"assetHost":"","baseUrl":"","bundlePath":"vendor/bundle","bundleWithout":"development:test:mysql:aws:sandbox:ci:wkhtmltopdf","defaultFunderId":8,"englishOrgId":"","frenchOrgId":"","funderOrgId":"","locale":"en_CA.UTF-8","nodeEnv":"production","omniauthFullHost":"","orcidClientMember":"false","railsEnv":"production","railsLogToStdout":"true","railsServeStaticFiles":"false","railsSkipAssetCompilation":"true","rakeEnv":"production","rollbarEnv":"arbutus-test","tmpDir":"/usr/src/app/tmp","wickedPdfPath":"/usr/bin/wkhtmltopdf","wickedPdfProxy":""},"mailer":{"defaultHost":"","from":"support@portagenetwork.ca","smtpAddress":"smtp.gmail.com","smtpAuthentication":"plain","smtpDomain":"portagenetwork.ca","smtpPort":587,"to":"support@portagenetwork.ca"}}` | Configuration values for the application |
 | config.application | object | `{"dmproadmapHost":"","httpProxy":"","httpProxyPort":"","onSandbox":"false"}` | Application and host settings |
 | config.application.dmproadmapHost | string | global.domain.name | Main hostname for the application |
 | config.application.httpProxy | string | `""` | HTTP proxy if needed |
 | config.application.httpProxyPort | string | `""` | HTTP proxy port if needed |
 | config.application.onSandbox | string | `"false"` | Set to true for sandbox mode |
-| config.environment | object | `{"assetHost":"","baseUrl":"","bundlePath":"vendor/bundle","bundleWithout":"development:test:mysql:aws:sandbox:ci:wkhtmltopdf","defaultFunderId":8,"englishOrgId":"","frenchOrgId":"","funderOrgId":"","locale":"en_CA.UTF-8","nodeEnv":"production","omniauthFullHost":"","orcidClientMember":"false","railsEnv":"production","railsLogToStdout":"true","railsRelativeUrlRoot":"","railsServeStaticFiles":"false","railsSkipAssetCompilation":"true","rakeEnv":"production","rollbarEnv":"arbutus-test","wickedPdfPath":"/usr/bin/wkhtmltopdf","wickedPdfProxy":""}` | Environment-specific settings |
+| config.environment | object | `{"assetHost":"","baseUrl":"","bundlePath":"vendor/bundle","bundleWithout":"development:test:mysql:aws:sandbox:ci:wkhtmltopdf","defaultFunderId":8,"englishOrgId":"","frenchOrgId":"","funderOrgId":"","locale":"en_CA.UTF-8","nodeEnv":"production","omniauthFullHost":"","orcidClientMember":"false","railsEnv":"production","railsLogToStdout":"true","railsServeStaticFiles":"false","railsSkipAssetCompilation":"true","rakeEnv":"production","rollbarEnv":"arbutus-test","tmpDir":"/usr/src/app/tmp","wickedPdfPath":"/usr/bin/wkhtmltopdf","wickedPdfProxy":""}` | Environment-specific settings |
 | config.environment.assetHost | string | https://global.domain.name | Asset host |
 | config.environment.baseUrl | string | https://global.domain.name/global.domain.path | Base URL |
 | config.environment.bundlePath | string | `"vendor/bundle"` | Bundle path |
@@ -104,11 +104,11 @@ Helm chart for DMP Roadmap - A Data Management Planning tool that helps research
 | config.environment.orcidClientMember | string | `"false"` | Whether ORCID client is a member |
 | config.environment.railsEnv | string | `"production"` | Rails environment |
 | config.environment.railsLogToStdout | string | `"true"` | Rails log to stdout |
-| config.environment.railsRelativeUrlRoot | string | global.domain.path | Rails relative URL root |
 | config.environment.railsServeStaticFiles | string | `"false"` | Rails serve static files |
 | config.environment.railsSkipAssetCompilation | string | `"true"` | Rails skip asset compilation |
 | config.environment.rakeEnv | string | `"production"` | Rake environment |
 | config.environment.rollbarEnv | string | `"arbutus-test"` | Rollbar environment |
+| config.environment.tmpDir | string | `"/usr/src/app/tmp"` | Tmp directory |
 | config.environment.wickedPdfPath | string | `"/usr/bin/wkhtmltopdf"` | Path to wkhtmltopdf binary |
 | config.environment.wickedPdfProxy | string | `""` | Proxy for wkhtmltopdf if needed |
 | config.mailer | object | `{"defaultHost":"","from":"support@portagenetwork.ca","smtpAddress":"smtp.gmail.com","smtpAuthentication":"plain","smtpDomain":"portagenetwork.ca","smtpPort":587,"to":"support@portagenetwork.ca"}` | Mailer and SMTP settings |
@@ -160,9 +160,10 @@ Helm chart for DMP Roadmap - A Data Management Planning tool that helps research
 | fullnameOverride | string | `""` | String to fully override `dmp-roadmap.fullname` |
 | global.additionalLabels | object | `{}` | Common labels for the all resources |
 | global.deploymentAnnotations | object | `{}` | Annotations for the all deployed Deployments |
-| global.domain | object | `{"name":"dmp-pgd.ca","path":""}` | Global domain configuration |
+| global.domain | object | `{"name":"dmp-pgd.ca","path":"","prefix":""}` | Global domain configuration |
 | global.domain.name | string | `"dmp-pgd.ca"` | Main domain name used throughout the chart |
 | global.domain.path | string | `""` | Application path/context (e.g., /staging) |
+| global.domain.prefix | string | `""` | Application prefix (e.g., staging) |
 | global.env | list | `[]` | Environment variables to pass to all deployed Deployments |
 | global.image | object | `{"imagePullPolicy":"IfNotPresent","repository":"ualbertalib/dmp_roadmap","tag":""}` | Default image used by all components |
 | global.image.imagePullPolicy | string | `"IfNotPresent"` | If defined, a imagePullPolicy applied to all DMP Roadmap deployments |
@@ -176,7 +177,6 @@ Helm chart for DMP Roadmap - A Data Management Planning tool that helps research
 | ingress.annotations | object | `{}` | Annotations for the ingress resource |
 | ingress.className | string | `""` | Ingress class name |
 | ingress.enabled | bool | `false` | Enable or disable the ingress |
-| ingress.hosts | list | `[{"host":"kestrel.arbutus.cloud","paths":[{"path":"/","pathType":"Prefix"}]}]` | Host configuration for the ingress |
 | ingress.tls | list | `[]` | TLS configuration for the ingress |
 | nameOverride | string | `""` | Provide a name in place of `dmp-roadmap` |
 | namespaceOverride | string | `.Release.Namespace` | Override the namespace |
