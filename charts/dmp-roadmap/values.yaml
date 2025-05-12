@@ -472,7 +472,7 @@ cronjobs:
     # -- Enable or disable the translation sync CronJob
     enabled: true
     # -- Schedule for the CronJob (cron format)
-    schedule: '*/5 * * * *'
+    schedule: '0 1 * * *'
     # -- Concurrency policy for CronJob (Allow, Forbid, Replace)
     concurrencyPolicy: Forbid
     # -- Number of successful job history to keep
@@ -519,7 +519,7 @@ cronjobs:
     # -- Enable or disable the research data output CronJob
     enabled: true
     # -- Schedule for the CronJob (cron format)
-    schedule: 0 0 * * *
+    schedule: '0 1 * * *'
     # -- Concurrency policy for CronJob (Allow, Forbid, Replace)
     concurrencyPolicy: Forbid
     # -- Number of successful job history to keep
