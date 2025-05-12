@@ -60,7 +60,7 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: {{ include "dmp-roadmap.railsRelativeUrlRoot" . }}/api/v1/heartbeat
+              path: /api/v1/heartbeat
               port: {{ .Values.app.service.targetPort }}
             initialDelaySeconds: {{ .Values.app.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.app.livenessProbe.periodSeconds }}
@@ -69,7 +69,7 @@ spec:
             successThreshold: {{ .Values.app.livenessProbe.successThreshold }}
           readinessProbe:
             httpGet:
-              path: {{ include "dmp-roadmap.railsRelativeUrlRoot" . }}/api/v1/heartbeat
+              path: /api/v1/heartbeat
               port: {{ .Values.app.service.targetPort }}
             initialDelaySeconds: {{ .Values.app.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.app.readinessProbe.periodSeconds }}
@@ -86,10 +86,8 @@ spec:
             {{- end }}
             {{- end }}
             # Required tmp directories for Rails
-            - name: tmp
+            - name: rails-tmp
               mountPath: /usr/src/app/tmp
-            - name: cache
-              mountPath: /usr/src/app/tmp/cache
             {{- with .Values.app.volumeMounts }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -103,10 +101,17 @@ spec:
         {{- end }}
         {{- end }}
         # Tmp directories required for Rails
-        - name: tmp
-          emptyDir: {}
-        - name: cache
-          emptyDir: {}
+        - name: rails-tmp
+          ephemeral:
+            volumeClaimTemplate:
+              metadata:
+                labels:
+                  type: rails-tmp
+              spec:
+                accessModes: [ "ReadWriteOnce" ]
+                resources:
+                  requests:
+                    storage: 500Mi
         {{- with .Values.app.volumes }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

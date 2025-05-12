@@ -1,7 +1,5 @@
 global:
   priorityClassName: uber-user-preempt-high
-  domain:
-    name: "kestrel.arbutus.cloud"
 app:
   envFrom:
     - secretRef:
@@ -10,7 +8,6 @@ app:
         name: dmp-roadmap-devise-secrets
     - secretRef:
         name: dmp-roadmap-integrations
-assets:
 cronjobs:
   translationSync:
     priorityClassName: uber-user-preempt-medium
@@ -21,7 +18,7 @@ ingress:
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
-    traefik.ingress.kubernetes.io/router.tls.certresolver: rcs_powerdns
+    cert-manager.io/issuer: letsencrypt-prod-cloudflare
 storage:
   cephfs:
     monitors:

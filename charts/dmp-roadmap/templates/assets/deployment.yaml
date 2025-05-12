@@ -47,8 +47,6 @@ spec:
               value: "{{ include "dmp-roadmap.fullname" . }}-app.{{ .Release.Namespace }}"
             - name: API_SERVICE_PORT
               value: "{{ .Values.app.service.port }}"
-            - name: RAILS_RELATIVE_URL_ROOT
-              value: {{ include "dmp-roadmap.railsRelativeUrlRoot" . }}
             {{- with (concat .Values.global.env .Values.assets.env) }}
               {{- toYaml . | nindent 10 }}
             {{- end }}

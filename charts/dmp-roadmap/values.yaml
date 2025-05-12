@@ -15,6 +15,8 @@ global:
     name: dmp-pgd.ca
     # -- Application path/context (e.g., /staging)
     path: ''
+    # -- Application prefix (e.g., staging)
+    prefix: ''
 
   # -- Default image used by all components
   image:
@@ -337,13 +339,6 @@ ingress:
   # -- Ingress class name
   className: ''
 
-  # -- Host configuration for the ingress
-  hosts:
-    - host: kestrel.arbutus.cloud
-      paths:
-        - path: /
-          pathType: Prefix
-
   # -- TLS configuration for the ingress
   tls: []
   #  - secretName: dmp-roadmap-tls
@@ -458,9 +453,6 @@ config:
     baseUrl: ''
     # -- Rollbar environment
     rollbarEnv: arbutus-test
-    # -- Rails relative URL root
-    # @default -- global.domain.path
-    railsRelativeUrlRoot: ''
     # -- Rails log to stdout
     railsLogToStdout: 'true'
     # -- Rails serve static files
@@ -470,6 +462,8 @@ config:
     # -- Asset host
     # @default -- https://global.domain.name
     assetHost: ''
+    # -- Tmp directory
+    tmpDir: /usr/src/app/tmp
 ## CronJobs Configuration
 # -- Scheduled tasks for the application
 cronjobs:
@@ -478,7 +472,7 @@ cronjobs:
     # -- Enable or disable the translation sync CronJob
     enabled: true
     # -- Schedule for the CronJob (cron format)
-    schedule: '*/5 * * * *'
+    schedule: '0 1 * * *'
     # -- Concurrency policy for CronJob (Allow, Forbid, Replace)
     concurrencyPolicy: Forbid
     # -- Number of successful job history to keep
@@ -525,7 +519,7 @@ cronjobs:
     # -- Enable or disable the research data output CronJob
     enabled: true
     # -- Schedule for the CronJob (cron format)
-    schedule: 0 0 * * *
+    schedule: '0 1 * * *'
     # -- Concurrency policy for CronJob (Allow, Forbid, Replace)
     concurrencyPolicy: Forbid
     # -- Number of successful job history to keep

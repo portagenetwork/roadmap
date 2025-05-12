@@ -1,10 +1,11 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "dmp-roadmap.fullname" . -}}
+{{- $hostname := include "dmp-roadmap.hostname" . -}}
 {{- $appSvcName := printf "%s-app" $fullName -}}
 {{- $appSvcPort := .Values.app.service.port -}}
 {{- $assetsSvcName := printf "%s-assets" $fullName -}}
 {{- $assetsSvcPort := .Values.assets.service.port -}}
-{{- $appRoot := include "dmp-roadmap.railsRelativeUrlRoot" . -}}
+{{- $tlsSecretName := printf "%s-tls" $fullName -}}
 {{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
   {{- if not (hasKey .Values.ingress.annotations "kubernetes.io/ingress.class") }}
   {{- $_ := set .Values.ingress.annotations "kubernetes.io/ingress.class" .Values.ingress.className}}
@@ -31,23 +32,16 @@ spec:
   {{- if and .Values.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
   ingressClassName: {{ .Values.ingress.className }}
   {{- end }}
-  {{- if .Values.ingress.tls }}
   tls:
-    {{- range .Values.ingress.tls }}
     - hosts:
-        {{- range .hosts }}
-        - {{ . | quote }}
-        {{- end }}
-      secretName: {{ .secretName }}
-    {{- end }}
-  {{- end }}
+        - {{ $hostname }}
+      secretName: {{ $tlsSecretName }}
   rules:
-    {{- range .Values.ingress.hosts }}
-    - host: {{ .host | quote }}
+    - host: {{ $hostname }}
       http:
         paths:
           # Route to assets deployment for /assets
-          - path: {{ $appRoot }}/assets
+          - path: /assets
             {{- if semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion }}
             pathType: Prefix
             {{- end }}
@@ -62,7 +56,7 @@ spec:
               servicePort: {{ $assetsSvcPort }}
               {{- end }}
           # Route everything else to the app
-          - path: {{ $appRoot }}
+          - path: /
             {{- if semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion }}
             pathType: Prefix
             {{- end }}
@@ -76,5 +70,4 @@ spec:
               serviceName: {{ $appSvcName }}
               servicePort: {{ $appSvcPort }}
               {{- end }}
-    {{- end }}
 {{- end }}
