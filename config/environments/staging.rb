@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'syslog/logger'
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -75,8 +74,7 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  # Use syslog for logging
-  config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new('dmp_assistant'))
+  config.logger = ActiveSupport::TaggedLogging.new(Logger.new($stdout))
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {

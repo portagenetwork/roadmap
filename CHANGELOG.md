@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Added
+
+ - Update for Migration to UVic's Arbutus Cloud / Kubernetes Cluster [#1002](https://github.com/portagenetwork/roadmap/pull/1002)
+
+ - DMP Roadmap Helm Chart and Staging Environment Configuration [#1028](https://github.com/portagenetwork/roadmap/pull/1028)
+
+ - Refactor: Implement Host-Based Routing and Remove Subpath URL Configuration [#1038](https://github.com/portagenetwork/roadmap/pull/1038)
+
 ### Changed
 
  - Lower PostgreSQL GitHub Action Chrome Version to Address Breaking Changes Between Latest Chrome Version (134) and `/features` Tests [#1033](https://github.com/portagenetwork/roadmap/pull/1033)
@@ -43,6 +51,20 @@
  - Bump pg from 1.5.4 to 1.5.9 [#934](https://github.com/portagenetwork/roadmap/pull/934)
 
  - Bump recaptcha from 5.16.0 to 5.18.0 [#964](https://github.com/portagenetwork/roadmap/pull/964)
+
+ - Bump rack from 2.2.12 to 2.2.13 [#1026](https://github.com/portagenetwork/roadmap/pull/1026)
+
+ - Bump uri from 0.13.0 to 0.13.2 [#1025](https://github.com/portagenetwork/roadmap/pull/1025)
+
+ - Bump nokogiri from 1.16.8 to 1.18.3 [#1024](https://github.com/portagenetwork/roadmap/pull/1024)
+
+ - Bump rack from 2.2.11 to 2.2.12 [#1023](https://github.com/portagenetwork/roadmap/pull/1023)
+
+ - Bump net-imap from 0.4.12 to 0.4.19 [#1008](https://github.com/portagenetwork/roadmap/pull/1008)
+
+ - Bump rack from 2.2.10 to 2.2.11 [#1018](https://github.com/portagenetwork/roadmap/pull/1018)
+
+ - Bump serialize-javascript from 6.0.1 to 6.0.2 [#1015](https://github.com/portagenetwork/roadmap/pull/1015)
 
 ## [4.1.1+portage-4.2.3] - 2024-11-20
 

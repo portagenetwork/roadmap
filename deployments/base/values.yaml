@@ -1,0 +1,27 @@
+global:
+  priorityClassName: uber-user-preempt-high
+app:
+  envFrom:
+    - secretRef:
+        name: dmp-roadmap-db
+    - secretRef:
+        name: dmp-roadmap-devise-secrets
+    - secretRef:
+        name: dmp-roadmap-integrations
+cronjobs:
+  translationSync:
+    priorityClassName: uber-user-preempt-medium
+  researchDataOutput:
+    priorityClassName: uber-user-preempt-medium
+ingress:
+  enabled: true
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    cert-manager.io/issuer: letsencrypt-prod-cloudflare
+storage:
+  cephfs:
+    monitors:
+      - 10.30.201.3:6789
+      - 10.30.202.3:6789
+      - 10.30.203.3:6789

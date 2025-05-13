@@ -1,54 +1,164 @@
-FROM ruby:3.1.4
+ARG RUBY_VERSION=3.1.4-alpine
+ARG NODE_VERSION=20.15.1-r0
+ARG WKHTMLTOPDF_VERSION=3.21.2-0.12.6-small
+ARG NGINX_VERSION=1.27.4-alpine
 
-# Setup bundle to install gems to volume
-ENV BUNDLE_PATH=/bundle/ \
-    BUNDLE_BIN=/bundle/bin \
-    GEM_HOME=/bundle \
-    DEBIAN_FRONTEND="noninteractive"
-ENV Path="${BUNDLE_BIN}:${PATH}"
+FROM surnet/alpine-wkhtmltopdf:$WKHTMLTOPDF_VERSION AS wkhtmltopdf
 
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
-    curl -sL https://deb.nodesource.com/setup_16.x | bash && \
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+FROM ruby:$RUBY_VERSION AS builder
 
-# Dependancies
-RUN apt-get update -qq && \
-  apt-get install --no-install-recommends -y \
-  default-mysql-client \
-  gettext \
-  nodejs \
-  yarn \
-  locales
+ARG NODE_VERSION
+ENV INSTALL_PATH=/usr/src/app \
+    RAILS_ENV=production \
+    NODE_ENV=production \
+    BUNDLE_WITHOUT='development:test:mysql:aws:sandbox:ci:wkhtmltopdf' \
+    # Dummy values to enable `rake assets:precompile` without a real db
+    DATABASE_URL=nulldb://nohost \
+    SECRET_KEY_BASE=foo
 
-ENV LANG=fr_CA.UTF-8 \
-    LANGUAGE=fr_CA:fr \ 
-    LC_ALL=fr_CA.UTF-8 
+# Create non-root user early
+RUN addgroup -g 3000 -S dmpgroup && \
+    adduser -u 1000 -S dmpuser -G dmpgroup
 
-RUN wget --quiet https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz && \
-    tar vxf wkhtmltox-0.12.3_linux-generic-amd64.tar.xz && \
-    cp wkhtmltox/bin/wk* /usr/local/bin/ && \
-    rm -rf wkhtmltox
-
-ARG INSTALL_PATH=/usr/src/app/
-ENV INSTALL_PATH $INSTALL_PATH
+# - build-base && musl-dev: required for compiling native extensions
+# - postgresql16-dev: required to compile pg gem
+# - shared-mime-info:: required to compile mimemagic gem
+# - tzdata: required to compile tzinfo gem
+RUN apk update && apk add --no-cache \
+    build-base \
+    musl-dev \
+    postgresql16-dev \
+    git \
+    nodejs=$NODE_VERSION \
+    yarn \
+    shared-mime-info \
+    tzdata
 
 WORKDIR $INSTALL_PATH
-COPY Gemfile* $INSTALL_PATH
-# Install Bundler with the specified version from Gemfile.lock
-RUN gem install bundler -v "$(tail -1 Gemfile.lock | tr -d " ")"
 
-# for 3.1.0 test, need both mysql and psql group installed
-RUN bundle config --local build.sassc --disable-march-tune-native
-RUN bundle config set --local without 'development pssql test thin aws ci' 
-RUN RAILS_ENV=production bundle install --jobs=3 --retry=3
+# For Bundler caching
+COPY --chown=dmpuser:dmpgroup Gemfile* $INSTALL_PATH
+RUN gem install bundler -v "$(tail -1 Gemfile.lock | tr -d " ")" && \
+    bundle config set --local frozen 'true' && \
+    # `deployment` flag installs gems to `vendor/bundle` directory
+    # https://bundler.io/guides/deploying.html#deploying-your-application
+    bundle config set --local deployment 'true' && \
+    bundle install --jobs=3 --retry=3
 
-COPY . $INSTALL_PATH
-RUN NODE_ENV=production yarn install --prod --check-files
-RUN bundle config set force_ruby_platform true
+# For Yarn caching
+COPY --chown=dmpuser:dmpgroup package.json yarn.lock $INSTALL_PATH
+RUN yarn install --prod --frozen-lockfile --check-files
 
-# /bundle/ruby/2.7.0/bin/rake error: Could not find nokogiri-1.13.6, mini_portile2-2.5.3 in locally installed gems (Bundler::GemNotFound)
-RUN bundle update rake 
-RUN DATABASE_URL=nulldb://user:test@127.0.0.1/roadmap RAILS_ENV=production SECRET_KEY_BASE=change_me DEVISE_SECRET_KEY=pickasecuretoken bundle exec rake assets:precompile
+COPY --chown=dmpuser:dmpgroup . $INSTALL_PATH
+
+# Precompile assets as non-root user
+# (tmp directory with correct permissions is required)
+RUN mkdir -p $INSTALL_PATH/tmp && chown -R dmpuser:dmpgroup $INSTALL_PATH/tmp
+USER dmpuser
+RUN bundle exec rake assets:precompile
+
+# Temporarily switch back to root user to delete /node_modules and tmp/*
+USER root
+RUN rm -rf ${INSTALL_PATH}/node_modules ${INSTALL_PATH}/tmp/*
+USER dmpuser
+
+FROM ruby:$RUBY_VERSION AS app
+
+ARG NODE_VERSION
+ENV INSTALL_PATH=/usr/src/app
+
+# Create non-root user with same UID/GID as builder
+RUN addgroup -g 3000 -S dmpgroup && \
+    adduser -u 1000 -S dmpuser -G dmpgroup
+
+# - postgresql16-client: Required for pg gem to connect to PostgreSQL
+# - imagemagick: Required for dragonfly gem to process images
+# - libjpeg-turbo: Adds support for processing JPEG images
+# - wget: Required for healthcheck
+RUN apk update && apk add --no-cache \
+    postgresql16-client \
+    imagemagick \
+    libjpeg-turbo \
+    wget \
+    nodejs=$NODE_VERSION \
+    # Install dependencies for wkhtmltopdf
+    # (See https://github.com/Surnet/docker-wkhtmltopdf/pkgs/container/alpine-wkhtmltopdf#other-images)
+    libstdc++ \
+    libx11 \
+    libxrender \
+    libxext \
+    libssl3 \
+    ca-certificates \
+    fontconfig \
+    freetype \
+    ttf-dejavu \
+    ttf-droid \
+    ttf-freefont \
+    ttf-liberation \
+    # more fonts
+  && apk add --no-cache --virtual .build-deps \
+    msttcorefonts-installer \
+  # Install microsoft fonts
+  && update-ms-fonts \
+  && fc-cache -f \
+  # Clean up when done
+  && rm -rf /tmp/* \
+  && apk del .build-deps 
+
+WORKDIR $INSTALL_PATH
+
+# Copy wkhtmltopdf binary
+COPY --from=wkhtmltopdf /bin/wkhtmltopdf /usr/bin/wkhtmltopdf
+# Copy data for timezone and mime types
+COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
+COPY --from=builder /usr/share/mime /usr/share/mime
+# Copy application code and dependencies from builder stage
+COPY --from=builder --chown=dmpuser:dmpgroup $INSTALL_PATH $INSTALL_PATH
+
+# Create required directories with correct ownerships & permissions
+RUN mkdir -p ${INSTALL_PATH}/tmp/cache \
+        ${INSTALL_PATH}/tmp/pids \
+        ${INSTALL_PATH}/tmp/sockets \
+        # Create env-specific directory for dragonfly datastore
+        ${INSTALL_PATH}/public/system/dragonfly/${RAILS_ENV} \
+        # For executing translation:sync
+        ${INSTALL_PATH}/config/locale && \
+    chown -R dmpuser:dmpgroup \
+        ${INSTALL_PATH}/tmp \
+        ${INSTALL_PATH}/public \
+        ${INSTALL_PATH}/config/locale  && \
+    chmod -R 755 \
+        ${INSTALL_PATH}/tmp \
+        ${INSTALL_PATH}/public \
+        ${INSTALL_PATH}/config/locale
+
+USER dmpuser
 
 EXPOSE 3000
-CMD bundle exec puma -C config/puma.rb
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+    CMD wget -qO- ${BASE_URL}/api/v1/heartbeat || exit 1
+
+CMD ["bundle", "exec", "rails", "s"]
+
+# nginx stage to serve static assets
+FROM nginx:$NGINX_VERSION AS assets
+
+ENV INSTALL_PATH=/usr/src/app
+
+# Create non-root user
+RUN addgroup -g 3000 -S dmpgroup && \
+    adduser -u 1000 -S dmpuser -G dmpgroup && \
+    # Create required nginx directories with correct permissions
+    mkdir -p /var/cache/nginx /var/run && \
+    chown -R dmpuser:dmpgroup /var/cache/nginx /var/run /etc/nginx
+
+USER dmpuser
+
+COPY --from=app --chown=dmpuser:dmpgroup ${INSTALL_PATH}/public/assets /usr/share/nginx/html/assets
+COPY --chown=dmpuser:dmpgroup nginx.conf /etc/nginx/nginx.conf
+COPY --chown=dmpuser:dmpgroup nginx.conf.template /etc/nginx/templates/default.conf.template
+
+EXPOSE 8080
+
+CMD ["nginx", "-g", "daemon off;"]

@@ -1,0 +1,50 @@
+{{- if .Values.networkPolicy.enabled }}
+{{- range .Values.networkPolicy.components }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "dmp-roadmap.fullname" $ }}-ingress-to-{{ .name }}
+  labels:
+    {{- include "dmp-roadmap.labels" $ | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "dmp-roadmap.selectorLabels" $ | nindent 6 }}
+      {{- if .component }}
+      app.kubernetes.io/component: {{ .component }}
+      {{- end }}
+      {{- if .partOf }}
+      app.kubernetes.io/part-of: {{ .partOf }}
+      {{- end }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        {{- if $.Values.networkPolicy.ingressSource.namespaceSelector }}
+        - namespaceSelector:
+            matchLabels:
+              {{- toYaml $.Values.networkPolicy.ingressSource.namespaceSelector | nindent 14 }}
+          {{- if $.Values.networkPolicy.ingressSource.podSelector }}
+          podSelector:
+            matchLabels:
+              {{- toYaml $.Values.networkPolicy.ingressSource.podSelector | nindent 14 }}
+          {{- end }}
+        {{- else if $.Values.networkPolicy.ingressSource.podSelector }}
+        - podSelector:
+            matchLabels:
+              {{- toYaml $.Values.networkPolicy.ingressSource.podSelector | nindent 14 }}
+        {{- else }}
+        # Default to allowing from traefik namespace
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: traefik
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: traefik
+        {{- end }}
+      ports:
+        - protocol: TCP
+          port: {{ .port }}
+---
+{{- end }}
+{{- end }}

@@ -1,0 +1,28 @@
+{{- if eq .Values.storage.type "cephfs" }}
+{{- range $name, $volume := .Values.storage.cephfs.volumes }}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ include "dmp-roadmap.fullname" $ }}-{{ $name }}
+  labels:
+    {{- include "dmp-roadmap.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $name }}
+spec:
+  capacity:
+    storage: {{ $volume.size }}
+  accessModes:
+    {{- toYaml $.Values.storage.cephfs.accessModes | nindent 4 }}
+  cephfs:
+    path: {{ $volume.path }}
+    user: dmp-roadmap-{{ $name }}-user
+    secretRef:
+      name: {{ $volume.secretRef }}
+    monitors:
+      {{- with $.Values.storage.cephfs.monitors }}
+        {{- toYaml . | nindent 4 }}
+      {{- end }}
+  persistentVolumeReclaimPolicy: {{ $.Values.storage.cephfs.persistentVolumeReclaimPolicy | default "Recycle" }}
+  volumeMode: {{ $.Values.storage.cephfs.volumeMode | default "Filesystem" }}
+{{- end }}
+{{- end }}

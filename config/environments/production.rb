@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'syslog/logger'
-
 # rubocop:disable Metrics/BlockLength
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -51,7 +49,7 @@ Rails.application.configure do
   # config.cache_store = :mem_cache_store
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  # config.action_controller.asset_host = 'http://assets.example.com'
+  config.action_controller.asset_host = ENV.fetch("ASSET_HOST", nil)
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise
@@ -77,8 +75,7 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  # Use syslog for logging
-  config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new('dmp_assistant'))
+  config.logger = ActiveSupport::TaggedLogging.new(Logger.new($stdout))
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
@@ -102,6 +99,11 @@ Rails.application.configure do
   dmproadmap_hosts.each do |host|
     config.hosts << host
   end
+
+  # Exclude api/v1/heartbeat path from host authorization to allow readiness check to pass
+  Rails.application.config.host_authorization = {
+    exclude: ->(request) { request.path.include?("api/v1/heartbeat") }
+  }
 end
 # rubocop:enable Metrics/BlockLength
 # Used by Rails' routes url_helpers (typically when including a link in an email)

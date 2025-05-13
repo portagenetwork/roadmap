@@ -1,29 +1,47 @@
-version: '3'
-services:
-  server:
-    build:
-      context: ./
-    volumes:
-      - ./:/usr/src/app:cached
-      - ./config/branding.yml:/usr/src/app/config/branding.yml:cached
-      - ../db_backups/:/tmp/dat/:cached
-      - bundle:/bundle
-    command: /usr/src/app/scripts/start.sh
-    environment:
-      DATABASE_URL: 'mysql2://db'
-    ports:
-      - "3000:3000"
-    env_file:
-      - ./.env
-    depends_on:
-      - db
+# This docker-compose.yml is configured to simulate a production environment for local testing.
 
+services:
   db:
     image: postgres:15-alpine
     volumes:
-      - db_volume:/var/lib/mysql
+      - db_volume:/var/lib/postgresql/data
     env_file:
       - ./.env
+    ports:
+      - '5432:5432'
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+      target: app
+    env_file:
+      - ./.env
+    environment:
+      BUNDLE_PATH: vendor/bundle
+      WICKED_PDF_PATH: /usr/bin/wkhtmltopdf
+      BUNDLE_WITHOUT: development:test:mysql:aws:sandbox:ci:wkhtmltopdf
+      RAILS_ENV: production
+      NODE_ENV: production
+      LC_ALL: en_CA.UTF-8
+      BASE_URL: http://127.0.0.1:3000/
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+  
+  # assets service to serve static files via Nginx
+  assets:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+      target: assets
+    environment:
+      API_URL: http://api:3000
+    ports:
+      - "8080:8080"
+    depends_on:
+      - app
+
 volumes:
   db_volume:
-  bundle:

@@ -1,0 +1,129 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "dmp-roadmap.fullname" . }}-app
+  labels:
+    {{- $_ := set . "component" "app" }}
+    {{- include "dmp-roadmap.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.app.autoscaling.enabled }}
+  replicas: {{ .Values.app.replicas }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- $_ := set . "component" "app" }}
+      {{- include "dmp-roadmap.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.app.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- $_ := set . "component" "app" }}
+        {{- include "dmp-roadmap.labels" . | nindent 8 }}
+        {{- with .Values.app.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.app.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.app.priorityClassName | default .Values.global.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
+      serviceAccountName: {{ include "dmp-roadmap.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.app.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          # Use Puma directly as shown in the Dockerfile
+          command: ["bundle", "exec", "rails", "s"]
+          image: "{{ .Values.app.image.repository | default .Values.global.image.repository }}:{{ .Values.app.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.app.image.imagePullPolicy }}
+          env:
+            {{- with (concat .Values.global.env .Values.app.env) }}
+              {{- toYaml . | nindent 10 }}
+            {{- end }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "dmp-roadmap.fullname" . }}-app-config
+            {{- if .Values.app.envFrom }}
+            {{- toYaml .Values.app.envFrom | nindent 12 }}
+            {{- end }}
+          securityContext:
+            {{- toYaml .Values.app.securityContext | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.app.service.targetPort }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /api/v1/heartbeat
+              port: {{ .Values.app.service.targetPort }}
+            initialDelaySeconds: {{ .Values.app.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.app.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.app.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.app.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.app.livenessProbe.successThreshold }}
+          readinessProbe:
+            httpGet:
+              path: /api/v1/heartbeat
+              port: {{ .Values.app.service.targetPort }}
+            initialDelaySeconds: {{ .Values.app.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.app.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.app.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.app.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.app.readinessProbe.successThreshold }}
+          resources:
+            {{- toYaml .Values.app.resources | nindent 12 }}
+          volumeMounts:
+            {{- if eq .Values.storage.type "cephfs" }}
+            {{- range $name, $volume := .Values.storage.cephfs.volumes }}
+            - name: {{ $name }}
+              mountPath: {{ $volume.mountPath }}
+            {{- end }}
+            {{- end }}
+            # Required tmp directories for Rails
+            - name: rails-tmp
+              mountPath: /usr/src/app/tmp
+            {{- with .Values.app.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+      volumes:
+        {{- if eq .Values.storage.type "cephfs" }}
+        # When using CephFS storage, mount persistent volumes for locale and uploads
+        {{- range $name, $volume := .Values.storage.cephfs.volumes }}
+        - name: {{ $name }}
+          persistentVolumeClaim:
+            claimName: {{ include "dmp-roadmap.fullname" $ }}-{{ $name }}
+        {{- end }}
+        {{- end }}
+        # Tmp directories required for Rails
+        - name: rails-tmp
+          ephemeral:
+            volumeClaimTemplate:
+              metadata:
+                labels:
+                  type: rails-tmp
+              spec:
+                accessModes: [ "ReadWriteOnce" ]
+                resources:
+                  requests:
+                    storage: 500Mi
+        {{- with .Values.app.volumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.app.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.app.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.app.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
