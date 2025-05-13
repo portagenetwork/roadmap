@@ -14,6 +14,8 @@
 
 ### Changed
 
+ - Bump @babel/helpers from 7.21.0 to 7.27.1 [#1042](https://github.com/portagenetwork/roadmap/pull/1042)
+
  - Bump @babel/runtime from 7.21.0 to 7.27.1 [#1043](https://github.com/portagenetwork/roadmap/pull/1043)
 
  - Bump nokogiri from 1.18.3 to 1.18.8 [#1036](https://github.com/portagenetwork/roadmap/pull/1036)
