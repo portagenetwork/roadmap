@@ -171,7 +171,7 @@ gem 'autoprefixer-rails'
 # ========= #
 
 # Provides binaries for WKHTMLTOPDF project in an easily accessible package.
-gem 'wkhtmltopdf-binary'
+gem 'wkhtmltopdf-binary', group: :wkhtmltopdf
 
 # PDF generator (from HTML) gem for Ruby on Rails
 # (https://github.com/mileszs/wicked_pdf)
@@ -349,8 +349,4 @@ group :development do
 
   # TomDoc for YARD (http://rubyworks.github.com/yard-tomdoc)
   gem 'yard-tomdoc'
-
-  group :production, :staging, :sandbox do
-    gem 'syslog-logger'
-  end
 end

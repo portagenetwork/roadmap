@@ -1,0 +1,55 @@
+---
+# SPDX-License-Identifier: MIT
+apiVersion: v2
+name: dmp-roadmap
+description: Helm chart for DMP Roadmap - A Data Management Planning tool that helps researchers and organizations create,
+  share, and update data management plans
+
+# A chart can be either an 'application' or a 'library' chart.
+#
+# Application charts are a collection of templates that can be packaged into versioned archives
+# to be deployed.
+#
+# Library charts provide useful utilities or functions for the chart developer. They're included as
+# a dependency of application charts to inject those utilities and functions into the rendering
+# pipeline. Library charts do not define any templates and therefore cannot be deployed.
+type: application
+
+# This is the chart version. This version number should be incremented each time you make changes
+# to the chart and its templates, including the app version.
+# Versions are expected to follow Semantic Versioning (https://semver.org/)
+version: 0.1.0
+
+# This is the version number of the application being deployed. This version number should be
+# incremented each time you make changes to the application. Versions are not expected to
+# follow Semantic Versioning. They should reflect the version the application is using.
+# It is recommended to use it with quotes.
+appVersion: 4.3.0
+# A list of keywords about this project
+keywords:
+  - dmp
+  - roadmap
+  - data-management
+  - research
+  - rails
+  - postgresql
+  - academic-research
+# URL to the project's home page
+home: https://dmp-pgd.ca/
+# Sources for the chart
+sources:
+  - https://github.com/portagenetwork/roadmap
+# The application icon
+icon: https://github.com/DMPRoadmap/roadmap/raw/master/app/assets/images/DMPRoadmap_logo.png
+# Chart maintainers information
+maintainers:
+  - name: University of Alberta Library
+    email: library.dmptool@ualberta.ca
+    url: https://library.ualberta.ca/
+  - name: University of Victoria Research Computing Services
+    email: arcsupport@uvic.ca
+    url: https://www.uvic.ca/systems/researchcomputing/index.php
+# Additional annotations
+annotations:
+  category: Research Tools
+  licenses: MIT

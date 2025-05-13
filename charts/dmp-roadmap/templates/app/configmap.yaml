@@ -1,0 +1,143 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "dmp-roadmap.fullname" . }}-app-config
+  labels:
+    {{- $_ := set . "component" "app" }}
+    {{- include "dmp-roadmap.labels" . | nindent 4 }}
+data:
+  # Application & Host Config
+  {{- $dmproadmapHost := .Values.config.application.dmproadmapHost | default (include "dmp-roadmap.hostname" .) }}
+  {{- if $dmproadmapHost }}
+  DMPROADMAP_HOST: {{ $dmproadmapHost | quote }}
+  {{- end }}
+
+  {{- if .Values.config.application.onSandbox }}
+  ON_SANDBOX: {{ .Values.config.application.onSandbox | quote }}
+  {{- end }}
+
+  {{- if .Values.config.application.httpProxy }}
+  HTTP_PROXY: {{ .Values.config.application.httpProxy | quote }}
+  {{- end }}
+
+  {{- if .Values.config.application.httpProxyPort }}
+  HTTP_PROXY_PORT: {{ .Values.config.application.httpProxyPort | quote }}
+  {{- end }}
+
+  # Mailer & SMTP Settings
+  {{- $defaultHost := .Values.config.mailer.defaultHost | default (include "dmp-roadmap.domainUrl" .) }}
+  {{- if $defaultHost }}
+  MAILER_DEFAULT_HOST: {{ $defaultHost | quote }}
+  {{- end }}
+
+  {{- if .Values.config.mailer.from }}
+  MAILER_FROM: {{ .Values.config.mailer.from | quote }}
+  {{- end }}
+
+  {{- if .Values.config.mailer.to }}
+  MAILER_TO: {{ .Values.config.mailer.to | quote }}
+  {{- end }}
+
+  {{- if .Values.config.mailer.smtpAddress }}
+  SMTP_ADDRESS: {{ .Values.config.mailer.smtpAddress | quote }}
+  {{- end }}
+
+  {{- if .Values.config.mailer.smtpAuthentication }}
+  SMTP_AUTHENTICATION: {{ .Values.config.mailer.smtpAuthentication | quote }}
+  {{- end }}
+
+  {{- if .Values.config.mailer.smtpDomain }}
+  SMTP_DOMAIN: {{ .Values.config.mailer.smtpDomain | quote }}
+  {{- end }}
+
+  {{- if .Values.config.mailer.smtpPort }}
+  SMTP_PORT: {{ .Values.config.mailer.smtpPort | quote }}
+  {{- end }}
+
+  # Environment-specific Settings
+  {{- $omniauthFullHost := .Values.config.environment.omniauthFullHost | default (include "dmp-roadmap.domainUrl" .) }}
+  {{- if $omniauthFullHost }}
+  OMNIAUTH_FULL_HOST: {{ $omniauthFullHost | quote }}
+  {{- end }}
+
+  {{- if .Values.config.environment.wickedPdfPath }}
+  WICKED_PDF_PATH: {{ .Values.config.environment.wickedPdfPath | quote }}
+  {{- end }}
+
+  {{- if .Values.config.environment.wickedPdfProxy }}
+  WICKED_PDF_PROXY: {{ .Values.config.environment.wickedPdfProxy | quote }}
+  {{- end }}
+
+  {{- if .Values.config.environment.defaultFunderId }}
+  DEFAULT_FUNDER_ID: {{ .Values.config.environment.defaultFunderId | quote }}
+  {{- end }}
+
+  {{- if .Values.config.environment.funderOrgId }}
+  FUNDER_ORG_ID: {{ .Values.config.environment.funderOrgId | quote }}
+  {{- end }}
+
+  {{- if .Values.config.environment.frenchOrgId }}
+  FRENCH_ORG_ID: {{ .Values.config.environment.frenchOrgId | quote }}
+  {{- end }}
+
+  {{- if .Values.config.environment.englishOrgId }}
+  ENGLISH_ORG_ID: {{ .Values.config.environment.englishOrgId | quote }}
+  {{- end }}
+
+  {{- if .Values.config.environment.orcidClientMember }}
+  ORCID_CLIENT_MEMBER: {{ .Values.config.environment.orcidClientMember | quote }}
+  {{- end }}
+
+  {{- if .Values.config.environment.railsEnv }}
+  RAILS_ENV: {{ .Values.config.environment.railsEnv | quote }}
+  {{- end }}
+
+  {{- if .Values.config.environment.rakeEnv }}
+  RAKE_ENV: {{ .Values.config.environment.rakeEnv | quote }}
+  {{- end }}
+
+  {{- if .Values.config.environment.nodeEnv }}
+  NODE_ENV: {{ .Values.config.environment.nodeEnv | quote }}
+  {{- end }}
+
+  {{- if .Values.config.environment.locale }}
+  LC_ALL: {{ .Values.config.environment.locale | quote }}
+  {{- end }}
+
+  {{- if .Values.config.environment.bundlePath }}
+  BUNDLE_PATH: {{ .Values.config.environment.bundlePath | quote }}
+  {{- end }}
+
+  {{- if .Values.config.environment.bundleWithout }}
+  BUNDLE_WITHOUT: {{ .Values.config.environment.bundleWithout | quote }}
+  {{- end }}
+
+  {{- $baseUrl := .Values.config.environment.baseUrl | default (include "dmp-roadmap.domainUrl" .) }}
+  {{- if $baseUrl }}
+  BASE_URL: {{ $baseUrl | quote }}
+  {{- end }}
+
+  {{- if .Values.config.environment.rollbarEnv }}
+  ROLLBAR_ENV: {{ .Values.config.environment.rollbarEnv | quote }}
+  {{- end }}
+
+  {{- if .Values.config.environment.railsLogToStdout }}
+  RAILS_LOG_TO_STDOUT: {{ .Values.config.environment.railsLogToStdout | quote }}
+  {{- end }}
+
+  {{- if .Values.config.environment.railsServeStaticFiles }}
+  RAILS_SERVE_STATIC_FILES: {{ .Values.config.environment.railsServeStaticFiles | quote }}
+  {{- end }}
+
+  {{- if .Values.config.environment.railsSkipAssetCompilation }}
+  RAILS_SKIP_ASSET_COMPILATION: {{ .Values.config.environment.railsSkipAssetCompilation | quote }}
+  {{- end }}
+
+  {{- $assetHost := .Values.config.environment.assetHost | default (include "dmp-roadmap.domainUrl" .) }}
+  {{- if $assetHost }}
+  ASSET_HOST: {{ $assetHost | quote }}
+  {{- end }}
+
+  {{- if .Values.config.environment.tmpDir }}
+  TMPDIR: {{ .Values.config.environment.tmpDir | quote }}
+  {{- end }}

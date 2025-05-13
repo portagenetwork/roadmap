@@ -18,6 +18,11 @@ public/stylesheets/*
 public/system/*
 public/videos/*
 
+deployments/kestrel.crt
+deployments/dev/secrets/
+deployments/staging/secrets/
+deployments/prod/secrets/
+
 # Ignore PO/POT backups
 *.po.bak
 *.pot.bak
@@ -25,7 +30,6 @@ public/videos/*
 # Ignore branded content
 app/views/branded/*
 config/locales/static_pages/*.yml
-
 
 # Ignore db schema.rb
 # db/schema.rb

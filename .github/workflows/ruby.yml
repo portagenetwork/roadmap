@@ -15,7 +15,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     services:
       # Postgres installation
@@ -51,7 +51,7 @@ jobs:
     # Install Node
     - uses: actions/setup-node@v3
       with:
-        node-version: '16.6.0'
+        node-version: '20.15.1'
         cache: 'yarn'
 
     # Install the Postgres developer packages
@@ -79,6 +79,18 @@ jobs:
     - name: 'Yarn Install'
       run: |
         yarn install
+    
+    # TEMPORARY WORKAROUND FOR THE FOLLOWING ISSUE: https://github.com/portagenetwork/roadmap/issues/1032
+    # Remove this once our tests are compatible with the new version of Chrome
+    # Source: https://github.com/teamcapybara/capybara/issues/2800#issuecomment-2731100953
+    - name: Remove image-bundled Chrome
+      run: sudo apt-get purge google-chrome-stable
+    - name: Setup stable Chrome
+      uses: browser-actions/setup-chrome@v1
+      with:
+        chrome-version: 128
+        install-chromedriver: true
+        install-dependencies: true
 
     - name: 'Setup Test DB'
       run: bin/rails db:setup RAILS_ENV=test

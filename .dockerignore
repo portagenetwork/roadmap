@@ -1,12 +1,52 @@
-# For some reason ignoring tmp creates a problem when compiling assets
-# tmp
-# !tmp/pids/.keep
-log/*
-coverage/
-tmp/* 
+/.bundle
+/.github
 
+/deployments
+
+app/assets/videos
+config/branding.yml.sample
+config/credentials.yml.mysql2
+config/credentials.yml.postgresql
+config/database.yml.sample
+config/spring.rb
+config/environments/*
+!config/environments/production.rb
+!config/environments/staging.rb
+config/initializers/bullet.rb
+db/diagram.svg
+db/seeds.rb
+db/seeds/
+/doc
+/log
+/node_modules
+public/files
+public/github-contributor-infographic-final.png
+public/images
+public/system
+public/videos
+/spec
+/tmp
+.byebug_history
 .dockerignore
-docker-compose-development.yml
-docker-compose.yml
+docker-compose*.yml
 .env
+# TODO: Remove .env-working if no one is using it
 .env-working
+.env.mysql2
+.env.postgresql
+.git
+.github
+.gitignore
+.gitmodules
+.rake_tasks~
+.rubocop.yml
+.ruby-lsp
+.travis.yml
+CHANGELOG.md
+CODE_OF_CONDUCT.md
+Dangerfile
+docker-compose*.yml
+LICENSE.md
+Procfile
+Procfile.dev
+README.md
