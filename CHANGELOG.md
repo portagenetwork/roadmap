@@ -12,6 +12,8 @@
 
 ### Changed
 
+ - Lower Ruby GitHub Action Chrome Version to Address Breaking Changes Between Latest Chrome Version (134) and `/features` Tests [#1041](https://github.com/portagenetwork/roadmap/pull/1041)
+
  - Lower PostgreSQL GitHub Action Chrome Version to Address Breaking Changes Between Latest Chrome Version (134) and `/features` Tests [#1033](https://github.com/portagenetwork/roadmap/pull/1033)
 
  - Bump nokogiri from 1.16.8 to 1.18.3 [#1012](https://github.com/portagenetwork/roadmap/pull/1012)
