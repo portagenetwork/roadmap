@@ -14,6 +14,8 @@
 
 ### Changed
 
+ - Bump net-imap from 0.4.19 to 0.4.20 [#1037](https://github.com/portagenetwork/roadmap/pull/1037)
+
  - Bump rack from 2.2.13 to 2.2.14 [#1039](https://github.com/portagenetwork/roadmap/pull/1039)
 
  - Bump @babel/helpers from 7.21.0 to 7.27.1 [#1042](https://github.com/portagenetwork/roadmap/pull/1042)
