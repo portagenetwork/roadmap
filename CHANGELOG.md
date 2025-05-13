@@ -12,6 +12,8 @@
 
 ### Changed
 
+ - Bump rack from 2.2.13 to 2.2.14 [#1039](https://github.com/portagenetwork/roadmap/pull/1039)
+
  - Bump @babel/helpers from 7.21.0 to 7.27.1 [#1042](https://github.com/portagenetwork/roadmap/pull/1042)
 
  - Bump @babel/runtime from 7.21.0 to 7.27.1 [#1043](https://github.com/portagenetwork/roadmap/pull/1043)
