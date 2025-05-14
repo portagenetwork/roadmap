@@ -1,0 +1,13 @@
+app:
+  image:
+    tag: "4.3.0-app"
+assets:
+  image:
+    tag: "4.3.0-assets"
+storage:
+  cephfs:
+    volumes:
+      locales:
+        path: "/volumes/_nogroup/12cec31d-96a5-464d-b475-8a2fc67c5eb2"
+      uploads:
+        path: "/volumes/_nogroup/a620def1-58f7-4b0f-95e2-f666728a45d6"
