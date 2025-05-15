@@ -8,6 +8,6 @@ storage:
   cephfs:
     volumes:
       locales:
-        path: "/volumes/_nogroup/12cec31d-96a5-464d-b475-8a2fc67c5eb2"
+        path: "/volumes/_nogroup/275e9568-3429-4abb-883e-835212586b7b"
       uploads:
-        path: "/volumes/_nogroup/a620def1-58f7-4b0f-95e2-f666728a45d6"
+        path: "/volumes/_nogroup/506e3c86-a134-4ad2-bff6-1247a5a717e0"
