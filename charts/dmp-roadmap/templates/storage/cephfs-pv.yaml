@@ -15,7 +15,7 @@ spec:
     {{- toYaml $.Values.storage.cephfs.accessModes | nindent 4 }}
   cephfs:
     path: {{ $volume.path }}
-    user: dmp-roadmap-{{ $name }}-user
+    user: dmp-roadmap-{{ $.Values.global.domain.prefix }}-{{ $name }}-user
     secretRef:
       name: {{ $volume.secretRef }}
     monitors:
