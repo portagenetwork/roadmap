@@ -109,13 +109,13 @@ WORKDIR $INSTALL_PATH
 
 # Copy wkhtmltopdf binary
 COPY --from=wkhtmltopdf /bin/wkhtmltopdf /usr/bin/wkhtmltopdf
-# Copy data for timezone and mime types
+# Copy data for timezone and mime types from builder stage
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=builder /usr/share/mime /usr/share/mime
-# Copy application code and dependencies from builder stage
+# Copy application code from builder stage
 COPY --from=builder --chown=dmpuser:dmpgroup $INSTALL_PATH $INSTALL_PATH
 
-# Create required directories with correct ownerships & permissions
+# Create required dirs, set ownerships, move + chmod entrypoint.sh
 RUN mkdir -p ${INSTALL_PATH}/tmp/cache \
         ${INSTALL_PATH}/tmp/pids \
         ${INSTALL_PATH}/tmp/sockets \
@@ -130,7 +130,11 @@ RUN mkdir -p ${INSTALL_PATH}/tmp/cache \
     chmod -R 755 \
         ${INSTALL_PATH}/tmp \
         ${INSTALL_PATH}/public \
-        ${INSTALL_PATH}/config/locale
+        ${INSTALL_PATH}/config/locale && \
+        # Move entrypoint.sh to /usr/bin/ (already copied from builder stage)
+        mv ${INSTALL_PATH}/entrypoint.sh /usr/bin/entrypoint.sh && \
+        # Make /usr/bin/entrypoint.sh executable
+        chmod +x /usr/bin/entrypoint.sh
 
 USER dmpuser
 
@@ -139,7 +143,7 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
     CMD wget -qO- ${BASE_URL}/api/v1/heartbeat || exit 1
 
-CMD ["bundle", "exec", "rails", "s"]
+ENTRYPOINT ["/usr/bin/entrypoint.sh"]
 
 # nginx stage to serve static assets
 FROM nginx:$NGINX_VERSION AS assets
