@@ -53,10 +53,6 @@ module ApplicationHelper
     end
   end
 
-  def terms_of_use_path
-    '/terms'
-  end
-
   def how_to_manage_your_data_path
     if I18n.locale == :'fr-CA'
       'https://portagenetwork.ca/fr/outils-et-ressources/assistant-pgd/comment-gerer-vos-donnees/'

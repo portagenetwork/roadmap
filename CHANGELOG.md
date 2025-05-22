@@ -14,7 +14,7 @@
  
  - Add `upgrade_customization?` Check When Determining Default Template (Funder vs Org Customization) For Dropdown [#1014](https://github.com/portagenetwork/roadmap/pull/1014)
 
- - Clean Up `/contact-us` Page, Fix "Contact us" Footer Link, and Update `terms_of_use_path` [#978](https://github.com/portagenetwork/roadmap/pull/978)
+ - Clean Up `/contact-us` Page, Fix "Contact us" Footer Link, and Update '/terms' Path Routing [#978](https://github.com/portagenetwork/roadmap/pull/978)
 
 ### Changed
 
