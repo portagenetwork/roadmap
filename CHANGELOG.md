@@ -10,6 +10,8 @@
 
  - Refactor: Implement Host-Based Routing and Remove Subpath URL Configuration [#1038](https://github.com/portagenetwork/roadmap/pull/1038)
 
+ - Added Arbutus Cloud and UVic logos to footer and added institutional sign in explanation [#1059](https://github.com/portagenetwork/roadmap/pull/1059)
+
 ### Changed
 
  - Lower Ruby GitHub Action Chrome Version to Address Breaking Changes Between Latest Chrome Version (134) and `/features` Tests [#1041](https://github.com/portagenetwork/roadmap/pull/1041)
