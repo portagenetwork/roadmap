@@ -79,7 +79,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         end.to change(current_user.identifiers, :count).by(1)
 
         expect(flash[:notice]).to eq('Linked successfully')
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(edit_user_registration_path)
       end
     end
 
