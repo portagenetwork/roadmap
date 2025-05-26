@@ -178,7 +178,7 @@ module Users
                                                     attrs: auth,
                                                     identifiable: current_user)
       flash[:notice] = _('Linked successfully')
-      redirect_to root_path
+      redirect_to edit_user_registration_path
     end
 
     def handle_conflicting_sso_email_for_signed_in_user(identifier_scheme, user)
