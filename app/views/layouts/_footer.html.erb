@@ -20,24 +20,6 @@
       </li>
 
       <li>
-        <%= link_to("https://dmponline.dcc.ac.uk/about_us", title: "DMP Online", target: '_blank', class: 'has-new-window-popup-info')  do %>
-          <%= image_tag("dmp-online-logo-white.png",
-                        class: "img-responsive",
-                        alt: "DMP Online #{_('(opens in a new window)')}") %>
-          <span class="new-window-popup-info"><%= _('Opens in new window') %></span>
-        <% end %>
-      </li>
-
-      <li>
-        <%= link_to("http://carl-abrc.ca/", title: _("Canadian Association of Research Libraries"), target: '_blank', class: 'has-new-window-popup-info')  do %>
-          <%= image_tag("carl-abrc-logo-white.png", 
-                        class: "img-responsive",
-                        alt: "#{_('Canadian Association of Research Libraries')} #{_('(opens in a new window)')}" ) %>
-          <span class="new-window-popup-info"><%= _('Opens in new window') %></span>
-        <% end %>
-      </li>
-
-      <li>
         <%= link_to("https://www.library.ualberta.ca/", title: "University of Alberta Library", target: '_blank', class: 'has-new-window-popup-info')  do %>
           <%= image_tag("UA-LIBR-1C-SOLID-REVERSE.png",
                         class: "img-responsive",
@@ -47,17 +29,38 @@
       </li>
 
       <li>
-        <%= link_to("https://cdlib.org/services/uc3/", title: "University of California Curation Center", target: '_blank', class: 'has-new-window-popup-info')  do %>
-          <%= image_tag("uc3_logo_white.png", class: "img-responsive", alt: "University of California Curation Center #{_('(opens in a new window)')}") %>
+        <%= link_to("https://www.uvic.ca/systems/researchcomputing/about-us/arbutus/index.php", title: "Arbutus Research Cloud", target: '_blank', class: 'has-new-window-popup-info')  do %>
+          <%= image_tag("arbutus-cloud.png", style: "width: 50px; height: 40px;", class: "img-responsive", alt:  "Arbutus Research Cloud #{_('(opens in a new window)')}") %>
           <span class="new-window-popup-info"><%= _('Opens in new window') %></span>
         <% end %>
       </li>
+
+      <li>
+        <%= link_to("https://www.uvic.ca/", title: _("University of Victoria"), target: '_blank', class: 'has-new-window-popup-info')  do %>
+          <%= image_tag("uvic-crest.png", 
+                        class: "img-responsive",
+                        style: "width: 100px; height: 34px;",
+                        alt: "#{_('University of Victoria')} #{_('(opens in a new window)')}" ) %>
+          <span class="new-window-popup-info"><%= _('Opens in new window') %></span>
+        <% end %>
+      </li>
+      
       <li>
         <%= link_to("http://www.dcc.ac.uk/", title: "Digital Curation Centre", target: '_blank', class: 'has-new-window-popup-info')  do %>
           <%= image_tag("dcc_logo_white.png", class: "img-responsive", alt: "Digital Curation Centre #{_('(opens in a new window)')}") %>
           <span class="new-window-popup-info"><%= _('Opens in new window') %></span>
         <% end %>
       </li>
+
+      <li>
+        <%= link_to("https://dmponline.dcc.ac.uk/about_us", title: "DMP Online", target: '_blank', class: 'has-new-window-popup-info')  do %>
+          <%= image_tag("dmp-online-logo-white.png",
+                        class: "img-responsive",
+                        alt: "DMP Online #{_('(opens in a new window)')}") %>
+          <span class="new-window-popup-info"><%= _('Opens in new window') %></span>
+        <% end %>
+      </li>
+
     </ul>
   </div>
   <div class="container-fluid">
