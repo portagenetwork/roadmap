@@ -452,7 +452,7 @@ config:
     # @default -- https://global.domain.name/global.domain.path
     baseUrl: ''
     # -- Rollbar environment
-    rollbarEnv: arbutus-test
+    rollbarEnv: arbutus
     # -- Rails log to stdout
     railsLogToStdout: 'true'
     # -- Rails serve static files

@@ -3,10 +3,10 @@ global:
     prefix: staging
 app:
   image:
-    tag: "4.3.0-dev.1-app"
+    tag: "4.3.0-rc.1-app"
 assets:
   image:
-    tag: "4.3.0-dev.1-assets"
+    tag: "4.3.0-rc.1-assets"
 ingress:
   annotations:
     cert-manager.io/issuer: letsencrypt-staging-cloudflare
@@ -17,3 +17,6 @@ storage:
         path: "/volumes/_nogroup/60983976-c3fb-49a0-84c1-309c925110f4"
       uploads:
         path: "/volumes/_nogroup/6a4a8728-6ee3-4151-b24a-eb2b84aef469"
+config:
+  environment:
+    rollbarEnv: arbutus-staging
