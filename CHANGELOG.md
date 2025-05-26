@@ -28,6 +28,8 @@
 
  - Refactor: Implement Host-Based Routing and Remove Subpath URL Configuration [#1038](https://github.com/portagenetwork/roadmap/pull/1038)
 
+ - Added Arbutus Cloud and UVic logos to footer and added institutional sign in explanation [#1059](https://github.com/portagenetwork/roadmap/pull/1059)
+
 ### Changed
 
  - Bump net-imap from 0.4.19 to 0.4.20 [#1037](https://github.com/portagenetwork/roadmap/pull/1037)
