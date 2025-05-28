@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+ - Add Functionality Allowing Super Admins to Confirm/Unconfirm User Emails [#1009](https://github.com/portagenetwork/roadmap/pull/1009)
+
+### Changed
+
+ - Delete Auto-Generated and Unused `tinymce/skins` Contents and Add to `.gitignore` [#1060](https://github.com/portagenetwork/roadmap/pull/1060)
+
 ## [4.1.1+portage-4.3.0]
 
 ### Added
@@ -9,10 +19,6 @@
  - DMP Roadmap Helm Chart and Staging Environment Configuration [#1028](https://github.com/portagenetwork/roadmap/pull/1028)
 
  - Refactor: Implement Host-Based Routing and Remove Subpath URL Configuration [#1038](https://github.com/portagenetwork/roadmap/pull/1038)
-
-### Added
-
- - Add Functionality Allowing Super Admins to Confirm/Unconfirm User Emails [#1009](https://github.com/portagenetwork/roadmap/pull/1009)
 
 ### Changed
 
