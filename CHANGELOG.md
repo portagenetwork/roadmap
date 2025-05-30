@@ -6,6 +6,8 @@
 
  - Add Functionality Allowing Super Admins to Confirm/Unconfirm User Emails [#1009](https://github.com/portagenetwork/roadmap/pull/1009)
 
+ - Added Arbutus Cloud and UVic logos to footer and added institutional sign in explanation [#1059](https://github.com/portagenetwork/roadmap/pull/1059)
+
 ### Fixed
  
  - Add `upgrade_customization?` Check When Determining Default Template (Funder vs Org Customization) For Dropdown [#1014](https://github.com/portagenetwork/roadmap/pull/1014)
