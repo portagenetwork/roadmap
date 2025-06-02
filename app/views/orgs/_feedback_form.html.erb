@@ -29,7 +29,12 @@
       </div>
       <div class="form-group col-xs-4">
         <h4><%= _('Sample Message') %></h4>
-        <%= sanitize sample_message_for_org_feedback_form(org) %>
+         <%= sanitize(
+            (org.feedback_msg || '')
+              .gsub('%{user_name}', current_user.name(false))
+              .gsub('%{plan_name}', '[Add Plan Name]')
+              .gsub('%{organisation_email}', org.contact_email)
+        ) %>
       </div>
     </div>
   </div>
