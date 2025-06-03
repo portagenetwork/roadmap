@@ -9,6 +9,8 @@
  - Added Arbutus Cloud and UVic logos to footer and added institutional sign in explanation [#1059](https://github.com/portagenetwork/roadmap/pull/1059)
 
 ### Fixed
+
+ - Fix handling of attrs[:managed] on Org updates [#1062](https://github.com/portagenetwork/roadmap/pull/1062)
  
  - Add `upgrade_customization?` Check When Determining Default Template (Funder vs Org Customization) For Dropdown [#1014](https://github.com/portagenetwork/roadmap/pull/1014)
 
