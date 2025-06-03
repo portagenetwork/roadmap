@@ -1,5 +1,23 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+ - Add Functionality Allowing Super Admins to Confirm/Unconfirm User Emails [#1009](https://github.com/portagenetwork/roadmap/pull/1009)
+
+ - Added Arbutus Cloud and UVic logos to footer and added institutional sign in explanation [#1059](https://github.com/portagenetwork/roadmap/pull/1059)
+
+ - Modified "Request Feedback" Default Message and Flash Behaviour [#1064](https://github.com/portagenetwork/roadmap/pull/1064)
+
+### Fixed
+ 
+ - Add `upgrade_customization?` Check When Determining Default Template (Funder vs Org Customization) For Dropdown [#1014](https://github.com/portagenetwork/roadmap/pull/1014)
+
+### Changed
+
+ - Delete Auto-Generated and Unused `tinymce/skins` Contents and Add to `.gitignore` [#1060](https://github.com/portagenetwork/roadmap/pull/1060)
+
 ## [4.1.1+portage-4.3.0]
 
 ### Added
