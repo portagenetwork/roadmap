@@ -6,7 +6,7 @@
 
  - Add Functionality Allowing Super Admins to Confirm/Unconfirm User Emails [#1009](https://github.com/portagenetwork/roadmap/pull/1009)
 
- - Added Arbutus Cloud and UVic logos to footer and added institutional sign in explanation [#1059](https://github.com/portagenetwork/roadmap/pull/1059)
+ - Added Arbutus Cloud and UVic logos to footer and added institutional sign in explanation [#1063](https://github.com/portagenetwork/roadmap/pull/1063)
 
 ### Fixed
  
@@ -15,6 +15,8 @@
 ### Changed
 
  - Delete Auto-Generated and Unused `tinymce/skins` Contents and Add to `.gitignore` [#1060](https://github.com/portagenetwork/roadmap/pull/1060)
+
+ - Changed error messages in `public` to be consistent and include French translations [#1058](https://github.com/portagenetwork/roadmap/pull/1058)
 
 ## [4.1.1+portage-4.3.0]
 
