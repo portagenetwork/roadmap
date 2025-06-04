@@ -32,7 +32,8 @@
          <%= sanitize(
             (org.feedback_msg || '')
               .gsub('%{user_name}', current_user.name(false))
-              .gsub('%{organisation_email}', org.contact_email)
+              .gsub('%{organisation_email}', (org.contact_email || '(no organization email inputted)'))
+              .gsub('%{plan_name}', '[Insert Plan Name]')
         ) %>
       </div>
     </div>
