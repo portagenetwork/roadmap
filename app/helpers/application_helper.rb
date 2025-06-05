@@ -53,26 +53,6 @@ module ApplicationHelper
     end
   end
 
-  def contact_us_path
-    if I18n.locale == :'fr-CA'
-      'https://portagenetwork.ca/fr/contactez-nous/'
-    else
-      # Handling :'en-CA' locale
-      'https://portagenetwork.ca/contact-us/'
-    end
-  end
-
-  # TODO: Replace function body with the commented-out code when French version of this path is made available.
-  def terms_of_use_path
-    'https://dmp-pgd.ca/terms' # TEMPORARY FIX
-    # if I18n.locale == :'fr-CA'
-    #   'https://portagenetwork.ca/fr/outils-et-ressources/assistant-pgd/conditions-dutilisation-de-lassistant-pgd/'
-    # else
-    #   # Handling :'en-CA' locale
-    #   'https://assistant.portagenetwork.ca/terms'
-    # end
-  end
-
   def how_to_manage_your_data_path
     if I18n.locale == :'fr-CA'
       'https://portagenetwork.ca/fr/outils-et-ressources/assistant-pgd/comment-gerer-vos-donnees/'
