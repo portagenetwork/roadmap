@@ -118,6 +118,10 @@ class Org < ApplicationRecord
   validates :feedback_msg, presence: { message: PRESENCE_MESSAGE,
                                        if: :feedback_enabled }
 
+  validate :validate_feedback_msg_interpolation,
+           # NOTE: feedback_msg_changed? comes from ActiveModel::Dirty
+           if: -> { feedback_msg.present? && feedback_msg_changed? }
+
   validates :managed, inclusion: { in: BOOLEAN_VALUES,
                                    message: INCLUSION_MESSAGE }
 
@@ -356,6 +360,29 @@ class Org < ApplicationRecord
   # rubocop:enable Metrics/AbcSize
 
   private
+
+  def validate_feedback_msg_interpolation
+    # Custom validator for the feedback message input on the `/org/admin/:id/admin_edit#feedback` path.
+    # Users can include placeholders in this message, which get interpolated with actual values
+    # on the `plans/:id/request_feedback` path.
+    # This validator prevents the saving of problematic feedback_msg data by attempting
+    # to format the custom message with the sample `placeholders` hash and capturing any errors.
+
+    # TODO: Make `placeholders.keys()` more explicit within the model.
+    #       We should clearly document valid placeholders supported by feedback_msg interpolation.
+    placeholders = {
+      user_name: 'Test User',
+      plan_name: 'Test Plan',
+      organisation_email: contact_email || 'test@abc.com'
+    }
+    begin
+      format(feedback_msg.to_s, placeholders)
+    rescue KeyError => e
+      errors.add(:feedback_msg, "contains invalid placeholders: #{e.message}")
+    rescue ArgumentError => e
+      errors.add(:feedback_msg, "has invalid format: #{e.message}")
+    end
+  end
 
   ##
   # checks size of logo and resizes if necessary
