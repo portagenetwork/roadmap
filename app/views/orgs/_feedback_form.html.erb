@@ -24,6 +24,9 @@
     <div class="row">
       <div class="form-group col-xs-8" data-html="true">
         <%= f.label :feedback_msg, _('Message'), class: "control-label" %>
+        <p class="help-block" style="color: #32322F;">
+          <%= _('You can use the placeholders: %{user_name} and %{organisation_email}') %>
+        </p>
         <%= f.text_area :feedback_msg, class: "form-control", spellcheck: true,
                         "aria-required" => true %>
       </div>
