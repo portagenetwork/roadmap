@@ -60,8 +60,11 @@ class TemplateOptionsController < ApplicationController
     # @templates << funder_templates = Template.latest_customizable
     # Always use the default template
     if Template.default.present? && org.present?
+      # Fetch the org’s latest customization of the default template
       customization = Template.published.latest_customized_version(Template.default.family_id, org.id).first
-      customization ||= Template.default
+      # In short: check if `customization` is based on `Template.default`
+      # If so, use `customization`; otherwise, fall back to `Template.default`
+      customization = Template.default unless customization.present? && !customization.upgrade_customization?
       @templates.select! { |t| t.id != Template.default.id && t.id != customization.id }
       # We want the default template to appear at the beggining of the list
       @templates.unshift(customization)
