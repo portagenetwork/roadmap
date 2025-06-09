@@ -119,20 +119,23 @@ module Users
     end
 
     def generate_flash_message_for_missing_email
-      url = 'https://cilogon.org/testidp/'
-      # if user is signed out and tried to sign in via SSO
+      testidp_url = 'https://cilogon.org/testidp/'
+      helpdesk_email = Rails.configuration.x.organisation.helpdesk_email
+      # if user is signed out and attempted to sign in via SSO
       if current_user.nil?
         format(
-          _('Unable to sign in with the selected identity provider. Please visit %{url} to verify ' \
-            'that all required fields are provided, or try signing in with another identity provider.'),
-          url: view_context.link_to(nil, url)
+          _('Unable to sign in with the selected identity provider. Consider using an alternative sign in method, ' \
+            'like social sign on. You can verify your email is being provided here <%{url}> and contact us at the ' \
+            'help desk for further assistance. Help desk email: %{helpdesk_email}'),
+          url: view_context.link_to(nil, testidp_url), helpdesk_email: view_context.mail_to(helpdesk_email)
         )
       # else user is signed in and attempted to link a new SSO account
       else
         format(
-          _('Unable to link with the selected identity provider. Please visit %{url} to verify ' \
-            'that all required fields are provided, or try linking with another identity provider.'),
-          url: view_context.link_to(nil, url)
+          _('Unable to link with the selected identity provider. Consider using an alternative sign in method, ' \
+            'like social sign on. You can verify your email is being provided here <%{url}> and contact us at the ' \
+            'help desk for further assistance. Help desk email: %{helpdesk_email}'),
+          url: view_context.link_to(nil, testidp_url), helpdesk_email: view_context.mail_to(helpdesk_email)
         )
       end
     end

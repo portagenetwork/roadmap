@@ -30,9 +30,12 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
       it 'Redirects signed out user to root path and renders correct flash message' do
         post :openid_connect
         expect(response).to redirect_to(root_path)
-        msg = 'Unable to sign in with the selected identity provider. Please visit ' \
-              '<a href="https://cilogon.org/testidp/">https://cilogon.org/testidp/</a> to verify ' \
-              'that all required fields are provided, or try signing in with another identity provider.'
+        msg = 'Unable to sign in with the selected identity provider. ' \
+              'Consider using an alternative sign in method, like social sign on. ' \
+              'You can verify your email is being provided here ' \
+              '<<a href="https://cilogon.org/testidp/">https://cilogon.org/testidp/</a>> ' \
+              'and contact us at the help desk for further assistance. Help desk email: ' \
+              '<a href="mailto:dmp-assistant@tech.alliancecan.ca">dmp-assistant@tech.alliancecan.ca</a>'
         expect(flash[:alert]).to eq(msg)
       end
 
@@ -40,9 +43,12 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         sign_in current_user
         post :openid_connect
         expect(response).to redirect_to(edit_user_registration_path)
-        msg = 'Unable to link with the selected identity provider. Please visit ' \
-              '<a href="https://cilogon.org/testidp/">https://cilogon.org/testidp/</a> to verify ' \
-              'that all required fields are provided, or try linking with another identity provider.'
+        msg = 'Unable to link with the selected identity provider. ' \
+              'Consider using an alternative sign in method, like social sign on. ' \
+              'You can verify your email is being provided here ' \
+              '<<a href="https://cilogon.org/testidp/">https://cilogon.org/testidp/</a>> ' \
+              'and contact us at the help desk for further assistance. Help desk email: ' \
+              '<a href="mailto:dmp-assistant@tech.alliancecan.ca">dmp-assistant@tech.alliancecan.ca</a>'
         expect(flash[:alert]).to eq(msg)
       end
     end
