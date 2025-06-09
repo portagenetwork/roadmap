@@ -23,9 +23,10 @@
  - Delete Auto-Generated and Unused `tinymce/skins` Contents and Add to `.gitignore` [#1060](https://github.com/portagenetwork/roadmap/pull/1060)
 
  - Changed error messages in `public` to be consistent and include French translations [#1058](https://github.com/portagenetwork/roadmap/pull/1058)
-## [4.1.1+portage-4.3.0]
 
  - Modified "Request Feedback" Default Message and Flash Behaviour [#1064](https://github.com/portagenetwork/roadmap/pull/1064)
+
+## [4.1.1+portage-4.3.0]
 
 ### Added
 

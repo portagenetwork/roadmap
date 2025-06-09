@@ -3,17 +3,25 @@
 # Helper methods for Orgs
 module OrgsHelper
   EMAIL_PLACEHOLDER = '[Organisation Contact Email Placeholder]'
-
-  # Sample message for Org feedback form.
+  PLAN_PLACEHOLDER = '[Plan Name Placeholder]'
+  USER_PLACEHOLDER = ''
+  # Displays a feedback message
   #
-  # org - The current Org we're updating feedback form for.
+  # org - The current Org who owns the feedback message being displayed
+  # current_user - The current user we're showing feedback message to
   #
   # Returns String
-  def sample_message_for_org_feedback_form(org)
+  def display_feedback_message(org, current_user, feedback_message)
     email = org.contact_email || EMAIL_PLACEHOLDER
-    format(_("<p>A data librarian from %{org_name} will respond to your request within 48
-       hours. If you have questions pertaining to this action please contact us
-       at %{organisation_email}.</p>"), organisation_email: email, org_name: org.name)
+    username = current_user.name(false) || USER_PLACEHOLDER
+    format(
+      _(feedback_message),
+      user_name: username, organisation_email: email, plan_name: PLAN_PLACEHOLDER
+    )
+  rescue KeyError, ArgumentError => e
+    Rails.logger.error("Unable to display feedback message: #{e.message}")
+    message = _('Unable to render feedback message: ')
+    message + _(e.message.to_s)
   end
 
   # The preferred logo url for the current configuration. If DRAGONFLY_AWS is true, return
