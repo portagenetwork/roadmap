@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 namespace :assets do
-  desc 'Copy Bootstrap glyphicons and TinyMCE skins to the public directory'
+  desc 'Copy Bootstrap glyphicons, TinyMCE skins, and DMP logo to the public directory'
   task :copy_assets do
     # Bootstrap and TinyMCE expect their files to live in a specific place, so copy them over
     puts 'Copying Bootstrap glyphicons to the public directory ...'
@@ -13,6 +13,12 @@ namespace :assets do
     puts 'Copying TinyMCE skins to the public directory ...'
     source_dir = Dir.glob(Rails.root.join('node_modules', 'tinymce', 'skins', 'ui', 'oxide'))
     destination_dir = Rails.root.join('public', 'tinymce', 'skins')
+    FileUtils.mkdir_p(destination_dir)
+    FileUtils.cp_r(source_dir, destination_dir)
+
+    puts 'Copying dmp logo to the public directory ...'
+    source_dir = Dir.glob(Rails.root.join('app', 'assets', 'images', 'dmp-logo-bil-large.png'))
+    destination_dir = Rails.root.join('public', 'images')
     FileUtils.mkdir_p(destination_dir)
     FileUtils.cp_r(source_dir, destination_dir)
   end
