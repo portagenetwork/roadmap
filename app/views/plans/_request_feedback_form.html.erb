@@ -12,7 +12,7 @@
        %>
        </p>
       <div class="well well-sm">
-        <%= sanitize display_feedback_message(plan.owner.org, current_user, plan.owner.org.feedback_msg) %>
+        <%= sanitize display_feedback_message(plan.owner.org, current_user, plan.owner.org.feedback_msg, plan.title) %>
       </div>
       <p><%= _('You can continue to edit and download the plan in the interim.') %></p>
       <div class="form-group col-xs-8">

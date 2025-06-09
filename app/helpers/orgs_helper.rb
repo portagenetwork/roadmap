@@ -9,14 +9,18 @@ module OrgsHelper
   #
   # org - The current Org who owns the feedback message being displayed
   # current_user - The current user we're showing feedback message to
+  # feedack_message - The feedback message we're displaying
+  # plan_name - Name of the plan we're displaying the feedback message for;
+  #   set to nil because there is no plan name in org feedback form
   #
   # Returns String
-  def display_feedback_message(org, current_user, feedback_message)
+  def display_feedback_message(org, current_user, feedback_message, plan_name = nil)
     email = org.contact_email || EMAIL_PLACEHOLDER
     username = current_user.name(false) || USER_PLACEHOLDER
+    plan_title = plan_name || PLAN_PLACEHOLDER
     format(
       _(feedback_message),
-      user_name: username, organisation_email: email, plan_name: PLAN_PLACEHOLDER
+      user_name: username, organisation_email: email, plan_name: plan_title
     )
   rescue KeyError, ArgumentError => e
     Rails.logger.error("Unable to display feedback message: #{e.message}")
