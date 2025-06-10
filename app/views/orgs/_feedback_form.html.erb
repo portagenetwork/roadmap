@@ -23,8 +23,6 @@
     </h3>
     <div class="row">
       <div class="form-group col-xs-8" data-html="true">
-        <%= f.label :feedback_msg, _('Message'), class: "control-label" %>
-        
         <p class="help-block" style="color: #32322F;">
           <%= _('You can personalise your request feedback message by including the following placeholders that will be replaced with real data:') %>
           <ul>
@@ -34,7 +32,7 @@
           </ul>
           <strong><%= _('NOTE: Placeholders must be typed exactly as shown, including the %{...} format.') %></strong>
         </p>
-
+        <%= f.label :feedback_msg, _('Message'), class: "control-label" %>
         <%= f.text_area :feedback_msg, class: "form-control", spellcheck: true,
                         "aria-required" => true %>
       </div>
