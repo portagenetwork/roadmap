@@ -20,6 +20,8 @@
 
  - Move Bootstrap & TinyMCE File Copying Logic to `assets:precompile` [#980](https://github.com/portagenetwork/roadmap/pull/980)
 
+ - Move DMP logo copying process to `assets:precompile` [#1069](https://github.com/portagenetwork/roadmap/pull/1069)
+
  - Delete Auto-Generated and Unused `tinymce/skins` Contents and Add to `.gitignore` [#1060](https://github.com/portagenetwork/roadmap/pull/1060)
 
  - Changed error messages in `public` to be consistent and include French translations [#1058](https://github.com/portagenetwork/roadmap/pull/1058)
