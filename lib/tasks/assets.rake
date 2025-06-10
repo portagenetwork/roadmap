@@ -17,10 +17,10 @@ namespace :assets do
     FileUtils.cp_r(source_dir, destination_dir)
 
     puts 'Copying dmp logo to the public directory ...'
-    source_dir = Dir.glob(Rails.root.join('app', 'assets', 'images', 'dmp-logo-bil-large.png'))
+    source_file = Rails.root.join('app', 'assets', 'images', 'dmp-logo-bil-large.png')
     destination_dir = Rails.root.join('public', 'images')
     FileUtils.mkdir_p(destination_dir)
-    FileUtils.cp_r(source_dir, destination_dir)
+    FileUtils.cp(source_file, destination_dir)
   end
 
   # Set assets:copy_assets as an extension of assets:precompile
