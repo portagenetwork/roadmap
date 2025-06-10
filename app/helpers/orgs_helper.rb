@@ -23,9 +23,14 @@ module OrgsHelper
       user_name: username, organisation_email: email, plan_name: plan_title
     )
   rescue KeyError, ArgumentError => e
-    Rails.logger.error("Unable to display feedback message: #{e.message}")
-    message = _('Unable to render feedback message: ')
-    message + _(e.message.to_s)
+      Rails.logger.error("Unable to display feedback message: #{e.message}")
+      # /plans/:plan_id/request_feedback and /org/admin/:org_id/admin_edit both render the feedback_msg
+      # If plan_name.nil?, then we are on /org/admin/:org_id/admin_edit
+      if plan_name.nil?
+        # Only render the error on the org admin page.
+        message = _('Unable to render feedback message: ')
+        message + _(e.message.to_s)
+    end
   end
 
   # The preferred logo url for the current configuration. If DRAGONFLY_AWS is true, return
