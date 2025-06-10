@@ -24,9 +24,17 @@
     <div class="row">
       <div class="form-group col-xs-8" data-html="true">
         <%= f.label :feedback_msg, _('Message'), class: "control-label" %>
+        
         <p class="help-block" style="color: #32322F;">
-          <%= _('You can use the placeholders: %{user_name} and %{organisation_email}') %>
+          <%= _('You can personalise your request feedback message by including the following placeholders that will be replaced with real data:') %>
+          <ul>
+            <li><code style="color: #8A6E00;">%{user_name}</code> — <%= _('The name of the user submitting the feedback request') %></li>
+            <li><code style="color: #8A6E00;">%{plan_name}</code> — <%= _('The name of the plan') %></li>
+            <li><code style="color: #8A6E00;">%{organisation_email}</code> — <%= _('The contact email for your organisation') %></li>
+          </ul>
+          <strong><%= _('NOTE: Placeholders must be typed exactly as shown, including the %{...} format.') %></strong>
         </p>
+
         <%= f.text_area :feedback_msg, class: "form-control", spellcheck: true,
                         "aria-required" => true %>
       </div>
