@@ -18,9 +18,7 @@
 
 ### Changed
 
- - Move Bootstrap & TinyMCE File Copying Logic to `assets:precompile` [#980](https://github.com/portagenetwork/roadmap/pull/980)
-
- - Move DMP logo copying process to `assets:precompile` [#1069](https://github.com/portagenetwork/roadmap/pull/1069)
+ - Improve copying of third-party and static assets not served by the Rails asset pipeline [#980](https://github.com/portagenetwork/roadmap/pull/980)
 
  - Delete Auto-Generated and Unused `tinymce/skins` Contents and Add to `.gitignore` [#1060](https://github.com/portagenetwork/roadmap/pull/1060)
 
