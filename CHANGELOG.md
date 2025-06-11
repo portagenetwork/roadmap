@@ -24,6 +24,8 @@
 
  - Bump progress_bar from 1.3.3 to 1.3.4 [#995](https://github.com/portagenetwork/roadmap/pull/995)
 
+ - Bump guard from 2.18.0 to 2.19.1 [#994](https://github.com/portagenetwork/roadmap/pull/994)
+
 ## [4.1.1+portage-4.3.0]
 
 ### Added
