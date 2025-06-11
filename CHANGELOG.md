@@ -22,6 +22,8 @@
 
  - Changed error messages in `public` to be consistent and include French translations [#1058](https://github.com/portagenetwork/roadmap/pull/1058)
 
+ - Bump progress_bar from 1.3.3 to 1.3.4 [#995](https://github.com/portagenetwork/roadmap/pull/995)
+
 ## [4.1.1+portage-4.3.0]
 
 ### Added
