@@ -31,7 +31,7 @@ deployments/prod/secrets/
 # Ignore branded content
 app/views/branded/*
 config/locales/static_pages/*.yml
-# config/locale/
+config/locale/
 # TODO: This file can probably be ignored/deleted at some point as well.
 !config/locale/i18n_placeholders.rb
 
