@@ -20,6 +20,8 @@
 
 ### Changed
 
+ - Improve copying of third-party and static assets not served by the Rails asset pipeline [#980](https://github.com/portagenetwork/roadmap/pull/980)
+
  - Delete Auto-Generated and Unused `tinymce/skins` Contents and Add to `.gitignore` [#1060](https://github.com/portagenetwork/roadmap/pull/1060)
 
  - Changed error messages in `public` to be consistent and include French translations [#1058](https://github.com/portagenetwork/roadmap/pull/1058)
