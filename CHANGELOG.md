@@ -30,6 +30,8 @@
 
  - Bump guard from 2.18.0 to 2.19.1 [#994](https://github.com/portagenetwork/roadmap/pull/994)
 
+ - Update Handling For When Linking New External Credentials Without IdP email and Refactor `def openid_connect` [#1003](https://github.com/portagenetwork/roadmap/pull/1003)
+
 ## [4.1.1+portage-4.3.0]
 
 ### Added

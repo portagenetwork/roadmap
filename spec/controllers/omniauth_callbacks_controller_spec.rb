@@ -20,17 +20,36 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
   end
 
   describe 'POST #openid_connect' do
-    context 'when the email is missing and the user does not exist' do
+    context 'email is missing from IdP and no user with these auth creds exists in DB' do
+      let(:current_user) { create(:user) }
       before do
         # Simulate missing email
         @request.env['omniauth.auth'].info.email = nil
       end
 
-      it 'redirects to the registration page with a flash message' do
+      it 'Redirects signed out user to root path and renders correct flash message' do
         post :openid_connect
+        expect(response).to redirect_to(root_path)
+        msg = 'Unable to sign in with the selected identity provider. ' \
+              'Consider using an alternative sign in method, like social sign on. ' \
+              'You can verify your email is being provided here ' \
+              '<<a href="https://cilogon.org/testidp/">https://cilogon.org/testidp/</a>> ' \
+              'and contact us at the help desk for further assistance. Help desk email: ' \
+              '<a href="mailto:dmp-assistant@tech.alliancecan.ca">dmp-assistant@tech.alliancecan.ca</a>'
+        expect(flash[:alert]).to eq(msg)
+      end
 
-        expect(response).to redirect_to(new_user_registration_path)
-        expect(flash[:notice]).to eq('Something went wrong, Please try signing up here.')
+      it 'Redirects signed in user to Edit Profile path and renders correct flash message' do
+        sign_in current_user
+        post :openid_connect
+        expect(response).to redirect_to(edit_user_registration_path)
+        msg = 'Unable to link with the selected identity provider. ' \
+              'Consider using an alternative sign in method, like social sign on. ' \
+              'You can verify your email is being provided here ' \
+              '<<a href="https://cilogon.org/testidp/">https://cilogon.org/testidp/</a>> ' \
+              'and contact us at the help desk for further assistance. Help desk email: ' \
+              '<a href="mailto:dmp-assistant@tech.alliancecan.ca">dmp-assistant@tech.alliancecan.ca</a>'
+        expect(flash[:alert]).to eq(msg)
       end
     end
 
@@ -66,7 +85,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         end.to change(current_user.identifiers, :count).by(1)
 
         expect(flash[:notice]).to eq('Linked successfully')
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(edit_user_registration_path)
       end
     end
 
