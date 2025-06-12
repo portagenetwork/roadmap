@@ -4,6 +4,8 @@
 
 ### Added
 
+ - Add custom validator for `Org.feedback_msg` interpolation [#1068](https://github.com/portagenetwork/roadmap/pull/1068)
+
  - Add Functionality Allowing Super Admins to Confirm/Unconfirm User Emails [#1009](https://github.com/portagenetwork/roadmap/pull/1009)
 
  - Added Arbutus Cloud and UVic logos to footer and added institutional sign in explanation [#1063](https://github.com/portagenetwork/roadmap/pull/1063)
@@ -21,6 +23,8 @@
  - Delete Auto-Generated and Unused `tinymce/skins` Contents and Add to `.gitignore` [#1060](https://github.com/portagenetwork/roadmap/pull/1060)
 
  - Changed error messages in `public` to be consistent and include French translations [#1058](https://github.com/portagenetwork/roadmap/pull/1058)
+
+ - Modified "Request Feedback" Default Message and Flash Behaviour [#1064](https://github.com/portagenetwork/roadmap/pull/1064)
 
  - Bump progress_bar from 1.3.3 to 1.3.4 [#995](https://github.com/portagenetwork/roadmap/pull/995)
 

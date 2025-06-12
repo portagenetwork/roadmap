@@ -19,6 +19,10 @@ $color-alliance-darkest-yellow: #8A6E00;
 $color-white: #FFF;
 $color-alliance-lighter-grey: #CCC;
 
+.code-darkest-yellow {
+  color: $color-alliance-darkest-yellow;
+}
+
 //logo style apply for all screen size
 //_logos.scss
 .app-logo{
