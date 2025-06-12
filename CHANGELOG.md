@@ -20,6 +20,8 @@
 
 ### Changed
 
+ - Improve copying of third-party and static assets not served by the Rails asset pipeline [#980](https://github.com/portagenetwork/roadmap/pull/980)
+
  - Delete Auto-Generated and Unused `tinymce/skins` Contents and Add to `.gitignore` [#1060](https://github.com/portagenetwork/roadmap/pull/1060)
 
  - Changed error messages in `public` to be consistent and include French translations [#1058](https://github.com/portagenetwork/roadmap/pull/1058)
@@ -33,6 +35,8 @@
  - Update Handling For When Linking New External Credentials Without IdP email and Refactor `def openid_connect` [#1003](https://github.com/portagenetwork/roadmap/pull/1003)
 
  - Modified MySql and Postgres workflows to only run on Pull Requests [#1073](https://github.com/portagenetwork/roadmap/pull/1073)
+
+ - Remove Outdated / Auto-Generated Translation Files from `config/locale` and Add to `.gitignore` and `.dockerignore` [#1070](https://github.com/portagenetwork/roadmap/pull/1070)
 
 ## [4.1.1+portage-4.3.0]
 
