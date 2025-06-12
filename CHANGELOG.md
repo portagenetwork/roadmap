@@ -34,6 +34,8 @@
 
  - Update Handling For When Linking New External Credentials Without IdP email and Refactor `def openid_connect` [#1003](https://github.com/portagenetwork/roadmap/pull/1003)
 
+ - Modified MySql and Postgres workflows to only run on Pull Requests [#1073](https://github.com/portagenetwork/roadmap/pull/1073)
+
  - Remove Outdated / Auto-Generated Translation Files from `config/locale` and Add to `.gitignore` and `.dockerignore` [#1070](https://github.com/portagenetwork/roadmap/pull/1070)
 
 ## [4.1.1+portage-4.3.0]
