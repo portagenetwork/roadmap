@@ -33,6 +33,11 @@ class LocaleService
       convert(string: locale, join_char: join_char)
     end
 
+    # Returns an array containing all available translations for the provided string arg
+    def translations_for_all_locales(string)
+      I18n.available_locales.map { |locale| I18n.with_locale(locale) { _(string) } }
+    end
+
     private
 
     def convert(string:, join_char: Rails.configuration.x.locales.gettext_join_character)

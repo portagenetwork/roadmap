@@ -139,12 +139,26 @@ module Users
       )
     end
 
+    def generate_flash_message_for_openid_connect_sign_in(user)
+      if user.generic_name?
+        flash[:alert] =
+          format(
+            _('Some information is missing from your profile. ' \
+              '<a href="%{link}">Click here to complete your profile</a>.'),
+            link: edit_user_registration_path
+          )
+      else
+        flash[:notice] = _('Signed in successfully.')
+      end
+    end
+
     def handle_openid_connect_for_signed_out_user(user, auth, identifier_scheme)
       # user.nil? is true if the chosen CILogon email is not currently linked to an existing user account
       user = handle_new_sso_email_for_signed_out_user(auth, identifier_scheme) if user.nil?
       # See app/controllers/concerns/email_confirmation_handler.rb
       return if confirmation_instructions_missing_and_handled?(user)
 
+      generate_flash_message_for_openid_connect_sign_in(user)
       sign_in_and_redirect user, event: :authentication
     end
 
