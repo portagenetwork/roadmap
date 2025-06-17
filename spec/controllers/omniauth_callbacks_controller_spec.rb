@@ -64,9 +64,8 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
 
       it 'signs in the existing user' do
         post :openid_connect
-        # expect(subject.current_user).to eq(user)
         expect(response).to redirect_to(root_path)
-        expect(flash[:notice]).to be_nil
+        expect(flash[:notice]).to eq('Signed in successfully.')
       end
     end
 
