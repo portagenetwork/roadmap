@@ -38,6 +38,8 @@
 
  - Remove Outdated / Auto-Generated Translation Files from `config/locale` and Add to `.gitignore` and `.dockerignore` [#1070](https://github.com/portagenetwork/roadmap/pull/1070)
 
+ - Bump httparty from 0.22.0 to 0.23.1 [#1072](https://github.com/portagenetwork/roadmap/pull/1072)
+
 ## [4.1.1+portage-4.3.0]
 
 ### Added
