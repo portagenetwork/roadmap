@@ -40,6 +40,8 @@
 
  - Bump puma from 6.4.3 to 6.6.0 [#1071](https://github.com/portagenetwork/roadmap/pull/1071)
 
+ - Bump httparty from 0.22.0 to 0.23.1 [#1072](https://github.com/portagenetwork/roadmap/pull/1072)
+
 ## [4.1.1+portage-4.3.0]
 
 ### Added
