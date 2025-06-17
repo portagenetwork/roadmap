@@ -38,6 +38,8 @@
 
  - Remove Outdated / Auto-Generated Translation Files from `config/locale` and Add to `.gitignore` and `.dockerignore` [#1070](https://github.com/portagenetwork/roadmap/pull/1070)
 
+ - Bump puma from 6.4.3 to 6.6.0 [#1071](https://github.com/portagenetwork/roadmap/pull/1071)
+
 ## [4.1.1+portage-4.3.0]
 
 ### Added
