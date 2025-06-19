@@ -55,7 +55,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
             expect(user.email).to eq(@request.env['omniauth.auth'].info.email)
             expect(user.firstname).to eq(@request.env['omniauth.auth'].info.first_name)
             expect(user.surname).to eq(@request.env['omniauth.auth'].info.last_name)
-            expect(user.org).to eq(Org.find_by(is_other: true))
+            expect(user.org).to eq(Org.find_by!(is_other: true))
             expect(user.accept_terms).to eq(true)
           end
         end
@@ -162,10 +162,10 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
     private
 
     def create_user_identifier_from_auth(user)
-      Identifier.create(identifier_scheme: @identifier_scheme,
-                        value: request.env['omniauth.auth'].uid,
-                        attrs: request.env['omniauth.auth'],
-                        identifiable: user)
+      Identifier.create!(identifier_scheme: @identifier_scheme,
+                         value: request.env['omniauth.auth'].uid,
+                         attrs: request.env['omniauth.auth'],
+                         identifiable: user)
     end
 
     # rubocop:disable Metrics/AbcSize
