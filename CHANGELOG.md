@@ -42,6 +42,8 @@
 
  - Bump httparty from 0.22.0 to 0.23.1 [#1072](https://github.com/portagenetwork/roadmap/pull/1072)
 
+ - Update CSS / Improve Accessibility For Hyperlinks and `.sign-in` Tabs [#811](https://github.com/portagenetwork/roadmap/pull/811)
+
 ## [4.1.1+portage-4.3.0]
 
 ### Added
