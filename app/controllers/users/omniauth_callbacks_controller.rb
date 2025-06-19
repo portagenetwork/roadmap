@@ -182,9 +182,12 @@ module Users
       if user.nil?
         # We need to link the new auth creds
         handle_new_sso_email_for_signed_in_user(auth, identifier_scheme)
-      # elsif user is signed in and trying to link via SSO, but the auth creds are already linked to another account
       elsif user.id != current_user.id
+        # `auth` is already linked to a different user
         handle_conflicting_sso_email_for_signed_in_user(identifier_scheme, user)
+      else # (user.id == current_user.id)
+        # `auth` is already linked to this user.
+        handle_already_linked_credentials
       end
     end
 
@@ -200,6 +203,13 @@ module Users
     def handle_conflicting_sso_email_for_signed_in_user(identifier_scheme, user)
       flash[:alert] = format(_('The current %{description} iD has been already linked to a user with email %{email}'),
                              description: identifier_scheme.description, email: user.email)
+      redirect_to edit_user_registration_path
+    end
+
+    def handle_already_linked_credentials
+      # NOTE: This scenario is not possible through normal UI interaction,
+      # but a user could trigger it by manipulating the frontend.
+      flash[:alert] = _('These credentials are already linked to your account.')
       redirect_to edit_user_registration_path
     end
   end

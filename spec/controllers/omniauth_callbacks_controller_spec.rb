@@ -15,7 +15,8 @@ FLASH_MESSAGES = {
                            'You can verify your email is being provided here ' \
                            '<<a href="https://cilogon.org/testidp/">https://cilogon.org/testidp/</a>> ' \
                            'and contact us at the help desk for further assistance. Help desk email: ' \
-                           '<a href="mailto:dmp-assistant@tech.alliancecan.ca">dmp-assistant@tech.alliancecan.ca</a>'
+                           '<a href="mailto:dmp-assistant@tech.alliancecan.ca">dmp-assistant@tech.alliancecan.ca</a>',
+    already_linked: 'These credentials are already linked to your account.'
   }
 }.freeze
 FLASH_MESSAGES[:alert][:missing_email_link] = FLASH_MESSAGES[:alert][:missing_email_sign_in].sub('sign in', 'link')
@@ -104,6 +105,29 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
           expect(Identifier.count).to eq(1)
           expect(flash[:notice]).to eq(FLASH_MESSAGES[:notice][:linked])
           expect(response).to redirect_to(edit_user_registration_path)
+        end
+      end
+
+      context 'Edge Case: The external credentials are already linked to the user.' do
+        # NOTE: This scenario is not possible through normal UI interaction,
+        # but a user could trigger it by manipulating the frontend.
+        let!(:user) { create(:user) }
+        before do
+          create_user_identifier_from_auth(user)
+          sign_in user
+        end
+        it 'Does not link the already linked credentials a second time.' do
+          expect(User.count).to eq(1)
+          expect(Identifier.count).to eq(1)
+          expect(user.identifiers.count).to eq(1)
+          # Attempt to link the already linked credentials
+          post :openid_connect
+          user.reload
+          expect(flash[:alert]).to eq(FLASH_MESSAGES[:alert][:already_linked])
+          expect(response).to redirect_to(edit_user_registration_path)
+          expect(User.count).to eq(1)
+          expect(Identifier.count).to eq(1)
+          expect(user.identifiers.count).to eq(1)
         end
       end
 
