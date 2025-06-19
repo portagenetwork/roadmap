@@ -67,21 +67,18 @@ thead th{
   }
 
 /* nav-tabs overiding on active */
-  .nav-tabs > li > a:hover,
-  .nav-tabs > li > a:focus,
-  .nav-tabs > li > a.active,
-  .nav-tabs > li > a.active:focus,
-  .nav-tabs > li > a.active:hover {
-    color: $color-alliance-digital-grey !important;
-  }
-
- .nav-tabs > li.active > a,
- .nav-tabs > li:hover > a,
- .nav-tabs > li:focus > a,
- .nav-tabs > li.active:focus > a,
- .nav-tabs > li.active:hover > a {
-    color: $color-alliance-digital-grey !important;
- }
+.nav-tabs > li > a:hover,
+.nav-tabs > li > a:focus,
+.nav-tabs > li > a.active,
+.nav-tabs > li > a.active:hover,
+.nav-tabs > li > a.active:focus,
+.nav-tabs > li.active > a,
+.nav-tabs > li:hover > a,
+.nav-tabs > li:focus > a,
+.nav-tabs > li.active:hover > a,
+.nav-tabs > li.active:focus > a {
+  color: $color-alliance-digital-grey !important;
+}
 
 
  /* Drop downs of the college lists in create plans section */
