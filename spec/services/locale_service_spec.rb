@@ -57,6 +57,28 @@ RSpec.describe LocaleService do
     end
   end
 
+  describe '#translations_for_all_locales(string)' do
+    before do
+      # Override `I18n.available_locales` value to match DMP Assistant
+      # (LocaleService.translations_for_all_locales calls I18n.available_locales, NOT LocaleService.available_locales)
+      # TODO: Consider configuring the test locales to match those used within the actual app.
+      I18n.available_locales = %i[en-CA fr-CA]
+    end
+    it 'returns an array containing all translations of a string, across all available locales' do
+      # Use a string that has an existing translation in `config/locale/fr_CA/LC_MESSAGES/app.mo`
+      string = 'Create plans'
+      expect(described_class.translations_for_all_locales(string)).to eql(['Create plans', 'Créer des plans'])
+    end
+    it 'Handles edge cases' do
+      # When a string with no available translations is provided
+      expect(described_class.translations_for_all_locales('RANDOM XYZ123 STRING')).to eql(['RANDOM XYZ123 STRING'])
+      # When an empty string is provided
+      expect(described_class.translations_for_all_locales('')).to eql([])
+      # When a nil value is provided
+      expect(described_class.translations_for_all_locales(nil)).to eql([])
+    end
+  end
+
   context 'private methods' do
     describe '#convert(string:, join_char:)' do
       it 'handles a 2 character locale (e.g. `en`)' do

@@ -33,9 +33,14 @@ class LocaleService
       convert(string: locale, join_char: join_char)
     end
 
-    # Returns an array containing all available translations for the provided string arg
-    def translations_for_all_locales(string)
-      I18n.available_locales.map { |locale| I18n.with_locale(locale) { _(string) } }
+    # Returns an array of string elements
+    # The elements are all of the available translations of `text` across all available locales
+    def translations_for_all_locales(text)
+      return [] unless text.present?
+
+      arr = I18n.available_locales.map { |locale| I18n.with_locale(locale) { _(text) } }
+      # Remove duplicates (occurs when a locale falls back to the default translation)
+      arr.uniq
     end
 
     private
