@@ -1,0 +1,91 @@
+{{- if .Values.cronjobs.statBuild.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "dmp-roadmap.fullname" . }}-stat-build
+  labels:
+    {{- $_ := set . "component" "cronjob-stat-build" }}
+    {{- include "dmp-roadmap.labels" . | nindent 4 }}
+spec:
+  schedule: "{{ .Values.cronjobs.statBuild.schedule }}"
+  concurrencyPolicy: {{ .Values.cronjobs.statBuild.concurrencyPolicy }}
+  successfulJobsHistoryLimit: {{ .Values.cronjobs.statBuild.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.cronjobs.statBuild.failedJobsHistoryLimit }}
+  suspend: {{ .Values.cronjobs.statBuild.suspend }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          {{- with .Values.cronjobs.statBuild.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          labels:
+            {{- $_ := set . "component" "cronjob-stat-build" }}
+            {{- include "dmp-roadmap.labels" . | nindent 12 }}
+            app.kubernetes.io/part-of: cronjob
+            {{- with .Values.cronjobs.statBuild.podLabels }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+        spec:
+          {{- with .Values.app.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.cronjobs.statBuild.priorityClassName | default .Values.app.priorityClassName | default .Values.global.priorityClassName }}
+          priorityClassName: {{ . }}
+          {{- end }}
+          serviceAccountName: {{ include "dmp-roadmap.serviceAccountName" . }}
+          securityContext:
+            {{- toYaml .Values.app.podSecurityContext | nindent 12 }}
+          restartPolicy: {{ .Values.cronjobs.statBuild.restartPolicy }}
+          containers:
+            - name: {{ .Chart.Name }}-stat-build
+              image: "{{ .Values.app.image.repository | default .Values.global.image.repository }}:{{ .Values.app.image.tag | default .Chart.AppVersion }}"
+              imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.app.image.imagePullPolicy }}
+              env:
+                {{- with (concat .Values.global.env .Values.app.env .Values.cronjobs.statBuild.env) }}
+                  {{- toYaml . | nindent 16 }}
+                {{- end }}
+              envFrom:
+                - configMapRef:
+                    name: {{ include "dmp-roadmap.fullname" . }}-app-config
+                {{- with .Values.app.envFrom }}
+                {{- toYaml . | nindent 16 }}
+                {{- end }}
+              securityContext:
+                {{- toYaml .Values.app.securityContext | nindent 16 }}
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  time bundle exec rake stat:build
+              resources:
+                {{- toYaml .Values.cronjobs.statBuild.resources | nindent 16 }}
+              volumeMounts:
+                # Required tmp directories for Rails
+                - name: rails-tmp
+                  mountPath: /usr/src/app/tmp
+                {{- with .Values.cronjobs.statBuild.volumeMounts }}
+                {{- toYaml . | nindent 16 }}
+                {{- end }}
+          volumes:
+            # Tmp directories required for Rails
+            - name: rails-tmp
+              emptyDir: {}
+            {{- with .Values.cronjobs.statBuild.volumes }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- with .Values.cronjobs.statBuild.nodeSelector | default .Values.app.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.cronjobs.statBuild.affinity | default .Values.app.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.cronjobs.statBuild.tolerations | default .Values.app.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+{{- end }}
