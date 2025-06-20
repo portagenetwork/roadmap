@@ -24,6 +24,8 @@
 
  - Improve OmniauthCallbacksController Tests [#1074](https://github.com/portagenetwork/roadmap/pull/1074)
 
+ - Fix WickedPdf deprecation warning [#1080](https://github.com/portagenetwork/roadmap/pull/1080)
+
 ### Changed
 
  - Improve copying of third-party and static assets not served by the Rails asset pipeline [#980](https://github.com/portagenetwork/roadmap/pull/980)
