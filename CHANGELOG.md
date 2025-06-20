@@ -50,6 +50,8 @@
 
  - Update CSS / Improve Accessibility For Hyperlinks and `.sign-in` Tabs [#811](https://github.com/portagenetwork/roadmap/pull/811)
 
+ - Add ENTRYPOINT to `Dockerfile.production` / Sync and Render New Translations at Runtime [#1075](https://github.com/portagenetwork/roadmap/pull/1075)
+
 ## [4.1.1+portage-4.3.0]
 
 ### Added
