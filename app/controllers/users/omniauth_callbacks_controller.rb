@@ -139,12 +139,26 @@ module Users
       )
     end
 
+    def generate_flash_message_for_openid_connect_sign_in(user)
+      if user.generic_name?
+        flash[:alert] =
+          format(
+            _('Some information is missing from your profile. ' \
+              '<a href="%{link}">Click here to complete your profile</a>.'),
+            link: edit_user_registration_path
+          )
+      else
+        flash[:notice] = _('Signed in successfully.')
+      end
+    end
+
     def handle_openid_connect_for_signed_out_user(user, auth, identifier_scheme)
       # user.nil? is true if the chosen CILogon email is not currently linked to an existing user account
       user = handle_new_sso_email_for_signed_out_user(auth, identifier_scheme) if user.nil?
       # See app/controllers/concerns/email_confirmation_handler.rb
       return if confirmation_instructions_missing_and_handled?(user)
 
+      generate_flash_message_for_openid_connect_sign_in(user)
       sign_in_and_redirect user, event: :authentication
     end
 
@@ -168,9 +182,12 @@ module Users
       if user.nil?
         # We need to link the new auth creds
         handle_new_sso_email_for_signed_in_user(auth, identifier_scheme)
-      # elsif user is signed in and trying to link via SSO, but the auth creds are already linked to another account
       elsif user.id != current_user.id
+        # `auth` is already linked to a different user
         handle_conflicting_sso_email_for_signed_in_user(identifier_scheme, user)
+      else # (user.id == current_user.id)
+        # `auth` is already linked to this user.
+        handle_already_linked_credentials
       end
     end
 
@@ -186,6 +203,13 @@ module Users
     def handle_conflicting_sso_email_for_signed_in_user(identifier_scheme, user)
       flash[:alert] = format(_('The current %{description} iD has been already linked to a user with email %{email}'),
                              description: identifier_scheme.description, email: user.email)
+      redirect_to edit_user_registration_path
+    end
+
+    def handle_already_linked_credentials
+      # NOTE: This scenario is not possible through normal UI interaction,
+      # but a user could trigger it by manipulating the frontend.
+      flash[:alert] = _('These credentials are already linked to your account.')
       redirect_to edit_user_registration_path
     end
   end
