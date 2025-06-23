@@ -560,6 +560,54 @@ cronjobs:
     # -- Tolerations for the CronJob
     # @default -- app.tolerations
     tolerations: []
+
+  # -- Stat Build CronJob configuration
+  statBuild:
+    # -- Enable or disable the stat build CronJob
+    enabled: true
+    # -- Schedule for the CronJob (cron format)
+    schedule: '1 1 * * *'
+    # -- Concurrency policy for CronJob (Allow, Forbid, Replace)
+    concurrencyPolicy: Forbid
+    # -- Number of successful job history to keep
+    successfulJobsHistoryLimit: 3
+    # -- Number of failed job history to keep
+    failedJobsHistoryLimit: 1
+    # -- Whether to suspend the job execution
+    suspend: false
+    # -- Restart policy for the job pods
+    restartPolicy: OnFailure
+    # -- Pod annotations for the CronJob pods
+    podAnnotations: {}
+    # -- Pod labels for the CronJob pods
+    podLabels: {}
+    # -- Priority class name for the CronJob
+    # @default -- app.priorityClassName or global.priorityClassName
+    priorityClassName: ''
+    # -- Additional environment variables for the CronJob
+    env: []
+    # -- Additional volume mounts for the CronJob
+    volumeMounts: []
+    # -- Additional volumes for the CronJob
+    volumes: []
+    # -- Resource limits and requests for the CronJob
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 200m
+        memory: 512Mi
+    # -- Node selector for the CronJob
+    # @default -- app.nodeSelector
+    nodeSelector: {}
+    # -- Affinity rules for the CronJob
+    # @default -- app.affinity
+    affinity: {}
+    # -- Tolerations for the CronJob
+    # @default -- app.tolerations
+    tolerations: []
+
 # -- Extra Kubernetes objects to deploy
 extraObjects: []
 ## Network Policies

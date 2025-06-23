@@ -83,13 +83,13 @@ Helm chart for DMP Roadmap - A Data Management Planning tool that helps research
 | assets.tolerations | list | `[]` | Tolerations for the assets deployment |
 | assets.volumeMounts | list | `[]` | Additional volume mounts for the assets deployment |
 | assets.volumes | list | `[]` | Additional volumes for the assets deployment |
-| config | object | `{"application":{"dmproadmapHost":"","httpProxy":"","httpProxyPort":"","onSandbox":"false"},"environment":{"assetHost":"","baseUrl":"","bundlePath":"vendor/bundle","bundleWithout":"development:test:mysql:aws:sandbox:ci:wkhtmltopdf","defaultFunderId":8,"englishOrgId":"","frenchOrgId":"","funderOrgId":"","locale":"en_CA.UTF-8","nodeEnv":"production","omniauthFullHost":"","orcidClientMember":"false","railsEnv":"production","railsLogToStdout":"true","railsServeStaticFiles":"false","railsSkipAssetCompilation":"true","rakeEnv":"production","rollbarEnv":"arbutus-test","tmpDir":"/usr/src/app/tmp","wickedPdfPath":"/usr/bin/wkhtmltopdf","wickedPdfProxy":""},"mailer":{"defaultHost":"","from":"support@portagenetwork.ca","smtpAddress":"smtp.gmail.com","smtpAuthentication":"plain","smtpDomain":"portagenetwork.ca","smtpPort":587,"to":"support@portagenetwork.ca"}}` | Configuration values for the application |
+| config | object | `{"application":{"dmproadmapHost":"","httpProxy":"","httpProxyPort":"","onSandbox":"false"},"environment":{"assetHost":"","baseUrl":"","bundlePath":"vendor/bundle","bundleWithout":"development:test:mysql:aws:sandbox:ci:wkhtmltopdf","defaultFunderId":8,"englishOrgId":"","frenchOrgId":"","funderOrgId":"","locale":"en_CA.UTF-8","nodeEnv":"production","omniauthFullHost":"","orcidClientMember":"false","railsEnv":"production","railsLogToStdout":"true","railsServeStaticFiles":"false","railsSkipAssetCompilation":"true","rakeEnv":"production","rollbarEnv":"arbutus","tmpDir":"/usr/src/app/tmp","wickedPdfPath":"/usr/bin/wkhtmltopdf","wickedPdfProxy":""},"mailer":{"defaultHost":"","from":"support@portagenetwork.ca","smtpAddress":"smtp.gmail.com","smtpAuthentication":"plain","smtpDomain":"portagenetwork.ca","smtpPort":587,"to":"support@portagenetwork.ca"}}` | Configuration values for the application |
 | config.application | object | `{"dmproadmapHost":"","httpProxy":"","httpProxyPort":"","onSandbox":"false"}` | Application and host settings |
 | config.application.dmproadmapHost | string | global.domain.name | Main hostname for the application |
 | config.application.httpProxy | string | `""` | HTTP proxy if needed |
 | config.application.httpProxyPort | string | `""` | HTTP proxy port if needed |
 | config.application.onSandbox | string | `"false"` | Set to true for sandbox mode |
-| config.environment | object | `{"assetHost":"","baseUrl":"","bundlePath":"vendor/bundle","bundleWithout":"development:test:mysql:aws:sandbox:ci:wkhtmltopdf","defaultFunderId":8,"englishOrgId":"","frenchOrgId":"","funderOrgId":"","locale":"en_CA.UTF-8","nodeEnv":"production","omniauthFullHost":"","orcidClientMember":"false","railsEnv":"production","railsLogToStdout":"true","railsServeStaticFiles":"false","railsSkipAssetCompilation":"true","rakeEnv":"production","rollbarEnv":"arbutus-test","tmpDir":"/usr/src/app/tmp","wickedPdfPath":"/usr/bin/wkhtmltopdf","wickedPdfProxy":""}` | Environment-specific settings |
+| config.environment | object | `{"assetHost":"","baseUrl":"","bundlePath":"vendor/bundle","bundleWithout":"development:test:mysql:aws:sandbox:ci:wkhtmltopdf","defaultFunderId":8,"englishOrgId":"","frenchOrgId":"","funderOrgId":"","locale":"en_CA.UTF-8","nodeEnv":"production","omniauthFullHost":"","orcidClientMember":"false","railsEnv":"production","railsLogToStdout":"true","railsServeStaticFiles":"false","railsSkipAssetCompilation":"true","rakeEnv":"production","rollbarEnv":"arbutus","tmpDir":"/usr/src/app/tmp","wickedPdfPath":"/usr/bin/wkhtmltopdf","wickedPdfProxy":""}` | Environment-specific settings |
 | config.environment.assetHost | string | https://global.domain.name | Asset host |
 | config.environment.baseUrl | string | https://global.domain.name/global.domain.path | Base URL |
 | config.environment.bundlePath | string | `"vendor/bundle"` | Bundle path |
@@ -107,7 +107,7 @@ Helm chart for DMP Roadmap - A Data Management Planning tool that helps research
 | config.environment.railsServeStaticFiles | string | `"false"` | Rails serve static files |
 | config.environment.railsSkipAssetCompilation | string | `"true"` | Rails skip asset compilation |
 | config.environment.rakeEnv | string | `"production"` | Rake environment |
-| config.environment.rollbarEnv | string | `"arbutus-test"` | Rollbar environment |
+| config.environment.rollbarEnv | string | `"arbutus"` | Rollbar environment |
 | config.environment.tmpDir | string | `"/usr/src/app/tmp"` | Tmp directory |
 | config.environment.wickedPdfPath | string | `"/usr/bin/wkhtmltopdf"` | Path to wkhtmltopdf binary |
 | config.environment.wickedPdfProxy | string | `""` | Proxy for wkhtmltopdf if needed |
@@ -119,7 +119,7 @@ Helm chart for DMP Roadmap - A Data Management Planning tool that helps research
 | config.mailer.smtpDomain | string | `"portagenetwork.ca"` | SMTP domain |
 | config.mailer.smtpPort | int | `587` | SMTP port |
 | config.mailer.to | string | `"support@portagenetwork.ca"` | To address for system emails |
-| cronjobs | object | `{"researchDataOutput":{"affinity":{},"concurrencyPolicy":"Forbid","enabled":true,"env":[],"failedJobsHistoryLimit":1,"nodeSelector":{},"podAnnotations":{},"podLabels":{},"priorityClassName":"","resources":{"limits":{"cpu":"200m","memory":"512Mi"},"requests":{"cpu":"100m","memory":"256Mi"}},"restartPolicy":"OnFailure","schedule":"0 1 * * *","successfulJobsHistoryLimit":3,"suspend":false,"tolerations":[],"volumeMounts":[],"volumes":[]},"translationSync":{"affinity":{},"concurrencyPolicy":"Forbid","enabled":true,"env":[],"failedJobsHistoryLimit":1,"nodeSelector":{},"podAnnotations":{},"podLabels":{},"priorityClassName":"","resources":{"limits":{"cpu":"200m","memory":"512Mi"},"requests":{"cpu":"100m","memory":"256Mi"}},"restartPolicy":"OnFailure","schedule":"0 1 * * *","successfulJobsHistoryLimit":3,"suspend":false,"tolerations":[],"volumeMounts":[],"volumes":[]}}` | Scheduled tasks for the application |
+| cronjobs | object | `{"researchDataOutput":{"affinity":{},"concurrencyPolicy":"Forbid","enabled":true,"env":[],"failedJobsHistoryLimit":1,"nodeSelector":{},"podAnnotations":{},"podLabels":{},"priorityClassName":"","resources":{"limits":{"cpu":"200m","memory":"512Mi"},"requests":{"cpu":"100m","memory":"256Mi"}},"restartPolicy":"OnFailure","schedule":"0 1 * * *","successfulJobsHistoryLimit":3,"suspend":false,"tolerations":[],"volumeMounts":[],"volumes":[]},"statBuild":{"affinity":{},"concurrencyPolicy":"Forbid","enabled":true,"env":[],"failedJobsHistoryLimit":1,"nodeSelector":{},"podAnnotations":{},"podLabels":{},"priorityClassName":"","resources":{"limits":{"cpu":"200m","memory":"512Mi"},"requests":{"cpu":"100m","memory":"256Mi"}},"restartPolicy":"OnFailure","schedule":"1 1 * * *","successfulJobsHistoryLimit":3,"suspend":false,"tolerations":[],"volumeMounts":[],"volumes":[]},"translationSync":{"affinity":{},"concurrencyPolicy":"Forbid","enabled":true,"env":[],"failedJobsHistoryLimit":1,"nodeSelector":{},"podAnnotations":{},"podLabels":{},"priorityClassName":"","resources":{"limits":{"cpu":"200m","memory":"512Mi"},"requests":{"cpu":"100m","memory":"256Mi"}},"restartPolicy":"OnFailure","schedule":"0 1 * * *","successfulJobsHistoryLimit":3,"suspend":false,"tolerations":[],"volumeMounts":[],"volumes":[]}}` | Scheduled tasks for the application |
 | cronjobs.researchDataOutput | object | `{"affinity":{},"concurrencyPolicy":"Forbid","enabled":true,"env":[],"failedJobsHistoryLimit":1,"nodeSelector":{},"podAnnotations":{},"podLabels":{},"priorityClassName":"","resources":{"limits":{"cpu":"200m","memory":"512Mi"},"requests":{"cpu":"100m","memory":"256Mi"}},"restartPolicy":"OnFailure","schedule":"0 1 * * *","successfulJobsHistoryLimit":3,"suspend":false,"tolerations":[],"volumeMounts":[],"volumes":[]}` | Research Data Output CronJob configuration |
 | cronjobs.researchDataOutput.affinity | object | app.affinity | Affinity rules for the CronJob |
 | cronjobs.researchDataOutput.concurrencyPolicy | string | `"Forbid"` | Concurrency policy for CronJob (Allow, Forbid, Replace) |
@@ -138,6 +138,24 @@ Helm chart for DMP Roadmap - A Data Management Planning tool that helps research
 | cronjobs.researchDataOutput.tolerations | list | app.tolerations | Tolerations for the CronJob |
 | cronjobs.researchDataOutput.volumeMounts | list | `[]` | Additional volume mounts for the CronJob |
 | cronjobs.researchDataOutput.volumes | list | `[]` | Additional volumes for the CronJob |
+| cronjobs.statBuild | object | `{"affinity":{},"concurrencyPolicy":"Forbid","enabled":true,"env":[],"failedJobsHistoryLimit":1,"nodeSelector":{},"podAnnotations":{},"podLabels":{},"priorityClassName":"","resources":{"limits":{"cpu":"200m","memory":"512Mi"},"requests":{"cpu":"100m","memory":"256Mi"}},"restartPolicy":"OnFailure","schedule":"1 1 * * *","successfulJobsHistoryLimit":3,"suspend":false,"tolerations":[],"volumeMounts":[],"volumes":[]}` | Stat Build CronJob configuration |
+| cronjobs.statBuild.affinity | object | app.affinity | Affinity rules for the CronJob |
+| cronjobs.statBuild.concurrencyPolicy | string | `"Forbid"` | Concurrency policy for CronJob (Allow, Forbid, Replace) |
+| cronjobs.statBuild.enabled | bool | `true` | Enable or disable the stat build CronJob |
+| cronjobs.statBuild.env | list | `[]` | Additional environment variables for the CronJob |
+| cronjobs.statBuild.failedJobsHistoryLimit | int | `1` | Number of failed job history to keep |
+| cronjobs.statBuild.nodeSelector | object | app.nodeSelector | Node selector for the CronJob |
+| cronjobs.statBuild.podAnnotations | object | `{}` | Pod annotations for the CronJob pods |
+| cronjobs.statBuild.podLabels | object | `{}` | Pod labels for the CronJob pods |
+| cronjobs.statBuild.priorityClassName | string | app.priorityClassName or global.priorityClassName | Priority class name for the CronJob |
+| cronjobs.statBuild.resources | object | `{"limits":{"cpu":"200m","memory":"512Mi"},"requests":{"cpu":"100m","memory":"256Mi"}}` | Resource limits and requests for the CronJob |
+| cronjobs.statBuild.restartPolicy | string | `"OnFailure"` | Restart policy for the job pods |
+| cronjobs.statBuild.schedule | string | `"1 1 * * *"` | Schedule for the CronJob (cron format) |
+| cronjobs.statBuild.successfulJobsHistoryLimit | int | `3` | Number of successful job history to keep |
+| cronjobs.statBuild.suspend | bool | `false` | Whether to suspend the job execution |
+| cronjobs.statBuild.tolerations | list | app.tolerations | Tolerations for the CronJob |
+| cronjobs.statBuild.volumeMounts | list | `[]` | Additional volume mounts for the CronJob |
+| cronjobs.statBuild.volumes | list | `[]` | Additional volumes for the CronJob |
 | cronjobs.translationSync | object | `{"affinity":{},"concurrencyPolicy":"Forbid","enabled":true,"env":[],"failedJobsHistoryLimit":1,"nodeSelector":{},"podAnnotations":{},"podLabels":{},"priorityClassName":"","resources":{"limits":{"cpu":"200m","memory":"512Mi"},"requests":{"cpu":"100m","memory":"256Mi"}},"restartPolicy":"OnFailure","schedule":"0 1 * * *","successfulJobsHistoryLimit":3,"suspend":false,"tolerations":[],"volumeMounts":[],"volumes":[]}` | Translation Sync CronJob configuration |
 | cronjobs.translationSync.affinity | object | app.affinity | Affinity rules for the CronJob |
 | cronjobs.translationSync.concurrencyPolicy | string | `"Forbid"` | Concurrency policy for CronJob (Allow, Forbid, Replace) |
