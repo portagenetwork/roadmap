@@ -28,6 +28,8 @@
 
 ### Changed
 
+ - Set 'noreply@dmp-pgd.ca' as envelope sender for all outgoing emails [#1088](https://github.com/portagenetwork/roadmap/pull/1088)
+
  - Improve copying of third-party and static assets not served by the Rails asset pipeline [#980](https://github.com/portagenetwork/roadmap/pull/980)
 
  - Delete Auto-Generated and Unused `tinymce/skins` Contents and Add to `.gitignore` [#1060](https://github.com/portagenetwork/roadmap/pull/1060)
