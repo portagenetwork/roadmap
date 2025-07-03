@@ -28,6 +28,8 @@
 
 ### Changed
 
+ -  Add `autocomplete` attribute for some fields [#1089](https://github.com/portagenetwork/roadmap/pull/1089)
+
  - Set 'noreply@dmp-pgd.ca' as envelope sender for all outgoing emails [#1088](https://github.com/portagenetwork/roadmap/pull/1088)
 
  - Improve copying of third-party and static assets not served by the Rails asset pipeline [#980](https://github.com/portagenetwork/roadmap/pull/980)
