@@ -1,0 +1,35 @@
+repos:
+  # Helm-specific hooks
+  - repo: local
+    hooks:
+      # Chart linting
+      - id: helm-lint
+        name: Helm lint charts
+        entry: bash -c 'for chart in charts/*/; do helm lint "$chart" || exit 1; done'
+        language: system
+        files: ^charts/.*\.(yaml|yml|tpl)$
+        pass_filenames: false
+
+      # Template validation
+      - id: helm-template-validate
+        name: Validate Helm templates
+        entry: bash -c 'for chart in charts/*/; do helm template test "$chart" --debug --dry-run > /dev/null || exit 1; done'
+        language: system
+        files: ^charts/.*\.(yaml|yml|tpl)$
+        pass_filenames: false
+
+      # Documentation generation
+      - id: helm-docs
+        name: Generate Helm docs
+        entry: helm-docs
+        language: system
+        files: (Chart\.yaml|values\.yaml|README\.md\.gotmpl)$
+        pass_filenames: false
+
+      # Schema generation
+      - id: helm-schema
+        name: Generate Helm schema
+        entry: bash -c 'cd charts/dmp-roadmap && helm schema dmp-roadmap/values.schema.json -f values.yaml'
+        language: system
+        files: values\.yaml$
+        pass_filenames: false

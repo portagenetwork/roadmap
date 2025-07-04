@@ -16,10 +16,11 @@ spec:
     spec:
       template:
         metadata:
-          {{- with .Values.cronjobs.statBuild.podAnnotations }}
           annotations:
+            checksum/config: {{ include (print $.Template.BasePath "/app/configmap.yaml") . | sha256sum }}
+            {{- with .Values.cronjobs.statBuild.podAnnotations }}
             {{- toYaml . | nindent 12 }}
-          {{- end }}
+            {{- end }}
           labels:
             {{- $_ := set . "component" "cronjob-stat-build" }}
             {{- include "dmp-roadmap.labels" . | nindent 12 }}

@@ -8,73 +8,102 @@ fullnameOverride: ''
 # -- Override the namespace
 # @default -- `.Release.Namespace`
 namespaceOverride: ''
+
+## @section Global parameters
+
 global:
   # -- Global domain configuration
+  # @section -- Global parameters
   domain:
     # -- Main domain name used throughout the chart
-    name: dmp-pgd.ca
+    # @section -- Global parameters
+    name: example.com
     # -- Application path/context (e.g., /staging)
+    # @section -- Global parameters
     path: ''
     # -- Application prefix (e.g., staging)
+    # @section -- Global parameters
     prefix: ''
 
   # -- Default image used by all components
+  # @section -- Global parameters
   image:
     # -- If defined, a repository applied to all DMP Roadmap deployments
+    # @section -- Global parameters
     repository: ualbertalib/dmp_roadmap
     # -- Overrides the global DMP Roadmap image tag whose default is the chart appVersion
+    # @section -- Global parameters
     tag: ''
     # -- If defined, a imagePullPolicy applied to all DMP Roadmap deployments
+    # @section -- Global parameters
     imagePullPolicy: IfNotPresent
 
   # -- Common labels for the all resources
+  # @section -- Global parameters
   additionalLabels: {}
     # app: dmp-r
 
   # -- Secrets with credentials to pull images from a private registry
+  # @section -- Global parameters
   imagePullSecrets: []
 
   # -- Annotations for the all deployed Statefulsets
+  # @section -- Global parameters
   statefulsetAnnotations: {}
 
   # -- Annotations for the all deployed Deployments
+  # @section -- Global parameters
   deploymentAnnotations: {}
 
   # -- Annotations for the all deployed pods
+  # @section -- Global parameters
   podAnnotations: {}
 
   # -- Labels for the all deployed pods
+  # @section -- Global parameters
   podLabels: {}
 
   # -- Default priority class for all components
+  # @section -- Global parameters
   priorityClassName: ''
 
   # -- Environment variables to pass to all deployed Deployments
+  # @section -- Global parameters
   env: []
+
+## @section Application Configuration
+
 app:
   # -- Number of app replicas
+  # @section -- Application Configuration
   replicas: 1
 
   ## DMP Roadmap app image
   image:
     # -- Repository to use for the DMP Roadmap app
     # @default -- global.image.repository
+    # @section -- Application Configuration
     repository: ''
     # -- Tag to use for the DMP Roadmap app
     # @default -- global.image.tag or chart appVersion
+    # @section -- Application Configuration
     tag: ''
     # -- Image pull policy for the DMP Roadmap app
     # @default -- global.image.imagePullPolicy
+    # @section -- Application Configuration
     imagePullPolicy: ''
 
   # -- Secrets with credentials to pull images from a private registry
   # @default -- global.imagePullSecrets
+  # @section -- Application Configuration
   imagePullSecrets: []
 
   # -- Environment variables to pass to DMP Roadmap app
+  # @section -- Application Configuration
   env: []
 
   # -- envFrom to pass to DMP Roadmap app
+  # @section -- Application Configuration
   envFrom: []
   # - configMapRef:
   #     name: config-map-name
@@ -82,25 +111,33 @@ app:
   #     name: secret-name
   serviceAccount:
     # -- Specifies whether a service account should be created
+    # @section -- Application Configuration
     create: true
     # -- Automatically mount a ServiceAccount's API credentials?
+    # @section -- Application Configuration
     automount: true
     # -- Annotations to add to the service account
+    # @section -- Application Configuration
     annotations: {}
     # -- The name of the service account to use.
     # @default -- If not set and create is true, a name is generated using the fullname template
+    # @section -- Application Configuration
     name: ''
 
   # -- Pod annotations for the app deployment
+  # @section -- Application Configuration
   podAnnotations: {}
   # -- Pod labels for the app deployment
+  # @section -- Application Configuration
   podLabels: {}
 
   # -- Pod security context for the app deployment
+  # @section -- Application Configuration
   podSecurityContext:
     fsGroup: 3000
 
   # -- Container security context for the app deployment
+  # @section -- Application Configuration
   securityContext:
     allowPrivilegeEscalation: false
     capabilities:
@@ -114,18 +151,18 @@ app:
       type: RuntimeDefault
   service:
     # -- Service type for the app
+    # @section -- Application Configuration
     type: ClusterIP
     # -- Service port for the app
+    # @section -- Application Configuration
     port: 8080
     # -- Target port for the app container
+    # @section -- Application Configuration
     targetPort: 3000
 
   # -- Resource requests and limits for the app
+  # @section -- Application Configuration
   resources:
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     requests:
       cpu: 200m
       memory: 512Mi
@@ -134,6 +171,7 @@ app:
       memory: 1Gi
 
   # -- Liveness probe configuration for the app
+  # @section -- Application Configuration
   livenessProbe:
     httpGet:
       path: /api/v1/heartbeat
@@ -145,6 +183,7 @@ app:
     successThreshold: 1
 
   # -- Readiness probe configuration for the app
+  # @section -- Application Configuration
   readinessProbe:
     httpGet:
       path: /api/v1/heartbeat
@@ -156,19 +195,25 @@ app:
     successThreshold: 1
 
   # -- Autoscaling configuration for the app
+  # @section -- Application Configuration
   autoscaling:
     # -- Enable autoscaling for the app
+    # @section -- Application Configuration
     enabled: false
     # -- Minimum number of replicas
+    # @section -- Application Configuration
     minReplicas: 1
     # -- Maximum number of replicas
+    # @section -- Application Configuration
     maxReplicas: 100
     # -- Target CPU utilization percentage
+    # @section -- Application Configuration
     targetCPUUtilizationPercentage: 80
     # -- Target memory utilization percentage
     # targetMemoryUtilizationPercentage: 80
 
   # -- Additional volumes for the app deployment
+  # @section -- Application Configuration
   volumes: []
   # - name: foo
   #   secret:
@@ -176,43 +221,57 @@ app:
   #     optional: false
 
   # -- Additional volume mounts for the app deployment
+  # @section -- Application Configuration
   volumeMounts: []
   # - name: foo
   #   mountPath: "/etc/foo"
   #   readOnly: true
 
   # -- Node selector for the app deployment
+  # @section -- Application Configuration
   nodeSelector: {}
 
   # -- Tolerations for the app deployment
+  # @section -- Application Configuration
   tolerations: []
 
   # -- Affinity settings for the app deployment
+  # @section -- Application Configuration
   affinity: {}
+
+## @section Assets Configuration
+
 assets:
   # -- Number of assets replicas
+  # @section -- Assets Configuration
   replicas: 1
 
   ## DMP Roadmap assets image
   image:
     # -- Repository to use for the DMP Roadmap assets
     # @default -- global.image.repository
+    # @section -- Assets Configuration
     repository: ''
     # -- Tag to use for the DMP Roadmap assets
     # @default -- global.image.tag or chart appVersion
+    # @section -- Assets Configuration
     tag: ''
     # -- Image pull policy for the DMP Roadmap assets
     # @default -- global.image.imagePullPolicy
+    # @section -- Assets Configuration
     imagePullPolicy: ''
 
   # -- Secrets with credentials to pull images from a private registry
   # @default -- global.imagePullSecrets
+  # @section -- Assets Configuration
   imagePullSecrets: []
 
   # -- Environment variables to pass to DMP Roadmap assets
+  # @section -- Assets Configuration
   env: []
 
   # -- envFrom to pass to DMP Roadmap assets
+  # @section -- Assets Configuration
   envFrom: []
   # - configMapRef:
   #     name: config-map-name
@@ -220,25 +279,33 @@ assets:
   #     name: secret-name
   serviceAccount:
     # -- Specifies whether a service account should be created
+    # @section -- Assets Configuration
     create: true
     # -- Automatically mount a ServiceAccount's API credentials?
+    # @section -- Assets Configuration
     automount: true
     # -- Annotations to add to the service account
+    # @section -- Assets Configuration
     annotations: {}
     # -- The name of the service account to use.
     # @default -- If not set and create is true, a name is generated using the fullname template
+    # @section -- Assets Configuration
     name: ''
 
   # -- Pod annotations for the assets deployment
+  # @section -- Assets Configuration
   podAnnotations: {}
   # -- Pod labels for the assets deployment
+  # @section -- Assets Configuration
   podLabels: {}
 
   # -- Pod security context for the assets deployment
+  # @section -- Assets Configuration
   podSecurityContext:
     fsGroup: 3000
 
   # -- Container security context for the assets deployment
+  # @section -- Assets Configuration
   securityContext:
     allowPrivilegeEscalation: false
     capabilities:
@@ -252,18 +319,18 @@ assets:
       type: RuntimeDefault
   service:
     # -- Service type for the assets
+    # @section -- Assets Configuration
     type: ClusterIP
     # -- Service port for the assets
+    # @section -- Assets Configuration
     port: 8080
     # -- Target port for the assets container
+    # @section -- Assets Configuration
     targetPort: 8080
 
   # -- Resource requests and limits for the assets
+  # @section -- Assets Configuration
   resources:
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     requests:
       cpu: 100m
       memory: 128Mi
@@ -272,6 +339,7 @@ assets:
       memory: 128Mi
 
   # -- Liveness probe configuration for the assets
+  # @section -- Assets Configuration
   livenessProbe:
     httpGet:
       path: /healthz
@@ -283,6 +351,7 @@ assets:
     successThreshold: 1
 
   # -- Readiness probe configuration for the assets
+  # @section -- Assets Configuration
   readinessProbe:
     httpGet:
       path: /healthz
@@ -294,19 +363,25 @@ assets:
     successThreshold: 1
 
   # -- Autoscaling configuration for the assets
+  # @section -- Assets Configuration
   autoscaling:
     # -- Enable autoscaling for the assets
+    # @section -- Assets Configuration
     enabled: false
     # -- Minimum number of replicas
+    # @section -- Assets Configuration
     minReplicas: 1
     # -- Maximum number of replicas
+    # @section -- Assets Configuration
     maxReplicas: 100
     # -- Target CPU utilization percentage
+    # @section -- Assets Configuration
     targetCPUUtilizationPercentage: 80
     # -- Target memory utilization percentage
     # targetMemoryUtilizationPercentage: 80
 
   # -- Additional volumes for the assets deployment
+  # @section -- Assets Configuration
   volumes: []
   # - name: foo
   #   secret:
@@ -314,189 +389,584 @@ assets:
   #     optional: false
 
   # -- Additional volume mounts for the assets deployment
+  # @section -- Assets Configuration
   volumeMounts: []
   # - name: foo
   #   mountPath: "/etc/foo"
   #   readOnly: true
 
   # -- Node selector for the assets deployment
+  # @section -- Assets Configuration
   nodeSelector: {}
 
   # -- Tolerations for the assets deployment
+  # @section -- Assets Configuration
   tolerations: []
 
   # -- Affinity settings for the assets deployment
+  # @section -- Assets Configuration
   affinity: {}
+
+## @section Ingress Configuration
+
 ingress:
   # -- Enable or disable the ingress
+  # @section -- Ingress Configuration
   enabled: false
 
   # -- Annotations for the ingress resource
+  # @section -- Ingress Configuration
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
+    # cert-manager.io/issuer: letsencrypt-prod
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
 
   # -- Ingress class name
+  # @section -- Ingress Configuration
   className: ''
 
+  # -- Hosts configuration (if empty, uses global.domain.name)
+  # @section -- Ingress Configuration
+  hosts: []
+  # Example of manual host configuration:
+  #  - host: custom-domain.com
+  #    paths:
+  #      - path: /
+  #        pathType: Prefix
+
   # -- TLS configuration for the ingress
+  # @section -- Ingress Configuration
   tls: []
   #  - secretName: dmp-roadmap-tls
   #    hosts:
-  #      - kestrel.arbutus.cloud
-## Storage Configuration
-# -- Storage configuration for the application
-storage:
-  # -- Storage type (cephfs)
-  type: cephfs
+  #      - chart-example.local
 
-  # -- CephFS storage configuration
-  cephfs:
+  # -- Automatic TLS certificate management with cert-manager
+  # @section -- Ingress Configuration
+  certManager:
+    # -- Enable automatic TLS certificate management
+    # @section -- Ingress Configuration
+    enabled: false
+    # -- Issuer name (for namespace-scoped issuer)
+    # @section -- Ingress Configuration
+    issuer: ""
+    # -- ClusterIssuer name (for cluster-scoped issuer)
+    # @section -- Ingress Configuration
+    clusterIssuer: ""
+    # -- Additional annotations for cert-manager
+    # @section -- Ingress Configuration
+    annotations: {}
+
+    # -- ACME configuration for Let's Encrypt
+    # @section -- Ingress Configuration
+    acme:
+      # -- ACME server URL
+      # @section -- Ingress Configuration
+      server: https://acme-v02.api.letsencrypt.org/directory
+      # -- Email address for ACME registration
+      # @section -- Ingress Configuration
+      email: support@example.com
+      # -- HTTP-01 challenge configuration
+      # @section -- Ingress Configuration
+      http01:
+        # -- Enable HTTP-01 challenge
+        # @section -- Ingress Configuration
+        enabled: false
+        # -- Ingress class for HTTP-01 challenge
+        # @section -- Ingress Configuration
+        ingressClass: ""
+      # -- DNS-01 challenge configuration
+      # @section -- Ingress Configuration
+      dns01:
+        # -- Enable DNS-01 challenge
+        # @section -- Ingress Configuration
+        enabled: false
+        # -- Cloudflare DNS-01 configuration
+        # @section -- Ingress Configuration
+        cloudflare:
+          # -- Cloudflare email
+          # @section -- Ingress Configuration
+          email: support@example.com
+          # -- Cloudflare API token secret reference
+          # @section -- Ingress Configuration
+          apiTokenSecretRef:
+            # -- Secret name containing Cloudflare API token
+            # @section -- Ingress Configuration
+            name: ""
+            # -- Secret key containing Cloudflare API token
+            # @section -- Ingress Configuration
+            key: "CF_API_KEY"
+
+    # -- CA issuer configuration
+    # @section -- Ingress Configuration
+    ca:
+      # -- Secret name containing CA certificate and private key
+      # @section -- Ingress Configuration
+      secretName: ""
+
+    # -- Vault issuer configuration
+    # @section -- Ingress Configuration
+    vault:
+      # -- Vault server URL
+      # @section -- Ingress Configuration
+      server: ""
+      # -- Vault path for certificate signing
+      # @section -- Ingress Configuration
+      path: ""
+      # -- Vault authentication configuration
+      # @section -- Ingress Configuration
+      auth: {}
+
+    # -- Certificate Request Policy configuration
+    # @section -- Ingress Configuration
+    certificateRequestPolicy:
+      # -- Enable Certificate Request Policy
+      # @section -- Ingress Configuration
+      enabled: false
+      # -- Name for the Certificate Request Policy
+      # @section -- Ingress Configuration
+      name: ""
+      # -- Allowed certificate properties
+      # @section -- Ingress Configuration
+      allowed:
+        # -- Common name for certificates
+        # @section -- Ingress Configuration
+        commonName: ""
+        # -- DNS names allowed for certificates
+        # @section -- Ingress Configuration
+        dnsNames: []
+        # -- Certificate usage constraints
+        # @section -- Ingress Configuration
+        usages:
+          - server auth
+          - digital signature
+          - key encipherment
+      # -- Certificate constraints
+      # @section -- Ingress Configuration
+      constraints:
+        # -- Private key constraints
+        # @section -- Ingress Configuration
+        privateKey:
+          # -- Private key algorithm
+          # @section -- Ingress Configuration
+          algorithm: RSA
+          # -- Minimum private key size
+          # @section -- Ingress Configuration
+          minSize: 2048
+
+    # -- RBAC configuration for cert-manager policies
+    # @section -- Ingress Configuration
+    rbac:
+      # -- Enable RBAC for cert-manager policies
+      # @section -- Ingress Configuration
+      enabled: false
+      # -- Role name for cert-manager policy access
+      # @section -- Ingress Configuration
+      roleName: ""
+      # -- RoleBinding name for cert-manager policy access
+      # @section -- Ingress Configuration
+      roleBindingName: ""
+      # -- cert-manager namespace (where cert-manager ServiceAccount is located)
+      # @section -- Ingress Configuration
+      certManagerNamespace: "cert-manager"
+      # -- Policy names that can be used
+      # @section -- Ingress Configuration
+      policyNames: []
+      # -- Custom subjects for the RoleBinding
+      # @section -- Ingress Configuration
+      subjects: []
+
+## @section Storage Configuration
+
+# -- Storage configuration for the application
+# @section -- Storage Configuration
+storage:
+  # -- Storage type (pvc, cephfs, hostPath, nfs, emptyDir)
+  # @section -- Storage Configuration
+  type: pvc
+
+  # -- Standard PVC storage configuration
+  # @section -- Storage Configuration
+  pvc:
+    # -- Storage class name (leave empty for default)
+    # @section -- Storage Configuration
+    storageClassName: ""
     # -- Storage reclaim policy
+    # @section -- Storage Configuration
     persistentVolumeReclaimPolicy: Retain
     # -- Volume mode
+    # @section -- Storage Configuration
     volumeMode: Filesystem
     # -- Access modes for the volumes
+    # @section -- Storage Configuration
+    accessModes:
+      - ReadWriteOnce
+
+    # -- Volume definitions for PVC
+    # @section -- Storage Configuration
+    volumes:
+      # -- Locales volume configuration (shared between app and cronjobs)
+      # @section -- Storage Configuration
+      locales:
+        # -- Size for the locales volume
+        # @section -- Storage Configuration
+        size: 5Gi
+        # -- Mount path for the locales volume
+        # @section -- Storage Configuration
+        mountPath: /usr/src/app/config/locale
+        # -- Access modes (needs ReadWriteMany for sharing between pods)
+        # @section -- Storage Configuration
+        accessModes:
+          - ReadWriteMany
+
+      # -- Uploads volume configuration
+      # @section -- Storage Configuration
+      uploads:
+        # -- Size for the uploads volume
+        # @section -- Storage Configuration
+        size: 5Gi
+        # -- Mount path for the uploads volume
+        # @section -- Storage Configuration
+        mountPath: /usr/src/app/public/system/dragonfly
+        # -- Access modes (override global if needed)
+        # @section -- Storage Configuration
+        accessModes: []
+
+  # -- CephFS storage configuration
+  # @section -- Storage Configuration
+  cephfs:
+    # -- Storage reclaim policy
+    # @section -- Storage Configuration
+    persistentVolumeReclaimPolicy: Retain
+    # -- Volume mode
+    # @section -- Storage Configuration
+    volumeMode: Filesystem
+    # -- Access modes for the volumes
+    # @section -- Storage Configuration
     accessModes:
       - ReadWriteMany
     # -- CephFS monitors
+    # @section -- Storage Configuration
     monitors: []
 
     # -- Volume definitions for CephFS
+    # @section -- Storage Configuration
     volumes:
       # -- Locales volume configuration
+      # @section -- Storage Configuration
       locales:
         # -- Path for the locales volume
+        # @section -- Storage Configuration
         path: ''
         # -- Size for the locales volume
+        # @section -- Storage Configuration
         size: 5Gi
         # -- Mount path for the locales volume
+        # @section -- Storage Configuration
         mountPath: /usr/src/app/config/locale
         # -- Secret reference for the locales volume
+        # @section -- Storage Configuration
         secretRef: cephfs-locales-key
 
       # -- Uploads volume configuration
+      # @section -- Storage Configuration
       uploads:
         # -- Path for the uploads volume
+        # @section -- Storage Configuration
         path: ''
         # -- Size for the uploads volume
+        # @section -- Storage Configuration
         size: 5Gi
         # -- Mount path for the uploads volume
+        # @section -- Storage Configuration
         mountPath: /usr/src/app/public/system/dragonfly
         # -- Secret reference for the uploads volume
+        # @section -- Storage Configuration
         secretRef: cephfs-uploads-key
+
+  # -- Host path storage configuration
+  # @section -- Storage Configuration
+  hostPath:
+    # -- Volume definitions for hostPath
+    # @section -- Storage Configuration
+    volumes:
+      # -- Locales volume configuration
+      # @section -- Storage Configuration
+      locales:
+        # -- Path on the host
+        # @section -- Storage Configuration
+        path: /data/dmp-roadmap/locales
+        # -- Host path type
+        # @section -- Storage Configuration
+        type: DirectoryOrCreate
+        # -- Mount path for the locales volume
+        # @section -- Storage Configuration
+        mountPath: /usr/src/app/config/locale
+
+      # -- Uploads volume configuration
+      # @section -- Storage Configuration
+      uploads:
+        # -- Path on the host
+        # @section -- Storage Configuration
+        path: /data/dmp-roadmap/uploads
+        # -- Host path type
+        # @section -- Storage Configuration
+        type: DirectoryOrCreate
+        # -- Mount path for the uploads volume
+        # @section -- Storage Configuration
+        mountPath: /usr/src/app/public/system/dragonfly
+
+  # -- NFS storage configuration
+  # @section -- Storage Configuration
+  nfs:
+    # -- NFS server address
+    # @section -- Storage Configuration
+    server: ""
+    # -- Volume definitions for NFS
+    # @section -- Storage Configuration
+    volumes:
+      # -- Locales volume configuration
+      # @section -- Storage Configuration
+      locales:
+        # -- Path on the NFS server
+        # @section -- Storage Configuration
+        path: /data/dmp-roadmap/locales
+        # -- Mount path for the locales volume
+        # @section -- Storage Configuration
+        mountPath: /usr/src/app/config/locale
+
+      # -- Uploads volume configuration
+      # @section -- Storage Configuration
+      uploads:
+        # -- Path on the NFS server
+        # @section -- Storage Configuration
+        path: /data/dmp-roadmap/uploads
+        # -- Mount path for the uploads volume
+        # @section -- Storage Configuration
+        mountPath: /usr/src/app/public/system/dragonfly
+
+  # -- EmptyDir storage configuration (temporary, data lost on pod restart)
+  # @section -- Storage Configuration
+  emptyDir:
+    # -- Volume definitions for emptyDir
+    # @section -- Storage Configuration
+    volumes:
+      # -- Locales volume configuration
+      # @section -- Storage Configuration
+      locales:
+        # -- Size limit for the volume
+        # @section -- Storage Configuration
+        sizeLimit: 1Gi
+        # -- Mount path for the locales volume
+        # @section -- Storage Configuration
+        mountPath: /usr/src/app/config/locale
+
+      # -- Uploads volume configuration
+      # @section -- Storage Configuration
+      uploads:
+        # -- Size limit for the volume
+        # @section -- Storage Configuration
+        sizeLimit: 5Gi
+        # -- Mount path for the uploads volume
+        # @section -- Storage Configuration
+        mountPath: /usr/src/app/public/system/dragonfly
+
+## @section Application Settings
+
 # -- Configuration values for the application
+# @section -- Application Settings
 config:
   # -- Application and host settings
+  # @section -- Application Settings
   application:
     # -- Main hostname for the application
     # @default -- global.domain.name
+    # @section -- Application Settings
     dmproadmapHost: ''
     # -- Set to true for sandbox mode
+    # @section -- Application Settings
     onSandbox: 'false'
     # -- HTTP proxy if needed
+    # @section -- Application Settings
     httpProxy: ''
     # -- HTTP proxy port if needed
+    # @section -- Application Settings
     httpProxyPort: ''
 
   # -- Mailer and SMTP settings
+  # @section -- Application Settings
   mailer:
     # -- Default host for mailer
     # @default -- https://global.domain.name
+    # @section -- Application Settings
     defaultHost: ''
     # -- From address for emails
-    from: support@portagenetwork.ca
+    # @section -- Application Settings
+    from: support@example.com
     # -- To address for system emails
-    to: support@portagenetwork.ca
+    # @section -- Application Settings
+    to: support@example.com
     # -- SMTP server address
-    smtpAddress: smtp.gmail.com
+    # @section -- Application Settings
+    smtpAddress: smtp.example.com
     # -- SMTP authentication method
+    # @section -- Application Settings
     smtpAuthentication: plain
     # -- SMTP domain
-    smtpDomain: portagenetwork.ca
+    # @section -- Application Settings
+    smtpDomain: example.com
     # -- SMTP port
+    # @section -- Application Settings
     smtpPort: 587
 
   # -- Environment-specific settings
+  # @section -- Application Settings
   environment:
     # -- OAuth callback URL
     # @default -- https://global.domain.name/global.domain.path
+    # @section -- Application Settings
     omniauthFullHost: ''
     # -- Path to wkhtmltopdf binary
+    # @section -- Application Settings
     wickedPdfPath: /usr/bin/wkhtmltopdf
     # -- Proxy for wkhtmltopdf if needed
+    # @section -- Application Settings
     wickedPdfProxy: ''
     # -- Default funder ID
+    # @section -- Application Settings
     defaultFunderId: 8
     # -- Funder organization ID
+    # @section -- Application Settings
     funderOrgId: ''
     # -- French organization ID
+    # @section -- Application Settings
     frenchOrgId: ''
     # -- English organization ID
+    # @section -- Application Settings
     englishOrgId: ''
     # -- Whether ORCID client is a member
+    # @section -- Application Settings
     orcidClientMember: 'false'
     # -- Rails environment
+    # @section -- Application Settings
     railsEnv: production
     # -- Rake environment
+    # @section -- Application Settings
     rakeEnv: production
     # -- Node environment
+    # @section -- Application Settings
     nodeEnv: production
     # -- Locale
+    # @section -- Application Settings
     locale: en_CA.UTF-8
     # -- Bundle path
+    # @section -- Application Settings
     bundlePath: vendor/bundle
     # -- Bundle without
+    # @section -- Application Settings
     bundleWithout: development:test:mysql:aws:sandbox:ci:wkhtmltopdf
     # -- Base URL
     # @default -- https://global.domain.name/global.domain.path
+    # @section -- Application Settings
     baseUrl: ''
     # -- Rollbar environment
-    rollbarEnv: arbutus
+    # @section -- Application Settings
+    rollbarEnv: production
     # -- Rails log to stdout
+    # @section -- Application Settings
     railsLogToStdout: 'true'
     # -- Rails serve static files
+    # @section -- Application Settings
     railsServeStaticFiles: 'false'
     # -- Rails skip asset compilation
+    # @section -- Application Settings
     railsSkipAssetCompilation: 'true'
     # -- Asset host
     # @default -- https://global.domain.name
+    # @section -- Application Settings
     assetHost: ''
     # -- Tmp directory
+    # @section -- Application Settings
     tmpDir: /usr/src/app/tmp
-## CronJobs Configuration
+
+## @section Database Configuration
+
+# -- External database configuration
+# @section -- Database Configuration
+externalDatabase:
+  # -- Database host
+  # @section -- Database Configuration
+  host: localhost
+  # -- Database port
+  # @section -- Database Configuration
+  port: 5432
+  # -- Database name
+  # @section -- Database Configuration
+  database: dmp_roadmap_production
+  # -- Database user
+  # @section -- Database Configuration
+  username: dmp_roadmap
+  # -- Database password (recommend using existingSecret instead)
+  # @section -- Database Configuration
+  password: ""
+  # -- Name of existing secret to use for database credentials
+  # @section -- Database Configuration
+  existingSecret: ""
+  # -- Key in the existing secret containing the password
+  # @section -- Database Configuration
+  existingSecretPasswordKey: password
+
+## @section CronJobs Configuration
+
 # -- Scheduled tasks for the application
+# @section -- CronJobs Configuration
 cronjobs:
   # -- Translation Sync CronJob configuration
+  # @section -- CronJobs Configuration
   translationSync:
     # -- Enable or disable the translation sync CronJob
+    # @section -- CronJobs Configuration
     enabled: true
     # -- Schedule for the CronJob (cron format)
+    # @section -- CronJobs Configuration
     schedule: '0 1 * * *'
     # -- Concurrency policy for CronJob (Allow, Forbid, Replace)
+    # @section -- CronJobs Configuration
     concurrencyPolicy: Forbid
     # -- Number of successful job history to keep
+    # @section -- CronJobs Configuration
     successfulJobsHistoryLimit: 3
     # -- Number of failed job history to keep
+    # @section -- CronJobs Configuration
     failedJobsHistoryLimit: 1
     # -- Whether to suspend the job execution
+    # @section -- CronJobs Configuration
     suspend: false
     # -- Restart policy for the job pods
+    # @section -- CronJobs Configuration
     restartPolicy: OnFailure
     # -- Pod annotations for the CronJob pods
+    # @section -- CronJobs Configuration
     podAnnotations: {}
     # -- Pod labels for the CronJob pods
+    # @section -- CronJobs Configuration
     podLabels: {}
     # -- Priority class name for the CronJob
     # @default -- app.priorityClassName or global.priorityClassName
+    # @section -- CronJobs Configuration
     priorityClassName: ''
     # -- Additional environment variables for the CronJob
+    # @section -- CronJobs Configuration
     env: []
     # -- Additional volume mounts for the CronJob
+    # @section -- CronJobs Configuration
     volumeMounts: []
     # -- Additional volumes for the CronJob
+    # @section -- CronJobs Configuration
     volumes: []
     # -- Resource limits and requests for the CronJob
+    # @section -- CronJobs Configuration
     resources:
       requests:
         cpu: 100m
@@ -506,44 +976,62 @@ cronjobs:
         memory: 512Mi
     # -- Node selector for the CronJob
     # @default -- app.nodeSelector
+    # @section -- CronJobs Configuration
     nodeSelector: {}
     # -- Affinity rules for the CronJob
     # @default -- app.affinity
+    # @section -- CronJobs Configuration
     affinity: {}
     # -- Tolerations for the CronJob
     # @default -- app.tolerations
+    # @section -- CronJobs Configuration
     tolerations: []
 
   # -- Research Data Output CronJob configuration
+  # @section -- CronJobs Configuration
   researchDataOutput:
     # -- Enable or disable the research data output CronJob
+    # @section -- CronJobs Configuration
     enabled: true
     # -- Schedule for the CronJob (cron format)
+    # @section -- CronJobs Configuration
     schedule: '0 1 * * *'
     # -- Concurrency policy for CronJob (Allow, Forbid, Replace)
+    # @section -- CronJobs Configuration
     concurrencyPolicy: Forbid
     # -- Number of successful job history to keep
+    # @section -- CronJobs Configuration
     successfulJobsHistoryLimit: 3
     # -- Number of failed job history to keep
+    # @section -- CronJobs Configuration
     failedJobsHistoryLimit: 1
     # -- Whether to suspend the job execution
+    # @section -- CronJobs Configuration
     suspend: false
     # -- Restart policy for the job pods
+    # @section -- CronJobs Configuration
     restartPolicy: OnFailure
     # -- Pod annotations for the CronJob pods
+    # @section -- CronJobs Configuration
     podAnnotations: {}
     # -- Pod labels for the CronJob pods
+    # @section -- CronJobs Configuration
     podLabels: {}
     # -- Priority class name for the CronJob
     # @default -- app.priorityClassName or global.priorityClassName
+    # @section -- CronJobs Configuration
     priorityClassName: ''
     # -- Additional environment variables for the CronJob
+    # @section -- CronJobs Configuration
     env: []
     # -- Additional volume mounts for the CronJob
+    # @section -- CronJobs Configuration
     volumeMounts: []
     # -- Additional volumes for the CronJob
+    # @section -- CronJobs Configuration
     volumes: []
     # -- Resource limits and requests for the CronJob
+    # @section -- CronJobs Configuration
     resources:
       requests:
         cpu: 100m
@@ -553,44 +1041,62 @@ cronjobs:
         memory: 512Mi
     # -- Node selector for the CronJob
     # @default -- app.nodeSelector
+    # @section -- CronJobs Configuration
     nodeSelector: {}
     # -- Affinity rules for the CronJob
     # @default -- app.affinity
+    # @section -- CronJobs Configuration
     affinity: {}
     # -- Tolerations for the CronJob
     # @default -- app.tolerations
+    # @section -- CronJobs Configuration
     tolerations: []
 
   # -- Stat Build CronJob configuration
+  # @section -- CronJobs Configuration
   statBuild:
     # -- Enable or disable the stat build CronJob
+    # @section -- CronJobs Configuration
     enabled: true
     # -- Schedule for the CronJob (cron format)
+    # @section -- CronJobs Configuration
     schedule: '1 1 * * *'
     # -- Concurrency policy for CronJob (Allow, Forbid, Replace)
+    # @section -- CronJobs Configuration
     concurrencyPolicy: Forbid
     # -- Number of successful job history to keep
+    # @section -- CronJobs Configuration
     successfulJobsHistoryLimit: 3
     # -- Number of failed job history to keep
+    # @section -- CronJobs Configuration
     failedJobsHistoryLimit: 1
     # -- Whether to suspend the job execution
+    # @section -- CronJobs Configuration
     suspend: false
     # -- Restart policy for the job pods
+    # @section -- CronJobs Configuration
     restartPolicy: OnFailure
     # -- Pod annotations for the CronJob pods
+    # @section -- CronJobs Configuration
     podAnnotations: {}
     # -- Pod labels for the CronJob pods
+    # @section -- CronJobs Configuration
     podLabels: {}
     # -- Priority class name for the CronJob
     # @default -- app.priorityClassName or global.priorityClassName
+    # @section -- CronJobs Configuration
     priorityClassName: ''
     # -- Additional environment variables for the CronJob
+    # @section -- CronJobs Configuration
     env: []
     # -- Additional volume mounts for the CronJob
+    # @section -- CronJobs Configuration
     volumeMounts: []
     # -- Additional volumes for the CronJob
+    # @section -- CronJobs Configuration
     volumes: []
     # -- Resource limits and requests for the CronJob
+    # @section -- CronJobs Configuration
     resources:
       requests:
         cpu: 100m
@@ -600,48 +1106,71 @@ cronjobs:
         memory: 512Mi
     # -- Node selector for the CronJob
     # @default -- app.nodeSelector
+    # @section -- CronJobs Configuration
     nodeSelector: {}
     # -- Affinity rules for the CronJob
     # @default -- app.affinity
+    # @section -- CronJobs Configuration
     affinity: {}
     # -- Tolerations for the CronJob
     # @default -- app.tolerations
+    # @section -- CronJobs Configuration
     tolerations: []
 
+## @section Additional Configuration
+
 # -- Extra Kubernetes objects to deploy
+# @section -- Additional Configuration
 extraObjects: []
-## Network Policies
+
+## @section Network Policies
+
 # -- Network policy configuration
+# @section -- Network Policies
 networkPolicy:
   # -- Enable network policies
+  # @section -- Network Policies
   enabled: false
 
   # -- Ingress source configuration
+  # @section -- Network Policies
   ingressSource:
     # -- Namespace selector for ingress controller
+    # @section -- Network Policies
     namespaceSelector: {}
       # kubernetes.io/metadata.name: traefik
     # -- Pod selector for ingress controller
+    # @section -- Network Policies
     podSelector: {}
       # app.kubernetes.io/name: traefik
 
   # -- Components to create network policies for
+  # @section -- Network Policies
   components:
     # -- App component
+    # @section -- Network Policies
     - name: app
       # -- Component label
+      # @section -- Network Policies
       component: app
       # -- Target port
+      # @section -- Network Policies
       port: 3000
     # -- Assets component
+    # @section -- Network Policies
     - name: assets
       # -- Component label
+      # @section -- Network Policies
       component: assets
       # -- Target port
+      # @section -- Network Policies
       port: 8080
     # -- CronJobs component
+    # @section -- Network Policies
     - name: cronjobs
       # -- Component label
+      # @section -- Network Policies
       partOf: cronjob
       # -- Target port
+      # @section -- Network Policies
       port: 3000
