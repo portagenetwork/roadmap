@@ -22,7 +22,7 @@ class UserMailer < ActionMailer::Base
 
     I18n.with_locale I18n.locale do
       mail(to: @user.email,
-           subject: format(_('Welcome to %{tool_name}'), tool_name: tool_name))
+           subject: format("Welcome to %{tool_name} / Bienvenue sur l'%{tool_name}", tool_name: tool_name))
     end
   end
   # rubocop:enable Metrics/AbcSize
@@ -59,7 +59,8 @@ class UserMailer < ActionMailer::Base
 
     I18n.with_locale I18n.locale do
       mail(to: @role.user.email,
-           subject: format(_('A Data Management Plan in %{tool_name} has been shared with you'),
+           subject: format('A Data Management Plan in %{tool_name} has been shared with you ' \
+                             '/ Un plan de gestion des données dans %{tool_name} a été partagé avec vous',
                            tool_name: tool_name))
     end
   end
@@ -76,7 +77,8 @@ class UserMailer < ActionMailer::Base
 
     I18n.with_locale I18n.locale do
       mail(to: @recepient.email,
-           subject: format(_('Changed permissions on a Data Management Plan in %{tool_name}'),
+           subject: format('Changed permissions on a Data Management Plan in %{tool_name} / Les ' \
+                             'autorisations pour un plan de gestion des données dans %{tool_name} sont modifiées',
                            tool_name: tool_name))
     end
   end
@@ -91,7 +93,8 @@ class UserMailer < ActionMailer::Base
 
     I18n.with_locale I18n.locale do
       mail(to: @user.email,
-           subject: format(_('Permissions removed on a DMP in %{tool_name}'),
+           subject: format('Permissions removed on a DMP in %{tool_name} ' \
+                             '/ Autorisations relatives à PGD retirées dans %{tool_name}',
                            tool_name: tool_name))
     end
   end
@@ -109,7 +112,8 @@ class UserMailer < ActionMailer::Base
 
     I18n.with_locale I18n.locale do
       mail(to: @recipient.email,
-           subject: format(_('%{user_name} has requested feedback on a %{tool_name} plan'),
+           subject: format('%{user_name} has requested feedback on a %{tool_name} plan ' \
+                             '/ %{user_name} a demandé des commentaires sur un plan %{tool_name}',
                            tool_name: tool_name, user_name: @user.name(false)))
     end
   end
@@ -132,7 +136,8 @@ class UserMailer < ActionMailer::Base
 
       mail(to: recipient.email,
            from: sender,
-           subject: format(_('%{tool_name}: Expert feedback has been provided for %{plan_title}'),
+           subject: format('%{tool_name}: Expert feedback has been provided for %{plan_title} ' \
+                             "/ %{tool_name}: des commentaires d'experts ont été fournis pour %{plan_title}",
                            tool_name: tool_name, plan_title: @plan.title))
     end
   end
@@ -150,7 +155,8 @@ class UserMailer < ActionMailer::Base
 
     I18n.with_locale I18n.locale do
       mail(to: @user.email,
-           subject: format(_('DMP Visibility Changed: %{plan_title}'), plan_title: @plan.title))
+           subject: format('DMP Visibility Changed: %{plan_title} / Visibilité du PGD modifiée : %{plan_title}',
+                           plan_title: @plan.title))
     end
   end
 
@@ -158,7 +164,7 @@ class UserMailer < ActionMailer::Base
   # plan - Plan for which the comment is associated to
   # answer - Answer commented on
   # rubocop:disable Metrics/AbcSize
-  def new_comment(commenter, plan, answer)
+  def new_comment(commenter, plan, answer) # rubocop:disable Metrics/MethodLength
     return unless commenter.is_a?(User) && plan.is_a?(Plan)
 
     owner = plan.owner
@@ -179,7 +185,8 @@ class UserMailer < ActionMailer::Base
 
     I18n.with_locale I18n.locale do
       mail(to: @plan.owner.email,
-           subject: format(_('%{tool_name}: A new comment was added to %{plan_title}'),
+           subject: format('%{tool_name}: A new comment was added to %{plan_title} ' \
+                             '/ %{tool_name}: un nouveau commentaire a été ajouté à %{plan_title}',
                            tool_name: tool_name, plan_title: @plan.title))
     end
   end
@@ -195,7 +202,8 @@ class UserMailer < ActionMailer::Base
 
     I18n.with_locale I18n.locale do
       mail(to: user.email,
-           subject: format(_('Administrator privileges updated in %{tool_name}'),
+           subject: format('Administrator privileges updated in %{tool_name} ' \
+                             '/ Privilèges d’administrateur accordés dans %{tool_name}',
                            tool_name: tool_name))
     end
   end
