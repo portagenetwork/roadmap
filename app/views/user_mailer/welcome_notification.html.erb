@@ -12,3 +12,19 @@
 <p>
   <%= _('You may change your notification preferences on your profile page.') %>&nbsp;<%= _('Please do not reply to this email.') %>
 </p>
+
+<hr>
+<p>
+  <%= "Bienvenue sur l'%{tool_name}, %{username}" %{ tool_name: tool_name, username: @username } %>
+</p>
+<p>
+  <%= sanitize("%{tool_name} vous aidera à élaborer votre plan de gestion des données. Si vous avez des questions ou des commentaires sur l’emploi de l’outil, veuillez nous écrire à %{helpdesk_email} ou rendez-vous à %{contact_us}" %{ tool_name: tool_name, helpdesk_email: mail_to( helpdesk_email, helpdesk_email, subject: @email_subject), contact_us: link_to(@contact_us, @contact_us) }) %>
+</p>
+<p>
+  <%= 'Sincèrement,' %>
+  <br />
+  <%= "Équipe chargée de l’outil %{tool_name}" %{ tool_name: tool_name} %>
+</p>
+<p>
+  <%= 'Vous pouvez modifier vos préférences relatives aux avis sur votre page de profil.' %>&nbsp;<%= 'Veuillez ne pas répondre à ce courriel.' %>
+</p>

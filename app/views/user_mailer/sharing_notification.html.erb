@@ -1,5 +1,5 @@
 <p>
-  <%= _('Hello %{username}') %{ username: @username } %>
+  <%= _('Hello %{username},') %{ username: @username } %>
 </p>
 <p>
   <%= _("Your colleague %{inviter_name} has invited you to contribute to
@@ -13,3 +13,20 @@
     %>
 </p>
 <%= render partial: 'email_signature' %>
+
+<hr>
+<p>
+  <%= 'Bonjour %{username},' %{ username: @username } %>
+</p>
+<p>
+  <%= "Votre collègue %{inviter_name} vous a invité(e) à collaborer à
+            son plan de gestion de données dans %{tool_name}" % {
+            inviter_name: @inviter.name(false), tool_name: tool_name
+            } %>
+</p>
+<p>
+  <%= sanitize('%{click_here} pour accepter l’invitation (ou copiez %{link} dans votre navigateur). Si vous ne souhaitez pas accepter l’invitation, veuillez ne pas tenir compte de ce courriel.' % { 
+    click_here: link_to('Cliquer ici', @link), link: @link })
+    %>
+</p>
+<%= render partial: 'french_email_signature' %>

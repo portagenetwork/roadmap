@@ -1,0 +1,24 @@
+<%
+  email_subject = email_subject || 'Requête ou commentaire associé à %{tool_name}' %{ tool_name: tool_name }
+  allow_change_prefs = allow_change_prefs.nil? ? true : allow_change_prefs
+
+  # Override the default Rails route helper for the contact_us page IF an alternate contact_us url was defined
+  # in the dmproadmap.rb initializer
+  contact_us = Rails.configuration.x.organisation.contact_us_url || contact_us_url
+%>
+<p>
+  <%= 'Sincèrement,' %>
+  <br />
+  <%= 'Équipe chargée de l’outil %{tool_name}' %{ tool_name: tool_name} %>
+</p>
+<p>
+  <% if allow_change_prefs %>
+    <%= 'Vous pouvez modifier vos préférences relatives aux avis sur votre page de profil.' %>
+  <% end %>
+  <%= 'Veuillez ne pas répondre à ce courriel.' %>
+  <%= sanitize('Si vous avez des questions ou avez besoin d’aide, veuillez nous écrire à %{helpdesk_email} ou visiter la page %{contact_us}' % {
+    helpdesk_email: mail_to(@helpdesk_email, @helpdesk_email,
+                      subject: email_subject),
+    contact_us: link_to(contact_us, contact_us)
+  }) %>
+</p>

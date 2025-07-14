@@ -8,3 +8,15 @@
   <%= raw @message %>
 </p>
 <%= render partial: 'email_signature' %>
+
+<hr>
+<p>
+  <%= raw 'Bonjour %{recipient_name},' %{ recipient_name: @recipient_name } %>
+</p>
+<p>
+  <%= raw @username + " is creating a Data Management Plan and has answered " + @answer_text + " to " + @question_title + " in a plan called " + @plan_title + " based on the template " + @template_title %>
+</p>
+<p>
+  <%= raw @message %>
+</p>
+<%= render partial: 'french_email_signature' %>

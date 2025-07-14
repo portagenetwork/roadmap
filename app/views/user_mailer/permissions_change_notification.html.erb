@@ -1,5 +1,5 @@
 <p>
-  <%= _('Hello %{recepientname}') %{ recepientname: @recepient.name } %>
+  <%= _('Hello %{recepientname},') %{ recepientname: @recepient.name } %>
 </p>
 <p>
   <%= _('Your permissions relating to %{plan_title} have changed. You now have %{type} access. This means you can %{placeholder1} %{placeholder2}') % {
@@ -9,4 +9,18 @@
      placeholder2: @messaging[:placeholder2]
     } %>
 </p>
-<%= render partial: 'email_signature' %>
+<%= render partial: 'email_signature'%>
+
+<hr>
+<p>
+  <%= 'Bonjour %{recepientname},' %{ recepientname: @recepient.name } %>
+</p>
+<p>
+  <%= 'Vos autorisations relatives à %{plan_title} ont changé. Vous avez maintenant un accès %{type}. Cela signifie que vous pouvez %{placeholder1} %{placeholder2}' % {
+     plan_title: @plan_title,
+     type: @messaging[:type],
+     placeholder1: @messaging[:placeholder1],
+     placeholder2: @messaging[:placeholder2]
+    } %>
+</p>
+<%= render partial: 'french_email_signature' %>

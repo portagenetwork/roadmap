@@ -1,5 +1,5 @@
 <p>
-  <%= _('Hello %{recipient_name}') % { recipient_name: @recipient_name } %>
+  <%= _('Hello %{recipient_name},') % { recipient_name: @recipient_name } %>
 </p>
 <p>
   <%= _("%{commenter} has finished providing feedback on the plan  \"%{link_html}\". Comments can be found in the 'Write plan' tab on the right side of the page (Guidance/Comments).").html_safe % {
@@ -8,5 +8,17 @@
     tool_name: tool_name
   }%>
 </p>
-
 <%= render partial: 'email_signature' %>
+
+<hr>
+<p>
+  <%= 'Bonjour %{recipient_name},' % { recipient_name: @recipient_name } %>
+</p>
+<p>
+  <%= "%{commenter} a terminé de fournir ses commentaires sur le plan "%{link_html}". Les commentaires se trouvent à l’onglet « Rédiger un plan » sur le côté droit de la page (Directives / Commentaires).".html_safe % {
+    commenter: @requestor_name,
+    link_html: link_to(@plan_name, edit_plan_url(@plan, phase_id: @phase.id)),
+    tool_name: tool_name
+  }%>
+</p>
+<%= render partial: 'french_email_signature' %>
