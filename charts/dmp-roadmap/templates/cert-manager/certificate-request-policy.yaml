@@ -1,0 +1,43 @@
+{{- if and .Values.ingress.certManager.enabled .Values.ingress.certManager.certificateRequestPolicy.enabled }}
+---
+apiVersion: policy.cert-manager.io/v1alpha1
+kind: CertificateRequestPolicy
+metadata:
+  name: {{ .Values.ingress.certManager.certificateRequestPolicy.name | default (printf "%s-ca" (include "dmp-roadmap.hostname" . | replace "." "-")) }}
+  labels:
+    {{- $_ := set . "component" "cert-manager-policy" }}
+    {{- include "dmp-roadmap.labels" . | nindent 4 }}
+  {{- with .Values.ingress.certManager.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  allowed:
+    commonName:
+      value: {{ .Values.ingress.certManager.certificateRequestPolicy.allowed.commonName | default (include "dmp-roadmap.hostname" .) }}
+    dnsNames:
+      values:
+        {{- if .Values.ingress.certManager.certificateRequestPolicy.allowed.dnsNames }}
+        {{- toYaml .Values.ingress.certManager.certificateRequestPolicy.allowed.dnsNames | nindent 8 }}
+        {{- else }}
+        - {{ include "dmp-roadmap.hostname" . }}
+        {{- end }}
+    {{- with .Values.ingress.certManager.certificateRequestPolicy.allowed.usages }}
+    usages:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+  {{- with .Values.ingress.certManager.certificateRequestPolicy.constraints }}
+  constraints:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  selector:
+    issuerRef:
+      {{- if .Values.ingress.certManager.issuer }}
+      name: {{ .Values.ingress.certManager.issuer }}
+      kind: Issuer
+      {{- else if .Values.ingress.certManager.clusterIssuer }}
+      name: {{ .Values.ingress.certManager.clusterIssuer }}
+      kind: ClusterIssuer
+      {{- end }}
+      group: cert-manager.io
+{{- end }}

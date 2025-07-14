@@ -1,0 +1,365 @@
+# DMP Roadmap Helm Chart
+
+{{ template "chart.badgesSection" . }}
+
+A comprehensive Helm chart for deploying DMP Roadmap - A Data Management Planning tool that helps researchers and organizations create, share, and update data management plans.
+
+## Features
+
+- **Production-ready** deployment with security best practices
+- **Flexible storage** support (PVC, CephFS, hostPath, NFS, emptyDir)
+- **Database options** (embedded PostgreSQL or external database)
+- **TLS & cert-manager** integration for automatic SSL certificates
+- **Horizontal Pod Autoscaling** for dynamic scaling
+- **Monitoring ready** with configmap change detection
+- **Automated tasks** via configurable CronJobs
+- **Multi-environment** support with overlay configurations
+
+## Quick Start
+
+### Prerequisites
+
+- Kubernetes 1.19+
+- Helm 3.8+
+- PV provisioner support in the underlying infrastructure (for persistent storage)
+
+### Installation
+
+1. **Add the Helm repository**:
+   ```bash
+   helm repo add dmp-roadmap https://your-helm-repo.com
+   helm repo update
+   ```
+
+2. **Install with default configuration**:
+   ```bash
+   helm install my-dmp-roadmap dmp-roadmap/dmp-roadmap
+   ```
+
+3. **Install with custom values**:
+   ```bash
+   helm install my-dmp-roadmap dmp-roadmap/dmp-roadmap \
+     --set global.domain.name=dmp.example.com \
+     --set postgresql.enabled=true
+   ```
+
+### Basic Configuration
+
+Create a `values.yaml` file with your specific configuration:
+
+```yaml
+# Basic configuration
+global:
+  domain:
+    name: dmp.example.com
+
+# Enable ingress with TLS
+ingress:
+  enabled: true
+  className: nginx
+  certManager:
+    enabled: true
+    clusterIssuer: letsencrypt-prod
+
+# Configure SMTP for emails
+config:
+  mailer:
+    from: noreply@example.com
+    to: admin@example.com
+    smtpAddress: smtp.example.com
+    smtpDomain: example.com
+```
+
+Then install:
+```bash
+helm install my-dmp-roadmap dmp-roadmap/dmp-roadmap -f values.yaml
+```
+
+## Storage Configuration
+
+The chart supports multiple storage backends:
+
+### Standard PVC (Default)
+```yaml
+storage:
+  type: pvc
+  pvc:
+    storageClassName: "fast-ssd"
+    volumes:
+      locales:
+        size: 5Gi
+        accessModes: [ReadWriteMany]
+      uploads:
+        size: 10Gi
+```
+
+### CephFS
+```yaml
+storage:
+  type: cephfs
+  cephfs:
+    monitors:
+      - 10.0.0.1:6789
+      - 10.0.0.2:6789
+    volumes:
+      locales:
+        path: /volumes/dmp-locales
+        secretRef: cephfs-secret
+```
+
+### NFS
+```yaml
+storage:
+  type: nfs
+  nfs:
+    server: nfs.example.com
+    volumes:
+      locales:
+        path: /exports/dmp-locales
+      uploads:
+        path: /exports/dmp-uploads
+```
+
+## Database Configuration
+
+### Embedded PostgreSQL (Recommended for development)
+TBD
+
+### External Database (Recommended for production)
+```yaml
+postgresql:
+  enabled: false
+
+externalDatabase:
+  host: postgres.example.com
+  port: 5432
+  database: dmp_roadmap_production
+  username: dmp_roadmap
+  existingSecret: dmp-db-secret
+  existingSecretPasswordKey: password
+```
+
+## TLS & Ingress Configuration
+
+### Automatic TLS with cert-manager
+```yaml
+ingress:
+  enabled: true
+  className: nginx
+  certManager:
+    enabled: true
+    clusterIssuer: letsencrypt-prod
+  # hosts automatically derived from global.domain.name
+```
+
+### Manual TLS Configuration
+```yaml
+ingress:
+  enabled: true
+  hosts:
+    - host: dmp.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: dmp-tls
+      hosts:
+        - dmp.example.com
+```
+
+## Production Deployment
+
+For production deployments, consider these configurations:
+
+```yaml
+# Resource limits
+app:
+  replicas: 2
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+
+# Autoscaling
+app:
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+
+# Persistent storage
+storage:
+  type: pvc
+  pvc:
+    storageClassName: "fast-ssd"
+    volumes:
+      uploads:
+        size: 100Gi
+
+# External database
+postgresql:
+  enabled: false
+externalDatabase:
+  host: postgres-cluster.internal
+  existingSecret: dmp-db-credentials
+```
+
+## CronJobs
+
+The chart includes several automated tasks:
+
+- **Translation Sync**: Synchronizes translation files (daily at 1:00 AM)
+- **Research Data Output**: Updates external research data (daily at 1:00 AM)
+- **Stat Build**: Builds application statistics (daily at 1:01 AM)
+
+Configure schedules and resources:
+```yaml
+cronjobs:
+  translationSync:
+    enabled: true
+    schedule: "0 2 * * *"  # 2 AM daily
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+```
+
+## Monitoring & Observability
+
+The chart includes:
+- **Configmap change detection**: Automatic pod rollouts when configuration changes
+- **Health checks**: Liveness and readiness probes
+- **Resource monitoring**: Resource requests and limits
+- **Pod disruption budgets**: (configure with `podDisruptionBudget`)
+
+## Upgrading
+
+### From 0.x to 1.x (when available)
+```bash
+# Review breaking changes in CHANGELOG.md first
+helm upgrade my-dmp-roadmap dmp-roadmap/dmp-roadmap --version 1.0.0
+```
+
+### Database Migrations
+Database migrations are handled automatically by the application's entrypoint script. No manual intervention required.
+
+## Troubleshooting
+
+### Check Pod Status
+```bash
+kubectl get pods -l app.kubernetes.io/name=dmp-roadmap
+kubectl describe pod <pod-name>
+```
+
+### Check Configuration
+```bash
+kubectl get configmap <release-name>-dmp-roadmap-app-config -o yaml
+```
+
+### Check Logs
+```bash
+kubectl logs -l app.kubernetes.io/name=dmp-roadmap -c dmp-roadmap
+```
+
+### Storage Issues
+```bash
+kubectl get pvc
+kubectl describe pvc <pvc-name>
+```
+
+## Development
+
+### Local Development with Minikube
+
+TBD
+
+## Contributing
+
+See [CONTRIBUTING.md](../../../.github/CONTRIBUTING.md) for more details.
+
+### Documentation & Schema Maintenance
+
+This chart uses automated tools to maintain documentation and schema files:
+
+#### helm-docs
+Automatically generates this README from `README.md.gotmpl` and `values.yaml` comments:
+
+```bash
+# Install helm-docs
+go install github.com/norwoodj/helm-docs/cmd/helm-docs@latest
+
+# Generate README.md from template and values.yaml comments
+helm-docs --chart-search-root=charts/dmp-roadmap
+```
+
+#### helm-schema
+Automatically generates `values.schema.json` from `values.yaml`:
+
+```bash
+# Install the plugin
+helm plugin install https://github.com/karuppiah7890/helm-schema
+
+# Generate schema from values.yaml
+cd charts/dmp-roadmap
+helm schema values.yaml > values.schema.json
+```
+
+#### Pre-commit Hooks
+This repository includes pre-commit hooks for quality assurance and automation:
+
+**Setup:**
+```bash
+# Install required tools
+pip install pre-commit
+go install github.com/norwoodj/helm-docs/cmd/helm-docs@latest
+helm plugin install https://github.com/dadav/helm-schema
+
+# Install pre-commit hooks
+pre-commit install
+
+# Run on all files (first time)
+pre-commit run --all-files
+```
+
+**What the hooks do:**
+- **File formatting**: Remove trailing whitespace, fix end-of-file issues
+- **Helm linting**: Validate chart structure and templates
+- **Template validation**: Ensure Helm templates render correctly
+- **Documentation generation**: Auto-update README.md from template and values.yaml
+- **Schema generation**: Auto-update values.schema.json from values.yaml
+
+**Configuration files:**
+- `.pre-commit-config.yaml` - Hook configuration
+
+**Usage:**
+```bash
+# Hooks run automatically on git commit
+git add .
+git commit -m "Update chart values"
+
+# Run manually on specific files
+pre-commit run --files charts/dmp-roadmap/values.yaml
+
+# Update hook versions
+pre-commit autoupdate
+```
+
+This ensures all chart changes maintain quality standards and keep documentation synchronized.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+{{ template "chart.homepageLine" . }}
+
+{{ template "chart.maintainersSection" . }}
+
+{{ template "chart.sourcesSection" . }}
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSection" . }}
