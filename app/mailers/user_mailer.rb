@@ -41,7 +41,9 @@ class UserMailer < ActionMailer::Base
     @answer_text    = @options_string.to_s
     @helpdesk_email = helpdesk_email(org: @user.org)
 
-    I18n.with_locale I18n.locale do
+    # This temporarily sets the I18n locale to user's preferred language (if available)
+    # defaults to app's default locale
+    I18n.with_locale(@user.language&.abbreviation || I18n.default_locale) do
       mail(to: data['email'],
            subject: data['subject'])
     end
@@ -75,10 +77,9 @@ class UserMailer < ActionMailer::Base
     @messaging = role_text(@role)
     @helpdesk_email = helpdesk_email(org: @user.org)
 
-    I18n.with_locale I18n.locale do
+    I18n.with_locale(@recepient.language&.abbreviation || I18n.default_locale) do
       mail(to: @recepient.email,
-           subject: format('Changed permissions on a Data Management Plan in %{tool_name} / Les ' \
-                             'autorisations pour un plan de gestion des données dans %{tool_name} sont modifiées',
+           subject: format(_('Changed permissions on a Data Management Plan in %{tool_name}'),
                            tool_name: tool_name))
     end
   end
@@ -91,10 +92,9 @@ class UserMailer < ActionMailer::Base
     @current_user = current_user
     @helpdesk_email = helpdesk_email(org: @plan.org)
 
-    I18n.with_locale I18n.locale do
+    I18n.with_locale(@user.language&.abbreviation || I18n.default_locale) do
       mail(to: @user.email,
-           subject: format('Permissions removed on a DMP in %{tool_name} ' \
-                             '/ Autorisations relatives à PGD retirées dans %{tool_name}',
+           subject: format(_('Permissions removed on a DMP in %{tool_name}'),
                            tool_name: tool_name))
     end
   end
@@ -110,10 +110,9 @@ class UserMailer < ActionMailer::Base
     @plan_name      = @plan.title
     @helpdesk_email = helpdesk_email(org: @plan.org)
 
-    I18n.with_locale I18n.locale do
+    I18n.with_locale(@recepient.language&.abbreviation || I18n.default_locale) do
       mail(to: @recipient.email,
-           subject: format('%{user_name} has requested feedback on a %{tool_name} plan ' \
-                             '/ %{user_name} a demandé des commentaires sur un plan %{tool_name}',
+           subject: format(_('%{user_name} has requested feedback on a %{tool_name} plan'),
                            tool_name: tool_name, user_name: @user.name(false)))
     end
   end
@@ -130,14 +129,13 @@ class UserMailer < ActionMailer::Base
     @plan_name      = @plan.title
     @helpdesk_email = helpdesk_email(org: @plan.org)
 
-    I18n.with_locale I18n.locale do
+    I18n.with_locale(@recipient.language&.abbreviation || I18n.default_locale) do
       sender = Rails.configuration.x.organisation.do_not_reply_email ||
                Rails.configuration.x.organisation.email
 
       mail(to: recipient.email,
            from: sender,
-           subject: format('%{tool_name}: Expert feedback has been provided for %{plan_title} ' \
-                             "/ %{tool_name}: des commentaires d'experts ont été fournis pour %{plan_title}",
+           subject: format(_('%{tool_name}: Expert feedback has been provided for %{plan_title}'),
                            tool_name: tool_name, plan_title: @plan.title))
     end
   end
@@ -153,10 +151,9 @@ class UserMailer < ActionMailer::Base
     @plan_visibility = Plan::VISIBILITY_MESSAGE[@plan.visibility.to_sym]
     @helpdesk_email = helpdesk_email(org: @plan.org)
 
-    I18n.with_locale I18n.locale do
+    I18n.with_locale(@user.language&.abbreviation || I18n.default_locale) do
       mail(to: @user.email,
-           subject: format('DMP Visibility Changed: %{plan_title} / Visibilité du PGD modifiée : %{plan_title}',
-                           plan_title: @plan.title))
+           subject: format(_('DMP Visibility Changed: %{plan_title}'), plan_title: @plan.title))
     end
   end
 
@@ -164,7 +161,7 @@ class UserMailer < ActionMailer::Base
   # plan - Plan for which the comment is associated to
   # answer - Answer commented on
   # rubocop:disable Metrics/AbcSize
-  def new_comment(commenter, plan, answer) # rubocop:disable Metrics/MethodLength
+  def new_comment(commenter, plan, answer)
     return unless commenter.is_a?(User) && plan.is_a?(Plan)
 
     owner = plan.owner
@@ -183,10 +180,9 @@ class UserMailer < ActionMailer::Base
     @phase_link = url_for(action: 'edit', controller: 'plans', id: @plan.id, phase_id: @phase_id)
     @helpdesk_email = helpdesk_email(org: @plan.org)
 
-    I18n.with_locale I18n.locale do
+    I18n.with_locale(@plan.owner.language&.abbreviation || I18n.default_locale) do
       mail(to: @plan.owner.email,
-           subject: format('%{tool_name}: A new comment was added to %{plan_title} ' \
-                             '/ %{tool_name}: un nouveau commentaire a été ajouté à %{plan_title}',
+           subject: format(_('%{tool_name}: A new comment was added to %{plan_title}'),
                            tool_name: tool_name, plan_title: @plan.title))
     end
   end
@@ -200,10 +196,9 @@ class UserMailer < ActionMailer::Base
     @ul_list   = privileges_list(@user)
     @helpdesk_email = helpdesk_email(org: @user.org)
 
-    I18n.with_locale I18n.locale do
+    I18n.with_locale(@user.language&.abbreviation || I18n.default_locale) do
       mail(to: user.email,
-           subject: format('Administrator privileges updated in %{tool_name} ' \
-                             '/ Privilèges d’administrateur accordés dans %{tool_name}',
+           subject: format(_('Administrator privileges updated in %{tool_name}'),
                            tool_name: tool_name))
     end
   end
@@ -219,7 +214,7 @@ class UserMailer < ActionMailer::Base
 
     @helpdesk_email = helpdesk_email(org: @api_client.org)
 
-    I18n.with_locale I18n.locale do
+    I18n.with_locale(@api_client.language&.abbreviation || I18n.default_locale) do
       mail(to: @api_client.contact_email,
            subject: format(_('%{tool_name} API changes'), tool_name: tool_name))
     end

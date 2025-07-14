@@ -6,11 +6,3 @@
 </p>
 <%= render partial: 'email_signature' %>
 
-<hr>
-<p>
-  <%= 'Bonjour ' %><%= @user.email %>,
-</p>
-<p>
-  <%= 'Votre accès à ' %>"<%= sanitize(@plan.title) %>"<%= '  a été supprimé(e) par ' %><%= "#{@current_user.name(false)}"%>.
-</p>
-<%= render partial: 'french_email_signature' %>

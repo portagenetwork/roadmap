@@ -19,26 +19,3 @@
   <%= link_to plan_url(@plan), plan_url(@plan) %>
 </p>
 <%= render partial: 'email_signature', locals: { allow_change_prefs: false } %>
-
-<hr>
-<p>
-  <%= 'Bonjour %{user_name},' % {user_name: @recipient_name} %>
-</p>
-<p>
-  <%= 
-   sanitize ('%{requestor} a demandé des commentaires sur un plan %{link_html}. Pour ajouter des commentaires, veuillez consulter la page « Plans » dans le menu Admin dans %{application_name} et ouvrir le plan.') % {
-    requestor: @requestor_name,
-    plan_name: @plan_name,
-    tool_name: tool_name,
-    allow_change_prefs: false,
-    link_html: link_to(@plan_name, plan_url(@plan))
-    } 
-    %>
-</p>
-
-<p>
-  <%= "À la place, vous pouvez cliquer sur le lien ci-dessous:" %>
-  <br>
-  <%= link_to plan_url(@plan), plan_url(@plan) %>
-</p>
-<%= render partial: 'french_email_signature', locals: { allow_change_prefs: false } %>
