@@ -16,7 +16,7 @@
   <%= 'Bonjour %{recepientname},' %{ recepientname: @recepient.name } %>
 </p>
 <p>
-  <%= 'Vos autorisations relatives à %{plan_title} ont changé. Vous avez maintenant un accès %{type}. Cela signifie que vous pouvez %{placeholder1} %{placeholder2}' % {
+  <%= ('Vos autorisations relatives à %{plan_title} ont changé. Vous avez maintenant un accès %{type}. Cela signifie que vous pouvez %{placeholder1} %{placeholder2}') % {
      plan_title: @plan_title,
      type: @messaging[:type],
      placeholder1: @messaging[:placeholder1],

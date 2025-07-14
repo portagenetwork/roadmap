@@ -27,8 +27,8 @@
   <%= 'Bonjour %{user_name}' %{ user_name: @user_name } %>
 </p>
 <p>
-  <%= '%{commenter_name} a effectué des commentaires sur votre plan %{plan_title}. Pour les afficher, '\
-  'suivez le lien vers le PGD ci-dessous ou accédez au plan à partir de la page Mon tableau de bord dans %{tool_name}.' \
+  <%= ('%{commenter_name} a effectué des commentaires sur votre plan %{plan_title}. Pour les afficher, '\
+  'suivez le lien vers le PGD ci-dessous ou accédez au plan à partir de la page Mon tableau de bord dans %{tool_name}.') \
   %{ commenter_name: @commenter_name, plan_title: @plan_title, tool_name: tool_name } %>
 </p>
 <p>

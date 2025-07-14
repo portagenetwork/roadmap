@@ -23,7 +23,7 @@
   <%= 'Bonjour %{username},' %{ username: @username } %>
 </p>
 <p>
-  <%= 'La visibilité du plan %{plan_title} est passée à %{plan_visibility}.' %{
+  <%= ('La visibilité du plan %{plan_title} est passée à %{plan_visibility}.') %{
     plan_title: @plan_title, plan_visibility: @plan_visibility } %>
 </p>
 <p>
@@ -35,6 +35,6 @@
   </ul>
 </p>
 <p>
-  <%= 'Si vous avez des questions concernant cette action, veuillez visiter la page Mon tableau de bord dans %{tool_name}' %{ tool_name: tool_name } %>
+  <%= ('Si vous avez des questions concernant cette action, veuillez visiter la page Mon tableau de bord dans %{tool_name}') %{ tool_name: tool_name } %>
 </p>
 <%= render partial: 'french_email_signature' %>
