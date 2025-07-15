@@ -28,7 +28,7 @@
 
 ### Changed
 
- -  Add `autocomplete` attribute for some fields [#1089](https://github.com/portagenetwork/roadmap/pull/1089)
+ - Add `autocomplete` attribute for some fields [#1089](https://github.com/portagenetwork/roadmap/pull/1089)
 
  - Set 'noreply@dmp-pgd.ca' as envelope sender for all outgoing emails [#1088](https://github.com/portagenetwork/roadmap/pull/1088)
 
@@ -59,6 +59,8 @@
  - Update CSS / Improve Accessibility For Hyperlinks and `.sign-in` Tabs [#811](https://github.com/portagenetwork/roadmap/pull/811)
 
  - Add ENTRYPOINT to `Dockerfile.production` / Sync and Render New Translations at Runtime [#1075](https://github.com/portagenetwork/roadmap/pull/1075)
+
+ - Modify CSV separator parameter [#1095](https://github.com/portagenetwork/roadmap/pull/1095)
 
 ## [4.1.1+portage-4.3.0]
 
