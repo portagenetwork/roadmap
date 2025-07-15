@@ -98,7 +98,7 @@ class UserMailer < ActionMailer::Base
     end
   end
 
-  def feedback_notification(recipient, plan, requestor)
+  def feedback_notification(recipient, plan, requestor) # rubocop:disable Metrics/AbcSize
     return unless recipient.active?
 
     @user           = requestor
@@ -140,7 +140,7 @@ class UserMailer < ActionMailer::Base
   end
   # rubocop:enable Metrics/AbcSize
 
-  def plan_visibility(user, plan)
+  def plan_visibility(user, plan) # rubocop:disable Metrics/AbcSize
     return unless user.active?
 
     @user            = user
