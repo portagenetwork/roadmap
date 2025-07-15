@@ -15,15 +15,15 @@
 
 <hr>
 <p>
-  <%= "Bienvenue sur l'%{tool_name}, %{username}" %{ tool_name: tool_name, username: @username } %>
+  <%= "Bienvenue sur l'Assistant PGD, %{username}" %{ username: @username } %>
 </p>
 <p>
-  <%= sanitize("%{tool_name} vous aidera à élaborer votre plan de gestion des données. Si vous avez des questions ou des commentaires sur l’emploi de l’outil, veuillez nous écrire à %{helpdesk_email} ou rendez-vous à %{contact_us}" %{ tool_name: tool_name, helpdesk_email: mail_to( helpdesk_email, helpdesk_email, subject: @email_subject), contact_us: link_to(@contact_us, @contact_us) }) %>
+  <%= sanitize("L'Assistant PGD vous aidera à élaborer votre plan de gestion des données. Si vous avez des questions ou des commentaires sur l’emploi de l’outil, veuillez nous écrire à %{helpdesk_email} ou rendez-vous à %{contact_us}" %{ helpdesk_email: mail_to( helpdesk_email, helpdesk_email, subject: @email_subject), contact_us: link_to(@contact_us, @contact_us) }) %>
 </p>
 <p>
   <%= 'Sincèrement,' %>
   <br />
-  <%= "Équipe chargée de l’outil %{tool_name}" %{ tool_name: tool_name} %>
+  <%= "Équipe chargée de l’outil Assistant PGD" %>
 </p>
 <p>
   <%= 'Vous pouvez modifier vos préférences relatives aux avis sur votre page de profil.' %>&nbsp;<%= 'Veuillez ne pas répondre à ce courriel.' %>
