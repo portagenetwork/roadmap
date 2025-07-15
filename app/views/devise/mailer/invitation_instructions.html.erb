@@ -9,67 +9,44 @@
   helpdesk_email = inviter.org&.helpdesk_email ||
                    Rails.configuration.x.organisation.helpdesk_email
 %>
-<% I18n.with_locale I18n.locale do %>
-<p>
+
+<% I18n.available_locales.each do |locale| %>
+  <% I18n.with_locale(locale) do %>
+    <p>
 
 
-</p>
-  <p>
-    <%= _("Hello %{user_name}") %{ :user_name => user_name } %>
-  </p>
-  <p>
-    <%= _("Your colleague %{inviter_name} has invited you to contribute to "\
-            " their Data Management Plan in %{tool_name}") % {
-      tool_name: tool_name,
-      inviter_name: inviter_name
-    } %>
-  </p>
-  <p>
-    <%= sanitize(_('%{click_here} to accept the invitation, (or copy %{link} into your browser). If you don\'t want to accept the invitation, please ignore this email.') % {
-      click_here: link_to(_('Click here'), link), link: link
-    }) %>
-  </p>
-  <p>
-    <%= _('All the best') %>
-    <br />
-    <%= _('The %{tool_name} team') %{:tool_name => tool_name} %>
-  </p>
-  <p>
-    <%= _('Please do not reply to this email.') %>&nbsp;
-    <%= sanitize(_('If you have any questions or need help, please contact us at %{helpdesk_email} or visit %{contact_us_url}') % {
-      helpdesk_email: mail_to(helpdesk_email, helpdesk_email,
-      subject: email_subject),
-      contact_us_url: link_to(contact_us, contact_us)
-    }) %>
-  </p>
+    </p>
+      <p>
+        <%= _("Hello %{user_name}") %{ :user_name => user_name } %>
+      </p>
+      <p>
+        <%= _("Your colleague %{inviter_name} has invited you to contribute to "\
+                " their Data Management Plan in %{tool_name}") % {
+          tool_name: tool_name,
+          inviter_name: inviter_name
+        } %>
+      </p>
+      <p>
+        <%= sanitize(_('%{click_here} to accept the invitation, (or copy %{link} into your browser). If you don\'t want to accept the invitation, please ignore this email.') % {
+          click_here: link_to(_('Click here'), link), link: link
+        }) %>
+      </p>
+      <p>
+        <%= _('All the best') %>
+        <br />
+        <%= _('The %{tool_name} team') %{:tool_name => tool_name} %>
+      </p>
+      <p>
+        <%= _('Please do not reply to this email.') %>&nbsp;
+        <%= sanitize(_('If you have any questions or need help, please contact us at %{helpdesk_email} or visit %{contact_us_url}') % {
+          helpdesk_email: mail_to(helpdesk_email, helpdesk_email,
+          subject: email_subject),
+          contact_us_url: link_to(contact_us, contact_us)
+        }) %>
+      </p>
 
-  <hr>
-  <p>
-    <%= "Bonjour %{user_name}" %{ :user_name => user_name } %>
-  </p>
-  <p>
-    <%= "Votre collègue %{inviter_name} vous a invité(e) à collaborer à
-            son plan de gestion de données dans %{tool_name}" % {
-      tool_name: tool_name,
-      inviter_name: inviter_name
-    } %>
-  </p>
-  <p>
-    <%= sanitize('%{click_here} pour accepter l’invitation (ou copiez %{link} dans votre navigateur). Si vous ne souhaitez pas accepter l’invitation, veuillez ne pas tenir compte de ce courriel.' % {
-      click_here: link_to('Cliquer ici', link), link: link
-    }) %>
-  </p>
-  <p>
-  <%= 'Sincèrement,' %>
-  <br />
-  <%= 'Équipe chargée de l’outil Assistant PGD' %>
-</p>
-<p>
-  <%= 'Veuillez ne pas répondre à ce courriel.' %>
-  <%= sanitize('Si vous avez des questions ou avez besoin d’aide, veuillez nous écrire à %{helpdesk_email} ou visiter la page %{contact_us}' % {
-    helpdesk_email: mail_to(@helpdesk_email, @helpdesk_email,
-                      subject: email_subject),
-    contact_us: link_to(contact_us, contact_us)
-  }) %>
-</p>
+    <% unless locale == I18n.available_locales.last %>
+      <hr>
+    <% end %>
+  <% end %>
 <% end %>
