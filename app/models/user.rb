@@ -421,7 +421,9 @@ class User < ApplicationRecord
 
   # Override devise_invitable email title
   def deliver_invitation(options = {})
-    super(options.merge(subject: format(_('A Data Management Plan in %{application_name} has been shared with you'),
+    super(options.merge(subject: format(_('A Data Management Plan in %{application_name} has been shared with you ' \
+                                          '/ Un plan de gestion des données dans %{application_name} a été partagé ' \
+                                          'avec vous'),
                                         application_name: ApplicationService.application_name))
     )
   end

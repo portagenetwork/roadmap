@@ -50,7 +50,7 @@ class UserMailer < ActionMailer::Base
   end
   # rubocop:enable Metrics/AbcSize
 
-  def sharing_notification(role, user, inviter:)
+  def sharing_notification(role, user, inviter:) # rubocop:disable Metrics/AbcSize
     @role       = role
     @user       = user
     @user_email = @user.email
@@ -59,15 +59,14 @@ class UserMailer < ActionMailer::Base
     @link       = url_for(action: 'show', controller: 'plans', id: @role.plan.id)
     @helpdesk_email = helpdesk_email(org: @inviter.org)
 
-    I18n.with_locale I18n.locale do
+    I18n.with_locale(@role.user.language&.abbreviation || I18n.default_locale) do
       mail(to: @role.user.email,
-           subject: format('A Data Management Plan in %{tool_name} has been shared with you ' \
-                             '/ Un plan de gestion des données dans %{tool_name} a été partagé avec vous',
+           subject: format(_('A Data Management Plan in %{tool_name} has been shared with you'),
                            tool_name: tool_name))
     end
   end
 
-  def permissions_change_notification(role, user)
+  def permissions_change_notification(role, user) # rubocop:disable Metrics/AbcSize
     return unless user.active?
 
     @role       = role
