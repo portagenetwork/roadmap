@@ -16,6 +16,8 @@
 
 ### Fixed
 
+ - Bug Fix: Address Delivery of Duplicate "contact-us" Emails [#1097](https://github.com/portagenetwork/roadmap/pull/1097)
+
  - Fix handling of attrs[:managed] on Org updates [#1062](https://github.com/portagenetwork/roadmap/pull/1062)
  
  - Add `upgrade_customization?` Check When Determining Default Template (Funder vs Org Customization) For Dropdown [#1014](https://github.com/portagenetwork/roadmap/pull/1014)

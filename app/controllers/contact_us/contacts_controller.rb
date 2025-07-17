@@ -4,12 +4,11 @@ module ContactUs
   # Controller for the Contact Us gem
   class ContactsController < ApplicationController
     # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def create
       @contact = ContactUs::Contact.new(params[:contact_us_contact])
 
       if !user_signed_in? && Rails.configuration.x.recaptcha.enabled &&
-         !(verify_recaptcha(model: @contact) && @contact.save)
+         !verify_recaptcha(model: @contact)
         flash[:alert] = _('Captcha verification failed, please retry.')
         render_new_page and return
       end
@@ -22,7 +21,6 @@ module ContactUs
       end
     end
     # rubocop:enable Metrics/AbcSize
-    # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
     def new
       @contact = ContactUs::Contact.new
