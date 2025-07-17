@@ -1,30 +1,21 @@
-<p>
-  <%= _('Welcome to %{tool_name}, %{username}') %{ tool_name: tool_name, username: @username } %>
-</p>
-<p>
-  <%= sanitize(_('%{tool_name} will help you to develop your Data Management Plan. If you have any queries or feedback as you use the tool, please contact us at %{helpdesk_email} or visit %{contact_us}') %{ tool_name: tool_name, helpdesk_email: mail_to( helpdesk_email, helpdesk_email, subject: @email_subject), contact_us: link_to(@contact_us, @contact_us) }) %>
-</p>
-<p>
-  <%= _('All the best') %>
-  <br />
-  <%= _('The %{tool_name} team') %{ tool_name: tool_name} %>
-</p>
-<p>
-  <%= _('You may change your notification preferences on your profile page.') %>&nbsp;<%= _('Please do not reply to this email.') %>
-</p>
-
-<hr>
-<p>
-  <%= "Bienvenue sur l'Assistant PGD, %{username}" %{ username: @username } %>
-</p>
-<p>
-  <%= sanitize("L'Assistant PGD vous aidera à élaborer votre plan de gestion des données. Si vous avez des questions ou des commentaires sur l’emploi de l’outil, veuillez nous écrire à %{helpdesk_email} ou rendez-vous à %{contact_us}" %{ helpdesk_email: mail_to( helpdesk_email, helpdesk_email, subject: @email_subject), contact_us: link_to(@contact_us, @contact_us) }) %>
-</p>
-<p>
-  <%= 'Sincèrement,' %>
-  <br />
-  <%= "Équipe chargée de l’outil Assistant PGD" %>
-</p>
-<p>
-  <%= 'Vous pouvez modifier vos préférences relatives aux avis sur votre page de profil.' %>&nbsp;<%= 'Veuillez ne pas répondre à ce courriel.' %>
-</p>
+<% I18n.available_locales.each do |locale| %>
+	<% I18n.with_locale(locale) do %>
+    <p>
+      <%= _('Welcome to %{tool_name}, %{username}') %{ tool_name: _(tool_name), username: @username } %>
+    </p>
+    <p>
+      <%= sanitize(_('%{tool_name} will help you to develop your Data Management Plan. If you have any queries or feedback as you use the tool, please contact us at %{helpdesk_email} or visit %{contact_us}') %{ tool_name: _(tool_name), helpdesk_email: mail_to( helpdesk_email, helpdesk_email, subject: @email_subject), contact_us: link_to(@contact_us, @contact_us) }) %>
+    </p>
+    <p>
+      <%= _('All the best') %>
+      <br />
+      <%= _('The %{tool_name} team') %{ tool_name: _(tool_name) } %>
+    </p>
+    <p>
+      <%= _('You may change your notification preferences on your profile page.') %>&nbsp;<%= _('Please do not reply to this email.') %>
+    </p>
+      <% unless locale == I18n.available_locales.last %>
+          <hr>
+      <% end %>
+  <% end %>
+<% end %>
