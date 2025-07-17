@@ -20,7 +20,7 @@ class UserMailer < ActionMailer::Base
     @helpdesk_email = helpdesk_email(org: @user.org)
 
     mail(to: @user.email,
-         subject: format("Welcome to %{tool_name} / Bienvenue sur l'%{tool_name}", tool_name: tool_name))
+         subject: "Welcome to DMP Assistant / Bienvenue sur l'Assistant PGD")
   end
 
   # rubocop:disable Metrics/AbcSize
