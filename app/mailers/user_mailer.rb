@@ -105,7 +105,7 @@ class UserMailer < ActionMailer::Base
     @plan_name      = @plan.title
     @helpdesk_email = helpdesk_email(org: @plan.org)
 
-    I18n.with_locale(@recepient.language&.abbreviation || I18n.default_locale) do
+    I18n.with_locale(@recipient.language&.abbreviation || I18n.default_locale) do
       mail(to: @recipient.email,
            subject: format(_('%{user_name} has requested feedback on a %{tool_name} plan'),
                            tool_name: tool_name, user_name: @user.name(false)))
@@ -124,7 +124,7 @@ class UserMailer < ActionMailer::Base
     @plan_name      = @plan.title
     @helpdesk_email = helpdesk_email(org: @plan.org)
 
-    I18n.with_locale(@recipient.language&.abbreviation || I18n.default_locale) do
+    I18n.with_locale(recipient.language&.abbreviation || I18n.default_locale) do
       sender = Rails.configuration.x.organisation.do_not_reply_email ||
                Rails.configuration.x.organisation.email
 
