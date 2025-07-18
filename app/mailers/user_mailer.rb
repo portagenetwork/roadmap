@@ -187,7 +187,6 @@ class UserMailer < ActionMailer::Base
 
     @user      = user
     @username  = @user.name
-    @ul_list   = privileges_list(@user)
     @helpdesk_email = helpdesk_email(org: @user.org)
 
     I18n.with_locale(@user.language&.abbreviation || I18n.locale) do
