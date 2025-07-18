@@ -10,7 +10,6 @@ class UserMailer < ActionMailer::Base
 
   default from: Rails.configuration.x.organisation.email
 
-  # rubocop:disable Metrics/AbcSize
   def welcome_notification(user)
     @user           = user
     @username       = @user.name
@@ -20,12 +19,9 @@ class UserMailer < ActionMailer::Base
     @contact_us     = Rails.application.config.x.organisation.contact_us_url || contact_us_url
     @helpdesk_email = helpdesk_email(org: @user.org)
 
-    I18n.with_locale I18n.locale do
-      mail(to: @user.email,
-           subject: format(_('Welcome to %{tool_name}'), tool_name: tool_name))
-    end
+    mail(to: @user.email,
+         subject: "Welcome to DMP Assistant / Bienvenue sur l'Assistant PGD")
   end
-  # rubocop:enable Metrics/AbcSize
 
   # rubocop:disable Metrics/AbcSize
   def question_answered(data, user, answer, _options_string)
