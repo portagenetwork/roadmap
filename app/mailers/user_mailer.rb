@@ -36,9 +36,7 @@ class UserMailer < ActionMailer::Base
     @answer_text    = @options_string.to_s
     @helpdesk_email = helpdesk_email(org: @user.org)
 
-    # This temporarily sets the I18n locale to user's preferred language (if available)
-    # defaults to app's default locale
-    I18n.with_locale(@user.language&.abbreviation || I18n.locale) do
+    I18n.with_locale(email_locale(@user)) do
       mail(to: data['email'],
            subject: data['subject'])
     end
@@ -54,14 +52,14 @@ class UserMailer < ActionMailer::Base
     @link       = url_for(action: 'show', controller: 'plans', id: @role.plan.id)
     @helpdesk_email = helpdesk_email(org: @inviter.org)
 
-    I18n.with_locale(@role.user.language&.abbreviation || I18n.locale) do
+    I18n.with_locale(email_locale(@role.user)) do
       mail(to: @role.user.email,
            subject: format(_('A Data Management Plan in %{tool_name} has been shared with you'),
                            tool_name: tool_name))
     end
   end
 
-  def permissions_change_notification(role, user) # rubocop:disable Metrics/AbcSize
+  def permissions_change_notification(role, user)
     return unless user.active?
 
     @role       = role
@@ -71,7 +69,7 @@ class UserMailer < ActionMailer::Base
     @messaging = role_text(@role)
     @helpdesk_email = helpdesk_email(org: @user.org)
 
-    I18n.with_locale(@recepient.language&.abbreviation || I18n.locale) do
+    I18n.with_locale(email_locale(@recepient)) do
       mail(to: @recepient.email,
            subject: format(_('Changed permissions on a Data Management Plan in %{tool_name}'),
                            tool_name: tool_name))
@@ -86,14 +84,14 @@ class UserMailer < ActionMailer::Base
     @current_user = current_user
     @helpdesk_email = helpdesk_email(org: @plan.org)
 
-    I18n.with_locale(@user.language&.abbreviation || I18n.locale) do
+    I18n.with_locale(email_locale(@user)) do
       mail(to: @user.email,
            subject: format(_('Permissions removed on a DMP in %{tool_name}'),
                            tool_name: tool_name))
     end
   end
 
-  def feedback_notification(recipient, plan, requestor) # rubocop:disable Metrics/AbcSize
+  def feedback_notification(recipient, plan, requestor)
     return unless recipient.active?
 
     @user           = requestor
@@ -104,7 +102,7 @@ class UserMailer < ActionMailer::Base
     @plan_name      = @plan.title
     @helpdesk_email = helpdesk_email(org: @plan.org)
 
-    I18n.with_locale(@recipient.language&.abbreviation || I18n.locale) do
+    I18n.with_locale(email_locale(@recipient)) do
       mail(to: @recipient.email,
            subject: format(_('%{user_name} has requested feedback on a %{tool_name} plan'),
                            tool_name: tool_name, user_name: @user.name(false)))
@@ -123,7 +121,7 @@ class UserMailer < ActionMailer::Base
     @plan_name      = @plan.title
     @helpdesk_email = helpdesk_email(org: @plan.org)
 
-    I18n.with_locale(recipient.language&.abbreviation || I18n.locale) do
+    I18n.with_locale(email_locale(recipient)) do
       sender = Rails.configuration.x.organisation.do_not_reply_email ||
                Rails.configuration.x.organisation.email
 
@@ -135,7 +133,7 @@ class UserMailer < ActionMailer::Base
   end
   # rubocop:enable Metrics/AbcSize
 
-  def plan_visibility(user, plan) # rubocop:disable Metrics/AbcSize
+  def plan_visibility(user, plan)
     return unless user.active?
 
     @user            = user
@@ -145,7 +143,7 @@ class UserMailer < ActionMailer::Base
     @plan_visibility = Plan::VISIBILITY_MESSAGE[@plan.visibility.to_sym]
     @helpdesk_email = helpdesk_email(org: @plan.org)
 
-    I18n.with_locale(@user.language&.abbreviation || I18n.locale) do
+    I18n.with_locale(email_locale(@user)) do
       mail(to: @user.email,
            subject: format(_('DMP Visibility Changed: %{plan_title}'), plan_title: @plan.title))
     end
@@ -174,7 +172,7 @@ class UserMailer < ActionMailer::Base
     @phase_link = url_for(action: 'edit', controller: 'plans', id: @plan.id, phase_id: @phase_id)
     @helpdesk_email = helpdesk_email(org: @plan.org)
 
-    I18n.with_locale(@plan.owner.language&.abbreviation || I18n.locale) do
+    I18n.with_locale(email_locale(@plan.owner)) do
       mail(to: @plan.owner.email,
            subject: format(_('%{tool_name}: A new comment was added to %{plan_title}'),
                            tool_name: tool_name, plan_title: @plan.title))
@@ -189,7 +187,7 @@ class UserMailer < ActionMailer::Base
     @username  = @user.name
     @helpdesk_email = helpdesk_email(org: @user.org)
 
-    I18n.with_locale(@user.language&.abbreviation || I18n.locale) do
+    I18n.with_locale(email_locale(@user)) do
       mail(to: user.email,
            subject: format(_('Administrator privileges updated in %{tool_name}'),
                            tool_name: tool_name))
