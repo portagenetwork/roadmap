@@ -421,9 +421,10 @@ class User < ApplicationRecord
 
   # Override devise_invitable email title
   def deliver_invitation(options = {})
-    super(options.merge(subject: "A Data Management Plan in DMP Assistant has been shared with you ' \
-                                          '/ Un plan de gestion des données dans l'Assistant PGD a été partagé ' \
-                                          'avec vous")
+    bilingual_subject = 'A Data Management Plan in DMP Assistant has been shared with you / ' \
+                        "Un plan de gestion des données dans l'Assistant PGD a été partagé avec vous"
+
+    super(options.merge(subject: bilingual_subject)
     )
   end
 
