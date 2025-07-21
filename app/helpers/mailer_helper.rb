@@ -7,7 +7,7 @@ module MailerHelper
   # Returns the email recipient's preferred locale.
   # Falls back to the current app locale.
   def email_locale(recipient)
-    recipient.language&.abbreviation || I18n.locale
+    recipient&.language&.abbreviation || I18n.locale
   end
 
   def tool_name
