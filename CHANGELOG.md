@@ -8,6 +8,8 @@
 
  - chore(deps): bump thor from 1.3.2 to 1.4.0 [#1104](https://github.com/portagenetwork/roadmap/pull/1104)
 
+ - chore(deps): bump brace-expansion from 1.1.11 to 1.1.12 [#1105](https://github.com/portagenetwork/roadmap/pull/1105)
+
 ## [4.1.1+portage-4.3.0]
 
 ### Added
