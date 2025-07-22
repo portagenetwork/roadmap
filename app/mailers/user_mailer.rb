@@ -37,7 +37,9 @@ class UserMailer < ActionMailer::Base
     @answer_text    = @options_string.to_s
     @helpdesk_email = helpdesk_email(org: @user.org)
 
-    I18n.with_locale(email_locale(@user)) do
+    locale = User.find_by(email: data['email'])
+
+    I18n.with_locale(email_locale(locale)) do
       mail(to: data['email'],
            subject: data['subject'])
     end
@@ -186,7 +188,6 @@ class UserMailer < ActionMailer::Base
 
     @user      = user
     @username  = @user.name
-    @ul_list   = privileges_list(@user)
     @helpdesk_email = helpdesk_email(org: @user.org)
 
     I18n.with_locale(email_locale(@user)) do
