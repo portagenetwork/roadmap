@@ -64,6 +64,8 @@
 
  - Modify CSV separator parameter [#1095](https://github.com/portagenetwork/roadmap/pull/1095)
 
+ - Removed `app/views/paginable/plans/_org_admin_other_user.html.erb` and `get org_admin_other_user/:page` route [#519](https://github.com/portagenetwork/roadmap/issues/519)
+
 ## [4.1.1+portage-4.3.0]
 
 ### Added
@@ -574,6 +576,7 @@ For more detailed explanation, please refer to this video : https://www.youtube.
 ### Fixed
 
  - Fixed handling of `\r` when syncing db fields to translation.io [#523](https://github.com/portagenetwork/roadmap/issues/523)
+
 
 ## [3.3.1+portage-3.2.1] - 2023-10-19
 
