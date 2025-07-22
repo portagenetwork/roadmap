@@ -6,6 +6,8 @@
 
  - chore(deps): bump nokogiri from 1.18.8 to 1.18.9 [#1103](https://github.com/portagenetwork/roadmap/pull/1103)
 
+ - chore(deps): bump thor from 1.3.2 to 1.4.0 [#1104](https://github.com/portagenetwork/roadmap/pull/1104)
+
 ## [4.1.1+portage-4.3.0]
 
 ### Added
