@@ -4,10 +4,13 @@
 module MailerHelper
   include PermsHelper
 
-  # Returns the email recipient's preferred locale.
-  # Falls back to the current app locale.
-  def email_locale(recipient)
-    recipient&.language&.abbreviation || I18n.locale
+  # Localizes the given block to the email recipient's preferred locale.
+  def with_email_recipient_locale(email_recipient, &)
+    locale = email_recipient_locale(email_recipient)
+    # Avoid switching locale if it is already set correctly.
+    return yield if locale == I18n.locale
+
+    I18n.with_locale(locale, &)
   end
 
   def tool_name
@@ -51,5 +54,13 @@ module MailerHelper
         placeholder2: nil
       }
     end
+  end
+
+  private
+
+  # Returns the email recipient's preferred locale,
+  # falling back to the current app locale.
+  def email_recipient_locale(recipient)
+    recipient&.language&.abbreviation || I18n.locale
   end
 end
