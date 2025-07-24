@@ -30,6 +30,8 @@
 
 ### Changed
 
+ - Activate requests to external ROR API [#1109](https://github.com/portagenetwork/roadmap/pull/1109)
+
  - Add `autocomplete` attribute for some fields [#1089](https://github.com/portagenetwork/roadmap/pull/1089)
 
  - Set 'noreply@dmp-pgd.ca' as envelope sender for all outgoing emails [#1088](https://github.com/portagenetwork/roadmap/pull/1088)
