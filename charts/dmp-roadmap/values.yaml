@@ -78,6 +78,7 @@ global:
 
   # @schema
   # type: object
+  # additionalProperties: true
   # @schema
   # -- Common labels for the all resources
   # @section -- Global parameters
@@ -93,6 +94,7 @@ global:
 
   # @schema
   # type: object
+  # additionalProperties: true
   # @schema
   # -- Annotations for the all deployed Statefulsets
   # @section -- Global parameters
@@ -100,6 +102,7 @@ global:
 
   # @schema
   # type: object
+  # additionalProperties: true
   # @schema
   # -- Annotations for the all deployed Deployments
   # @section -- Global parameters
@@ -107,6 +110,7 @@ global:
 
   # @schema
   # type: object
+  # additionalProperties: true
   # @schema
   # -- Annotations for the all deployed pods
   # @section -- Global parameters
@@ -114,6 +118,7 @@ global:
 
   # @schema
   # type: object
+  # additionalProperties: true
   # @schema
   # -- Labels for the all deployed pods
   # @section -- Global parameters
@@ -217,6 +222,7 @@ app:
     automount: true
     # @schema
     # type: object
+    # additionalProperties: true
     # @schema
     # -- Annotations to add to the service account
     # @section -- Application Configuration
@@ -231,12 +237,14 @@ app:
 
   # @schema
   # type: object
+  # additionalProperties: true
   # @schema
   # -- Pod annotations for the app deployment
   # @section -- Application Configuration
   podAnnotations: {}
   # @schema
   # type: object
+  # additionalProperties: true
   # @schema
   # -- Pod labels for the app deployment
   # @section -- Application Configuration
@@ -420,6 +428,10 @@ assets:
     # -- Automatically mount a ServiceAccount's API credentials?
     # @section -- Assets Configuration
     automount: true
+    # @schema
+    # type: object
+    # additionalProperties: true
+    # @schema
     # -- Annotations to add to the service account
     # @section -- Assets Configuration
     annotations: {}
@@ -428,9 +440,17 @@ assets:
     # @section -- Assets Configuration
     name: ''
 
+  # @schema
+  # type: object
+  # additionalProperties: true
+  # @schema
   # -- Pod annotations for the assets deployment
   # @section -- Assets Configuration
   podAnnotations: {}
+  # @schema
+  # type: object
+  # additionalProperties: true
+  # @schema
   # -- Pod labels for the assets deployment
   # @section -- Assets Configuration
   podLabels: {}
@@ -558,6 +578,7 @@ ingress:
 
   # @schema
   # type: object
+  # additionalProperties: true
   # @schema
   # -- Annotations for the ingress resource
   # @section -- Ingress Configuration
@@ -622,6 +643,7 @@ ingress:
     clusterIssuer: ""
     # @schema
     # type: object
+    # additionalProperties: true
     # @schema
     # -- Additional annotations for cert-manager
     # @section -- Ingress Configuration
@@ -1185,9 +1207,17 @@ cronjobs:
     # -- Restart policy for the job pods
     # @section -- CronJobs Configuration
     restartPolicy: OnFailure
+    # @schema
+    # type: object
+    # additionalProperties: true
+    # @schema
     # -- Pod annotations for the CronJob pods
     # @section -- CronJobs Configuration
     podAnnotations: {}
+    # @schema
+    # type: object
+    # additionalProperties: true
+    # @schema
     # -- Pod labels for the CronJob pods
     # @section -- CronJobs Configuration
     podLabels: {}
@@ -1250,9 +1280,17 @@ cronjobs:
     # -- Restart policy for the job pods
     # @section -- CronJobs Configuration
     restartPolicy: OnFailure
+    # @schema
+    # type: object
+    # additionalProperties: true
+    # @schema
     # -- Pod annotations for the CronJob pods
     # @section -- CronJobs Configuration
     podAnnotations: {}
+    # @schema
+    # type: object
+    # additionalProperties: true
+    # @schema
     # -- Pod labels for the CronJob pods
     # @section -- CronJobs Configuration
     podLabels: {}
@@ -1315,9 +1353,17 @@ cronjobs:
     # -- Restart policy for the job pods
     # @section -- CronJobs Configuration
     restartPolicy: OnFailure
+    # @schema
+    # type: object
+    # additionalProperties: true
+    # @schema
     # -- Pod annotations for the CronJob pods
     # @section -- CronJobs Configuration
     podAnnotations: {}
+    # @schema
+    # type: object
+    # additionalProperties: true
+    # @schema
     # -- Pod labels for the CronJob pods
     # @section -- CronJobs Configuration
     podLabels: {}

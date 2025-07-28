@@ -193,14 +193,14 @@
           "type": "object"
         },
         "podAnnotations": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Pod annotations for the app deployment",
           "required": [],
           "title": "podAnnotations",
           "type": "object"
         },
         "podLabels": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Pod labels for the app deployment",
           "required": [],
           "title": "podLabels",
@@ -488,7 +488,7 @@
           "description": "- configMapRef:\n    name: config-map-name\n- secretRef:\n    name: secret-name",
           "properties": {
             "annotations": {
-              "additionalProperties": false,
+              "additionalProperties": true,
               "description": "Annotations to add to the service account",
               "required": [],
               "title": "annotations",
@@ -752,14 +752,14 @@
           "type": "object"
         },
         "podAnnotations": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Pod annotations for the assets deployment",
           "required": [],
           "title": "podAnnotations",
           "type": "object"
         },
         "podLabels": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Pod labels for the assets deployment",
           "required": [],
           "title": "podLabels",
@@ -1041,7 +1041,7 @@
           "description": "- configMapRef:\n    name: config-map-name\n- secretRef:\n    name: secret-name",
           "properties": {
             "annotations": {
-              "additionalProperties": false,
+              "additionalProperties": true,
               "description": "Annotations to add to the service account",
               "required": [],
               "title": "annotations",
@@ -1072,7 +1072,6 @@
           "required": [
             "create",
             "automount",
-            "annotations",
             "name"
           ],
           "title": "serviceAccount",
@@ -1113,8 +1112,6 @@
         "env",
         "envFrom",
         "serviceAccount",
-        "podAnnotations",
-        "podLabels",
         "podSecurityContext",
         "securityContext",
         "service",
@@ -1483,14 +1480,14 @@
               "type": "object"
             },
             "podAnnotations": {
-              "additionalProperties": false,
+              "additionalProperties": true,
               "description": "Pod annotations for the CronJob pods",
               "required": [],
               "title": "podAnnotations",
               "type": "object"
             },
             "podLabels": {
-              "additionalProperties": false,
+              "additionalProperties": true,
               "description": "Pod labels for the CronJob pods",
               "required": [],
               "title": "podLabels",
@@ -1625,8 +1622,6 @@
             "failedJobsHistoryLimit",
             "suspend",
             "restartPolicy",
-            "podAnnotations",
-            "podLabels",
             "priorityClassName",
             "env",
             "volumeMounts",
@@ -1688,14 +1683,14 @@
               "type": "object"
             },
             "podAnnotations": {
-              "additionalProperties": false,
+              "additionalProperties": true,
               "description": "Pod annotations for the CronJob pods",
               "required": [],
               "title": "podAnnotations",
               "type": "object"
             },
             "podLabels": {
-              "additionalProperties": false,
+              "additionalProperties": true,
               "description": "Pod labels for the CronJob pods",
               "required": [],
               "title": "podLabels",
@@ -1830,8 +1825,6 @@
             "failedJobsHistoryLimit",
             "suspend",
             "restartPolicy",
-            "podAnnotations",
-            "podLabels",
             "priorityClassName",
             "env",
             "volumeMounts",
@@ -1893,14 +1886,14 @@
               "type": "object"
             },
             "podAnnotations": {
-              "additionalProperties": false,
+              "additionalProperties": true,
               "description": "Pod annotations for the CronJob pods",
               "required": [],
               "title": "podAnnotations",
               "type": "object"
             },
             "podLabels": {
-              "additionalProperties": false,
+              "additionalProperties": true,
               "description": "Pod labels for the CronJob pods",
               "required": [],
               "title": "podLabels",
@@ -2035,8 +2028,6 @@
             "failedJobsHistoryLimit",
             "suspend",
             "restartPolicy",
-            "podAnnotations",
-            "podLabels",
             "priorityClassName",
             "env",
             "volumeMounts",
@@ -2143,14 +2134,14 @@
       "additionalProperties": false,
       "properties": {
         "additionalLabels": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Common labels for the all resources",
           "required": [],
           "title": "additionalLabels",
           "type": "object"
         },
         "deploymentAnnotations": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Annotations for the all deployed Deployments",
           "required": [],
           "title": "deploymentAnnotations",
@@ -2240,14 +2231,14 @@
           "type": "array"
         },
         "podAnnotations": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Annotations for the all deployed pods",
           "required": [],
           "title": "podAnnotations",
           "type": "object"
         },
         "podLabels": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Labels for the all deployed pods",
           "required": [],
           "title": "podLabels",
@@ -2261,7 +2252,7 @@
           "type": "string"
         },
         "statefulsetAnnotations": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Annotations for the all deployed Statefulsets",
           "required": [],
           "title": "statefulsetAnnotations",
@@ -2276,7 +2267,7 @@
       "additionalProperties": false,
       "properties": {
         "annotations": {
-          "additionalProperties": false,
+          "additionalProperties": true,
           "description": "Annotations for the ingress resource",
           "required": [],
           "title": "annotations",
@@ -2403,7 +2394,7 @@
               "type": "object"
             },
             "annotations": {
-              "additionalProperties": false,
+              "additionalProperties": true,
               "description": "Additional annotations for cert-manager",
               "required": [],
               "title": "annotations",
