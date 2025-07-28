@@ -25,11 +25,22 @@ repos:
         language: system
         files: (Chart\.yaml|values\.yaml|README\.md\.gotmpl)$
         pass_filenames: false
-
-      # Schema generation
+        
+  - repo: https://github.com/dadav/helm-schema
+    rev: 0.18.1
+    hooks:
       - id: helm-schema
-        name: Generate Helm schema
-        entry: bash -c 'cd charts/dmp-roadmap && helm schema dmp-roadmap/values.schema.json -f values.yaml'
-        language: system
-        files: values\.yaml$
-        pass_filenames: false
+        # for all available options: helm-schema -h
+        args:
+          # directory to search recursively within for charts
+          - --chart-search-root=.
+
+          # don't analyze dependencies
+          - --no-dependencies
+
+          # add references to values file if not exist
+          - --add-schema-reference
+
+          # list of fields to skip from being created by default
+          # e.g. generate a relatively permissive schema
+          # - "--skip-auto-generation=required,additionalProperties"

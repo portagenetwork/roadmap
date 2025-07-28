@@ -4,7 +4,6 @@
   "properties": {
     "app": {
       "additionalProperties": false,
-      "description": "#",
       "properties": {
         "affinity": {
           "additionalProperties": false,
@@ -80,9 +79,14 @@
             "imagePullPolicy": {
               "default": "",
               "description": "Image pull policy for the DMP Roadmap app",
+              "enum": [
+                "Always",
+                "IfNotPresent",
+                "Never",
+                ""
+              ],
               "required": [],
-              "title": "imagePullPolicy",
-              "type": "string"
+              "title": "imagePullPolicy"
             },
             "repository": {
               "default": "",
@@ -99,11 +103,7 @@
               "type": "string"
             }
           },
-          "required": [
-            "repository",
-            "tag",
-            "imagePullPolicy"
-          ],
+          "required": [],
           "title": "image",
           "type": "object"
         },
@@ -295,6 +295,7 @@
         "replicas": {
           "default": 1,
           "description": "Number of app replicas",
+          "minimum": 1,
           "required": [],
           "title": "replicas",
           "type": "integer"
@@ -450,6 +451,8 @@
             "port": {
               "default": 8080,
               "description": "Service port for the app",
+              "maximum": 65535,
+              "minimum": 1,
               "required": [],
               "title": "port",
               "type": "integer"
@@ -457,6 +460,8 @@
             "targetPort": {
               "default": 3000,
               "description": "Target port for the app container",
+              "maximum": 65535,
+              "minimum": 1,
               "required": [],
               "title": "targetPort",
               "type": "integer"
@@ -464,16 +469,17 @@
             "type": {
               "default": "ClusterIP",
               "description": "Service type for the app",
+              "enum": [
+                "ClusterIP",
+                "NodePort",
+                "LoadBalancer",
+                "ExternalName"
+              ],
               "required": [],
-              "title": "type",
-              "type": "string"
+              "title": "type"
             }
           },
-          "required": [
-            "type",
-            "port",
-            "targetPort"
-          ],
+          "required": [],
           "title": "service",
           "type": "object"
         },
@@ -510,12 +516,7 @@
               "type": "string"
             }
           },
-          "required": [
-            "create",
-            "automount",
-            "annotations",
-            "name"
-          ],
+          "required": [],
           "title": "serviceAccount",
           "type": "object"
         },
@@ -548,18 +549,6 @@
         }
       },
       "required": [
-        "replicas",
-        "image",
-        "imagePullSecrets",
-        "env",
-        "envFrom",
-        "serviceAccount",
-        "podAnnotations",
-        "podLabels",
-        "podSecurityContext",
-        "securityContext",
-        "service",
-        "resources",
         "livenessProbe",
         "readinessProbe",
         "autoscaling",
@@ -1174,14 +1163,15 @@
             "onSandbox": {
               "default": "false",
               "description": "Set to true for sandbox mode",
+              "enum": [
+                "true",
+                "false"
+              ],
               "required": [],
-              "title": "onSandbox",
-              "type": "string"
+              "title": "onSandbox"
             }
           },
           "required": [
-            "dmproadmapHost",
-            "onSandbox",
             "httpProxy",
             "httpProxyPort"
           ],
@@ -1380,6 +1370,7 @@
             "from": {
               "default": "support@example.com",
               "description": "From address for emails",
+              "format": "email",
               "required": [],
               "title": "from",
               "type": "string"
@@ -1387,6 +1378,7 @@
             "smtpAddress": {
               "default": "smtp.example.com",
               "description": "SMTP server address",
+              "format": "hostname",
               "required": [],
               "title": "smtpAddress",
               "type": "string"
@@ -1408,6 +1400,8 @@
             "smtpPort": {
               "default": 587,
               "description": "SMTP port",
+              "maximum": 65535,
+              "minimum": 1,
               "required": [],
               "title": "smtpPort",
               "type": "integer"
@@ -1415,6 +1409,7 @@
             "to": {
               "default": "support@example.com",
               "description": "To address for system emails",
+              "format": "email",
               "required": [],
               "title": "to",
               "type": "string"
@@ -1422,20 +1417,14 @@
           },
           "required": [
             "defaultHost",
-            "from",
-            "to",
-            "smtpAddress",
             "smtpAuthentication",
-            "smtpDomain",
-            "smtpPort"
+            "smtpDomain"
           ],
           "title": "mailer",
           "type": "object"
         }
       },
       "required": [
-        "application",
-        "mailer",
         "environment"
       ],
       "title": "config",
@@ -2097,6 +2086,7 @@
         "host": {
           "default": "localhost",
           "description": "Database host",
+          "format": "hostname",
           "required": [],
           "title": "host",
           "type": "string"
@@ -2111,6 +2101,8 @@
         "port": {
           "default": 5432,
           "description": "Database port",
+          "maximum": 65535,
+          "minimum": 1,
           "required": [],
           "title": "port",
           "type": "integer"
@@ -2124,11 +2116,7 @@
         }
       },
       "required": [
-        "host",
-        "port",
-        "database",
         "username",
-        "password",
         "existingSecret",
         "existingSecretPasswordKey"
       ],
@@ -2153,7 +2141,6 @@
     },
     "global": {
       "additionalProperties": false,
-      "description": "#",
       "properties": {
         "additionalLabels": {
           "additionalProperties": false,
@@ -2176,6 +2163,7 @@
             "name": {
               "default": "example.com",
               "description": "Main domain name used throughout the chart",
+              "format": "hostname",
               "required": [],
               "title": "name",
               "type": "string"
@@ -2195,11 +2183,7 @@
               "type": "string"
             }
           },
-          "required": [
-            "name",
-            "path",
-            "prefix"
-          ],
+          "required": [],
           "title": "domain",
           "type": "object"
         },
@@ -2219,9 +2203,13 @@
             "imagePullPolicy": {
               "default": "IfNotPresent",
               "description": "If defined, a imagePullPolicy applied to all DMP Roadmap deployments",
+              "enum": [
+                "Always",
+                "IfNotPresent",
+                "Never"
+              ],
               "required": [],
-              "title": "imagePullPolicy",
-              "type": "string"
+              "title": "imagePullPolicy"
             },
             "repository": {
               "default": "ualbertalib/dmp_roadmap",
@@ -2238,11 +2226,7 @@
               "type": "string"
             }
           },
-          "required": [
-            "repository",
-            "tag",
-            "imagePullPolicy"
-          ],
+          "required": [],
           "title": "image",
           "type": "object"
         },
@@ -2284,24 +2268,12 @@
           "type": "object"
         }
       },
-      "required": [
-        "domain",
-        "image",
-        "additionalLabels",
-        "imagePullSecrets",
-        "statefulsetAnnotations",
-        "deploymentAnnotations",
-        "podAnnotations",
-        "podLabels",
-        "priorityClassName",
-        "env"
-      ],
+      "required": [],
       "title": "global",
       "type": "object"
     },
     "ingress": {
       "additionalProperties": false,
-      "description": "#",
       "properties": {
         "annotations": {
           "additionalProperties": false,
@@ -2385,6 +2357,7 @@
                 "email": {
                   "default": "support@example.com",
                   "description": "Email address for ACME registration",
+                  "format": "email",
                   "required": [],
                   "title": "email",
                   "type": "string"
@@ -2409,7 +2382,6 @@
                     }
                   },
                   "required": [
-                    "enabled",
                     "ingressClass"
                   ],
                   "title": "http01",
@@ -2418,15 +2390,13 @@
                 "server": {
                   "default": "https://acme-v02.api.letsencrypt.org/directory",
                   "description": "ACME server URL",
+                  "format": "uri",
                   "required": [],
                   "title": "server",
                   "type": "string"
                 }
               },
               "required": [
-                "server",
-                "email",
-                "http01",
                 "dns01"
               ],
               "title": "acme",
@@ -2693,11 +2663,6 @@
             }
           },
           "required": [
-            "enabled",
-            "issuer",
-            "clusterIssuer",
-            "annotations",
-            "acme",
             "ca",
             "vault",
             "certificateRequestPolicy",
@@ -2739,14 +2704,7 @@
           "type": "array"
         }
       },
-      "required": [
-        "enabled",
-        "annotations",
-        "className",
-        "hosts",
-        "tls",
-        "certManager"
-      ],
+      "required": [],
       "title": "ingress",
       "type": "object"
     },
@@ -3478,17 +3436,8 @@
     }
   },
   "required": [
-    "nameOverride",
-    "fullnameOverride",
-    "namespaceOverride",
-    "global",
-    "app",
     "assets",
-    "ingress",
     "storage",
-    "config",
-    "externalDatabase",
-    "cronjobs",
     "extraObjects",
     "networkPolicy"
   ],
