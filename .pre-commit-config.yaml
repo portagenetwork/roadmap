@@ -25,7 +25,7 @@ repos:
         language: system
         files: (Chart\.yaml|values\.yaml|README\.md\.gotmpl)$
         pass_filenames: false
-        
+
   - repo: https://github.com/dadav/helm-schema
     rev: 0.18.1
     hooks:
@@ -33,7 +33,7 @@ repos:
         # for all available options: helm-schema -h
         args:
           # directory to search recursively within for charts
-          - --chart-search-root=.
+          - --chart-search-root=charts/
 
           # don't analyze dependencies
           - --no-dependencies
