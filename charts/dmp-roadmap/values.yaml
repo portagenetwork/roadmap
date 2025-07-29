@@ -1,107 +1,202 @@
 ---
+# yaml-language-server: $schema=values.schema.json
 # Default values for dmp-roadmap.
 
+# @schema
+# type: string
+# @schema
 # -- Provide a name in place of `dmp-roadmap`
 nameOverride: ''
+# @schema
+# type: string
+# @schema
 # -- String to fully override `dmp-roadmap.fullname`
 fullnameOverride: ''
+# @schema
+# type: string
+# @schema
 # -- Override the namespace
 # @default -- `.Release.Namespace`
 namespaceOverride: ''
 
 ## @section Global parameters
 
+# @schema
+# type: object
+# @schema
 global:
+  # @schema
+  # type: object
+  # @schema
   # -- Global domain configuration
   # @section -- Global parameters
   domain:
+    # @schema
+    # type: string
+    # format: hostname
+    # @schema
     # -- Main domain name used throughout the chart
     # @section -- Global parameters
     name: example.com
+    # @schema
+    # type: string
+    # @schema
     # -- Application path/context (e.g., /staging)
     # @section -- Global parameters
     path: ''
+    # @schema
+    # type: string
+    # @schema
     # -- Application prefix (e.g., staging)
     # @section -- Global parameters
     prefix: ''
 
+  # @schema
+  # type: object
+  # @schema
   # -- Default image used by all components
   # @section -- Global parameters
   image:
+    # @schema
+    # type: string
+    # @schema
     # -- If defined, a repository applied to all DMP Roadmap deployments
     # @section -- Global parameters
     repository: ualbertalib/dmp_roadmap
+    # @schema
+    # type: string
+    # @schema
     # -- Overrides the global DMP Roadmap image tag whose default is the chart appVersion
     # @section -- Global parameters
     tag: ''
+    # @schema
+    # enum: [Always, IfNotPresent, Never]
+    # @schema
     # -- If defined, a imagePullPolicy applied to all DMP Roadmap deployments
     # @section -- Global parameters
     imagePullPolicy: IfNotPresent
 
+  # @schema
+  # type: object
+  # additionalProperties: true
+  # @schema
   # -- Common labels for the all resources
   # @section -- Global parameters
   additionalLabels: {}
     # app: dmp-r
 
+  # @schema
+  # type: array
+  # @schema
   # -- Secrets with credentials to pull images from a private registry
   # @section -- Global parameters
   imagePullSecrets: []
 
+  # @schema
+  # type: object
+  # additionalProperties: true
+  # @schema
   # -- Annotations for the all deployed Statefulsets
   # @section -- Global parameters
   statefulsetAnnotations: {}
 
+  # @schema
+  # type: object
+  # additionalProperties: true
+  # @schema
   # -- Annotations for the all deployed Deployments
   # @section -- Global parameters
   deploymentAnnotations: {}
 
+  # @schema
+  # type: object
+  # additionalProperties: true
+  # @schema
   # -- Annotations for the all deployed pods
   # @section -- Global parameters
   podAnnotations: {}
 
+  # @schema
+  # type: object
+  # additionalProperties: true
+  # @schema
   # -- Labels for the all deployed pods
   # @section -- Global parameters
   podLabels: {}
 
+  # @schema
+  # type: string
+  # @schema
   # -- Default priority class for all components
   # @section -- Global parameters
   priorityClassName: ''
 
+  # @schema
+  # type: array
+  # @schema
   # -- Environment variables to pass to all deployed Deployments
   # @section -- Global parameters
   env: []
 
 ## @section Application Configuration
 
+# @schema
+# type: object
+# @schema
 app:
+  # @schema
+  # type: integer
+  # minimum: 1
+  # @schema
   # -- Number of app replicas
   # @section -- Application Configuration
   replicas: 1
 
+  # @schema
+  # type: object
+  # @schema
   ## DMP Roadmap app image
   image:
+    # @schema
+    # type: string
+    # @schema
     # -- Repository to use for the DMP Roadmap app
     # @default -- global.image.repository
     # @section -- Application Configuration
     repository: ''
+    # @schema
+    # type: string
+    # @schema
     # -- Tag to use for the DMP Roadmap app
     # @default -- global.image.tag or chart appVersion
     # @section -- Application Configuration
     tag: ''
+    # @schema
+    # enum: [Always, IfNotPresent, Never, ""]
+    # @schema
     # -- Image pull policy for the DMP Roadmap app
     # @default -- global.image.imagePullPolicy
     # @section -- Application Configuration
     imagePullPolicy: ''
 
+  # @schema
+  # type: array
+  # @schema
   # -- Secrets with credentials to pull images from a private registry
   # @default -- global.imagePullSecrets
   # @section -- Application Configuration
   imagePullSecrets: []
 
+  # @schema
+  # type: array
+  # @schema
   # -- Environment variables to pass to DMP Roadmap app
   # @section -- Application Configuration
   env: []
 
+  # @schema
+  # type: array
+  # @schema
   # -- envFrom to pass to DMP Roadmap app
   # @section -- Application Configuration
   envFrom: []
@@ -109,33 +204,63 @@ app:
   #     name: config-map-name
   # - secretRef:
   #     name: secret-name
+  # @schema
+  # type: object
+  # @schema
   serviceAccount:
+    # @schema
+    # type: boolean
+    # @schema
     # -- Specifies whether a service account should be created
     # @section -- Application Configuration
     create: true
+    # @schema
+    # type: boolean
+    # @schema
     # -- Automatically mount a ServiceAccount's API credentials?
     # @section -- Application Configuration
     automount: true
+    # @schema
+    # type: object
+    # additionalProperties: true
+    # @schema
     # -- Annotations to add to the service account
     # @section -- Application Configuration
     annotations: {}
+    # @schema
+    # type: string
+    # @schema
     # -- The name of the service account to use.
     # @default -- If not set and create is true, a name is generated using the fullname template
     # @section -- Application Configuration
     name: ''
 
+  # @schema
+  # type: object
+  # additionalProperties: true
+  # @schema
   # -- Pod annotations for the app deployment
   # @section -- Application Configuration
   podAnnotations: {}
+  # @schema
+  # type: object
+  # additionalProperties: true
+  # @schema
   # -- Pod labels for the app deployment
   # @section -- Application Configuration
   podLabels: {}
 
+  # @schema
+  # type: object
+  # @schema
   # -- Pod security context for the app deployment
   # @section -- Application Configuration
   podSecurityContext:
     fsGroup: 3000
 
+  # @schema
+  # type: object
+  # @schema
   # -- Container security context for the app deployment
   # @section -- Application Configuration
   securityContext:
@@ -149,17 +274,36 @@ app:
     runAsUser: 1000
     seccompProfile:
       type: RuntimeDefault
+  # @schema
+  # type: object
+  # @schema
   service:
+    # @schema
+    # enum: [ClusterIP, NodePort, LoadBalancer, ExternalName]
+    # @schema
     # -- Service type for the app
     # @section -- Application Configuration
     type: ClusterIP
+    # @schema
+    # type: integer
+    # minimum: 1
+    # maximum: 65535
+    # @schema
     # -- Service port for the app
     # @section -- Application Configuration
     port: 8080
+    # @schema
+    # type: integer
+    # minimum: 1
+    # maximum: 65535
+    # @schema
     # -- Target port for the app container
     # @section -- Application Configuration
     targetPort: 3000
 
+  # @schema
+  # type: object
+  # @schema
   # -- Resource requests and limits for the app
   # @section -- Application Configuration
   resources:
@@ -284,6 +428,10 @@ assets:
     # -- Automatically mount a ServiceAccount's API credentials?
     # @section -- Assets Configuration
     automount: true
+    # @schema
+    # type: object
+    # additionalProperties: true
+    # @schema
     # -- Annotations to add to the service account
     # @section -- Assets Configuration
     annotations: {}
@@ -292,9 +440,17 @@ assets:
     # @section -- Assets Configuration
     name: ''
 
+  # @schema
+  # type: object
+  # additionalProperties: true
+  # @schema
   # -- Pod annotations for the assets deployment
   # @section -- Assets Configuration
   podAnnotations: {}
+  # @schema
+  # type: object
+  # additionalProperties: true
+  # @schema
   # -- Pod labels for the assets deployment
   # @section -- Assets Configuration
   podLabels: {}
@@ -409,11 +565,21 @@ assets:
 
 ## @section Ingress Configuration
 
+# @schema
+# type: object
+# @schema
 ingress:
+  # @schema
+  # type: boolean
+  # @schema
   # -- Enable or disable the ingress
   # @section -- Ingress Configuration
   enabled: false
 
+  # @schema
+  # type: object
+  # additionalProperties: true
+  # @schema
   # -- Annotations for the ingress resource
   # @section -- Ingress Configuration
   annotations: {}
@@ -422,10 +588,16 @@ ingress:
     # cert-manager.io/issuer: letsencrypt-prod
     # cert-manager.io/cluster-issuer: letsencrypt-prod
 
+  # @schema
+  # type: string
+  # @schema
   # -- Ingress class name
   # @section -- Ingress Configuration
   className: ''
 
+  # @schema
+  # type: array
+  # @schema
   # -- Hosts configuration (if empty, uses global.domain.name)
   # @section -- Ingress Configuration
   hosts: []
@@ -435,6 +607,9 @@ ingress:
   #      - path: /
   #        pathType: Prefix
 
+  # @schema
+  # type: array
+  # @schema
   # -- TLS configuration for the ingress
   # @section -- Ingress Configuration
   tls: []
@@ -442,34 +617,67 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+  # @schema
+  # type: object
+  # @schema
   # -- Automatic TLS certificate management with cert-manager
   # @section -- Ingress Configuration
   certManager:
+    # @schema
+    # type: boolean
+    # @schema
     # -- Enable automatic TLS certificate management
     # @section -- Ingress Configuration
     enabled: false
+    # @schema
+    # type: string
+    # @schema
     # -- Issuer name (for namespace-scoped issuer)
     # @section -- Ingress Configuration
     issuer: ""
+    # @schema
+    # type: string
+    # @schema
     # -- ClusterIssuer name (for cluster-scoped issuer)
     # @section -- Ingress Configuration
     clusterIssuer: ""
+    # @schema
+    # type: object
+    # additionalProperties: true
+    # @schema
     # -- Additional annotations for cert-manager
     # @section -- Ingress Configuration
     annotations: {}
 
+    # @schema
+    # type: object
+    # @schema
     # -- ACME configuration for Let's Encrypt
     # @section -- Ingress Configuration
     acme:
+      # @schema
+      # type: string
+      # format: uri
+      # @schema
       # -- ACME server URL
       # @section -- Ingress Configuration
       server: https://acme-v02.api.letsencrypt.org/directory
+      # @schema
+      # type: string
+      # format: email
+      # @schema
       # -- Email address for ACME registration
       # @section -- Ingress Configuration
       email: support@example.com
+      # @schema
+      # type: object
+      # @schema
       # -- HTTP-01 challenge configuration
       # @section -- Ingress Configuration
       http01:
+        # @schema
+        # type: boolean
+        # @schema
         # -- Enable HTTP-01 challenge
         # @section -- Ingress Configuration
         enabled: false
@@ -774,16 +982,28 @@ storage:
 
 ## @section Application Settings
 
+# @schema
+# type: object
+# @schema
 # -- Configuration values for the application
 # @section -- Application Settings
 config:
+  # @schema
+  # type: object
+  # @schema
   # -- Application and host settings
   # @section -- Application Settings
   application:
+    # @schema
+    # type: string
+    # @schema
     # -- Main hostname for the application
     # @default -- global.domain.name
     # @section -- Application Settings
     dmproadmapHost: ''
+    # @schema
+    # enum: ['true', 'false']
+    # @schema
     # -- Set to true for sandbox mode
     # @section -- Application Settings
     onSandbox: 'false'
@@ -794,6 +1014,9 @@ config:
     # @section -- Application Settings
     httpProxyPort: ''
 
+  # @schema
+  # type: object
+  # @schema
   # -- Mailer and SMTP settings
   # @section -- Application Settings
   mailer:
@@ -801,12 +1024,24 @@ config:
     # @default -- https://global.domain.name
     # @section -- Application Settings
     defaultHost: ''
+    # @schema
+    # type: string
+    # format: email
+    # @schema
     # -- From address for emails
     # @section -- Application Settings
     from: support@example.com
+    # @schema
+    # type: string
+    # format: email
+    # @schema
     # -- To address for system emails
     # @section -- Application Settings
     to: support@example.com
+    # @schema
+    # type: string
+    # format: hostname
+    # @schema
     # -- SMTP server address
     # @section -- Application Settings
     smtpAddress: smtp.example.com
@@ -816,6 +1051,11 @@ config:
     # -- SMTP domain
     # @section -- Application Settings
     smtpDomain: example.com
+    # @schema
+    # type: integer
+    # minimum: 1
+    # maximum: 65535
+    # @schema
     # -- SMTP port
     # @section -- Application Settings
     smtpPort: 587
@@ -892,21 +1132,39 @@ config:
 
 ## @section Database Configuration
 
+# @schema
+# type: object
+# @schema
 # -- External database configuration
 # @section -- Database Configuration
 externalDatabase:
+  # @schema
+  # type: string
+  # format: hostname
+  # @schema
   # -- Database host
   # @section -- Database Configuration
   host: localhost
+  # @schema
+  # type: integer
+  # minimum: 1
+  # maximum: 65535
+  # @schema
   # -- Database port
   # @section -- Database Configuration
   port: 5432
+  # @schema
+  # type: string
+  # @schema
   # -- Database name
   # @section -- Database Configuration
   database: dmp_roadmap_production
   # -- Database user
   # @section -- Database Configuration
   username: dmp_roadmap
+  # @schema
+  # type: string
+  # @schema
   # -- Database password (recommend using existingSecret instead)
   # @section -- Database Configuration
   password: ""
@@ -919,6 +1177,9 @@ externalDatabase:
 
 ## @section CronJobs Configuration
 
+# @schema
+# type: object
+# @schema
 # -- Scheduled tasks for the application
 # @section -- CronJobs Configuration
 cronjobs:
@@ -946,9 +1207,17 @@ cronjobs:
     # -- Restart policy for the job pods
     # @section -- CronJobs Configuration
     restartPolicy: OnFailure
+    # @schema
+    # type: object
+    # additionalProperties: true
+    # @schema
     # -- Pod annotations for the CronJob pods
     # @section -- CronJobs Configuration
     podAnnotations: {}
+    # @schema
+    # type: object
+    # additionalProperties: true
+    # @schema
     # -- Pod labels for the CronJob pods
     # @section -- CronJobs Configuration
     podLabels: {}
@@ -1011,9 +1280,17 @@ cronjobs:
     # -- Restart policy for the job pods
     # @section -- CronJobs Configuration
     restartPolicy: OnFailure
+    # @schema
+    # type: object
+    # additionalProperties: true
+    # @schema
     # -- Pod annotations for the CronJob pods
     # @section -- CronJobs Configuration
     podAnnotations: {}
+    # @schema
+    # type: object
+    # additionalProperties: true
+    # @schema
     # -- Pod labels for the CronJob pods
     # @section -- CronJobs Configuration
     podLabels: {}
@@ -1076,9 +1353,17 @@ cronjobs:
     # -- Restart policy for the job pods
     # @section -- CronJobs Configuration
     restartPolicy: OnFailure
+    # @schema
+    # type: object
+    # additionalProperties: true
+    # @schema
     # -- Pod annotations for the CronJob pods
     # @section -- CronJobs Configuration
     podAnnotations: {}
+    # @schema
+    # type: object
+    # additionalProperties: true
+    # @schema
     # -- Pod labels for the CronJob pods
     # @section -- CronJobs Configuration
     podLabels: {}

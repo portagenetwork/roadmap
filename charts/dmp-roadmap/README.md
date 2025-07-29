@@ -301,11 +301,11 @@ Automatically generates `values.schema.json` from `values.yaml`:
 
 ```bash
 # Install the plugin
-helm plugin install https://github.com/karuppiah7890/helm-schema
+helm plugin install https://github.com/dadav/helm-schema
 
 # Generate schema from values.yaml
 cd charts/dmp-roadmap
-helm schema values.yaml > values.schema.json
+helm-schema
 ```
 
 #### Pre-commit Hooks
