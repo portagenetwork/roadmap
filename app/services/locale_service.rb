@@ -41,6 +41,14 @@ class LocaleService
       I18n.with_locale(locale, &)
     end
 
+    # Iterates over each available locale, switching to that locale,
+    # and yields the locale to the given block for translation and processing.
+    def with_each_available_locale
+      I18n.available_locales.each do |locale|
+        I18n.with_locale(locale) { yield(locale) }
+      end
+    end
+
     # Returns an array of string elements
     # The elements are all of the available translations of `text` across all available locales
     def translations_for_all_locales(text)
