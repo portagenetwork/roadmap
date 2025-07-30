@@ -33,6 +33,14 @@ class LocaleService
       convert(string: locale, join_char: join_char)
     end
 
+    # Localizes the given block to the recipient's preferred locale.
+    # recipient may be an instance of User or Org (is able to respond to language&.abbreviation)
+    def with_preferred_locale(recipient, &)
+      # Fallback to the current locale, if necessary
+      locale = recipient&.language&.abbreviation || I18n.locale
+      I18n.with_locale(locale, &)
+    end
+
     # Returns an array of string elements
     # The elements are all of the available translations of `text` across all available locales
     def translations_for_all_locales(text)
