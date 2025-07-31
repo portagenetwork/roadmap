@@ -6,6 +6,7 @@
   inviter_name = inviter.name
   helpdesk_email = inviter.org&.helpdesk_email ||
                    Rails.configuration.x.organisation.helpdesk_email
+  last_locale = I18n.available_locales.last
 %>
 
 <% LocaleService.with_each_available_locale do |locale| %>
@@ -46,7 +47,5 @@
       }) %>
     </p>
 
-  <% unless locale == I18n.available_locales.last %>
-    <hr>
-  <% end %>
+  <% concat(tag.hr) unless locale == last_locale %>
 <% end %>

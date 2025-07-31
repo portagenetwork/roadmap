@@ -1,3 +1,5 @@
+<% last_locale = I18n.available_locales.last %>
+
 <% LocaleService.with_each_available_locale do |locale| %>
   <% @email_subject  = format(_('Query or feedback related to %{tool_name}'), tool_name: _(tool_name)) %>
   <p>
@@ -14,7 +16,6 @@
   <p>
     <%= _('You may change your notification preferences on your profile page.') %>&nbsp;<%= _('Please do not reply to this email.') %>
   </p>
-    <% unless locale == I18n.available_locales.last %>
-        <hr>
-    <% end %>
+
+  <% concat(tag.hr) unless locale == last_locale %>
 <% end %>
