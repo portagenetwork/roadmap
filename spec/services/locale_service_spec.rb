@@ -57,6 +57,43 @@ RSpec.describe LocaleService do
     end
   end
 
+  describe '#with_preferred_locale(recipient, &)' do
+    let(:recipient) { create(:user, language: @default) }
+    it "uses the recipient's preferred locale when it is different from I18n.locale. " \
+       'I18n.locale is restored after completion.' do
+      current_locale = I18n.locale
+
+      expect(I18n.locale).to_not eq(recipient.language.abbreviation)
+      described_class.with_preferred_locale(recipient) do
+        # I18n.locale == recipient.language.abbreviation within the `with_preferred_locale` block
+        expect(I18n.locale.to_s).to eq(recipient.language.abbreviation)
+      end
+      # I18n.locale is restored after the `with_preferred_locale` block
+      expect(I18n.locale).to eq(current_locale)
+    end
+
+    it "Uses I18n.locale when recipient doesn't respond to `.language.abbreviation`." do
+      current_locale = I18n.locale
+
+      described_class.with_preferred_locale(nil) do
+        # I18n.locale doesn't change when recipient.language.abbreviation is falsy
+        expect(I18n.locale).to eq(current_locale)
+      end
+    end
+  end
+
+  describe '#with_each_available_locale' do
+    it 'yields once for each available locale, and restores I18n.locale after completion.' do
+      yielded_locales = []
+
+      LocaleService.with_each_available_locale { |locale| yielded_locales << locale }
+
+      expect(yielded_locales).to eq(I18n.available_locales)
+      # Verify .count > 1 to increase our testing confidence
+      expect(yielded_locales.count).to be > 1
+    end
+  end
+
   describe '#translations_for_all_locales(string)' do
     before do
       # Override `I18n.available_locales` value to match DMP Assistant
