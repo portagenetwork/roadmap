@@ -50,6 +50,8 @@ class UserMailer < ActionMailer::Base
     @role       = role
     @user       = user
     @user_email = @user.email
+    # TODO: Should this be `@user.name(false)`? Currently, @username is just being assigned @user.email
+    # (There are several other user.name calls in UserMailer that should be verified as well)
     @username   = @user.name
     @inviter    = inviter
     @link       = url_for(action: 'show', controller: 'plans', id: @role.plan.id)
