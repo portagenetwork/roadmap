@@ -29,9 +29,8 @@ RSpec.describe 'User invitation email', type: :mailer do
       expect(mail.subject).to eq('A Data Management Plan in DMP Assistant has been shared with you / ' \
                                  "Un plan de gestion des données dans l'Assistant PGD a été partagé avec vous")
       # The body is bilingual
-      # (TODO: Fix this generic name greeting)
-      expect(mail.body).to include('Hello First Name Surname')
-      expect(mail.body).to include('Bonjour First Name Surname')
+      expect(mail.body).to include("Hello #{invitee_email}")
+      expect(mail.body).to include("Bonjour #{invitee_email}")
       # I18n.locale value remains intact
       expect(I18n.locale).to eq(original_locale)
     end
@@ -43,8 +42,6 @@ RSpec.describe 'User invitation email', type: :mailer do
     # This code is copied from RolesController#create to simulate its User.invite! behavior.
     # The controller action is large, so copying the code here is a pragmatic testing approach
     User.invite!({ email: invitee_email,
-                   firstname: _('First Name'),
-                   surname: _('Surname'),
                    org: inviter.org },
                  inviter)
   end
