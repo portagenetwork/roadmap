@@ -26,6 +26,8 @@
 
  - Fix WickedPdf deprecation warning [#1080](https://github.com/portagenetwork/roadmap/pull/1080)
 
+ - Enable translation of emails to recipient's preferred locale [#1100](https://github.com/portagenetwork/roadmap/pull/1100)
+
 ### Changed
 
  - Add `autocomplete` attribute for some fields [#1089](https://github.com/portagenetwork/roadmap/pull/1089)
