@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [4.1.1+portage-4.4.0]
 
 ### Added
 
