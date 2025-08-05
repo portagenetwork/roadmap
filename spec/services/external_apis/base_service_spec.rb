@@ -45,6 +45,12 @@ RSpec.describe ExternalApis::BaseService do
 
   context 'private methods' do
     context '#app_name' do
+      around do |example|
+        original_name = Rails.configuration.x.application[:name]
+        example.run
+        Rails.configuration.x.application[:name] = original_name
+      end
+
       it 'defaults to the Rails.application.class.name' do
         Rails.configuration.x.application.delete(:name)
         expected = ApplicationService.application_name
