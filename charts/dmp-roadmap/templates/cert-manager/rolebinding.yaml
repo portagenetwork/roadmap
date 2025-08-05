@@ -1,0 +1,26 @@
+{{- if and .Values.ingress.certManager.enabled .Values.ingress.certManager.rbac.enabled }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ .Values.ingress.certManager.rbac.roleBindingName | default (printf "%s-cert-policy" (include "dmp-roadmap.fullname" .)) }}
+  labels:
+    {{- $_ := set . "component" "cert-manager-rbac" }}
+    {{- include "dmp-roadmap.labels" . | nindent 4 }}
+  {{- with .Values.ingress.certManager.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ .Values.ingress.certManager.rbac.roleName | default (printf "%s-cert-policy" (include "dmp-roadmap.fullname" .)) }}
+subjects:
+  {{- if .Values.ingress.certManager.rbac.subjects }}
+  {{- toYaml .Values.ingress.certManager.rbac.subjects | nindent 2 }}
+  {{- else }}
+  - kind: ServiceAccount
+    name: cert-manager
+    namespace: {{ .Values.ingress.certManager.rbac.certManagerNamespace | default "cert-manager" }}
+  {{- end }}
+{{- end }}

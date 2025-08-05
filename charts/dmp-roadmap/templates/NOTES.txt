@@ -2,21 +2,74 @@
 {{- if .Values.ingress.enabled }}
 {{- range $host := .Values.ingress.hosts }}
   {{- range .paths }}
-  https://{{ $host.host }}{{ $.Values.global.domain.path }}
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host.host }}{{ .path }}
   {{- end }}
 {{- end }}
 {{- else if contains "NodePort" .Values.app.service.type }}
-  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "dmp-roadmap.fullname" . }})
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "dmp-roadmap.fullname" . }}-app)
   export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
   echo http://$NODE_IP:$NODE_PORT
 {{- else if contains "LoadBalancer" .Values.app.service.type }}
      NOTE: It may take a few minutes for the LoadBalancer IP to be available.
-           You can watch its status by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "dmp-roadmap.fullname" . }}'
-  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "dmp-roadmap.fullname" . }} --template "{{"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}"}}")
+           You can watch the status of by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "dmp-roadmap.fullname" . }}-app'
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "dmp-roadmap.fullname" . }}-app --template "{{"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}"}}")
   echo http://$SERVICE_IP:{{ .Values.app.service.port }}
 {{- else if contains "ClusterIP" .Values.app.service.type }}
-  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "dmp-roadmap.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "dmp-roadmap.name" . }},app.kubernetes.io/instance={{ .Release.Name }},app.kubernetes.io/component=app" -o jsonpath="{.items[0].metadata.name}")
   export CONTAINER_PORT=$(kubectl get pod --namespace {{ .Release.Namespace }} $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
 {{- end }}
+
+2. Database Configuration:
+  - Using external database
+  - Host: {{ .Values.externalDatabase.host }}:{{ .Values.externalDatabase.port }}
+  - Database: {{ .Values.externalDatabase.database }}
+  - Username: {{ .Values.externalDatabase.username }}
+{{- if .Values.externalDatabase.existingSecret }}
+  - Password: Stored in secret "{{ .Values.externalDatabase.existingSecret }}"
+{{- else }}
+  - Password: Please configure database credentials via secrets
+{{- end }}
+
+3. Storage Configuration:
+  - Storage type: {{ .Values.storage.type }}
+{{- if eq .Values.storage.type "pvc" }}
+  - Using PersistentVolumeClaims
+{{- if .Values.storage.pvc.storageClassName }}
+  - Storage class: {{ .Values.storage.pvc.storageClassName }}
+{{- else }}
+  - Storage class: Default cluster storage class
+{{- end }}
+{{- else if eq .Values.storage.type "cephfs" }}
+  - Using CephFS storage
+  - Monitors: {{ .Values.storage.cephfs.monitors }}
+{{- else if eq .Values.storage.type "hostPath" }}
+  - Using hostPath storage
+  - Warning: Data is tied to specific nodes
+{{- else if eq .Values.storage.type "nfs" }}
+  - Using NFS storage
+  - Server: {{ .Values.storage.nfs.server }}
+{{- else if eq .Values.storage.type "emptyDir" }}
+  - Using emptyDir storage
+  - Warning: Data will be lost when pods restart
+{{- end }}
+
+4. CronJobs:
+{{- if .Values.cronjobs.translationSync.enabled }}
+  - Translation Sync: {{ .Values.cronjobs.translationSync.schedule }}
+{{- end }}
+{{- if .Values.cronjobs.researchDataOutput.enabled }}
+  - Research Data Output: {{ .Values.cronjobs.researchDataOutput.schedule }}
+{{- end }}
+{{- if .Values.cronjobs.statBuild.enabled }}
+  - Stat Build: {{ .Values.cronjobs.statBuild.schedule }}
+{{- end }}
+
+5. Important Notes:
+  - Configure your domain in global.domain.name: {{ .Values.global.domain.name }}
+  - Configure SMTP settings in config.mailer for email functionality
+  - Set up proper secrets for database and application credentials
+  - Review and adjust resource limits based on your cluster capacity
+
+For more information, visit: {{ .Chart.Home }}

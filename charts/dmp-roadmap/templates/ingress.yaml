@@ -5,10 +5,25 @@
 {{- $appSvcPort := .Values.app.service.port -}}
 {{- $assetsSvcName := printf "%s-assets" $fullName -}}
 {{- $assetsSvcPort := .Values.assets.service.port -}}
-{{- $tlsSecretName := printf "%s-tls" $fullName -}}
+{{- $annotations := .Values.ingress.annotations -}}
+{{- $hosts := .Values.ingress.hosts -}}
+{{- if not $hosts }}
+  {{- $hosts = list (dict "host" $hostname "paths" (list (dict "path" "/" "pathType" "Prefix"))) -}}
+{{- end }}
+{{- if .Values.ingress.certManager.enabled }}
+  {{- if .Values.ingress.certManager.issuer }}
+    {{- $_ := set $annotations "cert-manager.io/issuer" .Values.ingress.certManager.issuer }}
+  {{- end }}
+  {{- if .Values.ingress.certManager.clusterIssuer }}
+    {{- $_ := set $annotations "cert-manager.io/cluster-issuer" .Values.ingress.certManager.clusterIssuer }}
+  {{- end }}
+  {{- with .Values.ingress.certManager.annotations }}
+    {{- $annotations = merge $annotations . }}
+  {{- end }}
+{{- end }}
 {{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
-  {{- if not (hasKey .Values.ingress.annotations "kubernetes.io/ingress.class") }}
-  {{- $_ := set .Values.ingress.annotations "kubernetes.io/ingress.class" .Values.ingress.className}}
+  {{- if not (hasKey $annotations "kubernetes.io/ingress.class") }}
+  {{- $_ := set $annotations "kubernetes.io/ingress.class" .Values.ingress.className}}
   {{- end }}
 {{- end }}
 {{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
@@ -24,7 +39,7 @@ metadata:
   labels:
     {{- $_ := set . "component" "ingress" }}
     {{- include "dmp-roadmap.labels" . | nindent 4 }}
-  {{- with .Values.ingress.annotations }}
+  {{- with $annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
@@ -32,12 +47,23 @@ spec:
   {{- if and .Values.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
   ingressClassName: {{ .Values.ingress.className }}
   {{- end }}
+  {{- if or .Values.ingress.tls .Values.ingress.certManager.enabled }}
   tls:
+    {{- if .Values.ingress.certManager.enabled }}
+    {{- range $hosts }}
     - hosts:
-        - {{ $hostname }}
-      secretName: {{ $tlsSecretName }}
+        - {{ .host }}
+      secretName: {{ $fullName }}-tls
+    {{- end }}
+    {{- else }}
+    {{- with .Values.ingress.tls }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- end }}
+  {{- end }}
   rules:
-    - host: {{ $hostname }}
+    {{- range $hosts }}
+    - host: {{ .host }}
       http:
         paths:
           # Route to assets deployment for /assets
@@ -55,10 +81,11 @@ spec:
               serviceName: {{ $assetsSvcName }}
               servicePort: {{ $assetsSvcPort }}
               {{- end }}
-          # Route everything else to the app
-          - path: /
-            {{- if semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion }}
-            pathType: Prefix
+          {{- range .paths }}
+          # Route configured paths to the app
+          - path: {{ .path }}
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ .pathType }}
             {{- end }}
             backend:
               {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
@@ -70,4 +97,6 @@ spec:
               serviceName: {{ $appSvcName }}
               servicePort: {{ $appSvcPort }}
               {{- end }}
+          {{- end }}
+    {{- end }}
 {{- end }}
