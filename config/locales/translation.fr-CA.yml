@@ -247,7 +247,8 @@ fr-CA:
         de votre compte.
     mailer:
       confirmation_instructions:
-        subject: Validez votre compte Assistant PGD
+        subject: Confirm your DMP Assistant account / Validez votre compte l'Assistant
+          PGD
       reset_password_instructions:
         subject: Directives pour réinitialiser le mot de passe
       unlock_instructions:

@@ -28,6 +28,8 @@
 
  - Fix WickedPdf deprecation warning [#1080](https://github.com/portagenetwork/roadmap/pull/1080)
 
+ - Enable translation of emails to recipient's preferred locale [#1100](https://github.com/portagenetwork/roadmap/pull/1100)
+
 ### Changed
 
  - Activate requests to external ROR API [#1109](https://github.com/portagenetwork/roadmap/pull/1109)

@@ -1,14 +1,21 @@
-<p>
-  <%= _('Welcome to %{tool_name}, %{username}') %{ tool_name: tool_name, username: @username } %>
-</p>
-<p>
-  <%= sanitize(_('%{tool_name} will help you to develop your Data Management Plan. If you have any queries or feedback as you use the tool, please contact us at %{helpdesk_email} or visit %{contact_us}') %{ tool_name: tool_name, helpdesk_email: mail_to( helpdesk_email, helpdesk_email, subject: @email_subject), contact_us: link_to(@contact_us, @contact_us) }) %>
-</p>
-<p>
-  <%= _('All the best') %>
-  <br />
-  <%= _('The %{tool_name} team') %{ tool_name: tool_name} %>
-</p>
-<p>
-  <%= _('You may change your notification preferences on your profile page.') %>&nbsp;<%= _('Please do not reply to this email.') %>
-</p>
+<% last_locale = I18n.available_locales.last %>
+
+<% LocaleService.with_each_available_locale do |locale| %>
+  <% @email_subject  = format(_('Query or feedback related to %{tool_name}'), tool_name: _(tool_name)) %>
+  <p>
+    <%= _('Welcome to %{tool_name}, %{username}') %{ tool_name: _(tool_name), username: @username } %>
+  </p>
+  <p>
+    <%= sanitize(_('%{tool_name} will help you to develop your Data Management Plan. If you have any queries or feedback as you use the tool, please contact us at %{helpdesk_email} or visit %{contact_us}') %{ tool_name: _(tool_name), helpdesk_email: mail_to( helpdesk_email, helpdesk_email, subject: @email_subject), contact_us: link_to(@contact_us, @contact_us) }) %>
+  </p>
+  <p>
+    <%= _('All the best') %>
+    <br />
+    <%= _('The %{tool_name} team') %{ tool_name: _(tool_name) } %>
+  </p>
+  <p>
+    <%= _('You may change your notification preferences on your profile page.') %>&nbsp;<%= _('Please do not reply to this email.') %>
+  </p>
+
+  <% concat(tag.hr) unless locale == last_locale %>
+<% end %>
