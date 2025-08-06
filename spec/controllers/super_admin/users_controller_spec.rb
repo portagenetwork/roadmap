@@ -21,19 +21,22 @@ RSpec.describe SuperAdmin::UsersController, type: :controller do
 
     context 'when unconfirming a confirmed user' do
       before do
-        user.update(confirmed_at: Time.current)
+        user.confirm
       end
 
       it 'sets confirmed_at to nil' do
+        expect(user.confirmed_at).to_not be_nil
+        expect(user.confirmation_token).to_not be_nil
         put :update, params: { id: user.id, user: { confirmed_at: '0' } }
         user.reload
         expect(user.confirmed_at).to be_nil
+        expect(user.confirmation_token).to be_nil
       end
     end
 
     context 'when update will not affect confirmation status' do
       it 'does not update confirmed_at value for an already confirmed user' do
-        # (usec: 0) removes mircoseconds to better enable comparison
+        # (usec: 0) removes microseconds to better enable comparison
         user.update(confirmed_at: Time.current.change(usec: 0))
         original_confirmed_at = user.confirmed_at
         put :update, params: { id: user.id, user: { firstname: 'NewName', confirmed_at: '1' } }
