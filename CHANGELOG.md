@@ -30,7 +30,9 @@
 
  - Enable translation of emails to recipient's preferred locale [#1100](https://github.com/portagenetwork/roadmap/pull/1100)
 
- - Use "Hello ${email}" When Addressing User in Devise invitation_instructions Email Body [1098](https://github.com/portagenetwork/roadmap/pull/1098)
+ - Use "Hello ${email}" When Addressing User in Devise invitation_instructions Email Body [#1098](https://github.com/portagenetwork/roadmap/pull/1098)
+
+ - Fix flaky tests from `application.name` overriding [#1116](https://github.com/portagenetwork/roadmap/pull/1116)
 
 ### Changed
 

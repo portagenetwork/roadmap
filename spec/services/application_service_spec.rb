@@ -4,6 +4,12 @@ require 'rails_helper'
 
 RSpec.describe ApplicationService do
   describe '#application_name' do
+    around do |example|
+      original_name = Rails.configuration.x.application[:name]
+      example.run
+      Rails.configuration.x.application[:name] = original_name
+    end
+
     it 'returns the application name defined in the dmproadmap.rb initializer' do
       Rails.configuration.x.application.name = 'Foo'
       expect(described_class.application_name).to eql('Foo')
