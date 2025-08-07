@@ -6,7 +6,9 @@
 
  - Add custom validator for `Org.feedback_msg` interpolation [#1068](https://github.com/portagenetwork/roadmap/pull/1068)
 
- - Add Functionality Allowing Super Admins to Confirm/Unconfirm User Emails [#1009](https://github.com/portagenetwork/roadmap/pull/1009)
+ - Add Functionality Allowing Super Admins to Confirm/Unconfirm User Emails
+   - [#1009](https://github.com/portagenetwork/roadmap/pull/1009)
+   - [#1120](https://github.com/portagenetwork/roadmap/pull/1120)
 
  - Added Arbutus Cloud and UVic logos to footer and added institutional sign in explanation [#1063](https://github.com/portagenetwork/roadmap/pull/1063)
 

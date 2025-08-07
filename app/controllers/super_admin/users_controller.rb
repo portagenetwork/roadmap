@@ -141,8 +141,8 @@ module SuperAdmin
     def handle_confirmed_at_param(attrs)
       # NOTE: The :confirmed_at param is controlled by a check_box in the form
       # `app/views/super_admin/users/_email_confirmation_status.html.erb`.
-      # When the checkbox is checked, Rails submits the string '1' (indicating "confirmed").
-      # When unchecked, it submits the string '0' (indicating "unconfirmed").
+      # attrs[:confirmed_at] == '1' corresponds to "confirm user"
+      # attrs[:confirmed_at] == '0' corresponds to "unconfirm user"
 
       # if an unconfirmed email is now being confirmed
       if !@user.confirmed? && attrs[:confirmed_at] == '1'
@@ -150,6 +150,8 @@ module SuperAdmin
       # elsif a confirmed email is now being unconfirmed and the user is not a super admin
       elsif @user.confirmed? && attrs[:confirmed_at] == '0' && !@user.can_super_admin?
         attrs[:confirmed_at] = nil
+        # Nullify any outstanding confirmation_token to prevent reuse
+        attrs[:confirmation_token] = nil
       else
         # else delete the param
         # (keeps value nil for unconfirmed user and maintains previous Time value for confirmed user)
