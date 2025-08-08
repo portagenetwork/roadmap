@@ -34,6 +34,8 @@
 
  - Fix flaky tests from `application.name` overriding [#1116](https://github.com/portagenetwork/roadmap/pull/1116)
 
+ - Render Correct helpdesk_email in Email Bodies [#1121](https://github.com/portagenetwork/roadmap/pull/1121)
+
 ### Changed
 
  - Activate requests to external ROR API [#1109](https://github.com/portagenetwork/roadmap/pull/1109)
