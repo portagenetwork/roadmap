@@ -3,8 +3,7 @@
   contact_us = (Rails.configuration.x.organisation.contact_us_url || contact_us_url)
   inviter =  @resource.invited_by
   inviter_name = inviter.name
-  helpdesk_email = inviter.org&.helpdesk_email ||
-                   Rails.configuration.x.organisation.helpdesk_email
+  helpdesk_email = Rails.configuration.x.organisation.helpdesk_email
   last_locale = I18n.available_locales.last
 %>
 

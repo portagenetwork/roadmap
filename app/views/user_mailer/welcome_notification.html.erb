@@ -1,4 +1,7 @@
-<% last_locale = I18n.available_locales.last %>
+<%
+  helpdesk_email = Rails.configuration.x.organisation.helpdesk_email
+  last_locale = I18n.available_locales.last
+%>
 
 <% LocaleService.with_each_available_locale do |locale| %>
   <% @email_subject  = format(_('Query or feedback related to %{tool_name}'), tool_name: _(tool_name)) %>
