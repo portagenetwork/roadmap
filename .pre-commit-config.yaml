@@ -1,0 +1,46 @@
+repos:
+  # Helm-specific hooks
+  - repo: local
+    hooks:
+      # Chart linting
+      - id: helm-lint
+        name: Helm lint charts
+        entry: bash -c 'for chart in charts/*/; do helm lint "$chart" || exit 1; done'
+        language: system
+        files: ^charts/.*\.(yaml|yml|tpl)$
+        pass_filenames: false
+
+      # Template validation
+      - id: helm-template-validate
+        name: Validate Helm templates
+        entry: bash -c 'for chart in charts/*/; do helm template test "$chart" --debug --dry-run > /dev/null || exit 1; done'
+        language: system
+        files: ^charts/.*\.(yaml|yml|tpl)$
+        pass_filenames: false
+
+      # Documentation generation
+      - id: helm-docs
+        name: Generate Helm docs
+        entry: helm-docs
+        language: system
+        files: (Chart\.yaml|values\.yaml|README\.md\.gotmpl)$
+        pass_filenames: false
+
+  - repo: https://github.com/dadav/helm-schema
+    rev: 0.18.1
+    hooks:
+      - id: helm-schema
+        # for all available options: helm-schema -h
+        args:
+          # directory to search recursively within for charts
+          - --chart-search-root=charts/
+
+          # don't analyze dependencies
+          - --no-dependencies
+
+          # add references to values file if not exist
+          - --add-schema-reference
+
+          # list of fields to skip from being created by default
+          # e.g. generate a relatively permissive schema
+          # - "--skip-auto-generation=required,additionalProperties"
