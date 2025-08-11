@@ -88,6 +88,8 @@
 
  - Bump serialize-javascript from 6.0.1 to 6.0.2 [#1015](https://github.com/portagenetwork/roadmap/pull/1015)
 
+ - Bump tmp from 0.2.3 to 0.2.4 [#1118](https://github.com/portagenetwork/roadmap/pull/1118)
+
 ## [4.1.1+portage-4.2.3] - 2024-11-20
 
 ### Added
