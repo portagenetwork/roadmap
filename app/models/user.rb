@@ -59,6 +59,15 @@ class User < ApplicationRecord
 
   extend UniqueRandom
 
+  # =============
+  # = Constants =
+  # =============
+
+  GENERIC_USER_NAME_VALUES = {
+    firstname: 'First name',
+    surname: 'Last name'
+  }.freeze
+
   ##
   # Devise
   #   Include default devise modules. Others available are:
@@ -191,8 +200,8 @@ class User < ApplicationRecord
     return user unless user.new_record?
 
     user.update!(
-      firstname: provider_data.info&.first_name.presence || _('First name'),
-      surname: provider_data.info&.last_name.presence || _('Last name'),
+      firstname: provider_data.info&.first_name.presence || _(GENERIC_USER_NAME_VALUES[:firstname]),
+      surname: provider_data.info&.last_name.presence || _(GENERIC_USER_NAME_VALUES[:surname]),
       # We don't know which organization to setup so we will use other
       org: Org.find_by(is_other: true),
       accept_terms: true,
@@ -211,6 +220,14 @@ class User < ApplicationRecord
   # ===========================
   # = Public instance methods =
   # ===========================
+
+  # Evaluates whether self.firstname and self.surname are both generic values
+  # (The user's name is compared against all translations of the generic firstname and surname)
+  def generic_name?
+    firstname_list = LocaleService.translations_for_all_locales(GENERIC_USER_NAME_VALUES[:firstname])
+    surname_list = LocaleService.translations_for_all_locales(GENERIC_USER_NAME_VALUES[:surname])
+    firstname_list.include?(firstname) && surname_list.include?(surname)
+  end
 
   # This method uses Devise's built-in handling for inactive users
   #
@@ -404,8 +421,10 @@ class User < ApplicationRecord
 
   # Override devise_invitable email title
   def deliver_invitation(options = {})
-    super(options.merge(subject: format(_('A Data Management Plan in %{application_name} has been shared with you'),
-                                        application_name: ApplicationService.application_name))
+    bilingual_subject = 'A Data Management Plan in DMP Assistant has been shared with you / ' \
+                        "Un plan de gestion des données dans l'Assistant PGD a été partagé avec vous"
+
+    super(options.merge(subject: bilingual_subject)
     )
   end
 

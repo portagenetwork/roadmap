@@ -6,7 +6,7 @@
     <%= _('You have been granted administrator privileges in %{tool_name}:') %{ tool_name: tool_name } %>
   </p>
   <p>
-    <%= sanitize(@ul_list) %>
+    <%= sanitize(privileges_list(@user)) %>
   </p>
 <% else %>
   <p>

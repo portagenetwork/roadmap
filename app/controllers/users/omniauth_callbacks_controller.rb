@@ -6,44 +6,26 @@ module Users
     include EmailConfirmationHandler
 
     # This is for the OpenidConnect CILogon
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def openid_connect
-      # First or create
       auth = request.env['omniauth.auth']
       user = User.from_omniauth(auth)
 
+      # if email missing from IdP and no user with these auth creds exists in DB
       if auth.info.email.nil? && user.nil?
-        # If email is missing we need to request the user to register with DMP.
-        # User email can be missing if the usFFvate or trusted clients only we won't get the value.
-        # User email id is one of the mandatory field which is must required.
-        flash[:notice] = _('Something went wrong, Please try signing up here.')
-        redirect_to new_user_registration_path
+        handle_missing_email_for_new_sso_entry
         return
       end
 
       identifier_scheme = IdentifierScheme.find_by(name: auth.provider)
 
-      if current_user.nil? # if user is not signed in (They clicked the SSO sign in button)
+      # if user is not signed in (They clicked the SSO sign in button)
+      if current_user.nil?
         handle_openid_connect_for_signed_out_user(user, auth, identifier_scheme)
-      elsif user.nil?
-        # we need to link
-        current_user.identifiers << Identifier.create(identifier_scheme: identifier_scheme,
-                                                      value: auth.uid,
-                                                      attrs: auth,
-                                                      identifiable: current_user)
-
-        flash[:notice] = _('Linked successfully')
-
-        redirect_to root_path
-      elsif user.id != current_user.id
-        # If a user was found but does NOT match the current user then the identifier has
-        # already been attached to another account (likely the user has 2 accounts)
-        flash[:alert] = format(_('The current %{description} iD has been already linked to a user with email %{email}'),
-                               description: identifier_scheme.description, email: user.email)
-        redirect_to edit_user_registration_path
+      # else user is signed in (They clicked the SSO link account button)
+      else
+        handle_openid_connect_for_signed_in_user(user, auth, identifier_scheme)
       end
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     def orcid
       handle_omniauth(IdentifierScheme.for_authentication.find_by(name: 'orcid'))
@@ -128,12 +110,55 @@ module Users
 
     private
 
+    def handle_missing_email_for_new_sso_entry
+      flash[:alert] = generate_flash_message_for_missing_email
+      # Signed out user stays on 'Sign in' page
+      # Signed in user stays on 'Edit profile' page
+      path = current_user.nil? ? root_path : edit_user_registration_path
+      redirect_to path
+    end
+
+    def generate_flash_message_for_missing_email
+      testidp_url = 'https://cilogon.org/testidp/'
+      helpdesk_email = Rails.configuration.x.organisation.helpdesk_email
+      msg_template =
+        if current_user.nil? # if user is signed out and attempted to sign in via SSO
+          _('Unable to sign in with the selected identity provider. Consider using an alternative sign in method, ' \
+            'like social sign on. You can verify your email is being provided here <%{url}> and contact us at the ' \
+            'help desk for further assistance. Help desk email: %{helpdesk_email}')
+        else # else user is signed in and attempted to link a new SSO account
+          _('Unable to link with the selected identity provider. Consider using an alternative sign in method, ' \
+            'like social sign on. You can verify your email is being provided here <%{url}> and contact us at the ' \
+            'help desk for further assistance. Help desk email: %{helpdesk_email}')
+        end
+
+      format(
+        msg_template,
+        url: view_context.link_to(nil, testidp_url),
+        helpdesk_email: view_context.mail_to(helpdesk_email)
+      )
+    end
+
+    def generate_flash_message_for_openid_connect_sign_in(user)
+      if user.generic_name?
+        flash[:alert] =
+          format(
+            _('Some information is missing from your profile. ' \
+              '<a href="%{link}">Click here to complete your profile</a>.'),
+            link: edit_user_registration_path
+          )
+      else
+        flash[:notice] = _('Signed in successfully.')
+      end
+    end
+
     def handle_openid_connect_for_signed_out_user(user, auth, identifier_scheme)
       # user.nil? is true if the chosen CILogon email is not currently linked to an existing user account
       user = handle_new_sso_email_for_signed_out_user(auth, identifier_scheme) if user.nil?
       # See app/controllers/concerns/email_confirmation_handler.rb
       return if confirmation_instructions_missing_and_handled?(user)
 
+      generate_flash_message_for_openid_connect_sign_in(user)
       sign_in_and_redirect user, event: :authentication
     end
 
@@ -151,6 +176,41 @@ module Users
                                               identifiable: user)
       end
       user
+    end
+
+    def handle_openid_connect_for_signed_in_user(user, auth, identifier_scheme)
+      if user.nil?
+        # We need to link the new auth creds
+        handle_new_sso_email_for_signed_in_user(auth, identifier_scheme)
+      elsif user.id != current_user.id
+        # `auth` is already linked to a different user
+        handle_conflicting_sso_email_for_signed_in_user(identifier_scheme, user)
+      else # (user.id == current_user.id)
+        # `auth` is already linked to this user.
+        handle_already_linked_credentials
+      end
+    end
+
+    def handle_new_sso_email_for_signed_in_user(auth, identifier_scheme)
+      current_user.identifiers << Identifier.create(identifier_scheme: identifier_scheme,
+                                                    value: auth.uid,
+                                                    attrs: auth,
+                                                    identifiable: current_user)
+      flash[:notice] = _('Linked successfully')
+      redirect_to edit_user_registration_path
+    end
+
+    def handle_conflicting_sso_email_for_signed_in_user(identifier_scheme, user)
+      flash[:alert] = format(_('The current %{description} iD has been already linked to a user with email %{email}'),
+                             description: identifier_scheme.description, email: user.email)
+      redirect_to edit_user_registration_path
+    end
+
+    def handle_already_linked_credentials
+      # NOTE: This scenario is not possible through normal UI interaction,
+      # but a user could trigger it by manipulating the frontend.
+      flash[:alert] = _('These credentials are already linked to your account.')
+      redirect_to edit_user_registration_path
     end
   end
 end

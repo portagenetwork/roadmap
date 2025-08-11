@@ -126,7 +126,7 @@ OmniAuth.config.test_mode = true
 OmniAuth.config.mock_auth[:openid_connect] = OmniAuth::AuthHash.new(
   {
     provider: 'openid_connect',
-    uid: '12345',
+    uid: 'https://www.cilogon.org/12345',
     info: {
       email: 'user@organization.ca',
       first_name: 'John',

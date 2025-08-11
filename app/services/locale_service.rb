@@ -33,6 +33,32 @@ class LocaleService
       convert(string: locale, join_char: join_char)
     end
 
+    # Localizes the given block to the recipient's preferred locale.
+    # recipient may be an instance of User or Org (is able to respond to language&.abbreviation)
+    def with_preferred_locale(recipient, &)
+      # Fallback to the current locale, if necessary
+      locale = recipient&.language&.abbreviation || I18n.locale
+      I18n.with_locale(locale, &)
+    end
+
+    # Iterates over each available locale, switching to that locale,
+    # and yields the locale to the given block for translation and processing.
+    def with_each_available_locale
+      I18n.available_locales.each do |locale|
+        I18n.with_locale(locale) { yield(locale) }
+      end
+    end
+
+    # Returns an array of string elements
+    # The elements are all of the available translations of `text` across all available locales
+    def translations_for_all_locales(text)
+      return [] unless text.present?
+
+      arr = I18n.available_locales.map { |locale| I18n.with_locale(locale) { _(text) } }
+      # Remove duplicates (occurs when a locale falls back to the default translation)
+      arr.uniq
+    end
+
     private
 
     def convert(string:, join_char: Rails.configuration.x.locales.gettext_join_character)

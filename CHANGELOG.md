@@ -1,14 +1,88 @@
 # Changelog
 
-## [Unreleased]
+## [4.1.1+portage-4.4.0]
+
+### Added
+
+ - Add custom validator for `Org.feedback_msg` interpolation [#1068](https://github.com/portagenetwork/roadmap/pull/1068)
+
+ - Add Functionality Allowing Super Admins to Confirm/Unconfirm User Emails
+   - [#1009](https://github.com/portagenetwork/roadmap/pull/1009)
+   - [#1120](https://github.com/portagenetwork/roadmap/pull/1120)
+
+ - Added Arbutus Cloud and UVic logos to footer and added institutional sign in explanation [#1063](https://github.com/portagenetwork/roadmap/pull/1063)
+
+ - Add handling For Additional User Scenarios in OmniauthCallbacksController [#1074](https://github.com/portagenetwork/roadmap/pull/1074)
+   - 1) Render flash message for users signing in with a "generic name"
+   - 2) Handle attempts to re-link already linked external credentials
+
+### Fixed
+
+ - Bug Fix: Address Delivery of Duplicate "contact-us" Emails [#1097](https://github.com/portagenetwork/roadmap/pull/1097)
+
+ - Fix handling of attrs[:managed] on Org updates [#1062](https://github.com/portagenetwork/roadmap/pull/1062)
+ 
+ - Add `upgrade_customization?` Check When Determining Default Template (Funder vs Org Customization) For Dropdown [#1014](https://github.com/portagenetwork/roadmap/pull/1014)
+
+ - Clean Up `/contact-us` Page, Fix "Contact us" Footer Link, and Update '/terms' Path Routing [#978](https://github.com/portagenetwork/roadmap/pull/978)
+
+ - Improve OmniauthCallbacksController Tests [#1074](https://github.com/portagenetwork/roadmap/pull/1074)
+
+ - Fix WickedPdf deprecation warning [#1080](https://github.com/portagenetwork/roadmap/pull/1080)
+
+ - Enable translation of emails to recipient's preferred locale [#1100](https://github.com/portagenetwork/roadmap/pull/1100)
+
+ - Use "Hello ${email}" When Addressing User in Devise invitation_instructions Email Body [#1098](https://github.com/portagenetwork/roadmap/pull/1098)
+
+ - Fix flaky tests from `application.name` overriding [#1116](https://github.com/portagenetwork/roadmap/pull/1116)
+
+ - Render Correct helpdesk_email in Email Bodies [#1121](https://github.com/portagenetwork/roadmap/pull/1121)
 
 ### Changed
+
+ - Activate requests to external ROR API [#1109](https://github.com/portagenetwork/roadmap/pull/1109)
+
+ - Add `autocomplete` attribute for some fields [#1089](https://github.com/portagenetwork/roadmap/pull/1089)
+
+ - Set 'noreply@dmp-pgd.ca' as envelope sender for all outgoing emails [#1088](https://github.com/portagenetwork/roadmap/pull/1088)
+
+ - Improve copying of third-party and static assets not served by the Rails asset pipeline [#980](https://github.com/portagenetwork/roadmap/pull/980)
+
+ - Delete Auto-Generated and Unused `tinymce/skins` Contents and Add to `.gitignore` [#1060](https://github.com/portagenetwork/roadmap/pull/1060)
+
+ - Changed error pages in `public/` to be consistent and include French translations
+   - [#1058](https://github.com/portagenetwork/roadmap/pull/1058)
+   - [#1083](https://github.com/portagenetwork/roadmap/pull/1083) 
+
+ - Modified "Request Feedback" Default Message and Flash Behaviour [#1064](https://github.com/portagenetwork/roadmap/pull/1064)
+
+ - Bump progress_bar from 1.3.3 to 1.3.4 [#995](https://github.com/portagenetwork/roadmap/pull/995)
+
+ - Bump guard from 2.18.0 to 2.19.1 [#994](https://github.com/portagenetwork/roadmap/pull/994)
+
+ - Update Handling For When Linking New External Credentials Without IdP email and Refactor `def openid_connect` [#1003](https://github.com/portagenetwork/roadmap/pull/1003)
+
+ - Modified MySql and Postgres workflows to only run on Pull Requests [#1073](https://github.com/portagenetwork/roadmap/pull/1073)
+
+ - Remove Outdated / Auto-Generated Translation Files from `config/locale` and Add to `.gitignore` and `.dockerignore` [#1070](https://github.com/portagenetwork/roadmap/pull/1070)
+
+ - Bump puma from 6.4.3 to 6.6.0 [#1071](https://github.com/portagenetwork/roadmap/pull/1071)
+
+ - Bump httparty from 0.22.0 to 0.23.1 [#1072](https://github.com/portagenetwork/roadmap/pull/1072)
+
+ - Update CSS / Improve Accessibility For Hyperlinks and `.sign-in` Tabs [#811](https://github.com/portagenetwork/roadmap/pull/811)
+
+ - Add ENTRYPOINT to `Dockerfile.production` / Sync and Render New Translations at Runtime [#1075](https://github.com/portagenetwork/roadmap/pull/1075)
+
+ - Modify CSV separator parameter [#1095](https://github.com/portagenetwork/roadmap/pull/1095)
 
  - chore(deps): bump nokogiri from 1.18.8 to 1.18.9 [#1103](https://github.com/portagenetwork/roadmap/pull/1103)
 
  - chore(deps): bump thor from 1.3.2 to 1.4.0 [#1104](https://github.com/portagenetwork/roadmap/pull/1104)
 
  - chore(deps): bump brace-expansion from 1.1.11 to 1.1.12 [#1105](https://github.com/portagenetwork/roadmap/pull/1105)
+
+ - chore(deps): bump tmp from 0.2.3 to 0.2.4 [#1118](https://github.com/portagenetwork/roadmap/pull/1118)
 
 ## [4.1.1+portage-4.3.0]
 
@@ -87,8 +161,6 @@
  - Bump rack from 2.2.10 to 2.2.11 [#1018](https://github.com/portagenetwork/roadmap/pull/1018)
 
  - Bump serialize-javascript from 6.0.1 to 6.0.2 [#1015](https://github.com/portagenetwork/roadmap/pull/1015)
-
- - Bump tmp from 0.2.3 to 0.2.4 [#1118](https://github.com/portagenetwork/roadmap/pull/1118)
 
 ## [4.1.1+portage-4.2.3] - 2024-11-20
 

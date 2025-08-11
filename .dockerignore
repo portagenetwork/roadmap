@@ -13,6 +13,9 @@ config/environments/*
 !config/environments/production.rb
 !config/environments/staging.rb
 config/initializers/bullet.rb
+config/locale/
+# TODO: This file can probably be ignored/deleted at some point as well.
+!config/locale/i18n_placeholders.rb
 db/diagram.svg
 db/seeds.rb
 db/seeds/
