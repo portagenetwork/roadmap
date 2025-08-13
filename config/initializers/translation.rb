@@ -31,17 +31,12 @@ TranslationIO.configure do |config|
   config.locales_path = File.join('config', 'locale')
 
   unless Rails.env.in?(%w[test development uat])
-    config.db_fields = {
-      'Theme' => %w[title description],
-      'QuestionFormat' => %w[title description],
-      'Template' => %w[title description],
-      'Phase' => %w[title description],
-      'Section' => %w[title description],
-      'Question' => %w[text default_value],
-      'Annotation' => ['text'],
-      'ResearchDomain' => ['label'],
-      'QuestionOption' => ['text']
-    }
+    config.db_query_procs = [
+      proc { Theme.pluck(:title, :description).flatten.uniq },
+      proc { QuestionFormat.pluck(:title, :description).flatten.uniq },
+      proc { ResearchDomain.pluck(:label) },
+      proc { Template.for_translation_sync }
+    ]
   end
   # Find other useful usage information here:
   # https://github.com/translation/rails#readme
