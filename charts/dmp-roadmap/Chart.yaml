@@ -2,8 +2,9 @@
 # SPDX-License-Identifier: MIT
 apiVersion: v2
 name: dmp-roadmap
-description: Helm chart for DMP Roadmap - A Data Management Planning tool that helps researchers and organizations create,
-  share, and update data management plans
+description: >-
+  Helm chart for DMP Roadmap - A Data Management Planning tool that helps
+  researchers and organizations create, share, and update data management plans
 
 # A chart can be either an 'application' or a 'library' chart.
 #

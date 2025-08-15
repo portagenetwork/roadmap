@@ -15,10 +15,11 @@ spec:
       {{- include "dmp-roadmap.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.app.podAnnotations }}
       annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/app/configmap.yaml") . | sha256sum }}
+        {{- with .Values.app.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- end }}
       labels:
         {{- $_ := set . "component" "app" }}
         {{- include "dmp-roadmap.labels" . | nindent 8 }}
@@ -38,8 +39,6 @@ spec:
         {{- toYaml .Values.app.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          # Use Puma directly as shown in the Dockerfile
-          command: ["bundle", "exec", "rails", "s"]
           image: "{{ .Values.app.image.repository | default .Values.global.image.repository }}:{{ .Values.app.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.app.image.imagePullPolicy }}
           env:
@@ -79,12 +78,7 @@ spec:
           resources:
             {{- toYaml .Values.app.resources | nindent 12 }}
           volumeMounts:
-            {{- if eq .Values.storage.type "cephfs" }}
-            {{- range $name, $volume := .Values.storage.cephfs.volumes }}
-            - name: {{ $name }}
-              mountPath: {{ $volume.mountPath }}
-            {{- end }}
-            {{- end }}
+            {{- include "dmp-roadmap.volumeMounts" . | nindent 12 }}
             # Required tmp directories for Rails
             - name: rails-tmp
               mountPath: /usr/src/app/tmp
@@ -92,14 +86,7 @@ spec:
             {{- toYaml . | nindent 12 }}
             {{- end }}
       volumes:
-        {{- if eq .Values.storage.type "cephfs" }}
-        # When using CephFS storage, mount persistent volumes for locale and uploads
-        {{- range $name, $volume := .Values.storage.cephfs.volumes }}
-        - name: {{ $name }}
-          persistentVolumeClaim:
-            claimName: {{ include "dmp-roadmap.fullname" $ }}-{{ $name }}
-        {{- end }}
-        {{- end }}
+        {{- include "dmp-roadmap.volumes" . | nindent 8 }}
         # Tmp directories required for Rails
         - name: rails-tmp
           ephemeral:

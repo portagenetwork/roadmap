@@ -1,0 +1,25 @@
+{{- if eq .Values.storage.type "pvc" }}
+{{- range $name, $volume := .Values.storage.pvc.volumes }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "dmp-roadmap.fullname" $ }}-{{ $name }}
+  labels:
+    {{- include "dmp-roadmap.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: storage-{{ $name }}
+spec:
+  accessModes:
+    {{- if $volume.accessModes }}
+    {{- toYaml $volume.accessModes | nindent 4 }}
+    {{- else }}
+    {{- toYaml $.Values.storage.pvc.accessModes | nindent 4 }}
+    {{- end }}
+  {{- if $.Values.storage.pvc.storageClassName }}
+  storageClassName: {{ $.Values.storage.pvc.storageClassName }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ $volume.size }}
+{{- end }}
+{{- end }}
