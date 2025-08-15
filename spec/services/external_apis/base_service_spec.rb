@@ -62,6 +62,11 @@ RSpec.describe ExternalApis::BaseService do
       end
     end
     context '#app_email' do
+      around do |example|
+        original_helpdesk_email = Rails.configuration.x.organisation[:helpdesk_email]
+        example.run
+        Rails.configuration.x.organisation[:helpdesk_email] = original_helpdesk_email
+      end
       it 'defaults to the contact_us url' do
         Rails.configuration.x.organisation.delete(:helpdesk_email)
         expected = Rails.application.routes.url_helpers.contact_us_url
