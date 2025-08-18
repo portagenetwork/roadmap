@@ -81,7 +81,7 @@ GEM
       rake (>= 10.4, < 14.0)
     annotate_gem (0.0.14)
       bundler (>= 1.1)
-    api-pagination (5.0.0)
+    api-pagination (6.0.0)
     ast (2.4.2)
     attr_required (1.0.2)
     autoprefixer-rails (10.4.19.0)
