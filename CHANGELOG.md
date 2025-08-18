@@ -3,7 +3,7 @@
 ## [Unreleased]
 
 ### Added 
-
+ - - Enable session timeout after inactivity [#1128](https://github.com/portagenetwork/roadmap/pull/1128)
 
 ### Fixed
  - Fix Translation of Permissions in Email [#1123](https://github.com/portagenetwork/roadmap/pull/1123)
@@ -13,6 +13,7 @@
 
 
 ### Dependency Updates
+
 
 ## [4.1.1+portage-4.4.0]
 
