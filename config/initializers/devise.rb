@@ -171,9 +171,10 @@ Devise.setup do |config|
   # config.email_regexp = /\A[^@]+@[^@]+\z/
 
   # ==> Configuration for :timeoutable
-  # The time you want to timeout the user session without activity. After this
-  # time the user will be asked for credentials again. Default is 30 minutes.
-  config.timeout_in = 3.hours
+  # The length of time of inactivity allowed. After this, the user will be
+  # signed out and asked for credentials again. Default is 30 minutes.
+  # It is being configured to 90 minutes.
+  config.timeout_in = 90.minutes
 
   # If true, expires auth token on session timeout.
   # config.expire_auth_token_on_timeout = false
