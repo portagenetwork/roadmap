@@ -1,5 +1,20 @@
 # Changelog
 
+## [Unreleased]
+
+## Added 
+
+ - Enable session timeout after inactivity [#1128](https://github.com/portagenetwork/roadmap/pull/1128)
+
+## Fixed
+
+
+## Changed
+
+
+## Dependency Updates
+
+
 ## [4.1.1+portage-4.4.0]
 
 ### Added
