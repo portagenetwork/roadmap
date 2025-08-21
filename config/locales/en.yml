@@ -3,6 +3,7 @@ en:
   activerecord:
     errors:
       messages:
+        complexity: "complexity requirement not met."
         record_invalid: 'Validation failed: %{errors}'
         restrict_dependent_destroy:
           has_one: Cannot delete record because a dependent %{record} exists
