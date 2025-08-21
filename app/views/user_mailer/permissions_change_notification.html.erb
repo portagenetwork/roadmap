@@ -1,8 +1,8 @@
+<% messaging = role_text(@role) %>
+
 <p>
   <%= _('Hello %{recepientname}') %{ recepientname: @recepient.name } %>
 </p>
-
-<% messaging = role_text(@role) %>
 
 <p>
   <%= _('Your permissions relating to %{plan_title} have changed. You now have %{type} access. This means you can %{placeholder1} %{placeholder2}') % {
