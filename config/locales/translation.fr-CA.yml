@@ -136,6 +136,7 @@ fr-CA:
   activerecord:
     errors:
       messages:
+        complexity: ' Le mot de passe ne respecte pas les exigences de complexité.'
         record_invalid: 'La validation a échoué : %{errors}'
         restrict_dependent_destroy:
           has_one: Vous ne pouvez pas supprimer l'enregistrement car un(e) %{record}
