@@ -17,7 +17,7 @@ module SessionsHelper
     visit root_path
     within '#sign-in-form' do
       fill_in 'Email', with: user.email
-      fill_in 'Password', with: user.password.presence || 'password'
+      fill_in 'Password', with: user.password.presence || 'StrongP@ssw0rd!@$%#'
       click_button 'Sign in'
     end
   end
