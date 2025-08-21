@@ -586,4 +586,55 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe '#password_complexity' do
+    let(:user) { build(:user, password: password) }
+
+    subject { user.valid? }
+
+    context 'with password with valid complexity' do
+      let(:password) { 'StrongP@ssw0rd!@$%#' }
+
+      it 'accepts strong password' do
+        subject
+        expect(user.errors[:password]).to be_empty
+      end
+    end
+
+    context 'without uppercase letter' do
+      let(:password) { 'invalid1@password' }
+
+      it 'adds complexity error' do
+        subject
+        expect(user.errors[:password]).to include(I18n.t('activerecord.errors.messages.complexity'))
+      end
+    end
+
+    context 'without lowercase letter' do
+      let(:password) { 'INVALID1@' }
+
+      it 'adds complexity error' do
+        subject
+        expect(user.errors[:password]).to include(I18n.t('activerecord.errors.messages.complexity'))
+      end
+    end
+
+    context 'without digit' do
+      let(:password) { 'Invalid@pass' }
+
+      it 'adds complexity error' do
+        subject
+        expect(user.errors[:password]).to include(I18n.t('activerecord.errors.messages.complexity'))
+      end
+    end
+
+    context 'without special character' do
+      let(:password) { 'Invalid1pass' }
+
+      it 'adds complexity error' do
+        subject
+        expect(user.errors[:password]).to include(I18n.t('activerecord.errors.messages.complexity'))
+      end
+    end
+  end
 end
