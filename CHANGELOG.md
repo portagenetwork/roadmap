@@ -6,8 +6,10 @@
 
  - Enable session timeout after inactivity [#1128](https://github.com/portagenetwork/roadmap/pull/1128)
 
+
 ## Fixed
 
+ - Fix Translation of Permissions in Email [#1123](https://github.com/portagenetwork/roadmap/pull/1123)
 
 ## Changed
 
@@ -90,6 +92,14 @@
  - Add ENTRYPOINT to `Dockerfile.production` / Sync and Render New Translations at Runtime [#1075](https://github.com/portagenetwork/roadmap/pull/1075)
 
  - Modify CSV separator parameter [#1095](https://github.com/portagenetwork/roadmap/pull/1095)
+
+ - chore(deps): bump nokogiri from 1.18.8 to 1.18.9 [#1103](https://github.com/portagenetwork/roadmap/pull/1103)
+
+ - chore(deps): bump thor from 1.3.2 to 1.4.0 [#1104](https://github.com/portagenetwork/roadmap/pull/1104)
+
+ - chore(deps): bump brace-expansion from 1.1.11 to 1.1.12 [#1105](https://github.com/portagenetwork/roadmap/pull/1105)
+
+ - chore(deps): bump tmp from 0.2.3 to 0.2.4 [#1118](https://github.com/portagenetwork/roadmap/pull/1118)
 
 ## [4.1.1+portage-4.3.0]
 

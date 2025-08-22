@@ -1,0 +1,3436 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "properties": {
+    "app": {
+      "additionalProperties": false,
+      "properties": {
+        "affinity": {
+          "additionalProperties": false,
+          "description": "Affinity settings for the app deployment",
+          "required": [],
+          "title": "affinity",
+          "type": "object"
+        },
+        "autoscaling": {
+          "additionalProperties": false,
+          "description": "Autoscaling configuration for the app",
+          "properties": {
+            "enabled": {
+              "default": false,
+              "description": "Enable autoscaling for the app",
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "maxReplicas": {
+              "default": 100,
+              "description": "Maximum number of replicas",
+              "required": [],
+              "title": "maxReplicas",
+              "type": "integer"
+            },
+            "minReplicas": {
+              "default": 1,
+              "description": "Minimum number of replicas",
+              "required": [],
+              "title": "minReplicas",
+              "type": "integer"
+            },
+            "targetCPUUtilizationPercentage": {
+              "default": 80,
+              "description": "Target CPU utilization percentage",
+              "required": [],
+              "title": "targetCPUUtilizationPercentage",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "enabled",
+            "minReplicas",
+            "maxReplicas",
+            "targetCPUUtilizationPercentage"
+          ],
+          "title": "autoscaling",
+          "type": "object"
+        },
+        "env": {
+          "description": "Environment variables to pass to DMP Roadmap app",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "env",
+          "type": "array"
+        },
+        "envFrom": {
+          "description": "envFrom to pass to DMP Roadmap app",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "envFrom",
+          "type": "array"
+        },
+        "image": {
+          "additionalProperties": false,
+          "description": "# DMP Roadmap app image",
+          "properties": {
+            "imagePullPolicy": {
+              "default": "",
+              "description": "Image pull policy for the DMP Roadmap app",
+              "enum": [
+                "Always",
+                "IfNotPresent",
+                "Never",
+                ""
+              ],
+              "required": [],
+              "title": "imagePullPolicy"
+            },
+            "repository": {
+              "default": "",
+              "description": "Repository to use for the DMP Roadmap app",
+              "required": [],
+              "title": "repository",
+              "type": "string"
+            },
+            "tag": {
+              "default": "",
+              "description": "Tag to use for the DMP Roadmap app",
+              "required": [],
+              "title": "tag",
+              "type": "string"
+            }
+          },
+          "required": [],
+          "title": "image",
+          "type": "object"
+        },
+        "imagePullSecrets": {
+          "description": "Secrets with credentials to pull images from a private registry",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "imagePullSecrets",
+          "type": "array"
+        },
+        "livenessProbe": {
+          "additionalProperties": false,
+          "description": "Liveness probe configuration for the app",
+          "properties": {
+            "failureThreshold": {
+              "default": 6,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "httpGet": {
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "default": "/api/v1/heartbeat",
+                  "required": [],
+                  "title": "path",
+                  "type": "string"
+                },
+                "port": {
+                  "default": "http",
+                  "required": [],
+                  "title": "port",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "port"
+              ],
+              "title": "httpGet",
+              "type": "object"
+            },
+            "initialDelaySeconds": {
+              "default": 120,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 20,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "successThreshold": {
+              "default": 1,
+              "required": [],
+              "title": "successThreshold",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 10,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "httpGet",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold",
+            "successThreshold"
+          ],
+          "title": "livenessProbe",
+          "type": "object"
+        },
+        "nodeSelector": {
+          "additionalProperties": false,
+          "description": "Node selector for the app deployment",
+          "required": [],
+          "title": "nodeSelector",
+          "type": "object"
+        },
+        "podAnnotations": {
+          "additionalProperties": true,
+          "description": "Pod annotations for the app deployment",
+          "required": [],
+          "title": "podAnnotations",
+          "type": "object"
+        },
+        "podLabels": {
+          "additionalProperties": true,
+          "description": "Pod labels for the app deployment",
+          "required": [],
+          "title": "podLabels",
+          "type": "object"
+        },
+        "podSecurityContext": {
+          "additionalProperties": false,
+          "description": "Pod security context for the app deployment",
+          "properties": {
+            "fsGroup": {
+              "default": 3000,
+              "required": [],
+              "title": "fsGroup",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "fsGroup"
+          ],
+          "title": "podSecurityContext",
+          "type": "object"
+        },
+        "readinessProbe": {
+          "additionalProperties": false,
+          "description": "Readiness probe configuration for the app",
+          "properties": {
+            "failureThreshold": {
+              "default": 6,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "httpGet": {
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "default": "/api/v1/heartbeat",
+                  "required": [],
+                  "title": "path",
+                  "type": "string"
+                },
+                "port": {
+                  "default": "http",
+                  "required": [],
+                  "title": "port",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "port"
+              ],
+              "title": "httpGet",
+              "type": "object"
+            },
+            "initialDelaySeconds": {
+              "default": 60,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 20,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "successThreshold": {
+              "default": 1,
+              "required": [],
+              "title": "successThreshold",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 10,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "httpGet",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold",
+            "successThreshold"
+          ],
+          "title": "readinessProbe",
+          "type": "object"
+        },
+        "replicas": {
+          "default": 1,
+          "description": "Number of app replicas",
+          "minimum": 1,
+          "required": [],
+          "title": "replicas",
+          "type": "integer"
+        },
+        "resources": {
+          "additionalProperties": false,
+          "description": "Resource requests and limits for the app",
+          "properties": {
+            "limits": {
+              "additionalProperties": false,
+              "properties": {
+                "cpu": {
+                  "default": "500m",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "1Gi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "limits",
+              "type": "object"
+            },
+            "requests": {
+              "additionalProperties": false,
+              "properties": {
+                "cpu": {
+                  "default": "200m",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "512Mi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "requests",
+              "type": "object"
+            }
+          },
+          "required": [
+            "requests",
+            "limits"
+          ],
+          "title": "resources",
+          "type": "object"
+        },
+        "securityContext": {
+          "additionalProperties": false,
+          "description": "Container security context for the app deployment",
+          "properties": {
+            "allowPrivilegeEscalation": {
+              "default": false,
+              "required": [],
+              "title": "allowPrivilegeEscalation",
+              "type": "boolean"
+            },
+            "capabilities": {
+              "additionalProperties": false,
+              "properties": {
+                "drop": {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "required": [],
+                        "type": "string"
+                      }
+                    ],
+                    "required": []
+                  },
+                  "required": [],
+                  "title": "drop",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "drop"
+              ],
+              "title": "capabilities",
+              "type": "object"
+            },
+            "privileged": {
+              "default": false,
+              "required": [],
+              "title": "privileged",
+              "type": "boolean"
+            },
+            "readOnlyRootFilesystem": {
+              "default": true,
+              "required": [],
+              "title": "readOnlyRootFilesystem",
+              "type": "boolean"
+            },
+            "runAsNonRoot": {
+              "default": true,
+              "required": [],
+              "title": "runAsNonRoot",
+              "type": "boolean"
+            },
+            "runAsUser": {
+              "default": 1000,
+              "required": [],
+              "title": "runAsUser",
+              "type": "integer"
+            },
+            "seccompProfile": {
+              "additionalProperties": false,
+              "properties": {
+                "type": {
+                  "default": "RuntimeDefault",
+                  "required": [],
+                  "title": "type",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "title": "seccompProfile",
+              "type": "object"
+            }
+          },
+          "required": [
+            "allowPrivilegeEscalation",
+            "capabilities",
+            "privileged",
+            "readOnlyRootFilesystem",
+            "runAsNonRoot",
+            "runAsUser",
+            "seccompProfile"
+          ],
+          "title": "securityContext",
+          "type": "object"
+        },
+        "service": {
+          "additionalProperties": false,
+          "properties": {
+            "port": {
+              "default": 8080,
+              "description": "Service port for the app",
+              "maximum": 65535,
+              "minimum": 1,
+              "required": [],
+              "title": "port",
+              "type": "integer"
+            },
+            "targetPort": {
+              "default": 3000,
+              "description": "Target port for the app container",
+              "maximum": 65535,
+              "minimum": 1,
+              "required": [],
+              "title": "targetPort",
+              "type": "integer"
+            },
+            "type": {
+              "default": "ClusterIP",
+              "description": "Service type for the app",
+              "enum": [
+                "ClusterIP",
+                "NodePort",
+                "LoadBalancer",
+                "ExternalName"
+              ],
+              "required": [],
+              "title": "type"
+            }
+          },
+          "required": [],
+          "title": "service",
+          "type": "object"
+        },
+        "serviceAccount": {
+          "additionalProperties": false,
+          "description": "- configMapRef:\n    name: config-map-name\n- secretRef:\n    name: secret-name",
+          "properties": {
+            "annotations": {
+              "additionalProperties": true,
+              "description": "Annotations to add to the service account",
+              "required": [],
+              "title": "annotations",
+              "type": "object"
+            },
+            "automount": {
+              "default": true,
+              "description": "Automatically mount a ServiceAccount's API credentials?",
+              "required": [],
+              "title": "automount",
+              "type": "boolean"
+            },
+            "create": {
+              "default": true,
+              "description": "Specifies whether a service account should be created",
+              "required": [],
+              "title": "create",
+              "type": "boolean"
+            },
+            "name": {
+              "default": "",
+              "description": "The name of the service account to use.",
+              "required": [],
+              "title": "name",
+              "type": "string"
+            }
+          },
+          "required": [],
+          "title": "serviceAccount",
+          "type": "object"
+        },
+        "tolerations": {
+          "description": "Tolerations for the app deployment",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "tolerations",
+          "type": "array"
+        },
+        "volumeMounts": {
+          "description": "Additional volume mounts for the app deployment",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "volumeMounts",
+          "type": "array"
+        },
+        "volumes": {
+          "description": "Additional volumes for the app deployment",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "volumes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "livenessProbe",
+        "readinessProbe",
+        "autoscaling",
+        "volumes",
+        "volumeMounts",
+        "nodeSelector",
+        "tolerations",
+        "affinity"
+      ],
+      "title": "app",
+      "type": "object"
+    },
+    "assets": {
+      "additionalProperties": false,
+      "description": "#",
+      "properties": {
+        "affinity": {
+          "additionalProperties": false,
+          "description": "Affinity settings for the assets deployment",
+          "required": [],
+          "title": "affinity",
+          "type": "object"
+        },
+        "autoscaling": {
+          "additionalProperties": false,
+          "description": "Autoscaling configuration for the assets",
+          "properties": {
+            "enabled": {
+              "default": false,
+              "description": "Enable autoscaling for the assets",
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "maxReplicas": {
+              "default": 100,
+              "description": "Maximum number of replicas",
+              "required": [],
+              "title": "maxReplicas",
+              "type": "integer"
+            },
+            "minReplicas": {
+              "default": 1,
+              "description": "Minimum number of replicas",
+              "required": [],
+              "title": "minReplicas",
+              "type": "integer"
+            },
+            "targetCPUUtilizationPercentage": {
+              "default": 80,
+              "description": "Target CPU utilization percentage",
+              "required": [],
+              "title": "targetCPUUtilizationPercentage",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "enabled",
+            "minReplicas",
+            "maxReplicas",
+            "targetCPUUtilizationPercentage"
+          ],
+          "title": "autoscaling",
+          "type": "object"
+        },
+        "env": {
+          "description": "Environment variables to pass to DMP Roadmap assets",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "env",
+          "type": "array"
+        },
+        "envFrom": {
+          "description": "envFrom to pass to DMP Roadmap assets",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "envFrom",
+          "type": "array"
+        },
+        "image": {
+          "additionalProperties": false,
+          "description": "# DMP Roadmap assets image",
+          "properties": {
+            "imagePullPolicy": {
+              "default": "",
+              "description": "Image pull policy for the DMP Roadmap assets",
+              "required": [],
+              "title": "imagePullPolicy",
+              "type": "string"
+            },
+            "repository": {
+              "default": "",
+              "description": "Repository to use for the DMP Roadmap assets",
+              "required": [],
+              "title": "repository",
+              "type": "string"
+            },
+            "tag": {
+              "default": "",
+              "description": "Tag to use for the DMP Roadmap assets",
+              "required": [],
+              "title": "tag",
+              "type": "string"
+            }
+          },
+          "required": [
+            "repository",
+            "tag",
+            "imagePullPolicy"
+          ],
+          "title": "image",
+          "type": "object"
+        },
+        "imagePullSecrets": {
+          "description": "Secrets with credentials to pull images from a private registry",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "imagePullSecrets",
+          "type": "array"
+        },
+        "livenessProbe": {
+          "additionalProperties": false,
+          "description": "Liveness probe configuration for the assets",
+          "properties": {
+            "failureThreshold": {
+              "default": 6,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "httpGet": {
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "default": "/healthz",
+                  "required": [],
+                  "title": "path",
+                  "type": "string"
+                },
+                "port": {
+                  "default": "http",
+                  "required": [],
+                  "title": "port",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "port"
+              ],
+              "title": "httpGet",
+              "type": "object"
+            },
+            "initialDelaySeconds": {
+              "default": 120,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 20,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "successThreshold": {
+              "default": 1,
+              "required": [],
+              "title": "successThreshold",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 10,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "httpGet",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold",
+            "successThreshold"
+          ],
+          "title": "livenessProbe",
+          "type": "object"
+        },
+        "nodeSelector": {
+          "additionalProperties": false,
+          "description": "Node selector for the assets deployment",
+          "required": [],
+          "title": "nodeSelector",
+          "type": "object"
+        },
+        "podAnnotations": {
+          "additionalProperties": true,
+          "description": "Pod annotations for the assets deployment",
+          "required": [],
+          "title": "podAnnotations",
+          "type": "object"
+        },
+        "podLabels": {
+          "additionalProperties": true,
+          "description": "Pod labels for the assets deployment",
+          "required": [],
+          "title": "podLabels",
+          "type": "object"
+        },
+        "podSecurityContext": {
+          "additionalProperties": false,
+          "description": "Pod security context for the assets deployment",
+          "properties": {
+            "fsGroup": {
+              "default": 3000,
+              "required": [],
+              "title": "fsGroup",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "fsGroup"
+          ],
+          "title": "podSecurityContext",
+          "type": "object"
+        },
+        "readinessProbe": {
+          "additionalProperties": false,
+          "description": "Readiness probe configuration for the assets",
+          "properties": {
+            "failureThreshold": {
+              "default": 6,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "httpGet": {
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "default": "/healthz",
+                  "required": [],
+                  "title": "path",
+                  "type": "string"
+                },
+                "port": {
+                  "default": "http",
+                  "required": [],
+                  "title": "port",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "port"
+              ],
+              "title": "httpGet",
+              "type": "object"
+            },
+            "initialDelaySeconds": {
+              "default": 60,
+              "required": [],
+              "title": "initialDelaySeconds",
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "default": 20,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "successThreshold": {
+              "default": 1,
+              "required": [],
+              "title": "successThreshold",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 10,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "httpGet",
+            "initialDelaySeconds",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold",
+            "successThreshold"
+          ],
+          "title": "readinessProbe",
+          "type": "object"
+        },
+        "replicas": {
+          "default": 1,
+          "description": "Number of assets replicas",
+          "required": [],
+          "title": "replicas",
+          "type": "integer"
+        },
+        "resources": {
+          "additionalProperties": false,
+          "description": "Resource requests and limits for the assets",
+          "properties": {
+            "limits": {
+              "additionalProperties": false,
+              "properties": {
+                "cpu": {
+                  "default": "100m",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "128Mi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "limits",
+              "type": "object"
+            },
+            "requests": {
+              "additionalProperties": false,
+              "properties": {
+                "cpu": {
+                  "default": "100m",
+                  "required": [],
+                  "title": "cpu",
+                  "type": "string"
+                },
+                "memory": {
+                  "default": "128Mi",
+                  "required": [],
+                  "title": "memory",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "cpu",
+                "memory"
+              ],
+              "title": "requests",
+              "type": "object"
+            }
+          },
+          "required": [
+            "requests",
+            "limits"
+          ],
+          "title": "resources",
+          "type": "object"
+        },
+        "securityContext": {
+          "additionalProperties": false,
+          "description": "Container security context for the assets deployment",
+          "properties": {
+            "allowPrivilegeEscalation": {
+              "default": false,
+              "required": [],
+              "title": "allowPrivilegeEscalation",
+              "type": "boolean"
+            },
+            "capabilities": {
+              "additionalProperties": false,
+              "properties": {
+                "drop": {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "required": [],
+                        "type": "string"
+                      }
+                    ],
+                    "required": []
+                  },
+                  "required": [],
+                  "title": "drop",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "drop"
+              ],
+              "title": "capabilities",
+              "type": "object"
+            },
+            "privileged": {
+              "default": false,
+              "required": [],
+              "title": "privileged",
+              "type": "boolean"
+            },
+            "readOnlyRootFilesystem": {
+              "default": true,
+              "required": [],
+              "title": "readOnlyRootFilesystem",
+              "type": "boolean"
+            },
+            "runAsNonRoot": {
+              "default": true,
+              "required": [],
+              "title": "runAsNonRoot",
+              "type": "boolean"
+            },
+            "runAsUser": {
+              "default": 1000,
+              "required": [],
+              "title": "runAsUser",
+              "type": "integer"
+            },
+            "seccompProfile": {
+              "additionalProperties": false,
+              "properties": {
+                "type": {
+                  "default": "RuntimeDefault",
+                  "required": [],
+                  "title": "type",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "title": "seccompProfile",
+              "type": "object"
+            }
+          },
+          "required": [
+            "allowPrivilegeEscalation",
+            "capabilities",
+            "privileged",
+            "readOnlyRootFilesystem",
+            "runAsNonRoot",
+            "runAsUser",
+            "seccompProfile"
+          ],
+          "title": "securityContext",
+          "type": "object"
+        },
+        "service": {
+          "additionalProperties": false,
+          "properties": {
+            "port": {
+              "default": 8080,
+              "description": "Service port for the assets",
+              "required": [],
+              "title": "port",
+              "type": "integer"
+            },
+            "targetPort": {
+              "default": 8080,
+              "description": "Target port for the assets container",
+              "required": [],
+              "title": "targetPort",
+              "type": "integer"
+            },
+            "type": {
+              "default": "ClusterIP",
+              "description": "Service type for the assets",
+              "required": [],
+              "title": "type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "port",
+            "targetPort"
+          ],
+          "title": "service",
+          "type": "object"
+        },
+        "serviceAccount": {
+          "additionalProperties": false,
+          "description": "- configMapRef:\n    name: config-map-name\n- secretRef:\n    name: secret-name",
+          "properties": {
+            "annotations": {
+              "additionalProperties": true,
+              "description": "Annotations to add to the service account",
+              "required": [],
+              "title": "annotations",
+              "type": "object"
+            },
+            "automount": {
+              "default": true,
+              "description": "Automatically mount a ServiceAccount's API credentials?",
+              "required": [],
+              "title": "automount",
+              "type": "boolean"
+            },
+            "create": {
+              "default": true,
+              "description": "Specifies whether a service account should be created",
+              "required": [],
+              "title": "create",
+              "type": "boolean"
+            },
+            "name": {
+              "default": "",
+              "description": "The name of the service account to use.",
+              "required": [],
+              "title": "name",
+              "type": "string"
+            }
+          },
+          "required": [
+            "create",
+            "automount",
+            "name"
+          ],
+          "title": "serviceAccount",
+          "type": "object"
+        },
+        "tolerations": {
+          "description": "Tolerations for the assets deployment",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "tolerations",
+          "type": "array"
+        },
+        "volumeMounts": {
+          "description": "Additional volume mounts for the assets deployment",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "volumeMounts",
+          "type": "array"
+        },
+        "volumes": {
+          "description": "Additional volumes for the assets deployment",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "volumes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "replicas",
+        "image",
+        "imagePullSecrets",
+        "env",
+        "envFrom",
+        "serviceAccount",
+        "podSecurityContext",
+        "securityContext",
+        "service",
+        "resources",
+        "livenessProbe",
+        "readinessProbe",
+        "autoscaling",
+        "volumes",
+        "volumeMounts",
+        "nodeSelector",
+        "tolerations",
+        "affinity"
+      ],
+      "title": "assets",
+      "type": "object"
+    },
+    "config": {
+      "additionalProperties": false,
+      "description": "Configuration values for the application",
+      "properties": {
+        "application": {
+          "additionalProperties": false,
+          "description": "Application and host settings",
+          "properties": {
+            "dmproadmapHost": {
+              "default": "",
+              "description": "Main hostname for the application",
+              "required": [],
+              "title": "dmproadmapHost",
+              "type": "string"
+            },
+            "httpProxy": {
+              "default": "",
+              "description": "HTTP proxy if needed",
+              "required": [],
+              "title": "httpProxy",
+              "type": "string"
+            },
+            "httpProxyPort": {
+              "default": "",
+              "description": "HTTP proxy port if needed",
+              "required": [],
+              "title": "httpProxyPort",
+              "type": "string"
+            },
+            "onSandbox": {
+              "default": "false",
+              "description": "Set to true for sandbox mode",
+              "enum": [
+                "true",
+                "false"
+              ],
+              "required": [],
+              "title": "onSandbox"
+            }
+          },
+          "required": [
+            "httpProxy",
+            "httpProxyPort"
+          ],
+          "title": "application",
+          "type": "object"
+        },
+        "environment": {
+          "additionalProperties": false,
+          "description": "Environment-specific settings",
+          "properties": {
+            "assetHost": {
+              "default": "",
+              "description": "Asset host",
+              "required": [],
+              "title": "assetHost",
+              "type": "string"
+            },
+            "baseUrl": {
+              "default": "",
+              "description": "Base URL",
+              "required": [],
+              "title": "baseUrl",
+              "type": "string"
+            },
+            "bundlePath": {
+              "default": "vendor/bundle",
+              "description": "Bundle path",
+              "required": [],
+              "title": "bundlePath",
+              "type": "string"
+            },
+            "bundleWithout": {
+              "default": "development:test:mysql:aws:sandbox:ci:wkhtmltopdf",
+              "description": "Bundle without",
+              "required": [],
+              "title": "bundleWithout",
+              "type": "string"
+            },
+            "defaultFunderId": {
+              "default": 8,
+              "description": "Default funder ID",
+              "required": [],
+              "title": "defaultFunderId",
+              "type": "integer"
+            },
+            "englishOrgId": {
+              "default": "",
+              "description": "English organization ID",
+              "required": [],
+              "title": "englishOrgId",
+              "type": "string"
+            },
+            "frenchOrgId": {
+              "default": "",
+              "description": "French organization ID",
+              "required": [],
+              "title": "frenchOrgId",
+              "type": "string"
+            },
+            "funderOrgId": {
+              "default": "",
+              "description": "Funder organization ID",
+              "required": [],
+              "title": "funderOrgId",
+              "type": "string"
+            },
+            "locale": {
+              "default": "en_CA.UTF-8",
+              "description": "Locale",
+              "required": [],
+              "title": "locale",
+              "type": "string"
+            },
+            "nodeEnv": {
+              "default": "production",
+              "description": "Node environment",
+              "required": [],
+              "title": "nodeEnv",
+              "type": "string"
+            },
+            "omniauthFullHost": {
+              "default": "",
+              "description": "OAuth callback URL",
+              "required": [],
+              "title": "omniauthFullHost",
+              "type": "string"
+            },
+            "orcidClientMember": {
+              "default": "false",
+              "description": "Whether ORCID client is a member",
+              "required": [],
+              "title": "orcidClientMember",
+              "type": "string"
+            },
+            "railsEnv": {
+              "default": "production",
+              "description": "Rails environment",
+              "required": [],
+              "title": "railsEnv",
+              "type": "string"
+            },
+            "railsLogToStdout": {
+              "default": "true",
+              "description": "Rails log to stdout",
+              "required": [],
+              "title": "railsLogToStdout",
+              "type": "string"
+            },
+            "railsServeStaticFiles": {
+              "default": "false",
+              "description": "Rails serve static files",
+              "required": [],
+              "title": "railsServeStaticFiles",
+              "type": "string"
+            },
+            "railsSkipAssetCompilation": {
+              "default": "true",
+              "description": "Rails skip asset compilation",
+              "required": [],
+              "title": "railsSkipAssetCompilation",
+              "type": "string"
+            },
+            "rakeEnv": {
+              "default": "production",
+              "description": "Rake environment",
+              "required": [],
+              "title": "rakeEnv",
+              "type": "string"
+            },
+            "rollbarEnv": {
+              "default": "production",
+              "description": "Rollbar environment",
+              "required": [],
+              "title": "rollbarEnv",
+              "type": "string"
+            },
+            "tmpDir": {
+              "default": "/usr/src/app/tmp",
+              "description": "Tmp directory",
+              "required": [],
+              "title": "tmpDir",
+              "type": "string"
+            },
+            "wickedPdfPath": {
+              "default": "/usr/bin/wkhtmltopdf",
+              "description": "Path to wkhtmltopdf binary",
+              "required": [],
+              "title": "wickedPdfPath",
+              "type": "string"
+            },
+            "wickedPdfProxy": {
+              "default": "",
+              "description": "Proxy for wkhtmltopdf if needed",
+              "required": [],
+              "title": "wickedPdfProxy",
+              "type": "string"
+            }
+          },
+          "required": [
+            "omniauthFullHost",
+            "wickedPdfPath",
+            "wickedPdfProxy",
+            "defaultFunderId",
+            "funderOrgId",
+            "frenchOrgId",
+            "englishOrgId",
+            "orcidClientMember",
+            "railsEnv",
+            "rakeEnv",
+            "nodeEnv",
+            "locale",
+            "bundlePath",
+            "bundleWithout",
+            "baseUrl",
+            "rollbarEnv",
+            "railsLogToStdout",
+            "railsServeStaticFiles",
+            "railsSkipAssetCompilation",
+            "assetHost",
+            "tmpDir"
+          ],
+          "title": "environment",
+          "type": "object"
+        },
+        "mailer": {
+          "additionalProperties": false,
+          "description": "Mailer and SMTP settings",
+          "properties": {
+            "defaultHost": {
+              "default": "",
+              "description": "Default host for mailer",
+              "required": [],
+              "title": "defaultHost",
+              "type": "string"
+            },
+            "from": {
+              "default": "support@example.com",
+              "description": "From address for emails",
+              "format": "email",
+              "required": [],
+              "title": "from",
+              "type": "string"
+            },
+            "smtpAddress": {
+              "default": "smtp.example.com",
+              "description": "SMTP server address",
+              "format": "hostname",
+              "required": [],
+              "title": "smtpAddress",
+              "type": "string"
+            },
+            "smtpAuthentication": {
+              "default": "plain",
+              "description": "SMTP authentication method",
+              "required": [],
+              "title": "smtpAuthentication",
+              "type": "string"
+            },
+            "smtpDomain": {
+              "default": "example.com",
+              "description": "SMTP domain",
+              "required": [],
+              "title": "smtpDomain",
+              "type": "string"
+            },
+            "smtpPort": {
+              "default": 587,
+              "description": "SMTP port",
+              "maximum": 65535,
+              "minimum": 1,
+              "required": [],
+              "title": "smtpPort",
+              "type": "integer"
+            },
+            "to": {
+              "default": "support@example.com",
+              "description": "To address for system emails",
+              "format": "email",
+              "required": [],
+              "title": "to",
+              "type": "string"
+            }
+          },
+          "required": [
+            "defaultHost",
+            "smtpAuthentication",
+            "smtpDomain"
+          ],
+          "title": "mailer",
+          "type": "object"
+        }
+      },
+      "required": [
+        "environment"
+      ],
+      "title": "config",
+      "type": "object"
+    },
+    "cronjobs": {
+      "additionalProperties": false,
+      "description": "Scheduled tasks for the application",
+      "properties": {
+        "researchDataOutput": {
+          "additionalProperties": false,
+          "description": "Research Data Output CronJob configuration",
+          "properties": {
+            "affinity": {
+              "additionalProperties": false,
+              "description": "Affinity rules for the CronJob",
+              "required": [],
+              "title": "affinity",
+              "type": "object"
+            },
+            "concurrencyPolicy": {
+              "default": "Forbid",
+              "description": "Concurrency policy for CronJob (Allow, Forbid, Replace)",
+              "required": [],
+              "title": "concurrencyPolicy",
+              "type": "string"
+            },
+            "enabled": {
+              "default": true,
+              "description": "Enable or disable the research data output CronJob",
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "env": {
+              "description": "Additional environment variables for the CronJob",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "env",
+              "type": "array"
+            },
+            "failedJobsHistoryLimit": {
+              "default": 1,
+              "description": "Number of failed job history to keep",
+              "required": [],
+              "title": "failedJobsHistoryLimit",
+              "type": "integer"
+            },
+            "nodeSelector": {
+              "additionalProperties": false,
+              "description": "Node selector for the CronJob",
+              "required": [],
+              "title": "nodeSelector",
+              "type": "object"
+            },
+            "podAnnotations": {
+              "additionalProperties": true,
+              "description": "Pod annotations for the CronJob pods",
+              "required": [],
+              "title": "podAnnotations",
+              "type": "object"
+            },
+            "podLabels": {
+              "additionalProperties": true,
+              "description": "Pod labels for the CronJob pods",
+              "required": [],
+              "title": "podLabels",
+              "type": "object"
+            },
+            "priorityClassName": {
+              "default": "",
+              "description": "Priority class name for the CronJob",
+              "required": [],
+              "title": "priorityClassName",
+              "type": "string"
+            },
+            "resources": {
+              "additionalProperties": false,
+              "description": "Resource limits and requests for the CronJob",
+              "properties": {
+                "limits": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "cpu": {
+                      "default": "200m",
+                      "required": [],
+                      "title": "cpu",
+                      "type": "string"
+                    },
+                    "memory": {
+                      "default": "512Mi",
+                      "required": [],
+                      "title": "memory",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "cpu",
+                    "memory"
+                  ],
+                  "title": "limits",
+                  "type": "object"
+                },
+                "requests": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "cpu": {
+                      "default": "100m",
+                      "required": [],
+                      "title": "cpu",
+                      "type": "string"
+                    },
+                    "memory": {
+                      "default": "256Mi",
+                      "required": [],
+                      "title": "memory",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "cpu",
+                    "memory"
+                  ],
+                  "title": "requests",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "requests",
+                "limits"
+              ],
+              "title": "resources",
+              "type": "object"
+            },
+            "restartPolicy": {
+              "default": "OnFailure",
+              "description": "Restart policy for the job pods",
+              "required": [],
+              "title": "restartPolicy",
+              "type": "string"
+            },
+            "schedule": {
+              "default": "0 1 * * *",
+              "description": "Schedule for the CronJob (cron format)",
+              "required": [],
+              "title": "schedule",
+              "type": "string"
+            },
+            "successfulJobsHistoryLimit": {
+              "default": 3,
+              "description": "Number of successful job history to keep",
+              "required": [],
+              "title": "successfulJobsHistoryLimit",
+              "type": "integer"
+            },
+            "suspend": {
+              "default": false,
+              "description": "Whether to suspend the job execution",
+              "required": [],
+              "title": "suspend",
+              "type": "boolean"
+            },
+            "tolerations": {
+              "description": "Tolerations for the CronJob",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "tolerations",
+              "type": "array"
+            },
+            "volumeMounts": {
+              "description": "Additional volume mounts for the CronJob",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "volumeMounts",
+              "type": "array"
+            },
+            "volumes": {
+              "description": "Additional volumes for the CronJob",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "volumes",
+              "type": "array"
+            }
+          },
+          "required": [
+            "enabled",
+            "schedule",
+            "concurrencyPolicy",
+            "successfulJobsHistoryLimit",
+            "failedJobsHistoryLimit",
+            "suspend",
+            "restartPolicy",
+            "priorityClassName",
+            "env",
+            "volumeMounts",
+            "volumes",
+            "resources",
+            "nodeSelector",
+            "affinity",
+            "tolerations"
+          ],
+          "title": "researchDataOutput",
+          "type": "object"
+        },
+        "statBuild": {
+          "additionalProperties": false,
+          "description": "Stat Build CronJob configuration",
+          "properties": {
+            "affinity": {
+              "additionalProperties": false,
+              "description": "Affinity rules for the CronJob",
+              "required": [],
+              "title": "affinity",
+              "type": "object"
+            },
+            "concurrencyPolicy": {
+              "default": "Forbid",
+              "description": "Concurrency policy for CronJob (Allow, Forbid, Replace)",
+              "required": [],
+              "title": "concurrencyPolicy",
+              "type": "string"
+            },
+            "enabled": {
+              "default": true,
+              "description": "Enable or disable the stat build CronJob",
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "env": {
+              "description": "Additional environment variables for the CronJob",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "env",
+              "type": "array"
+            },
+            "failedJobsHistoryLimit": {
+              "default": 1,
+              "description": "Number of failed job history to keep",
+              "required": [],
+              "title": "failedJobsHistoryLimit",
+              "type": "integer"
+            },
+            "nodeSelector": {
+              "additionalProperties": false,
+              "description": "Node selector for the CronJob",
+              "required": [],
+              "title": "nodeSelector",
+              "type": "object"
+            },
+            "podAnnotations": {
+              "additionalProperties": true,
+              "description": "Pod annotations for the CronJob pods",
+              "required": [],
+              "title": "podAnnotations",
+              "type": "object"
+            },
+            "podLabels": {
+              "additionalProperties": true,
+              "description": "Pod labels for the CronJob pods",
+              "required": [],
+              "title": "podLabels",
+              "type": "object"
+            },
+            "priorityClassName": {
+              "default": "",
+              "description": "Priority class name for the CronJob",
+              "required": [],
+              "title": "priorityClassName",
+              "type": "string"
+            },
+            "resources": {
+              "additionalProperties": false,
+              "description": "Resource limits and requests for the CronJob",
+              "properties": {
+                "limits": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "cpu": {
+                      "default": "200m",
+                      "required": [],
+                      "title": "cpu",
+                      "type": "string"
+                    },
+                    "memory": {
+                      "default": "512Mi",
+                      "required": [],
+                      "title": "memory",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "cpu",
+                    "memory"
+                  ],
+                  "title": "limits",
+                  "type": "object"
+                },
+                "requests": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "cpu": {
+                      "default": "100m",
+                      "required": [],
+                      "title": "cpu",
+                      "type": "string"
+                    },
+                    "memory": {
+                      "default": "256Mi",
+                      "required": [],
+                      "title": "memory",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "cpu",
+                    "memory"
+                  ],
+                  "title": "requests",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "requests",
+                "limits"
+              ],
+              "title": "resources",
+              "type": "object"
+            },
+            "restartPolicy": {
+              "default": "OnFailure",
+              "description": "Restart policy for the job pods",
+              "required": [],
+              "title": "restartPolicy",
+              "type": "string"
+            },
+            "schedule": {
+              "default": "1 1 * * *",
+              "description": "Schedule for the CronJob (cron format)",
+              "required": [],
+              "title": "schedule",
+              "type": "string"
+            },
+            "successfulJobsHistoryLimit": {
+              "default": 3,
+              "description": "Number of successful job history to keep",
+              "required": [],
+              "title": "successfulJobsHistoryLimit",
+              "type": "integer"
+            },
+            "suspend": {
+              "default": false,
+              "description": "Whether to suspend the job execution",
+              "required": [],
+              "title": "suspend",
+              "type": "boolean"
+            },
+            "tolerations": {
+              "description": "Tolerations for the CronJob",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "tolerations",
+              "type": "array"
+            },
+            "volumeMounts": {
+              "description": "Additional volume mounts for the CronJob",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "volumeMounts",
+              "type": "array"
+            },
+            "volumes": {
+              "description": "Additional volumes for the CronJob",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "volumes",
+              "type": "array"
+            }
+          },
+          "required": [
+            "enabled",
+            "schedule",
+            "concurrencyPolicy",
+            "successfulJobsHistoryLimit",
+            "failedJobsHistoryLimit",
+            "suspend",
+            "restartPolicy",
+            "priorityClassName",
+            "env",
+            "volumeMounts",
+            "volumes",
+            "resources",
+            "nodeSelector",
+            "affinity",
+            "tolerations"
+          ],
+          "title": "statBuild",
+          "type": "object"
+        },
+        "translationSync": {
+          "additionalProperties": false,
+          "description": "Translation Sync CronJob configuration",
+          "properties": {
+            "affinity": {
+              "additionalProperties": false,
+              "description": "Affinity rules for the CronJob",
+              "required": [],
+              "title": "affinity",
+              "type": "object"
+            },
+            "concurrencyPolicy": {
+              "default": "Forbid",
+              "description": "Concurrency policy for CronJob (Allow, Forbid, Replace)",
+              "required": [],
+              "title": "concurrencyPolicy",
+              "type": "string"
+            },
+            "enabled": {
+              "default": true,
+              "description": "Enable or disable the translation sync CronJob",
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "env": {
+              "description": "Additional environment variables for the CronJob",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "env",
+              "type": "array"
+            },
+            "failedJobsHistoryLimit": {
+              "default": 1,
+              "description": "Number of failed job history to keep",
+              "required": [],
+              "title": "failedJobsHistoryLimit",
+              "type": "integer"
+            },
+            "nodeSelector": {
+              "additionalProperties": false,
+              "description": "Node selector for the CronJob",
+              "required": [],
+              "title": "nodeSelector",
+              "type": "object"
+            },
+            "podAnnotations": {
+              "additionalProperties": true,
+              "description": "Pod annotations for the CronJob pods",
+              "required": [],
+              "title": "podAnnotations",
+              "type": "object"
+            },
+            "podLabels": {
+              "additionalProperties": true,
+              "description": "Pod labels for the CronJob pods",
+              "required": [],
+              "title": "podLabels",
+              "type": "object"
+            },
+            "priorityClassName": {
+              "default": "",
+              "description": "Priority class name for the CronJob",
+              "required": [],
+              "title": "priorityClassName",
+              "type": "string"
+            },
+            "resources": {
+              "additionalProperties": false,
+              "description": "Resource limits and requests for the CronJob",
+              "properties": {
+                "limits": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "cpu": {
+                      "default": "200m",
+                      "required": [],
+                      "title": "cpu",
+                      "type": "string"
+                    },
+                    "memory": {
+                      "default": "512Mi",
+                      "required": [],
+                      "title": "memory",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "cpu",
+                    "memory"
+                  ],
+                  "title": "limits",
+                  "type": "object"
+                },
+                "requests": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "cpu": {
+                      "default": "100m",
+                      "required": [],
+                      "title": "cpu",
+                      "type": "string"
+                    },
+                    "memory": {
+                      "default": "256Mi",
+                      "required": [],
+                      "title": "memory",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "cpu",
+                    "memory"
+                  ],
+                  "title": "requests",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "requests",
+                "limits"
+              ],
+              "title": "resources",
+              "type": "object"
+            },
+            "restartPolicy": {
+              "default": "OnFailure",
+              "description": "Restart policy for the job pods",
+              "required": [],
+              "title": "restartPolicy",
+              "type": "string"
+            },
+            "schedule": {
+              "default": "0 1 * * *",
+              "description": "Schedule for the CronJob (cron format)",
+              "required": [],
+              "title": "schedule",
+              "type": "string"
+            },
+            "successfulJobsHistoryLimit": {
+              "default": 3,
+              "description": "Number of successful job history to keep",
+              "required": [],
+              "title": "successfulJobsHistoryLimit",
+              "type": "integer"
+            },
+            "suspend": {
+              "default": false,
+              "description": "Whether to suspend the job execution",
+              "required": [],
+              "title": "suspend",
+              "type": "boolean"
+            },
+            "tolerations": {
+              "description": "Tolerations for the CronJob",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "tolerations",
+              "type": "array"
+            },
+            "volumeMounts": {
+              "description": "Additional volume mounts for the CronJob",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "volumeMounts",
+              "type": "array"
+            },
+            "volumes": {
+              "description": "Additional volumes for the CronJob",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "volumes",
+              "type": "array"
+            }
+          },
+          "required": [
+            "enabled",
+            "schedule",
+            "concurrencyPolicy",
+            "successfulJobsHistoryLimit",
+            "failedJobsHistoryLimit",
+            "suspend",
+            "restartPolicy",
+            "priorityClassName",
+            "env",
+            "volumeMounts",
+            "volumes",
+            "resources",
+            "nodeSelector",
+            "affinity",
+            "tolerations"
+          ],
+          "title": "translationSync",
+          "type": "object"
+        }
+      },
+      "required": [
+        "translationSync",
+        "researchDataOutput",
+        "statBuild"
+      ],
+      "title": "cronjobs",
+      "type": "object"
+    },
+    "externalDatabase": {
+      "additionalProperties": false,
+      "description": "External database configuration",
+      "properties": {
+        "database": {
+          "default": "dmp_roadmap_production",
+          "description": "Database name",
+          "required": [],
+          "title": "database",
+          "type": "string"
+        },
+        "existingSecret": {
+          "default": "",
+          "description": "Name of existing secret to use for database credentials",
+          "required": [],
+          "title": "existingSecret",
+          "type": "string"
+        },
+        "existingSecretPasswordKey": {
+          "default": "password",
+          "description": "Key in the existing secret containing the password",
+          "required": [],
+          "title": "existingSecretPasswordKey",
+          "type": "string"
+        },
+        "host": {
+          "default": "localhost",
+          "description": "Database host",
+          "format": "hostname",
+          "required": [],
+          "title": "host",
+          "type": "string"
+        },
+        "password": {
+          "default": "",
+          "description": "Database password (recommend using existingSecret instead)",
+          "required": [],
+          "title": "password",
+          "type": "string"
+        },
+        "port": {
+          "default": 5432,
+          "description": "Database port",
+          "maximum": 65535,
+          "minimum": 1,
+          "required": [],
+          "title": "port",
+          "type": "integer"
+        },
+        "username": {
+          "default": "dmp_roadmap",
+          "description": "Database user",
+          "required": [],
+          "title": "username",
+          "type": "string"
+        }
+      },
+      "required": [
+        "username",
+        "existingSecret",
+        "existingSecretPasswordKey"
+      ],
+      "title": "externalDatabase",
+      "type": "object"
+    },
+    "extraObjects": {
+      "description": "Extra Kubernetes objects to deploy",
+      "items": {
+        "required": []
+      },
+      "required": [],
+      "title": "extraObjects",
+      "type": "array"
+    },
+    "fullnameOverride": {
+      "default": "",
+      "description": "String to fully override `dmp-roadmap.fullname`",
+      "required": [],
+      "title": "fullnameOverride",
+      "type": "string"
+    },
+    "global": {
+      "additionalProperties": false,
+      "properties": {
+        "additionalLabels": {
+          "additionalProperties": true,
+          "description": "Common labels for the all resources",
+          "required": [],
+          "title": "additionalLabels",
+          "type": "object"
+        },
+        "deploymentAnnotations": {
+          "additionalProperties": true,
+          "description": "Annotations for the all deployed Deployments",
+          "required": [],
+          "title": "deploymentAnnotations",
+          "type": "object"
+        },
+        "domain": {
+          "additionalProperties": false,
+          "description": "Global domain configuration",
+          "properties": {
+            "name": {
+              "default": "example.com",
+              "description": "Main domain name used throughout the chart",
+              "format": "hostname",
+              "required": [],
+              "title": "name",
+              "type": "string"
+            },
+            "path": {
+              "default": "",
+              "description": "Application path/context (e.g., /staging)",
+              "required": [],
+              "title": "path",
+              "type": "string"
+            },
+            "prefix": {
+              "default": "",
+              "description": "Application prefix (e.g., staging)",
+              "required": [],
+              "title": "prefix",
+              "type": "string"
+            }
+          },
+          "required": [],
+          "title": "domain",
+          "type": "object"
+        },
+        "env": {
+          "description": "Environment variables to pass to all deployed Deployments",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "env",
+          "type": "array"
+        },
+        "image": {
+          "additionalProperties": false,
+          "description": "Default image used by all components",
+          "properties": {
+            "imagePullPolicy": {
+              "default": "IfNotPresent",
+              "description": "If defined, a imagePullPolicy applied to all DMP Roadmap deployments",
+              "enum": [
+                "Always",
+                "IfNotPresent",
+                "Never"
+              ],
+              "required": [],
+              "title": "imagePullPolicy"
+            },
+            "repository": {
+              "default": "ualbertalib/dmp_roadmap",
+              "description": "If defined, a repository applied to all DMP Roadmap deployments",
+              "required": [],
+              "title": "repository",
+              "type": "string"
+            },
+            "tag": {
+              "default": "",
+              "description": "Overrides the global DMP Roadmap image tag whose default is the chart appVersion",
+              "required": [],
+              "title": "tag",
+              "type": "string"
+            }
+          },
+          "required": [],
+          "title": "image",
+          "type": "object"
+        },
+        "imagePullSecrets": {
+          "description": "Secrets with credentials to pull images from a private registry",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "imagePullSecrets",
+          "type": "array"
+        },
+        "podAnnotations": {
+          "additionalProperties": true,
+          "description": "Annotations for the all deployed pods",
+          "required": [],
+          "title": "podAnnotations",
+          "type": "object"
+        },
+        "podLabels": {
+          "additionalProperties": true,
+          "description": "Labels for the all deployed pods",
+          "required": [],
+          "title": "podLabels",
+          "type": "object"
+        },
+        "priorityClassName": {
+          "default": "",
+          "description": "Default priority class for all components",
+          "required": [],
+          "title": "priorityClassName",
+          "type": "string"
+        },
+        "statefulsetAnnotations": {
+          "additionalProperties": true,
+          "description": "Annotations for the all deployed Statefulsets",
+          "required": [],
+          "title": "statefulsetAnnotations",
+          "type": "object"
+        }
+      },
+      "required": [],
+      "title": "global",
+      "type": "object"
+    },
+    "ingress": {
+      "additionalProperties": false,
+      "properties": {
+        "annotations": {
+          "additionalProperties": true,
+          "description": "Annotations for the ingress resource",
+          "required": [],
+          "title": "annotations",
+          "type": "object"
+        },
+        "certManager": {
+          "additionalProperties": false,
+          "description": "Automatic TLS certificate management with cert-manager",
+          "properties": {
+            "acme": {
+              "additionalProperties": false,
+              "description": "ACME configuration for Let's Encrypt",
+              "properties": {
+                "dns01": {
+                  "additionalProperties": false,
+                  "description": "DNS-01 challenge configuration",
+                  "properties": {
+                    "cloudflare": {
+                      "additionalProperties": false,
+                      "description": "Cloudflare DNS-01 configuration",
+                      "properties": {
+                        "apiTokenSecretRef": {
+                          "additionalProperties": false,
+                          "description": "Cloudflare API token secret reference",
+                          "properties": {
+                            "key": {
+                              "default": "CF_API_KEY",
+                              "description": "Secret key containing Cloudflare API token",
+                              "required": [],
+                              "title": "key",
+                              "type": "string"
+                            },
+                            "name": {
+                              "default": "",
+                              "description": "Secret name containing Cloudflare API token",
+                              "required": [],
+                              "title": "name",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "name",
+                            "key"
+                          ],
+                          "title": "apiTokenSecretRef",
+                          "type": "object"
+                        },
+                        "email": {
+                          "default": "support@example.com",
+                          "description": "Cloudflare email",
+                          "required": [],
+                          "title": "email",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "email",
+                        "apiTokenSecretRef"
+                      ],
+                      "title": "cloudflare",
+                      "type": "object"
+                    },
+                    "enabled": {
+                      "default": false,
+                      "description": "Enable DNS-01 challenge",
+                      "required": [],
+                      "title": "enabled",
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "enabled",
+                    "cloudflare"
+                  ],
+                  "title": "dns01",
+                  "type": "object"
+                },
+                "email": {
+                  "default": "support@example.com",
+                  "description": "Email address for ACME registration",
+                  "format": "email",
+                  "required": [],
+                  "title": "email",
+                  "type": "string"
+                },
+                "http01": {
+                  "additionalProperties": false,
+                  "description": "HTTP-01 challenge configuration",
+                  "properties": {
+                    "enabled": {
+                      "default": false,
+                      "description": "Enable HTTP-01 challenge",
+                      "required": [],
+                      "title": "enabled",
+                      "type": "boolean"
+                    },
+                    "ingressClass": {
+                      "default": "",
+                      "description": "Ingress class for HTTP-01 challenge",
+                      "required": [],
+                      "title": "ingressClass",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "ingressClass"
+                  ],
+                  "title": "http01",
+                  "type": "object"
+                },
+                "server": {
+                  "default": "https://acme-v02.api.letsencrypt.org/directory",
+                  "description": "ACME server URL",
+                  "format": "uri",
+                  "required": [],
+                  "title": "server",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "dns01"
+              ],
+              "title": "acme",
+              "type": "object"
+            },
+            "annotations": {
+              "additionalProperties": true,
+              "description": "Additional annotations for cert-manager",
+              "required": [],
+              "title": "annotations",
+              "type": "object"
+            },
+            "ca": {
+              "additionalProperties": false,
+              "description": "CA issuer configuration",
+              "properties": {
+                "secretName": {
+                  "default": "",
+                  "description": "Secret name containing CA certificate and private key",
+                  "required": [],
+                  "title": "secretName",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "secretName"
+              ],
+              "title": "ca",
+              "type": "object"
+            },
+            "certificateRequestPolicy": {
+              "additionalProperties": false,
+              "description": "Certificate Request Policy configuration",
+              "properties": {
+                "allowed": {
+                  "additionalProperties": false,
+                  "description": "Allowed certificate properties",
+                  "properties": {
+                    "commonName": {
+                      "default": "",
+                      "description": "Common name for certificates",
+                      "required": [],
+                      "title": "commonName",
+                      "type": "string"
+                    },
+                    "dnsNames": {
+                      "description": "DNS names allowed for certificates",
+                      "items": {
+                        "required": []
+                      },
+                      "required": [],
+                      "title": "dnsNames",
+                      "type": "array"
+                    },
+                    "usages": {
+                      "description": "Certificate usage constraints",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "required": [],
+                            "type": "string"
+                          },
+                          {
+                            "required": [],
+                            "type": "string"
+                          },
+                          {
+                            "required": [],
+                            "type": "string"
+                          }
+                        ],
+                        "required": []
+                      },
+                      "required": [],
+                      "title": "usages",
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "commonName",
+                    "dnsNames",
+                    "usages"
+                  ],
+                  "title": "allowed",
+                  "type": "object"
+                },
+                "constraints": {
+                  "additionalProperties": false,
+                  "description": "Certificate constraints",
+                  "properties": {
+                    "privateKey": {
+                      "additionalProperties": false,
+                      "description": "Private key constraints",
+                      "properties": {
+                        "algorithm": {
+                          "default": "RSA",
+                          "description": "Private key algorithm",
+                          "required": [],
+                          "title": "algorithm",
+                          "type": "string"
+                        },
+                        "minSize": {
+                          "default": 2048,
+                          "description": "Minimum private key size",
+                          "required": [],
+                          "title": "minSize",
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "algorithm",
+                        "minSize"
+                      ],
+                      "title": "privateKey",
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "privateKey"
+                  ],
+                  "title": "constraints",
+                  "type": "object"
+                },
+                "enabled": {
+                  "default": false,
+                  "description": "Enable Certificate Request Policy",
+                  "required": [],
+                  "title": "enabled",
+                  "type": "boolean"
+                },
+                "name": {
+                  "default": "",
+                  "description": "Name for the Certificate Request Policy",
+                  "required": [],
+                  "title": "name",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "enabled",
+                "name",
+                "allowed",
+                "constraints"
+              ],
+              "title": "certificateRequestPolicy",
+              "type": "object"
+            },
+            "clusterIssuer": {
+              "default": "",
+              "description": "ClusterIssuer name (for cluster-scoped issuer)",
+              "required": [],
+              "title": "clusterIssuer",
+              "type": "string"
+            },
+            "enabled": {
+              "default": false,
+              "description": "Enable automatic TLS certificate management",
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "issuer": {
+              "default": "",
+              "description": "Issuer name (for namespace-scoped issuer)",
+              "required": [],
+              "title": "issuer",
+              "type": "string"
+            },
+            "rbac": {
+              "additionalProperties": false,
+              "description": "RBAC configuration for cert-manager policies",
+              "properties": {
+                "certManagerNamespace": {
+                  "default": "cert-manager",
+                  "description": "cert-manager namespace (where cert-manager ServiceAccount is located)",
+                  "required": [],
+                  "title": "certManagerNamespace",
+                  "type": "string"
+                },
+                "enabled": {
+                  "default": false,
+                  "description": "Enable RBAC for cert-manager policies",
+                  "required": [],
+                  "title": "enabled",
+                  "type": "boolean"
+                },
+                "policyNames": {
+                  "description": "Policy names that can be used",
+                  "items": {
+                    "required": []
+                  },
+                  "required": [],
+                  "title": "policyNames",
+                  "type": "array"
+                },
+                "roleBindingName": {
+                  "default": "",
+                  "description": "RoleBinding name for cert-manager policy access",
+                  "required": [],
+                  "title": "roleBindingName",
+                  "type": "string"
+                },
+                "roleName": {
+                  "default": "",
+                  "description": "Role name for cert-manager policy access",
+                  "required": [],
+                  "title": "roleName",
+                  "type": "string"
+                },
+                "subjects": {
+                  "description": "Custom subjects for the RoleBinding",
+                  "items": {
+                    "required": []
+                  },
+                  "required": [],
+                  "title": "subjects",
+                  "type": "array"
+                }
+              },
+              "required": [
+                "enabled",
+                "roleName",
+                "roleBindingName",
+                "certManagerNamespace",
+                "policyNames",
+                "subjects"
+              ],
+              "title": "rbac",
+              "type": "object"
+            },
+            "vault": {
+              "additionalProperties": false,
+              "description": "Vault issuer configuration",
+              "properties": {
+                "auth": {
+                  "additionalProperties": false,
+                  "description": "Vault authentication configuration",
+                  "required": [],
+                  "title": "auth",
+                  "type": "object"
+                },
+                "path": {
+                  "default": "",
+                  "description": "Vault path for certificate signing",
+                  "required": [],
+                  "title": "path",
+                  "type": "string"
+                },
+                "server": {
+                  "default": "",
+                  "description": "Vault server URL",
+                  "required": [],
+                  "title": "server",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "server",
+                "path",
+                "auth"
+              ],
+              "title": "vault",
+              "type": "object"
+            }
+          },
+          "required": [
+            "ca",
+            "vault",
+            "certificateRequestPolicy",
+            "rbac"
+          ],
+          "title": "certManager",
+          "type": "object"
+        },
+        "className": {
+          "default": "",
+          "description": "Ingress class name",
+          "required": [],
+          "title": "className",
+          "type": "string"
+        },
+        "enabled": {
+          "default": false,
+          "description": "Enable or disable the ingress",
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "hosts": {
+          "description": "Hosts configuration (if empty, uses global.domain.name)",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "hosts",
+          "type": "array"
+        },
+        "tls": {
+          "description": "TLS configuration for the ingress",
+          "items": {
+            "required": []
+          },
+          "required": [],
+          "title": "tls",
+          "type": "array"
+        }
+      },
+      "required": [],
+      "title": "ingress",
+      "type": "object"
+    },
+    "nameOverride": {
+      "default": "",
+      "description": "Provide a name in place of `dmp-roadmap`",
+      "required": [],
+      "title": "nameOverride",
+      "type": "string"
+    },
+    "namespaceOverride": {
+      "default": "",
+      "description": "Override the namespace",
+      "required": [],
+      "title": "namespaceOverride",
+      "type": "string"
+    },
+    "networkPolicy": {
+      "additionalProperties": false,
+      "description": "Network policy configuration",
+      "properties": {
+        "components": {
+          "description": "Components to create network policies for",
+          "items": {
+            "anyOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "component": {
+                    "default": "app",
+                    "description": "Component label",
+                    "required": [],
+                    "title": "component",
+                    "type": "string"
+                  },
+                  "name": {
+                    "default": "app",
+                    "required": [],
+                    "title": "name",
+                    "type": "string"
+                  },
+                  "port": {
+                    "default": 3000,
+                    "description": "Target port",
+                    "required": [],
+                    "title": "port",
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "name",
+                  "component",
+                  "port"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "component": {
+                    "default": "assets",
+                    "description": "Component label",
+                    "required": [],
+                    "title": "component",
+                    "type": "string"
+                  },
+                  "name": {
+                    "default": "assets",
+                    "required": [],
+                    "title": "name",
+                    "type": "string"
+                  },
+                  "port": {
+                    "default": 8080,
+                    "description": "Target port",
+                    "required": [],
+                    "title": "port",
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "name",
+                  "component",
+                  "port"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "name": {
+                    "default": "cronjobs",
+                    "required": [],
+                    "title": "name",
+                    "type": "string"
+                  },
+                  "partOf": {
+                    "default": "cronjob",
+                    "description": "Component label",
+                    "required": [],
+                    "title": "partOf",
+                    "type": "string"
+                  },
+                  "port": {
+                    "default": 3000,
+                    "description": "Target port",
+                    "required": [],
+                    "title": "port",
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "name",
+                  "partOf",
+                  "port"
+                ],
+                "type": "object"
+              }
+            ],
+            "required": []
+          },
+          "required": [],
+          "title": "components",
+          "type": "array"
+        },
+        "enabled": {
+          "default": false,
+          "description": "Enable network policies",
+          "required": [],
+          "title": "enabled",
+          "type": "boolean"
+        },
+        "ingressSource": {
+          "additionalProperties": false,
+          "description": "Ingress source configuration",
+          "properties": {
+            "namespaceSelector": {
+              "additionalProperties": false,
+              "description": "Namespace selector for ingress controller",
+              "required": [],
+              "title": "namespaceSelector",
+              "type": "object"
+            },
+            "podSelector": {
+              "additionalProperties": false,
+              "description": "kubernetes.io/metadata.name: traefik\nPod selector for ingress controller",
+              "required": [],
+              "title": "podSelector",
+              "type": "object"
+            }
+          },
+          "required": [
+            "namespaceSelector",
+            "podSelector"
+          ],
+          "title": "ingressSource",
+          "type": "object"
+        }
+      },
+      "required": [
+        "enabled",
+        "ingressSource",
+        "components"
+      ],
+      "title": "networkPolicy",
+      "type": "object"
+    },
+    "storage": {
+      "additionalProperties": false,
+      "description": "Storage configuration for the application",
+      "properties": {
+        "cephfs": {
+          "additionalProperties": false,
+          "description": "CephFS storage configuration",
+          "properties": {
+            "accessModes": {
+              "description": "Access modes for the volumes",
+              "items": {
+                "anyOf": [
+                  {
+                    "required": [],
+                    "type": "string"
+                  }
+                ],
+                "required": []
+              },
+              "required": [],
+              "title": "accessModes",
+              "type": "array"
+            },
+            "monitors": {
+              "description": "CephFS monitors",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "monitors",
+              "type": "array"
+            },
+            "persistentVolumeReclaimPolicy": {
+              "default": "Retain",
+              "description": "Storage reclaim policy",
+              "required": [],
+              "title": "persistentVolumeReclaimPolicy",
+              "type": "string"
+            },
+            "volumeMode": {
+              "default": "Filesystem",
+              "description": "Volume mode",
+              "required": [],
+              "title": "volumeMode",
+              "type": "string"
+            },
+            "volumes": {
+              "additionalProperties": false,
+              "description": "Volume definitions for CephFS",
+              "properties": {
+                "locales": {
+                  "additionalProperties": false,
+                  "description": "Locales volume configuration",
+                  "properties": {
+                    "mountPath": {
+                      "default": "/usr/src/app/config/locale",
+                      "description": "Mount path for the locales volume",
+                      "required": [],
+                      "title": "mountPath",
+                      "type": "string"
+                    },
+                    "path": {
+                      "default": "",
+                      "description": "Path for the locales volume",
+                      "required": [],
+                      "title": "path",
+                      "type": "string"
+                    },
+                    "secretRef": {
+                      "default": "cephfs-locales-key",
+                      "description": "Secret reference for the locales volume",
+                      "required": [],
+                      "title": "secretRef",
+                      "type": "string"
+                    },
+                    "size": {
+                      "default": "5Gi",
+                      "description": "Size for the locales volume",
+                      "required": [],
+                      "title": "size",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "path",
+                    "size",
+                    "mountPath",
+                    "secretRef"
+                  ],
+                  "title": "locales",
+                  "type": "object"
+                },
+                "uploads": {
+                  "additionalProperties": false,
+                  "description": "Uploads volume configuration",
+                  "properties": {
+                    "mountPath": {
+                      "default": "/usr/src/app/public/system/dragonfly",
+                      "description": "Mount path for the uploads volume",
+                      "required": [],
+                      "title": "mountPath",
+                      "type": "string"
+                    },
+                    "path": {
+                      "default": "",
+                      "description": "Path for the uploads volume",
+                      "required": [],
+                      "title": "path",
+                      "type": "string"
+                    },
+                    "secretRef": {
+                      "default": "cephfs-uploads-key",
+                      "description": "Secret reference for the uploads volume",
+                      "required": [],
+                      "title": "secretRef",
+                      "type": "string"
+                    },
+                    "size": {
+                      "default": "5Gi",
+                      "description": "Size for the uploads volume",
+                      "required": [],
+                      "title": "size",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "path",
+                    "size",
+                    "mountPath",
+                    "secretRef"
+                  ],
+                  "title": "uploads",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "locales",
+                "uploads"
+              ],
+              "title": "volumes",
+              "type": "object"
+            }
+          },
+          "required": [
+            "persistentVolumeReclaimPolicy",
+            "volumeMode",
+            "accessModes",
+            "monitors",
+            "volumes"
+          ],
+          "title": "cephfs",
+          "type": "object"
+        },
+        "emptyDir": {
+          "additionalProperties": false,
+          "description": "EmptyDir storage configuration (temporary, data lost on pod restart)",
+          "properties": {
+            "volumes": {
+              "additionalProperties": false,
+              "description": "Volume definitions for emptyDir",
+              "properties": {
+                "locales": {
+                  "additionalProperties": false,
+                  "description": "Locales volume configuration",
+                  "properties": {
+                    "mountPath": {
+                      "default": "/usr/src/app/config/locale",
+                      "description": "Mount path for the locales volume",
+                      "required": [],
+                      "title": "mountPath",
+                      "type": "string"
+                    },
+                    "sizeLimit": {
+                      "default": "1Gi",
+                      "description": "Size limit for the volume",
+                      "required": [],
+                      "title": "sizeLimit",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "sizeLimit",
+                    "mountPath"
+                  ],
+                  "title": "locales",
+                  "type": "object"
+                },
+                "uploads": {
+                  "additionalProperties": false,
+                  "description": "Uploads volume configuration",
+                  "properties": {
+                    "mountPath": {
+                      "default": "/usr/src/app/public/system/dragonfly",
+                      "description": "Mount path for the uploads volume",
+                      "required": [],
+                      "title": "mountPath",
+                      "type": "string"
+                    },
+                    "sizeLimit": {
+                      "default": "5Gi",
+                      "description": "Size limit for the volume",
+                      "required": [],
+                      "title": "sizeLimit",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "sizeLimit",
+                    "mountPath"
+                  ],
+                  "title": "uploads",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "locales",
+                "uploads"
+              ],
+              "title": "volumes",
+              "type": "object"
+            }
+          },
+          "required": [
+            "volumes"
+          ],
+          "title": "emptyDir",
+          "type": "object"
+        },
+        "hostPath": {
+          "additionalProperties": false,
+          "description": "Host path storage configuration",
+          "properties": {
+            "volumes": {
+              "additionalProperties": false,
+              "description": "Volume definitions for hostPath",
+              "properties": {
+                "locales": {
+                  "additionalProperties": false,
+                  "description": "Locales volume configuration",
+                  "properties": {
+                    "mountPath": {
+                      "default": "/usr/src/app/config/locale",
+                      "description": "Mount path for the locales volume",
+                      "required": [],
+                      "title": "mountPath",
+                      "type": "string"
+                    },
+                    "path": {
+                      "default": "/data/dmp-roadmap/locales",
+                      "description": "Path on the host",
+                      "required": [],
+                      "title": "path",
+                      "type": "string"
+                    },
+                    "type": {
+                      "default": "DirectoryOrCreate",
+                      "description": "Host path type",
+                      "required": [],
+                      "title": "type",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "path",
+                    "type",
+                    "mountPath"
+                  ],
+                  "title": "locales",
+                  "type": "object"
+                },
+                "uploads": {
+                  "additionalProperties": false,
+                  "description": "Uploads volume configuration",
+                  "properties": {
+                    "mountPath": {
+                      "default": "/usr/src/app/public/system/dragonfly",
+                      "description": "Mount path for the uploads volume",
+                      "required": [],
+                      "title": "mountPath",
+                      "type": "string"
+                    },
+                    "path": {
+                      "default": "/data/dmp-roadmap/uploads",
+                      "description": "Path on the host",
+                      "required": [],
+                      "title": "path",
+                      "type": "string"
+                    },
+                    "type": {
+                      "default": "DirectoryOrCreate",
+                      "description": "Host path type",
+                      "required": [],
+                      "title": "type",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "path",
+                    "type",
+                    "mountPath"
+                  ],
+                  "title": "uploads",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "locales",
+                "uploads"
+              ],
+              "title": "volumes",
+              "type": "object"
+            }
+          },
+          "required": [
+            "volumes"
+          ],
+          "title": "hostPath",
+          "type": "object"
+        },
+        "nfs": {
+          "additionalProperties": false,
+          "description": "NFS storage configuration",
+          "properties": {
+            "server": {
+              "default": "",
+              "description": "NFS server address",
+              "required": [],
+              "title": "server",
+              "type": "string"
+            },
+            "volumes": {
+              "additionalProperties": false,
+              "description": "Volume definitions for NFS",
+              "properties": {
+                "locales": {
+                  "additionalProperties": false,
+                  "description": "Locales volume configuration",
+                  "properties": {
+                    "mountPath": {
+                      "default": "/usr/src/app/config/locale",
+                      "description": "Mount path for the locales volume",
+                      "required": [],
+                      "title": "mountPath",
+                      "type": "string"
+                    },
+                    "path": {
+                      "default": "/data/dmp-roadmap/locales",
+                      "description": "Path on the NFS server",
+                      "required": [],
+                      "title": "path",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "path",
+                    "mountPath"
+                  ],
+                  "title": "locales",
+                  "type": "object"
+                },
+                "uploads": {
+                  "additionalProperties": false,
+                  "description": "Uploads volume configuration",
+                  "properties": {
+                    "mountPath": {
+                      "default": "/usr/src/app/public/system/dragonfly",
+                      "description": "Mount path for the uploads volume",
+                      "required": [],
+                      "title": "mountPath",
+                      "type": "string"
+                    },
+                    "path": {
+                      "default": "/data/dmp-roadmap/uploads",
+                      "description": "Path on the NFS server",
+                      "required": [],
+                      "title": "path",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "path",
+                    "mountPath"
+                  ],
+                  "title": "uploads",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "locales",
+                "uploads"
+              ],
+              "title": "volumes",
+              "type": "object"
+            }
+          },
+          "required": [
+            "server",
+            "volumes"
+          ],
+          "title": "nfs",
+          "type": "object"
+        },
+        "pvc": {
+          "additionalProperties": false,
+          "description": "Standard PVC storage configuration",
+          "properties": {
+            "accessModes": {
+              "description": "Access modes for the volumes",
+              "items": {
+                "anyOf": [
+                  {
+                    "required": [],
+                    "type": "string"
+                  }
+                ],
+                "required": []
+              },
+              "required": [],
+              "title": "accessModes",
+              "type": "array"
+            },
+            "persistentVolumeReclaimPolicy": {
+              "default": "Retain",
+              "description": "Storage reclaim policy",
+              "required": [],
+              "title": "persistentVolumeReclaimPolicy",
+              "type": "string"
+            },
+            "storageClassName": {
+              "default": "",
+              "description": "Storage class name (leave empty for default)",
+              "required": [],
+              "title": "storageClassName",
+              "type": "string"
+            },
+            "volumeMode": {
+              "default": "Filesystem",
+              "description": "Volume mode",
+              "required": [],
+              "title": "volumeMode",
+              "type": "string"
+            },
+            "volumes": {
+              "additionalProperties": false,
+              "description": "Volume definitions for PVC",
+              "properties": {
+                "locales": {
+                  "additionalProperties": false,
+                  "description": "Locales volume configuration (shared between app and cronjobs)",
+                  "properties": {
+                    "accessModes": {
+                      "description": "Access modes (needs ReadWriteMany for sharing between pods)",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "required": [],
+                            "type": "string"
+                          }
+                        ],
+                        "required": []
+                      },
+                      "required": [],
+                      "title": "accessModes",
+                      "type": "array"
+                    },
+                    "mountPath": {
+                      "default": "/usr/src/app/config/locale",
+                      "description": "Mount path for the locales volume",
+                      "required": [],
+                      "title": "mountPath",
+                      "type": "string"
+                    },
+                    "size": {
+                      "default": "5Gi",
+                      "description": "Size for the locales volume",
+                      "required": [],
+                      "title": "size",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "size",
+                    "mountPath",
+                    "accessModes"
+                  ],
+                  "title": "locales",
+                  "type": "object"
+                },
+                "uploads": {
+                  "additionalProperties": false,
+                  "description": "Uploads volume configuration",
+                  "properties": {
+                    "accessModes": {
+                      "description": "Access modes (override global if needed)",
+                      "items": {
+                        "required": []
+                      },
+                      "required": [],
+                      "title": "accessModes",
+                      "type": "array"
+                    },
+                    "mountPath": {
+                      "default": "/usr/src/app/public/system/dragonfly",
+                      "description": "Mount path for the uploads volume",
+                      "required": [],
+                      "title": "mountPath",
+                      "type": "string"
+                    },
+                    "size": {
+                      "default": "5Gi",
+                      "description": "Size for the uploads volume",
+                      "required": [],
+                      "title": "size",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "size",
+                    "mountPath",
+                    "accessModes"
+                  ],
+                  "title": "uploads",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "locales",
+                "uploads"
+              ],
+              "title": "volumes",
+              "type": "object"
+            }
+          },
+          "required": [
+            "storageClassName",
+            "persistentVolumeReclaimPolicy",
+            "volumeMode",
+            "accessModes",
+            "volumes"
+          ],
+          "title": "pvc",
+          "type": "object"
+        },
+        "type": {
+          "default": "pvc",
+          "description": "Storage type (pvc, cephfs, hostPath, nfs, emptyDir)",
+          "required": [],
+          "title": "type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "pvc",
+        "cephfs",
+        "hostPath",
+        "nfs",
+        "emptyDir"
+      ],
+      "title": "storage",
+      "type": "object"
+    }
+  },
+  "required": [
+    "assets",
+    "storage",
+    "extraObjects",
+    "networkPolicy"
+  ],
+  "type": "object"
+}

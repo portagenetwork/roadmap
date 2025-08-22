@@ -1,0 +1,52 @@
+{{- if and .Values.ingress.certManager.enabled .Values.ingress.certManager.issuer }}
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ .Values.ingress.certManager.issuer }}
+  labels:
+    {{- $_ := set . "component" "cert-manager-issuer" }}
+    {{- include "dmp-roadmap.labels" . | nindent 4 }}
+  {{- with .Values.ingress.certManager.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if and .Values.ingress.certManager.acme .Values.ingress.certManager.acme.email }}
+  acme:
+    # The ACME server URL
+    server: {{ .Values.ingress.certManager.acme.server | default "https://acme-v02.api.letsencrypt.org/directory" }}
+    # Email address used for ACME registration
+    email: {{ .Values.ingress.certManager.acme.email | required "ingress.certManager.acme.email is required when using ACME issuer" }}
+    # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: {{ .Values.ingress.certManager.issuer }}-private-key
+    # Enable the HTTP-01 challenge provider
+    solvers:
+    {{- if and .Values.ingress.certManager.acme.http01 .Values.ingress.certManager.acme.http01.ingressClass }}
+    - http01:
+        ingress:
+          ingressClassName: {{ .Values.ingress.certManager.acme.http01.ingressClass }}
+    {{- end }}
+    # Enable the DNS-01 challenge provider
+    {{- if and .Values.ingress.certManager.acme.dns01 .Values.ingress.certManager.acme.dns01.cloudflare }}
+    - dns01:
+        cloudflare:
+          email: {{ .Values.ingress.certManager.acme.dns01.cloudflare.email | required "ingress.certManager.acme.dns01.cloudflare.email is required" }}
+          apiTokenSecretRef:
+            name: {{ .Values.ingress.certManager.acme.dns01.cloudflare.apiTokenSecretRef.name | required "ingress.certManager.acme.dns01.cloudflare.apiTokenSecretRef.name is required" }}
+            key: {{ .Values.ingress.certManager.acme.dns01.cloudflare.apiTokenSecretRef.key | default "CF_API_KEY" }}
+    {{- end }}
+  {{- end }}
+  {{- if and .Values.ingress.certManager.ca .Values.ingress.certManager.ca.secretName }}
+  ca:
+    secretName: {{ .Values.ingress.certManager.ca.secretName }}
+  {{- end }}
+  {{- if and .Values.ingress.certManager.vault .Values.ingress.certManager.vault.server .Values.ingress.certManager.vault.path }}
+  vault:
+    server: {{ .Values.ingress.certManager.vault.server }}
+    path: {{ .Values.ingress.certManager.vault.path }}
+    auth:
+      {{- toYaml .Values.ingress.certManager.vault.auth | nindent 6 }}
+  {{- end }}
+{{- end }}
