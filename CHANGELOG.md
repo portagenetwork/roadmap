@@ -1,5 +1,18 @@
 # Changelog
 
+## [Unreleased]
+
+## Added 
+
+
+## Fixed
+ - Fix Translation of Permissions in Email [#1123](https://github.com/portagenetwork/roadmap/pull/1123)
+
+## Changed
+
+
+## Dependency Updates
+
 ## [4.1.1+portage-4.4.0]
 
 ### Added
