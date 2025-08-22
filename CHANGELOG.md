@@ -2,16 +2,17 @@
 
 ## [Unreleased]
 
-## Added 
+### Added 
 
 
-## Fixed
+### Fixed
  - Fix Translation of Permissions in Email [#1123](https://github.com/portagenetwork/roadmap/pull/1123)
+ - Fix/Re-Enable "Create Plan" RSpec Test [#798](https://github.com/portagenetwork/roadmap/pull/798)
 
-## Changed
+### Changed
 
 
-## Dependency Updates
+### Dependency Updates
 
 ## [4.1.1+portage-4.4.0]
 
