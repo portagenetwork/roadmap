@@ -7,7 +7,10 @@
 
 ### Fixed
  - Fix Translation of Permissions in Email [#1123](https://github.com/portagenetwork/roadmap/pull/1123)
+
  - Fix/Re-Enable "Create Plan" RSpec Test [#798](https://github.com/portagenetwork/roadmap/pull/798)
+
+ - Fix Feedback Sample Message Behaviour [#1156](https://github.com/portagenetwork/roadmap/pull/1156)
 
 ### Changed
 
