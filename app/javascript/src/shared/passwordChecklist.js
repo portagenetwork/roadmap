@@ -4,7 +4,7 @@ const passwordInputs = [
   document.getElementById('new_user_password')
 ].filter(Boolean); // Filter out nulls if one doesn't exist
 
-passwordRequirements = document.getElementById('password-requirements')
+passwordRequirements = document.getElementById('password-checklist')
 
 const rules = {
   length: (pw) => pw.length >= 8,

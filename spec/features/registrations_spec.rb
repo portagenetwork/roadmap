@@ -67,7 +67,7 @@ RSpec.describe 'Registrations', type: :feature do
 
     # Check rule indicators
     # Only 1 out of 5 should be a check mark
-    within('#password-requirements') do
+    within('#password-checklist') do
       expect(page).to have_css('.fa-circle-check', count: 1)
       expect(page).to have_css('.fa-circle-xmark', count: 4)
     end
@@ -79,7 +79,7 @@ RSpec.describe 'Registrations', type: :feature do
     end
 
     # Check rule indicators
-    within('#password-requirements') do
+    within('#password-checklist') do
       expect(page).to have_css('.fa-circle-check', count: 3)
       expect(page).to have_css('.fa-circle-xmark', count: 2)
     end
@@ -91,7 +91,7 @@ RSpec.describe 'Registrations', type: :feature do
 
     # Check rule indicators
     # All 5 requirements should be met
-    within('#password-requirements') do
+    within('#password-checklist') do
       expect(page).to have_css('.fa-circle-check', count: 5)
       expect(page).to have_css('.fa-circle-xmark', count: 0)
     end
