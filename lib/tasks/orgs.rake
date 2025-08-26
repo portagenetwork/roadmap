@@ -18,7 +18,7 @@ namespace :orgs do
         p ''
         # rubocop:enable Layout/LineLength
         orgs = Org.includes(identifiers: :identifier_scheme)
-                  .where(is_other: false).order(:name)
+                  .where(managed: true, is_other: false).order(:name)
 
         orgs.each do |org|
           # If the Org already has a ROR identifier skip it
