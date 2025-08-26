@@ -17,7 +17,7 @@
         <div class="form-control mb-3 col-xs-10">
           <% id = presenter.id_for_scheme(scheme: scheme) %>
           <span class="bold"><%= scheme.description %>:</span>
-          <%= id_for_display(id: id) %>
+          <%= id_for_display(id: id, with_scheme_name: false) %>
         </div>
       </div>
     <% end %>
@@ -62,7 +62,7 @@
       <div class="form-control mb-3 col-xs-10">
         <% id = presenter.id_for_scheme(scheme: scheme) %>
         <span class="bold"><%= scheme.description %>:</span>
-        <%= id_for_display(id: id) %>
+        <%= id_for_display(id: id, with_scheme_name: false) %>
       </div>
     </div>
   <% end %>
