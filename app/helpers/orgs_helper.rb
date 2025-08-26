@@ -39,16 +39,12 @@ module OrgsHelper
   # Displays a sample feedback message in the org/Request Feedback section
   # that is meant to serve as an example
   #
-  # org - The current Org who owns the feedback message being displayed
-  # current_user - The current user we're showing feedback message to
-  #
   # Returns String
   def display_sample_feedback_message(org, current_user)
     email = org.contact_email || EMAIL_PLACEHOLDER
     username = current_user.name(false) || USER_PLACEHOLDER
 
-    # feedback_confirmation_default_message represents the default feedback message
-    # taken from feedbacks_helper.rb
+    # feedback_confirmation_default_message is taken from feedbacks_helper.rb
     format(feedback_confirmation_default_message, user_name: username, organisation_email: email)
   end
 
