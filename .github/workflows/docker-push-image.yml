@@ -34,7 +34,7 @@ jobs:
       # Extract metadata for app image
       - name: Extract metadata (tags) for Docker app Image
         id: meta_app
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v5
         with:
           images: ualbertalib/dmp_roadmap
           flavor: |
@@ -55,7 +55,7 @@ jobs:
       # Extract metadata for assets image
       - name: Extract metadata (tags) for Docker assets image
         id: meta_assets
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v5
         with:
           images: ualbertalib/dmp_roadmap
           flavor: |
