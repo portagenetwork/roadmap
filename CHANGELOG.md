@@ -7,9 +7,11 @@
 
 ### Fixed
  - Fix Translation of Permissions in Email [#1123](https://github.com/portagenetwork/roadmap/pull/1123)
+ 
  - Fix/Re-Enable "Create Plan" RSpec Test [#798](https://github.com/portagenetwork/roadmap/pull/798)
 
 ### Changed
+ - Strengthened Password Policy [#1158](https://github.com/portagenetwork/roadmap/pull/1158)
 
 
 ### Dependency Updates
