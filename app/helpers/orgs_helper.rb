@@ -2,6 +2,8 @@
 
 # Helper methods for Orgs
 module OrgsHelper
+  include FeedbacksHelper
+
   EMAIL_PLACEHOLDER = '[Organisation Contact Email Placeholder]'
   PLAN_PLACEHOLDER = '[Plan Name Placeholder]'
   USER_PLACEHOLDER = ''
@@ -45,12 +47,9 @@ module OrgsHelper
     email = org.contact_email || EMAIL_PLACEHOLDER
     username = current_user.name(false) || USER_PLACEHOLDER
 
-    format(_('<p>Hello %{user_name},</p>' \
-      'A member of your organisation will respond to your request to review your data management plan
-       within 48 hours. ' \
-      'If you have questions pertaining to this action please contact your local team at %{organisation_email}, ' \
-      'or for assistance with DMP Assistant contact dmp-assistant@tech.alliancecan.ca.'), user_name: username,
-                                                                                          organisation_email: email)
+    # feedback_confirmation_default_message represents the default feedback message
+    # taken from feedbacks_helper.rb
+    format(feedback_confirmation_default_message, user_name: username, organisation_email: email)
   end
 
   # The preferred logo url for the current configuration. If DRAGONFLY_AWS is true, return
