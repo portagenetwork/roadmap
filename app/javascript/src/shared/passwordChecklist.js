@@ -1,12 +1,12 @@
 
-const passwordChecklist = () => {
+const initPasswordChecklist = () => {
 
   // Some forms pre-append 'new' to ID names
   const passwordInput = document.getElementById('user_password') || document.getElementById('new_user_password');
   
-  const passwordRequirements = document.getElementById('password-checklist')
+  const passwordChecklist = document.getElementById('password-checklist')
   // Exit if relevant elements are not on this page
-  if (!passwordInput|| !passwordRequirements) return;
+  if (!passwordInput|| !passwordChecklist) return;
 
   const rules = {
     length: (pw) => pw.length >= 8,
@@ -21,13 +21,13 @@ const passwordChecklist = () => {
   // (See app/views/shared/_password_checklist.html.erb)
   const ruleIconsMap = Object.fromEntries(
     Object.keys(rules).map(rule => {
-      const li = passwordRequirements.querySelector(`li[data-rule="${rule}"]`);
+      const li = passwordChecklist.querySelector(`li[data-rule="${rule}"]`);
       const icon = li?.querySelector('i');
       return [rule, icon];
     })
   );
 
-  const updateRequirements = (pw) => {
+  const updateChecklistIcons = (pw) => {
     for (const [ruleName, ruleValidator] of Object.entries(rules)) {
       const icon = ruleIconsMap[ruleName];
       if (!icon) continue;
@@ -39,12 +39,12 @@ const passwordChecklist = () => {
   };
 
   passwordInput.addEventListener('input', (e) => {
-    // passwordRequirements element is hidden by default
-    if (!passwordRequirements.classList.contains('visible')) {
-      passwordRequirements.classList.add('visible');
+    // passwordChecklist element is hidden by default
+    if (!passwordChecklist.classList.contains('visible')) {
+      passwordChecklist.classList.add('visible');
     }
-    updateRequirements(e.target.value);
+    updateChecklistIcons(e.target.value);
   });
 };
 
-passwordChecklist();
+initPasswordChecklist();
