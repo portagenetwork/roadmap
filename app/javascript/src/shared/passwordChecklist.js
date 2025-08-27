@@ -1,15 +1,12 @@
 
 const passwordChecklist = () => {
-  const passwordInputs = [
-    document.getElementById('user_password'),
-    // Some forms pre-append 'new' to ID names
-    document.getElementById('new_user_password')
-  ].filter(Boolean); // Filter out nulls if one doesn't exist
 
+  // Some forms pre-append 'new' to ID names
+  const passwordInput = document.getElementById('user_password') || document.getElementById('new_user_password');
+  
   const passwordRequirements = document.getElementById('password-checklist')
-
   // Exit if relevant elements are not on this page
-  if (passwordInputs.length === 0 || !passwordRequirements) return;
+  if (!passwordInput|| !passwordRequirements) return;
 
   const rules = {
     length: (pw) => pw.length >= 8,
@@ -41,14 +38,12 @@ const passwordChecklist = () => {
     }
   };
 
-  passwordInputs.forEach(input => {
-    input.addEventListener('input', (e) => {
-      // passwordRequirements element is hidden by default
-      if (!passwordRequirements.classList.contains('visible')) {
-        passwordRequirements.classList.add('visible');
-      }
-      updateRequirements(e.target.value);
-    });
+  passwordInput.addEventListener('input', (e) => {
+    // passwordRequirements element is hidden by default
+    if (!passwordRequirements.classList.contains('visible')) {
+      passwordRequirements.classList.add('visible');
+    }
+    updateRequirements(e.target.value);
   });
 };
 
