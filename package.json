@@ -58,7 +58,7 @@
     "popper.js": "^1.16.1",
     "rails-erb-loader": "^5.5.2",
     "regenerator-runtime": "^0.13.5",
-    "sass": "^1.57.1",
+    "sass": "^1.91.0",
     "timeago.js": "^4.0.2",
     "tinymce": "^7.2.0",
     "webpack": "^5.94.0",
