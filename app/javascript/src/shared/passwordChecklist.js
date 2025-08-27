@@ -20,14 +20,22 @@ const passwordChecklist = () => {
     special: (pw) => /[!@#$%^&*()_\-+=\[\]{};:'",.<>?/\\|`~]/.test(pw),
   };
 
-  const updateRequirements = (pw) => {
-    for (const rule in rules) {
+  // Map the rule names to their icons
+  // (See app/views/shared/_password_checklist.html.erb)
+  const ruleIconsMap = Object.fromEntries(
+    Object.keys(rules).map(rule => {
       const li = passwordRequirements.querySelector(`li[data-rule="${rule}"]`);
       const icon = li?.querySelector('i');
+      return [rule, icon];
+    })
+  );
 
+  const updateRequirements = (pw) => {
+    for (const [ruleName, ruleValidator] of Object.entries(rules)) {
+      const icon = ruleIconsMap[ruleName];
       if (!icon) continue;
 
-      const valid = rules[rule](pw);
+      const valid = ruleValidator(pw);
       icon.classList.toggle('fa-circle-check', valid);
       icon.classList.toggle('fa-circle-xmark', !valid);
     }
