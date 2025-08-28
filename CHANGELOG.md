@@ -10,6 +10,8 @@
  
  - Fix/Re-Enable "Create Plan" RSpec Test [#798](https://github.com/portagenetwork/roadmap/pull/798)
 
+ - Fix Sample Feedback Message Behaviour [#1164](https://github.com/portagenetwork/roadmap/pull/1164)
+
 ### Changed
  - Strengthened Password Policy [#1158](https://github.com/portagenetwork/roadmap/pull/1158)
 
