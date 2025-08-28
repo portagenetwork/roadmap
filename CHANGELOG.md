@@ -3,7 +3,7 @@
 ## [Unreleased]
 
 ### Added 
- - - Enable session timeout after inactivity [#1128](https://github.com/portagenetwork/roadmap/pull/1128)
+ - Enable session timeout after inactivity [#1128](https://github.com/portagenetwork/roadmap/pull/1128)
 
 ### Fixed
  - Fix Translation of Permissions in Email [#1123](https://github.com/portagenetwork/roadmap/pull/1123)
