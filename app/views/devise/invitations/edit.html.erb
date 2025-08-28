@@ -13,7 +13,7 @@
       <%= f.hidden_field :invitation_token %>
       <div class="form-group">
         <%= f.label(:password, _('New password'), class: 'control-label') %>
-        <%= f.password_field(:password, class: 'form-control', "aria-required": true, autocomplete: "new-password", id: 'user_password') %>
+        <%= f.password_field(:password, class: 'form-control', "aria-required": true, autocomplete: "new-password") %>
         <%= render 'shared/password_checklist', f: f%>
       </div>
       <div class="form-group">
