@@ -8,6 +8,8 @@ const initPasswordChecklist = () => {
   // Exit if relevant elements are not on this page
   if (!passwordInput|| !passwordChecklist) return;
 
+  // Use RegExp's .test() method for validating rules
+  // (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/test)
   const rules = {
     length: (pw) => pw.length >= 8,
     uppercase: (pw) => /[A-Z]/.test(pw),
@@ -27,12 +29,17 @@ const initPasswordChecklist = () => {
     })
   );
 
+  // Updates the checklist icons to reflect which password rules are satisfied.
   const updateChecklistIcons = (pw) => {
+    // Loop over each of the defined rules
     for (const [ruleName, ruleValidator] of Object.entries(rules)) {
+      // Get the DOM icon mapped to this rule
       const icon = ruleIconsMap[ruleName];
       if (!icon) continue;
 
+      // Validate current password against current rule
       const valid = ruleValidator(pw);
+      // Update icons accordingly: ✔ if valid, ✖ if invalid
       icon.classList.toggle('fa-circle-check', valid);
       icon.classList.toggle('fa-circle-xmark', !valid);
     }
