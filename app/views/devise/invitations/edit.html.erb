@@ -14,6 +14,7 @@
       <div class="form-group">
         <%= f.label(:password, _('New password'), class: 'control-label') %>
         <%= f.password_field(:password, class: 'form-control', "aria-required": true, autocomplete: "new-password") %>
+        <%= render 'shared/password_checklist', f: f%>
       </div>
       <div class="form-group">
         <%= f.label(:password_confirmation, _('Password confirmation'), class: 'control-label') %>

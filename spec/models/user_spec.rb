@@ -586,4 +586,48 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe '#password_complexity' do
+    let(:user) { build(:user, password: password) }
+
+    subject { user.valid? }
+
+    context 'with password with valid complexity' do
+      let(:password) { 'StrongP@ssw0rd!@$%#' }
+
+      it 'accepts strong password' do
+        subject
+        expect(user.errors[:password]).to be_empty
+      end
+    end
+
+    # For more info on shared_examples:
+    # https://rspec.info/features/3-13/rspec-core/example-groups/shared-examples/
+    shared_examples 'complexity error' do |pwd|
+      let(:password) { pwd }
+
+      it 'adds complexity error' do
+        subject
+        expect(user.errors[:password]).to include(
+          I18n.t('activerecord.errors.messages.complexity')
+        )
+      end
+    end
+
+    context 'without uppercase letter' do
+      it_behaves_like 'complexity error', 'invalid1@password'
+    end
+
+    context 'without lowercase letter' do
+      it_behaves_like 'complexity error', 'INVALID1@'
+    end
+
+    context 'without digit' do
+      it_behaves_like 'complexity error', 'Invalid@pass'
+    end
+
+    context 'without special character' do
+      it_behaves_like 'complexity error', 'Invalid1pass'
+    end
+  end
 end

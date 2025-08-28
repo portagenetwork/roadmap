@@ -58,7 +58,7 @@ FactoryBot.define do
     firstname    { Faker::Name.unique.first_name }
     surname      { Faker::Name.unique.last_name }
     email        { Faker::Internet.unique.email }
-    password     { 'password' }
+    password     { 'StrongP@ssw0rd!@$%#' }
     accept_terms { true }
     confirmed_at { Time.now.utc }
 
