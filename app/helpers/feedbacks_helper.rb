@@ -2,6 +2,8 @@
 
 # Helper methods for Feedback messages
 module FeedbacksHelper
+  EMAIL_PLACEHOLDER = _('[Organisation Contact Email Placeholder]')
+
   def feedback_confirmation_default_subject
     _('%{application_name}: Your plan has been submitted for feedback')
   end
@@ -18,5 +20,29 @@ module FeedbacksHelper
   def feedback_constant_to_text(text, user, plan, org)
     format(_(text.to_s), application_name: ApplicationService.application_name, user_name: user.name(false),
                          plan_name: plan.title, organisation_email: org.contact_email)
+  end
+
+  # Displays a feedback message that the user can edit in the org/Request Feedback section
+  #
+  # org - The current Org who owns the feedback message being displayed
+  # feedack_message - The feedback message we're displaying
+  # plan_name - Name of the plan we're displaying the feedback message for
+  def editable_feedback_message(org, feedback_message, plan_name)
+    format(
+      _(feedback_message),
+      user_name: current_user.name(false), organisation_email: org.contact_email, plan_name: plan_name
+    )
+  rescue KeyError, ArgumentError => e
+    Rails.logger.error("Unable to display feedback message: #{e.message}")
+    ''
+  end
+
+  # Displays a sample feedback message in the org/Request Feedback section
+  # that is meant to serve as an example
+  def sample_feedback_message(org)
+    # This is needed here because an org may not have set a contact email
+    email = org.contact_email || EMAIL_PLACEHOLDER
+
+    format(feedback_confirmation_default_message, user_name: current_user.name(false), organisation_email: email)
   end
 end
