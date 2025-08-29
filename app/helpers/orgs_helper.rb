@@ -12,7 +12,7 @@ module OrgsHelper
   # current_user - The current user we're showing feedback message to
   # feedack_message - The feedback message we're displaying
   # plan_name - Name of the plan we're displaying the feedback message for
-  def display_editable_feedback_message(org, current_user, feedback_message, plan_name)
+  def display_editable_feedback_message(org, feedback_message, plan_name)
     email = org.contact_email || EMAIL_PLACEHOLDER
 
     format(
@@ -25,7 +25,7 @@ module OrgsHelper
 
   # Displays a sample feedback message in the org/Request Feedback section
   # that is meant to serve as an example
-  def display_sample_feedback_message(org, current_user)
+  def display_sample_feedback_message(org)
     email = org.contact_email || EMAIL_PLACEHOLDER
 
     # feedback_confirmation_default_message is taken from feedbacks_helper.rb
