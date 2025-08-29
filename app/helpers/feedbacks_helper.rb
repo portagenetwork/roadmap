@@ -25,7 +25,6 @@ module FeedbacksHelper
   # Displays a feedback message that the user can edit in the org/Request Feedback section
   #
   # org - The current Org who owns the feedback message being displayed
-  # current_user - The current user we're showing feedback message to
   # feedack_message - The feedback message we're displaying
   # plan_name - Name of the plan we're displaying the feedback message for
   def editable_feedback_message(org, feedback_message, plan_name)
@@ -35,6 +34,7 @@ module FeedbacksHelper
     )
   rescue KeyError, ArgumentError => e
     Rails.logger.error("Unable to display feedback message: #{e.message}")
+    ''
   end
 
   # Displays a sample feedback message in the org/Request Feedback section
