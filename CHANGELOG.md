@@ -3,7 +3,7 @@
 ## [Unreleased]
 
 ### Added 
-
+ - Added session timeout after 90 minutes of inactivity [#1165](https://github.com/portagenetwork/roadmap/pull/1165)
 
 ### Fixed
  - Fix Translation of Permissions in Email [#1123](https://github.com/portagenetwork/roadmap/pull/1123)

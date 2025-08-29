@@ -74,9 +74,9 @@ class User < ApplicationRecord
   # Devise
   #   Include default devise modules. Others available are:
   #   :token_authenticatable, :confirmable,
-  #   :lockable, :timeoutable and :omniauthable
+  #   :lockable, and :omniauthable
   devise :invitable, :database_authenticatable, :registerable, :recoverable,
-         :rememberable, :trackable, :validatable, :omniauthable, :confirmable,
+         :rememberable, :trackable, :validatable, :omniauthable, :confirmable, :timeoutable,
          omniauth_providers: %i[shibboleth orcid openid_connect]
 
   ##
