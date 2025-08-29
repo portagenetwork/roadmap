@@ -29,11 +29,9 @@ module FeedbacksHelper
   # feedack_message - The feedback message we're displaying
   # plan_name - Name of the plan we're displaying the feedback message for
   def editable_feedback_message(org, feedback_message, plan_name)
-    email = org.contact_email || EMAIL_PLACEHOLDER
-
     format(
       _(feedback_message),
-      user_name: current_user.name(false), organisation_email: email, plan_name: plan_name
+      user_name: current_user.name(false), organisation_email: org.contact_email, plan_name: plan_name
     )
   rescue KeyError, ArgumentError => e
     Rails.logger.error("Unable to display feedback message: #{e.message}")
@@ -42,6 +40,7 @@ module FeedbacksHelper
   # Displays a sample feedback message in the org/Request Feedback section
   # that is meant to serve as an example
   def sample_feedback_message(org)
+    # This is needed here because an org may not have set a contact email
     email = org.contact_email || EMAIL_PLACEHOLDER
 
     format(feedback_confirmation_default_message, user_name: current_user.name(false), organisation_email: email)
