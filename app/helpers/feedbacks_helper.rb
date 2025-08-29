@@ -2,7 +2,7 @@
 
 # Helper methods for Feedback messages
 module FeedbacksHelper
-  EMAIL_PLACEHOLDER = '[Organisation Contact Email Placeholder]'
+  EMAIL_PLACEHOLDER = _('[Organisation Contact Email Placeholder]')
 
   def feedback_confirmation_default_subject
     _('%{application_name}: Your plan has been submitted for feedback')
@@ -28,7 +28,7 @@ module FeedbacksHelper
   # current_user - The current user we're showing feedback message to
   # feedack_message - The feedback message we're displaying
   # plan_name - Name of the plan we're displaying the feedback message for
-  def display_editable_feedback_message(org, feedback_message, plan_name)
+  def editable_feedback_message(org, feedback_message, plan_name)
     email = org.contact_email || EMAIL_PLACEHOLDER
 
     format(
@@ -41,7 +41,7 @@ module FeedbacksHelper
 
   # Displays a sample feedback message in the org/Request Feedback section
   # that is meant to serve as an example
-  def display_sample_feedback_message(org)
+  def sample_feedback_message(org)
     email = org.contact_email || EMAIL_PLACEHOLDER
 
     format(feedback_confirmation_default_message, user_name: current_user.name(false), organisation_email: email)
