@@ -17,6 +17,8 @@
 
  - Hardcode `Dockerfile.production` image versions for Dependabot [#1163](https://github.com/portagenetwork/roadmap/pull/1163)
 
+ - Use Default Branch for `ualbertalib/translation_io_rails` in Gemfile [#1168](https://github.com/portagenetwork/roadmap/pull/1168)
+
 ### Dependency Updates
 
 ## [4.1.1+portage-4.4.0]
