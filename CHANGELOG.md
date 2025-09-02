@@ -34,6 +34,8 @@
 
  - chore(deps): bump actions/checkout from 3 to 5 [#1159](https://github.com/portagenetwork/roadmap/pull/1159)
 
+ - chore(deps): bump docker/build-push-action from 2.5.0 to 6.18.0 [#1160](https://github.com/portagenetwork/roadmap/pull/1160)
+
 ## [4.1.1+portage-4.4.0]
 
 ### Added
