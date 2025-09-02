@@ -15,6 +15,7 @@
 ### Changed
  - Strengthened Password Policy [#1158](https://github.com/portagenetwork/roadmap/pull/1158)
 
+ - Hardcode `Dockerfile.production` image versions for Dependabot [#1163](https://github.com/portagenetwork/roadmap/pull/1163)
 
 ### Dependency Updates
 
