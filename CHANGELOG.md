@@ -5,6 +5,8 @@
 ### Added 
  - Added session timeout after 90 minutes of inactivity [#1165](https://github.com/portagenetwork/roadmap/pull/1165)
 
+ - Enabled session cookie to be secure in deployed environments [#1157](https://github.com/portagenetwork/roadmap/pull/1157)
+
 ### Fixed
  - Fix Translation of Permissions in Email [#1123](https://github.com/portagenetwork/roadmap/pull/1123)
  
@@ -20,6 +22,11 @@
  - Use Default Branch for `ualbertalib/translation_io_rails` in Gemfile [#1168](https://github.com/portagenetwork/roadmap/pull/1168)
 
 ### Dependency Updates
+ - Bump docker/setup-buildx-action from 2 to 3 [#1139](https://github.com/portagenetwork/roadmap/pull/1139)
+
+ - Bump docker/login-action from 1.10.0 to 3.5.0 [#1140](https://github.com/portagenetwork/roadmap/pull/1140)
+
+ - Bump docker/metadata-action from 3 to 5 [#1142](https://github.com/portagenetwork/roadmap/pull/1142)
 
 ## [4.1.1+portage-4.4.0]
 
