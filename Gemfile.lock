@@ -1,7 +1,6 @@
 GIT
   remote: https://github.com/ualbertalib/translation_io_rails
-  revision: 6fbb2cd619e7bf01b37b9b8916b0f345899f876b
-  branch: fix/broken_db_fake_method_calls
+  revision: f60a5427372b51348eb218755e275f0f34d19746
   specs:
     translation (1.22)
       gettext (~> 3.2, >= 3.2.5)
@@ -228,7 +227,7 @@ GEM
     fuubar (2.5.1)
       rspec-core (~> 3.0)
       ruby-progressbar (~> 1.4)
-    gettext (3.4.9)
+    gettext (3.5.1)
       erubi
       locale (>= 2.0.5)
       prime
@@ -413,7 +412,7 @@ GEM
       ast (~> 2.4.1)
       racc
     pg (1.5.9)
-    prime (0.1.2)
+    prime (0.1.4)
       forwardable
       singleton
     progress_bar (1.3.4)
@@ -556,7 +555,7 @@ GEM
       activesupport (>= 4.2.0)
     simpleidn (0.2.1)
       unf (~> 0.1.4)
-    singleton (0.2.0)
+    singleton (0.3.0)
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
