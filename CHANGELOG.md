@@ -36,6 +36,8 @@
 
  - chore(deps): bump docker/build-push-action from 2.5.0 to 6.18.0 [#1160](https://github.com/portagenetwork/roadmap/pull/1160)
 
+ - chore(deps): bump surnet/alpine-wkhtmltopdf from 3.21.2-0.12.6-small to 3.22.0-0.12.6-small [#1170](https://github.com/portagenetwork/roadmap/pull/1170)
+
 ## [4.1.1+portage-4.4.0]
 
 ### Added
