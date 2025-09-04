@@ -44,9 +44,9 @@
                   <% if @show_unanswered %>
                     <%# Hack: for DOCX export - otherwise, bold highlighting of question inconsistent. %>
                     <% if local_assigns[:export_format] && export_format == 'docx' %>
-                      <strong><%=  sanitize question[:text].to_s, scrubber: TableFreeScrubber.new %></strong>
+                      <p class="bold"><%= sanitize question[:text].to_s, scrubber: TableFreeScrubber.new %></p>
                     <% else %>
-                     <div class="bold"><%=  sanitize question[:text].to_s, scrubber: TableFreeScrubber.new %></div>
+                      <div class="bold"><%= sanitize question[:text].to_s, scrubber: TableFreeScrubber.new %></div>
                     <% end %>
                     <br>
                   <% end %>
