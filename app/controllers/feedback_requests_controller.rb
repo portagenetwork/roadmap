@@ -14,25 +14,12 @@ class FeedbackRequestsController < ApplicationController
     authorize @plan, :request_feedback?
     begin
       if @plan.request_feedback(current_user)
-        redirect_to request_feedback_plan_path(@plan), notice: _(request_feedback_flash_notice)
+        redirect_to request_feedback_plan_path(@plan), notice: request_feedback_flash_notice(@plan, current_user.org)
       else
         redirect_to request_feedback_plan_path(@plan), alert: ALERT
       end
     rescue StandardError
       redirect_to request_feedback_plan_path(@plan), alert: ERROR
     end
-  end
-
-  private
-
-  # Flash notice for successful feedback requests
-  def request_feedback_flash_notice
-    # This is the flash notice that is shown after a user clicks "Request Feedback"
-    # when creating a plan
-
-    text = _('<p>Your plan "%{plan_name}" has been submitted for feedback from an administrator at your organisation. ' \
-             'If you have questions pertaining to this action, please contact us at %{organisation_email}.</p>')
-
-    feedback_constant_to_text(text, current_user, @plan, current_user.org)
   end
 end
