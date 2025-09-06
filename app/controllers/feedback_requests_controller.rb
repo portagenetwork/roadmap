@@ -26,16 +26,12 @@ class FeedbackRequestsController < ApplicationController
   private
 
   # Flash notice for successful feedback requests
-  #
-  # Returns String
   def request_feedback_flash_notice
     # This is the flash notice that is shown after a user clicks "Request Feedback"
     # when creating a plan
 
-    text = "<p>Your plan \"%{plan_name}\" has been submitted for feedback from an
-       administrator at your organisation. " \
-      "If you have questions pertaining to this action, please contact us
-      at %{organisation_email}.</p>"
+    text = _('<p>Your plan "%{plan_name}" has been submitted for feedback from an administrator at your organisation. ' \
+             'If you have questions pertaining to this action, please contact us at %{organisation_email}.</p>')
 
     feedback_constant_to_text(text, current_user, @plan, current_user.org)
   end
