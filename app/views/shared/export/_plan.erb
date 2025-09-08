@@ -42,8 +42,9 @@
                   <% blank = answer.present? ? answer.blank? : true %>
                   <% options = answer.present? ? answer.question_options : [] %>
                   <% if @show_unanswered %>
-                    <%# Hack: for DOCX export - otherwise, bold highlighting of question inconsistent. %>
                     <% if local_assigns[:export_format] && export_format == 'docx' %>
+                      <%# Use <p class="bold"> for DOCX export to generate valid paragraphs in the Word XML,
+                        # preventing file corruption and ensuring consistent bold styling. %>
                       <p class="bold"><%= sanitize question[:text].to_s, scrubber: TableFreeScrubber.new %></p>
                     <% else %>
                       <div class="bold"><%= sanitize question[:text].to_s, scrubber: TableFreeScrubber.new %></div>
