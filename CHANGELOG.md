@@ -18,6 +18,8 @@
 
  - Enable `request_feedback_flash_notice` Translation and Refactor [#1176](https://github.com/portagenetwork/roadmap/pull/1176)
 
+ - Fix `.docx` issue when opening with Word [#1175](https://github.com/portagenetwork/roadmap/pull/1175)
+
 ### Changed
 
  - Strengthened Password Policy [#1158](https://github.com/portagenetwork/roadmap/pull/1158)
