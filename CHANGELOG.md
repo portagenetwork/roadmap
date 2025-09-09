@@ -16,6 +16,8 @@
 
  - Fix Sample Feedback Message Behaviour [#1164](https://github.com/portagenetwork/roadmap/pull/1164)
 
+ - Enable `request_feedback_flash_notice` Translation and Refactor [#1176](https://github.com/portagenetwork/roadmap/pull/1176)
+
 ### Changed
 
  - Strengthened Password Policy [#1158](https://github.com/portagenetwork/roadmap/pull/1158)
