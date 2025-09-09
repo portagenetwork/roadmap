@@ -16,6 +16,10 @@
 
  - Fix Sample Feedback Message Behaviour [#1164](https://github.com/portagenetwork/roadmap/pull/1164)
 
+ - Enable `request_feedback_flash_notice` Translation and Refactor [#1176](https://github.com/portagenetwork/roadmap/pull/1176)
+
+ - Fix `.docx` issue when opening with Word [#1175](https://github.com/portagenetwork/roadmap/pull/1175)
+
 ### Changed
 
  - Strengthened Password Policy [#1158](https://github.com/portagenetwork/roadmap/pull/1158)
@@ -35,6 +39,10 @@
  - chore(deps): bump actions/checkout from 3 to 5 [#1159](https://github.com/portagenetwork/roadmap/pull/1159)
 
  - chore(deps): bump docker/build-push-action from 2.5.0 to 6.18.0 [#1160](https://github.com/portagenetwork/roadmap/pull/1160)
+
+ - chore(deps): bump surnet/alpine-wkhtmltopdf from 3.21.2-0.12.6-small to 3.22.0-0.12.6-small [#1170](https://github.com/portagenetwork/roadmap/pull/1170)
+
+ - chore(deps): bump nginx from 1.27.4-alpine to 1.29.1-alpine [#1171](https://github.com/portagenetwork/roadmap/pull/1171)
 
 ## [4.1.1+portage-4.4.0]
 
