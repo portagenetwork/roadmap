@@ -17,9 +17,14 @@ module FeedbacksHelper
       'or for assistance with DMP Assistant contact dmp-assistant@tech.alliancecan.ca.')
   end
 
-  def feedback_constant_to_text(text, user, plan, org)
-    format(_(text.to_s), application_name: ApplicationService.application_name, user_name: user.name(false),
-                         plan_name: plan.title, organisation_email: org.contact_email)
+  def request_feedback_flash_notice(plan, org)
+    # Content for the "Request Feedback" flash notice on the plans/:id/request_feedback page
+
+    format(
+      _('<p>Your plan "%{plan_name}" has been submitted for feedback from an administrator at your organisation. ' \
+        'If you have questions pertaining to this action, please contact us at %{organisation_email}.</p>'),
+      plan_name: plan.title, organisation_email: org.contact_email
+    )
   end
 
   # Displays a feedback message that the user can edit in the org/Request Feedback section
