@@ -3,8 +3,8 @@
 namespace :orgs do
   desc 'retrieves ROR ids for each of the Orgs defined in the database'
   task retrieve_ror_fundref_ids: :environment do
-    ror = IdentifierScheme.find_by(name: 'ror')
-    fundref = IdentifierScheme.find_by(name: 'fundref')
+    ror, fundref = fetch_identifier_schemes
+    return unless ror && fundref
 
     out = CSV.generate do |csv|
       csv << %w[org_id org_name ror_name ror_id fundref_id]
@@ -68,5 +68,16 @@ namespace :orgs do
       file.puts out
       file.close
     end
+  end
+
+  def fetch_identifier_schemes
+    ror = IdentifierScheme.find_by(name: 'ror')
+    fundref = IdentifierScheme.find_by(name: 'fundref')
+
+    if ror.nil? || fundref.nil?
+      p "Missing IdentifierScheme(s): ror: #{ror.inspect}, fundref: #{fundref.inspect}"
+      p 'Both must exist in DB for this task to run.'
+    end
+    [ror, fundref]
   end
 end
