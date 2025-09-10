@@ -23,7 +23,7 @@ jobs:
         bundler-cache: true
     
     # Install Node
-    - uses: actions/setup-node@v3
+    - uses: actions/setup-node@v5
       with:
         node-version: '20.15.1'
         cache: 'yarn'
