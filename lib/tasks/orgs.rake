@@ -6,7 +6,7 @@ namespace :orgs do
     ror, fundref = fetch_identifier_schemes
     return unless ror && fundref
 
-    out = CSV.generate do |csv|
+    CSV.open('tmp/ror_fundref_ids.csv', 'w') do |csv|
       csv << %w[org_id org_name ror_name ror_id fundref_id]
 
       if ExternalApis::RorService.ping
@@ -61,12 +61,6 @@ namespace :orgs do
         p 'ROR appears to be offline or your configuration is invalid. Heartbeat check failed. Refer to the log for more information.'
         # rubocop:enable Layout/LineLength
       end
-    end
-
-    if out.present?
-      file = File.open('tmp/ror_fundref_ids.csv', 'w')
-      file.puts out
-      file.close
     end
   end
 
