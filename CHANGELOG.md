@@ -42,6 +42,8 @@
 
  - chore(deps): bump nginx from 1.27.4-alpine to 1.29.1-alpine [#1171](https://github.com/portagenetwork/roadmap/pull/1171)
 
+ - chore(deps): bump actions/setup-node from 3 to 5 [#1174](https://github.com/portagenetwork/roadmap/pull/1174)
+
 ## [4.1.1+portage-4.4.0]
 
 ### Added
