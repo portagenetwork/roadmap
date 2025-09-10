@@ -44,6 +44,8 @@
 
  - chore(deps): bump actions/setup-node from 3 to 5 [#1174](https://github.com/portagenetwork/roadmap/pull/1174)
 
+ - chore(deps-dev): bump wkhtmltopdf-binary from 0.12.6.8 to 0.12.6.10 [#1151](https://github.com/portagenetwork/roadmap/pull/1151)
+
 ## [4.1.1+portage-4.4.0]
 
 ### Added
