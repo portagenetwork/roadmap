@@ -67,10 +67,6 @@ class UserPolicy < ApplicationPolicy
     @user.can_super_admin?
   end
 
-  def org_admin_other_user?
-    @user.can_super_admin? || @user.can_org_admin?
-  end
-
   # returns the users for the org
   class Scope < Scope
     def resolve
