@@ -26,6 +26,8 @@
 
  - Use Default Branch for `ualbertalib/translation_io_rails` in Gemfile [#1168](https://github.com/portagenetwork/roadmap/pull/1168)
 
+ - Remove Files and References Related to `org_admin_other_user` [#1178](https://github.com/portagenetwork/roadmap/pull/1178)
+
 ### Dependency Updates
 
  - Bump docker/setup-buildx-action from 2 to 3 [#1139](https://github.com/portagenetwork/roadmap/pull/1139)
