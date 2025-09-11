@@ -30,8 +30,9 @@ namespace :orgs do
           rslts = OrgSelection::SearchService.search_externally(search_term: org_name)
           next unless rslts.any?
 
-          # Just use the first match that contains the search term
-          rslt = rslts.find { |r| r[:weight] <= 1 }
+          # Find the best match
+          # (See OrgSelection::SearchService#weigh for how weight is calculated.)
+          rslt = rslts.find { |r| (r[:weight]).zero? } || rslts.find { |r| r[:weight] == 1 }
           next unless rslt.present?
 
           ror_id = rslt[:ror]
