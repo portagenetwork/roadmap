@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 CSV_FILE_PATH = Rails.root.join('tmp', 'ror_fundref_ids.csv')
-CSV_HEADERS = %w[org_id org_name ror_name ror_id fundref_id].freeze
+CSV_HEADERS = %w[org_id org_name ror_name ror_id fundref_id weight].freeze
 
 namespace :orgs do
   desc 'Updates DB and Creates CSV with Org-related ROR/Fundref data'
@@ -17,13 +17,13 @@ namespace :orgs do
         # If the Org already has a ROR identifier skip it
         next if org_has_ror_identifier?(org, ror)
 
-        rslts = ror_search_results_for_org(org)
-        next unless rslts.any?
-
-        rslt = best_match_from_results(rslts)
-        next unless rslt.present?
-
-        handle_result(org, ror, fundref, rslt, csv)
+        results = ror_search_results_for_org(org)
+        result = best_match_from_results(results) if results.any?
+        if result.present?
+          handle_matched_result(org, ror, fundref, result, csv)
+        else
+          handle_unmatched_result(org, csv)
+        end
       end
     end
   end
@@ -79,19 +79,24 @@ namespace :orgs do
     OrgSelection::SearchService.search_externally(search_term: org_name)
   end
 
-  def best_match_from_results(rslts)
+  def best_match_from_results(results)
     # Find the best match
     # (See OrgSelection::SearchService#weigh for how weight is calculated.)
-    rslts.find { |r| (r[:weight]).zero? } || rslts.find { |r| r[:weight] == 1 }
+    results.find { |r| (r[:weight]).zero? } || results.find { |r| r[:weight] == 1 }
   end
 
-  def handle_result(org, ror, fundref, result, csv)
+  def handle_unmatched_result(org, csv)
+    puts "⚠️  No results found for Org with id: #{org.id} and name: #{org.name}"
+    csv << [org.id, org.name, nil, nil, nil, nil]
+  end
+
+  def handle_matched_result(org, ror, fundref, result, csv)
     return unless result[:ror].present? || result[:fundref].present?
 
     # Save ROR and FUNDREF entries to DB
     identifiers = handle_identifiers(org, ror, fundref, result)
     # Add entry to generated CSV
-    csv << [org.id, org.name, result[:name], identifiers[:ror]&.value, identifiers[:fundref]&.value]
+    csv << [org.id, org.name, result[:name], identifiers[:ror]&.value, identifiers[:fundref]&.value, result[:weight]]
   end
 
   def handle_identifiers(org, ror, fundref, result)
@@ -108,9 +113,11 @@ namespace :orgs do
                                                   identifier_scheme: identifier_scheme)
     begin
       identifier.update!(value: "#{identifier_scheme.identifier_prefix}#{id}")
-      puts "#{org.name} -> #{label}: #{identifier.value}, #{name}"
+      puts "✅  Updated #{org.name} -> #{label}: #{identifier.value}, #{name}"
     rescue StandardError => e
-      puts "Failed to update #{org.name} -> #{label}: #{e.message}"
+      message = "❌  Failed to update #{org.name} -> #{label}: #{e.message}"
+      puts message
+      Rails.logger.error(message)
     end
     identifier
   end
