@@ -81,9 +81,13 @@ module ExternalApis
       def query_ror(term:, page: 1, filters: [])
         return [] unless term.present?
 
+        # Percent-encode the term
+        # (HTTParty.get() throws InvalidURIError when given non-ASCII characters)
+        encoded_term = URI.encode_www_form_component(term)
+
         # build the URL
         target = "#{api_base_url}#{search_path}"
-        query = query_string(term: term, page: page, filters: filters)
+        query = query_string(term: encoded_term, page: page, filters: filters)
 
         # Call the ROR API and log any errors
         resp = http_get(uri: "#{target}?#{query}", additional_headers: {},
