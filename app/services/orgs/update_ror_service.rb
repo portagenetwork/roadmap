@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
 module Orgs
+  # Service object that updates Org records with ROR and FundRef identifiers, and writes results to CSV
+  # Invoked by the `orgs:update_ror_data` Rake task (lib/tasks/orgs.rake)
   module UpdateRorService
     extend self
 
@@ -13,22 +17,24 @@ module Orgs
       print_intro_message
 
       CSV.open(CSV_FILE_PATH, 'w', write_headers: true, headers: CSV_HEADERS) do |csv|
-        org_scope.each do |org|
-          # If the Org already has a ROR identifier skip it
-          next if org_has_ror_identifier?(org, ror)
-
-          results = ror_search_results_for_org(org)
-          result = best_match_from_results(results) if results.any?
-          if result.present?
-            handle_matched_result(org, ror, fundref, result, csv)
-          else
-            handle_unmatched_result(org, csv)
-          end
-        end
+        org_scope.each { |org| process_org(org, ror, fundref, csv) }
       end
     end
 
     private
+
+    def process_org(org, ror, fundref, csv)
+      # If the Org already has a ROR identifier, skip it
+      return if org_has_ror_identifier?(org, ror)
+
+      results = ror_search_results_for_org(org)
+      result = best_match_from_results(results) if results.any?
+      if result.present?
+        handle_matched_result(org, ror, fundref, result, csv)
+      else
+        handle_unmatched_result(org, csv)
+      end
+    end
 
     def fetch_identifier_schemes
       ror = IdentifierScheme.find_by(name: 'ror')
