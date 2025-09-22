@@ -8,6 +8,8 @@
 
  - Enabled session cookie to be secure in deployed environments [#1157](https://github.com/portagenetwork/roadmap/pull/1157)
 
+ - Rework `retrieve_ror_fundref_ids` rake task & Fix HTTParty InvalidURIError with non-ASCII characters [#1182](https://github.com/portagenetwork/roadmap/pull/1182)
+
 ### Fixed
 
  - Fix Translation of Permissions in Email [#1123](https://github.com/portagenetwork/roadmap/pull/1123)
