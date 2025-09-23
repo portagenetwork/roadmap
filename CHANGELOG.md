@@ -30,6 +30,10 @@
 
  - Remove Files and References Related to `org_admin_other_user` [#1178](https://github.com/portagenetwork/roadmap/pull/1178)
 
+ - Remove repetitive rendering of ROR/Fundref scheme names
+   - [#1182](https://github.com/portagenetwork/roadmap/pull/1182)
+   - [#1190](https://github.com/portagenetwork/roadmap/pull/1190)
+
 ### Dependency Updates
 
  - Bump docker/setup-buildx-action from 2 to 3 [#1139](https://github.com/portagenetwork/roadmap/pull/1139)
