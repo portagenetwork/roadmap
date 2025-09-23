@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [4.1.1+portage-4.5.0]
 
 ### Added
 
@@ -53,6 +53,8 @@
  - chore(deps): bump actions/setup-node from 3 to 5 [#1174](https://github.com/portagenetwork/roadmap/pull/1174)
 
  - chore(deps-dev): bump wkhtmltopdf-binary from 0.12.6.8 to 0.12.6.10 [#1151](https://github.com/portagenetwork/roadmap/pull/1151)
+
+ - chore(deps-dev): bump rexml from 3.3.9 to 3.4.2 [#1184](https://github.com/portagenetwork/roadmap/pull/1184)
 
 ## [4.1.1+portage-4.4.0]
 
