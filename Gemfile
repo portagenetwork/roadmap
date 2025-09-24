@@ -187,8 +187,7 @@ gem 'htmltoword'
 # INTERNATIONALIZATION #
 # ==================== #
 
-gem 'translation', git: 'https://github.com/ualbertalib/translation_io_rails',
-                   branch: 'fix/broken_db_fake_method_calls'
+gem 'translation', git: 'https://github.com/ualbertalib/translation_io_rails'
 
 # ========= #
 # UTILITIES #

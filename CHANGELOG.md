@@ -1,5 +1,61 @@
 # Changelog
 
+## [4.1.1+portage-4.5.0]
+
+### Added
+
+ - Added session timeout after 90 minutes of inactivity [#1165](https://github.com/portagenetwork/roadmap/pull/1165)
+
+ - Enabled session cookie to be secure in deployed environments [#1157](https://github.com/portagenetwork/roadmap/pull/1157)
+
+ - Rework `retrieve_ror_fundref_ids` rake task & Fix HTTParty InvalidURIError with non-ASCII characters [#1182](https://github.com/portagenetwork/roadmap/pull/1182)
+
+### Fixed
+
+ - Fix Translation of Permissions in Email [#1123](https://github.com/portagenetwork/roadmap/pull/1123)
+ 
+ - Fix/Re-Enable "Create Plan" RSpec Test [#798](https://github.com/portagenetwork/roadmap/pull/798)
+
+ - Fix Sample Feedback Message Behaviour [#1164](https://github.com/portagenetwork/roadmap/pull/1164)
+
+ - Enable `request_feedback_flash_notice` Translation and Refactor [#1176](https://github.com/portagenetwork/roadmap/pull/1176)
+
+### Changed
+
+ - Strengthened Password Policy [#1158](https://github.com/portagenetwork/roadmap/pull/1158)
+
+ - Hardcode `Dockerfile.production` image versions for Dependabot [#1163](https://github.com/portagenetwork/roadmap/pull/1163)
+
+ - Use Default Branch for `ualbertalib/translation_io_rails` in Gemfile [#1168](https://github.com/portagenetwork/roadmap/pull/1168)
+
+ - Remove Files and References Related to `org_admin_other_user` [#1178](https://github.com/portagenetwork/roadmap/pull/1178)
+
+ - Remove repetitive rendering of ROR/Fundref scheme names
+   - [#1182](https://github.com/portagenetwork/roadmap/pull/1182)
+   - [#1190](https://github.com/portagenetwork/roadmap/pull/1190)
+
+### Dependency Updates
+
+ - Bump docker/setup-buildx-action from 2 to 3 [#1139](https://github.com/portagenetwork/roadmap/pull/1139)
+
+ - Bump docker/login-action from 1.10.0 to 3.5.0 [#1140](https://github.com/portagenetwork/roadmap/pull/1140)
+
+ - Bump docker/metadata-action from 3 to 5 [#1142](https://github.com/portagenetwork/roadmap/pull/1142)
+
+ - chore(deps): bump actions/checkout from 3 to 5 [#1159](https://github.com/portagenetwork/roadmap/pull/1159)
+
+ - chore(deps): bump docker/build-push-action from 2.5.0 to 6.18.0 [#1160](https://github.com/portagenetwork/roadmap/pull/1160)
+
+ - chore(deps): bump surnet/alpine-wkhtmltopdf from 3.21.2-0.12.6-small to 3.22.0-0.12.6-small [#1170](https://github.com/portagenetwork/roadmap/pull/1170)
+
+ - chore(deps): bump nginx from 1.27.4-alpine to 1.29.1-alpine [#1171](https://github.com/portagenetwork/roadmap/pull/1171)
+
+ - chore(deps): bump actions/setup-node from 3 to 5 [#1174](https://github.com/portagenetwork/roadmap/pull/1174)
+
+ - chore(deps-dev): bump wkhtmltopdf-binary from 0.12.6.8 to 0.12.6.10 [#1151](https://github.com/portagenetwork/roadmap/pull/1151)
+
+ - chore(deps-dev): bump rexml from 3.3.9 to 3.4.2 [#1184](https://github.com/portagenetwork/roadmap/pull/1184)
+
 ## [4.1.1+portage-4.4.0]
 
 ### Added

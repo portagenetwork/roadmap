@@ -1,13 +1,7 @@
-ARG RUBY_VERSION=3.1.4-alpine
-ARG NODE_VERSION=20.15.1-r0
-ARG WKHTMLTOPDF_VERSION=3.21.2-0.12.6-small
-ARG NGINX_VERSION=1.27.4-alpine
+FROM surnet/alpine-wkhtmltopdf:3.22.0-0.12.6-small AS wkhtmltopdf
 
-FROM surnet/alpine-wkhtmltopdf:$WKHTMLTOPDF_VERSION AS wkhtmltopdf
+FROM ruby:3.1.4-alpine AS builder
 
-FROM ruby:$RUBY_VERSION AS builder
-
-ARG NODE_VERSION
 ENV INSTALL_PATH=/usr/src/app \
     RAILS_ENV=production \
     NODE_ENV=production \
@@ -29,7 +23,7 @@ RUN apk update && apk add --no-cache \
     musl-dev \
     postgresql16-dev \
     git \
-    nodejs=$NODE_VERSION \
+    nodejs=20.15.1-r0 \
     yarn \
     shared-mime-info \
     tzdata
@@ -62,9 +56,8 @@ USER root
 RUN rm -rf ${INSTALL_PATH}/node_modules ${INSTALL_PATH}/tmp/*
 USER dmpuser
 
-FROM ruby:$RUBY_VERSION AS app
+FROM ruby:3.1.4-alpine AS app
 
-ARG NODE_VERSION
 ENV INSTALL_PATH=/usr/src/app
 
 # Create non-root user with same UID/GID as builder
@@ -80,7 +73,7 @@ RUN apk update && apk add --no-cache \
     imagemagick \
     libjpeg-turbo \
     wget \
-    nodejs=$NODE_VERSION \
+    nodejs=20.15.1-r0 \
     # Install dependencies for wkhtmltopdf
     # (See https://github.com/Surnet/docker-wkhtmltopdf/pkgs/container/alpine-wkhtmltopdf#other-images)
     libstdc++ \
@@ -146,7 +139,7 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]
 
 # nginx stage to serve static assets
-FROM nginx:$NGINX_VERSION AS assets
+FROM nginx:1.29.1-alpine AS assets
 
 ENV INSTALL_PATH=/usr/src/app
 

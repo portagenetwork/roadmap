@@ -59,6 +59,8 @@ class User < ApplicationRecord
 
   extend UniqueRandom
 
+  attr_accessor :skip_password_validation
+
   # =============
   # = Constants =
   # =============
@@ -72,9 +74,9 @@ class User < ApplicationRecord
   # Devise
   #   Include default devise modules. Others available are:
   #   :token_authenticatable, :confirmable,
-  #   :lockable, :timeoutable and :omniauthable
+  #   :lockable, and :omniauthable
   devise :invitable, :database_authenticatable, :registerable, :recoverable,
-         :rememberable, :trackable, :validatable, :omniauthable, :confirmable,
+         :rememberable, :trackable, :validatable, :omniauthable, :confirmable, :timeoutable,
          omniauth_providers: %i[shibboleth orcid openid_connect]
 
   ##
@@ -114,6 +116,8 @@ class User < ApplicationRecord
   # ===============
   # = Validations =
   # ===============
+
+  validate :password_complexity, unless: :skip_password_validation
 
   validates :active, inclusion: { in: BOOLEAN_VALUES, message: INCLUSION_MESSAGE }
 
@@ -198,6 +202,10 @@ class User < ApplicationRecord
     user = User.find_or_initialize_by(email: provider_data.info.email.downcase)
 
     return user unless user.new_record?
+
+    # We are using `Devise.friendly_token[0, 20]` to generate a random password here. While it is strong,
+    # it may not satisfy our custom `password_complexity` validator, so we skip validation.
+    user.skip_password_validation = true
 
     user.update!(
       firstname: provider_data.info&.first_name.presence || _(GENERIC_USER_NAME_VALUES[:firstname]),
@@ -514,5 +522,17 @@ class User < ApplicationRecord
 
   def clear_department_id
     self.department_id = nil
+  end
+
+  def password_complexity
+    # Custom validator for password complexity to ensure each password has
+    # 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character
+
+    # Regexp that ensures requirements are met
+    regexp = %r{(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()_\-+=\[\]{};:'",.<>?/\\|`~])}
+
+    return if password.blank? || password =~ regexp
+
+    errors.add :password, :complexity
   end
 end
