@@ -13,13 +13,7 @@
       %w[ror fundref].include?(s.name)
     end
     schemes.each do |scheme| %>
-      <div class="row">
-        <div class="form-group col-xs-10">
-          <% id = presenter.id_for_scheme(scheme: scheme) %>
-          <span class="bold"><%= scheme.description %>:</span>
-          <%= id_for_display(id: id, with_scheme_name: false) %>
-        </div>
-      </div>
+      <%= render_org_identifier(presenter: presenter, scheme: scheme) %>
     <% end %>
 
     <%
@@ -58,13 +52,7 @@
 <%# Otherwise this is an Org Admin so just display the identifiers %>
 <% else %>
   <% presenter.schemes.each do |scheme| %>
-    <div class="row">
-      <div class="form-group col-xs-10">
-        <% id = presenter.id_for_scheme(scheme: scheme) %>
-        <span class="bold"><%= scheme.description %>:</span>
-        <%= id_for_display(id: id, with_scheme_name: false) %>
-      </div>
-    </div>
+    <%= render_org_identifier(presenter: presenter, scheme: scheme) %>
   <% end %>
   <p><%= _("If any of the above identifiers are incorrect or missing, please <a href=\"%{contact_us_url}\">contact us</a> to have them updated.").html_safe % { contact_us_url: contact_us_path } %></p>
 <% end %>

@@ -11,4 +11,14 @@ module IdentifierHelper
 
     link_to "#{prefix} #{without}", id.value, class: 'has-new-window-popup-info'
   end
+
+  def render_org_identifier(presenter:, scheme:, with_scheme_name: false)
+    id = presenter.id_for_scheme(scheme: scheme)
+    content_tag(:div, class: 'row') do
+      content_tag(:div, class: 'form-group col-xs-10') do
+        content_tag(:span, "#{scheme.description}: ", class: 'bold') +
+          id_for_display(id: id, with_scheme_name: with_scheme_name)
+      end
+    end
+  end
 end
