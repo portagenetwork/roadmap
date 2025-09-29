@@ -129,13 +129,16 @@ Rails.application.routes.draw do
 
     member do
       get 'answer'
+      get 'publish'
       get 'share'
+      get 'follow_up'
       get 'request_feedback'
       get 'download'
       post 'duplicate'
       post 'visibility', constraints: { format: [:json] }
       post 'set_test', constraints: { format: [:json] }
       get 'overview'
+      get 'mint'
     end
 
     # Ajax endpoint for ResearchOutput.output_type selection

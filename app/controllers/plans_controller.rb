@@ -307,6 +307,27 @@ class PlansController < ApplicationController
   end
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
 
+  # GET /plans/:id/publish
+  def publish
+    @plan = Plan.find(params[:id])
+    if @plan.present?
+      authorize @plan
+      @plan_roles = @plan.roles.where(active: true)
+      @orcid_access_token = ExternalApiAccessToken.for_user_and_service(user: current_user, service: 'orcid')
+    else
+      redirect_to(plans_path)
+    end
+  end
+
+  # Retrieves the Plan's most recent DOI
+  def dmp_id
+    return nil unless Rails.configuration.x.madmp.enable_dmp_id_registration
+
+    id = identifiers.includes(:identifier_scheme)
+                    .reverse.find { |i| i.identifier_scheme == DmpIdService.identifier_scheme }
+    id if id.present?
+  end
+
   # GET /plans/:id/share
   def share
     @plan = Plan.find(params[:id])
@@ -462,6 +483,47 @@ class PlansController < ApplicationController
     flash[:alert] = format(_('There is no plan associated with id %{<id}>s'), id: params[:id])
     redirect_to(action: :index)
   end
+
+  # GET /plans/:id/mint
+  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
+  def mint
+    @plan = Plan.find(params[:id])
+    authorize @plan
+
+    dmp_id = DmpIdService.mint_dmp_id(plan: @plan)
+    if dmp_id.save
+      @plan = @plan.reload
+
+      # Only allow ORCID publication for the DMP ID if it is enabled in the config!
+      if Rails.configuration.x.madmp.enable_orcid_publication
+        @orcid_access_token = ExternalApiAccessToken.for_user_and_service(user: current_user, service: 'orcid')
+      end
+
+      # If a DMP ID was successfully acquired and the User has authorized us to write to their ORCID record
+      if @plan.dmp_id.present? && @orcid_access_token.present?
+        ExternalApis::OrcidService.add_work(user: current_user, plan: @plan)
+      end
+
+      redirect_to publish_plan_path(@plan), notice: success_message(@plan, _('registered'))
+    else
+      redirect_to publish_plan_path(@plan), alert: failure_message(@plan, _('register'))
+    end
+  rescue StandardError => e
+    # rubocop:disable Layout/LineLength
+    Rails.logger.error "Either unable to register the DMP ID or unable to update the owner's ORCID record for plan #{params[:id]} /
+                        and user #{current_user.id} - #{e.message}"
+    Rails.logger.error e.backtrace
+
+    msg = if @plan.dmp_id.present?
+            _('Your DMP ID was registered but we were unable to add it to your ORCID record as a new work.')
+          else
+            format(_("Something went wrong and we were unable to acquire a DMP ID for your plan. Please try again. If the problem /
+              persists please contact the help desk at %{helpdesk_email}"), helpdesk_email: Rails.configuration.x.organisation.helpdesk_email)
+          end
+    # rubocop:enable Layout/LineLength
+    redirect_to publish_plan_path(@plan), alert: msg
+  end
+  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
 
   # ============================
   # = Private instance methods =

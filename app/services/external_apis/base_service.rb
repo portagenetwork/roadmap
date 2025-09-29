@@ -77,6 +77,29 @@ module ExternalApis
         Rails.logger.error error.backtrace
       end
 
+      # Emails the error and response to the administrators
+      # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      def notify_administrators(obj:, response: nil, error: nil)
+        return false unless obj.present? && response.present?
+
+        message = "#{obj.class.name} - #{obj.respond_to?(:id) ? obj.id : ''}"
+        message += '<br>----------------------------------------<br><br>'
+
+        message += "Sent: #{Rails.logger.debug(json_from_template(plan: obj))}" if obj.is_a?(Plan)
+        message += '<br>----------------------------------------<br><br>' if obj.is_a?(Plan)
+
+        message += "#{name} received the following unexpected response:<br>"
+        message += response.inspect.to_s
+        message += '<br>----------------------------------------<br><br>'
+
+        message += error.message if error.present? && error.is_a?(StandardError)
+        message += error.backtrace || '' if error.present? && error.is_a?(StandardError)
+
+        UserMailer.notify_administrators(message).deliver_now
+        true
+      end
+      # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+
       private
 
       # Retrieves the application name from dmproadmap.rb initializer or uses the App name
@@ -105,6 +128,40 @@ module ExternalApis
         handle_http_failure(method: "BaseService.http_get #{e.message}",
                             http_response: resp)
         resp
+      end
+
+      # Makes a PUT request to the specified uri with the additional headers.
+      # Additional headers are combined with the base headers defined above.
+      def http_put(uri:, additional_headers: {}, data: {}, basic_auth: nil, debug: false)
+        return nil if uri.blank?
+
+        opts = options(additional_headers: additional_headers, debug: debug)
+        opts[:body] = data
+        opts[:basic_auth] = basic_auth if basic_auth.present?
+        HTTParty.put(uri, opts)
+      rescue URI::InvalidURIError => e
+        handle_uri_failure(method: "BaseService.http_put #{e.message}", uri: uri)
+        nil
+      rescue HTTParty::Error => e
+        handle_http_failure(method: "BaseService.http_put #{e.message}", http_response: nil)
+        nil
+      end
+
+      # Makes a POST request to the specified uri with the additional headers.
+      # Additional headers are combined with the base headers defined above.
+      def http_post(uri:, additional_headers: {}, data: {}, basic_auth: nil, debug: false)
+        return nil if uri.blank?
+
+        opts = options(additional_headers: additional_headers, debug: debug)
+        opts[:body] = data
+        opts[:basic_auth] = basic_auth if basic_auth.present?
+        HTTParty.post(uri, opts)
+      rescue URI::InvalidURIError => e
+        handle_uri_failure(method: "BaseService.http_post #{e.message}", uri: uri)
+        nil
+      rescue HTTParty::Error => e
+        handle_http_failure(method: "BaseService.http_post #{e.message}", http_response: nil)
+        nil
       end
 
       # Options for the HTTParty call

@@ -584,6 +584,15 @@ class Plan < ApplicationRecord
     identifiers.find { |i| DMP_ID_TYPES.include?(i.identifier_format) }
   end
 
+  # Retrieves the Plan's most recent DOI
+  def dmp_id
+    return nil unless Rails.configuration.x.madmp.enable_dmp_id_registration
+
+    id = identifiers.includes(:identifier_scheme)
+                    .reverse.find { |i| i.identifier_scheme == DmpIdService.identifier_scheme }
+    id if id.present?
+  end
+
   # Since the Grant is not a normal AR association, override the getter and setter
   def grant
     Identifier.find_by(id: grant_id)
@@ -608,6 +617,25 @@ class Plan < ApplicationRecord
     self.grant_id = current.id
   end
   # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
+
+  # Return the citation for the DMP. For example:
+  #
+  # Jane Doe. (2021). "My DMP" [Data Management Plan]. DMPRoadmap. https://doi.org/10.12/a1.b2
+  #
+  def citation
+    return nil unless owner.present? && dmp_id.is_a?(Identifier)
+
+    # authors = owner_and_coowners.map { |author| author.name(false) }
+    #                             .uniq
+    #                             .sort { |a, b| a <=> b }
+    #                             .join(", ")
+    # TODO: display all authors once we determine the appropriate way to handle on the ORCID side
+    authors = owner.name(false)
+    pub_year = updated_at.strftime('%Y')
+    app_name = ApplicationService.application_name
+    link = dmp_id.value
+    "#{authors}. (#{pub_year}). \"#{title}\" [Data Management Plan]. #{app_name}. #{link}"
+  end
 
   private
 
