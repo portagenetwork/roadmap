@@ -51,6 +51,8 @@ class IdentifierScheme < ApplicationRecord
             3 => :for_plans,
             4 => :for_users,
             5 => :for_contributors,
+            6 => :for_identification,
+            7 => :for_research_outputs,
             column: 'context',
             check_for_column: false # Must be false to allow Docker GH Action to pass
 

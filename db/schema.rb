@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_08_20_190548) do
+ActiveRecord::Schema.define(version: 2025_09_29_223135) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -228,6 +228,7 @@ ActiveRecord::Schema.define(version: 2024_08_20_190548) do
     t.text "logo_url"
     t.text "identifier_prefix"
     t.integer "context"
+    t.string "external_service"
   end
 
   create_table "identifiers", id: :serial, force: :cascade do |t|
