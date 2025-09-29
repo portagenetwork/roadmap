@@ -69,6 +69,23 @@ class TemplateOptionsController < ApplicationController
       # We want the default template to appear at the beggining of the list
       @templates.unshift(customization)
     end
+
+    # Assign the order of templates in the dropdown menu
+    # Get all templates belonging to the organization
+    org_templates = @templates.select { |template| template.org_id == org&.id && template.customization_of.nil? }
+
+    # Get the Alliance Simplified Template and the Alliance Template
+    alliance_simplified_template = @templates.find { |t| t.title.start_with?('Alliance Simplified Template') }
+    alliance_template = @templates.find { |t| t.title == 'Alliance Template' }
+
+    remaining_templates = @templates - org_templates - [alliance_simplified_template, alliance_template]
+
+    # The desired order of templates in the dropdown is:
+    # All organizational templates first followed by the Alliance Simplified Template
+    # Followed by the Alliance Template and then all remaining templates
+    # Note: .compact removes nil plans
+    @templates = org_templates + [alliance_simplified_template, alliance_template].compact + remaining_templates
+
     @templates = @templates.uniq
   end
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
