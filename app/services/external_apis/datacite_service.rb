@@ -167,10 +167,10 @@ module ExternalApis
       end
 
       def json_from_template(dmp:)
-        ActionController::Base.new.render_to_string(
-          template: '/datacite/_minter',
-          locals: { prefix: shoulder, data_management_plan: dmp }
-        )
+        ActionController::Base.new.render_to_string(template: '/datacite/_minter',
+                                                    locals: {
+                                                      prefix: shoulder, data_management_plan: dmp
+                                                    }, layout: false)
       end
 
       def process_response(response:)

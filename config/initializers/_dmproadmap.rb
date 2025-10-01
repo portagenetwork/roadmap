@@ -217,6 +217,13 @@ module DMPRoadmap
 
     # Check download of a plan coversheet tickbox
     config.x.plans.download_coversheet_tickbox_checked = true
+
+    # Whether the collaborators section of the DMP (people who co-owner, can edit or comment)
+    # are displayed on the 'Share' tab.
+    # If true: The 'Share' tab appears with Plan Visibility and Collaborators
+    # If false: It appears on the Contributors tab and the 'Share' tab becomes 'Publish'
+    config.x.show_collaborators_on_share_tab = false
+
     # ---------------------------------------------------- #
     # CACHING - all values are in seconds (86400 == 1 Day) #
     # ---------------------------------------------------- #
@@ -247,9 +254,15 @@ module DMPRoadmap
     # This flag will enable/disable the entire Research Outputs tab. The others below will
     # just enable/disable specific functionality on the Research Outputs tab
     config.x.madmp.enable_research_outputs = true
+    config.x.enable_research_outputs = false
     config.x.madmp.enable_license_selection = true
     config.x.madmp.enable_metadata_standard_selection = true
     config.x.madmp.enable_repository_selection = true
+
+    # Allow DMP ID minting
+    config.x.madmp.enable_dmp_id_registration = true
+    # Allow DMP IDs to be published to the user's ORCID record
+    config.x.madmp.enable_orcid_publication = false
 
     # The following flags will allow the system to include the question and answer in the JSON output
     #   - questions with a theme equal to 'Preservation'

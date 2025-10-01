@@ -7,8 +7,8 @@ Rails.configuration.x.datacite.description = 'The DataCite REST API: https://sup
 
 # Credentials for minting DMP IDs via DataCite
 # To disable this feature, simply set 'active' to false
-Rails.configuration.x.datacite.landing_page_url = Rails.configuration.x.dmproadmap.datacite_landing_page_url
-Rails.configuration.x.datacite.api_base_url = Rails.configuration.x.dmproadmap.datacite_api_base_url
+Rails.configuration.x.datacite.landing_page_url = "https://doi.org/"
+Rails.configuration.x.datacite.api_base_url = "https://api.test.datacite.org/"
 Rails.configuration.x.datacite.mint_path = 'dois'
 Rails.configuration.x.datacite.update_path = 'dois/'
 Rails.configuration.x.datacite.delete_path = 'dois/'
@@ -17,11 +17,11 @@ Rails.configuration.x.datacite.delete_path = 'dois/'
 # Datacite defines this as:
 #    "Typically, the organisation allowing the resource to be available on the
 #     internet through the provision of its hardware/software/operating support."
-Rails.configuration.x.datacite.hosting_institution = 'My Curation Centre (MCC)'
-Rails.configuration.x.datacite.hosting_institution_identifier = 'https://ror.org/12345'
+Rails.configuration.x.datacite.hosting_institution = 'Digital Research Alliance of Canada'
+Rails.configuration.x.datacite.hosting_institution_identifier = 'https://ror.org/010r6td27'
 
 # TODO: Move the :repository_id, :password and :shoulder to the credentials.yml.enc in Rails5
-Rails.configuration.x.datacite.repository_id = Rails.application.credentials.datacite_repository_id
-Rails.configuration.x.datacite.password = Rails.application.credentials.datacite_password
-Rails.configuration.x.datacite.shoulder = Rails.application.credentials.datacite_shoulder
-Rails.configuration.x.datacite.active = false
+Rails.configuration.x.datacite.repository_id = Rails.application.secrets.datacite_repository_id
+Rails.configuration.x.datacite.password = Rails.application.secrets.datacite_password
+Rails.configuration.x.datacite.shoulder = Rails.application.secrets.datacite_shoulder.to_s
+Rails.configuration.x.datacite.active = true
