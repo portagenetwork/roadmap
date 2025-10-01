@@ -70,23 +70,7 @@ class TemplateOptionsController < ApplicationController
       @templates.unshift(customization)
     end
 
-    # Assign the order of templates in the dropdown menu
-    # Get all templates belonging to the organization
-    org_templates = @templates.select { |template| template.org_id == org&.id && template.customization_of.nil? }
-
-    # Get the Alliance Simplified Template and the Alliance Template
-    alliance_simplified_template = @templates.find { |t| t.title.start_with?('Alliance Simplified Template') }
-    alliance_template = @templates.find { |t| t.title == 'Alliance Template' }
-
-    remaining_templates = @templates - org_templates - [alliance_simplified_template, alliance_template]
-
-    # The desired order of templates in the dropdown is:
-    # All organizational templates first followed by the Alliance Simplified Template
-    # Followed by the Alliance Template and then all remaining templates
-    # Note: .compact removes nil plans
-    @templates = org_templates + [alliance_simplified_template, alliance_template].compact + remaining_templates
-
-    @templates = @templates.uniq
+    @templates = sort_templates(@templates, org)
   end
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
   # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
@@ -100,5 +84,23 @@ class TemplateOptionsController < ApplicationController
 
   def org_params
     %i[id name url language abbreviation ror fundref weight score]
+  end
+
+  # Assign the order of templates in the dropdown menu
+  def sort_templates(templates, org) # rubocop:disable Metrics/AbcSize
+    # Get all templates belonging to the selected organization
+    org_templates = templates.select { |template| template.org_id == org&.id && template.customization_of.nil? }
+
+    # Get the Alliance Simplified Template and the Alliance Template
+    alliance_simplified_template = templates.find { |t| t.title.start_with?('Alliance Simplified Template') }
+    alliance_template = templates.find { |t| t.title == 'Alliance Template' }
+
+    remaining_templates = templates - org_templates - [alliance_simplified_template, alliance_template]
+
+    # The desired order of templates in the dropdown is:
+    # All organizational templates first followed by the Alliance Simplified Template
+    # Followed by the Alliance Template and then all remaining templates
+    # Note: .compact removes nil plans
+    (org_templates + [alliance_simplified_template, alliance_template].compact + remaining_templates).uniq
   end
 end
