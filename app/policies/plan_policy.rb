@@ -93,8 +93,4 @@ class PlanPolicy < ApplicationPolicy
   def mint?
     @record.owner == @user || @user.can_super_admin?
   end
-
-  def follow_up?
-    @record.administerable_by?(@user.id) || (@user.can_org_admin? && @user.org_id == @record.org_id)
-  end
 end

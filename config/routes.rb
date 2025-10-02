@@ -131,7 +131,6 @@ Rails.application.routes.draw do
       get 'answer'
       get 'publish'
       get 'share'
-      get 'follow_up'
       get 'request_feedback'
       get 'download'
       post 'duplicate'
