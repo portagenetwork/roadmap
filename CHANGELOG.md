@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Dependency Updates
+
+ - chore(deps): bump rack from 2.2.14 to 2.2.18 [#1195](https://github.com/portagenetwork/roadmap/pull/1195)
+
 ## [4.1.1+portage-4.5.0]
 
 ### Added
