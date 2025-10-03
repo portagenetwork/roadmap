@@ -24,16 +24,14 @@ class TemplateOptionsController < ApplicationController
     return unless (org.present? && !org.new_record?) || (funder.present? && !funder.new_record?)
 
     if org.present? && !org.new_record?
-      # Load the funder's template(s) minus the default template (that gets swapped
-      # in below if NO other templates are available)
+      # Load the funder's template(s) minus the default template (that gets swapped in below)
       @templates = Template.latest_customizable.where(org_id: funder.id, is_default: false).sort_by(&:title).to_a
-      # Swap out any organisational cusotmizations of a funder template
+      # Wherever possible, replace funder templates with organisational customizations
       @templates = @templates.map do |tmplt|
         customization = Template.published
                                 .latest_customized_version(tmplt.family_id,
                                                            org.id).first
-        # Only provide the customized version if its still up to date with the
-        # funder template!
+        # Only provide the customized version if it's still up to date with the funder template
         if customization.present? && !customization.upgrade_customization?
           customization
         else
@@ -42,8 +40,6 @@ class TemplateOptionsController < ApplicationController
       end
       # We are using a default funder to provide with the default templates, but
       # We still want to provide the organization templates.
-      # If the no funder was specified OR the funder matches the org
-      # if funder.blank? || funder.id == org&.id
       # Retrieve the Org's templates
       @templates << Template.published.organisationally_visible.where(org_id: org.id,
                                                                       customization_of: nil).sort_by(&:title).to_a
@@ -55,9 +51,6 @@ class TemplateOptionsController < ApplicationController
                                                               is_default: false).sort_by(&:title).to_a
     end
     @templates = @templates.flatten
-    # DMP Assistant: We do not want to include not customized templates from default funder
-    # Include customizable funder templates
-    # @templates << funder_templates = Template.latest_customizable
     # Always use the default template
     if Template.default.present? && org.present?
       # Fetch the org’s latest customization of the default template
