@@ -86,31 +86,35 @@ class TemplateOptionsController < ApplicationController
     %i[id name url language abbreviation ror fundref weight score]
   end
 
+  def alliance_templates(templates)
+    simplified = templates.find { |t| t.title.start_with?('Alliance Simplified Template') }
+    alliance   = templates.find { |t| t.title == 'Alliance Template' }
+    [simplified, alliance].compact
+  end
+
   # Assign the order of templates in the dropdown menu
   # The desired order of templates in the dropdown is:
   # All organizational templates first followed by the Alliance Simplified Template
   # Followed by the Alliance Template and then all remaining templates
-  def sort_templates(templates, org) # rubocop:disable Metrics/AbcSize,Metrics/PerceivedComplexity
+  def sort_templates(templates, org)
     # Get all templates belonging to the selected organization
     org_templates = templates.select { |template| template.org_id == org&.id }
-
-    # Get the Alliance Simplified Template and the Alliance Template
-    alliance_simplified_template = templates.find { |t| t.title.start_with?('Alliance Simplified Template') }
-    alliance_template = templates.find { |t| t.title == 'Alliance Template' }
+    # Get the Alliance Simplified and Full Templates
+    alliance_templates = alliance_templates(templates)
 
     org_is_alliance = org&.name == 'Digital Research Alliance of Canada'
 
     # If the chosen org is the Alliance, its templates must not be removed
     remaining_templates = if org_is_alliance
-                            templates - [alliance_simplified_template, alliance_template]
+                            templates - alliance_templates
                           else
-                            templates - org_templates - [alliance_simplified_template, alliance_template]
+                            templates - org_templates - alliance_templates
                           end
 
     if org_is_alliance
-      ([alliance_simplified_template, alliance_template].compact + remaining_templates).uniq
+      (alliance_templates + remaining_templates).uniq
     else
-      (org_templates + [alliance_simplified_template, alliance_template].compact + remaining_templates).uniq
+      (org_templates + alliance_templates + remaining_templates).uniq
     end
   end
 end
