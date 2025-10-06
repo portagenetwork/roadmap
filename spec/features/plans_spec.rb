@@ -6,12 +6,13 @@ RSpec.describe 'Plans', type: :feature do
   include Webmocks
 
   before do
-    @default_template = create(:template, :default, :published)
     @org = create(:org)
     @research_org = create(:org, :organisation, :research_institute,
                            name: 'Test Research Org', templates: 1)
     # Create the required default_funder org for DMP Assistant
     @funding_org  = create(:org, :funder, templates: 1)
+    # Create the default template for the default_funder
+    @default_template = create(:template, :default, :published, org_id: @funding_org.id)
     @original_default_funder_id = Rails.application.config.default_funder_id
     Rails.application.config.default_funder_id = @funding_org.id
     @template     = create(:template, org: @org)

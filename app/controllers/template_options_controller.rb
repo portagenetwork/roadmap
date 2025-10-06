@@ -25,6 +25,7 @@ class TemplateOptionsController < ApplicationController
 
     if org.present? && !org.new_record?
       # Load the funder's template(s)
+      # (`Template.default` belongs to `funder` and will be fetched as part of this query)
       @templates = Template.latest_customizable.where(org_id: funder.id).sort_by(&:title).to_a
       # Wherever possible, replace funder templates with organisational customizations
       @templates = @templates.map do |tmplt|
@@ -46,6 +47,7 @@ class TemplateOptionsController < ApplicationController
     else
       # if'No Primary Research Institution' checkbox is checked,
       # only show publicly available template without customization
+      # (`Template.default` belongs to `funder` and will be fetched as part of this query)
       @templates << Template.published.publicly_visible.where(org_id: funder.id,
                                                               customization_of: nil).sort_by(&:title).to_a
     end
