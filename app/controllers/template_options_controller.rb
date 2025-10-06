@@ -24,8 +24,8 @@ class TemplateOptionsController < ApplicationController
     return unless (org.present? && !org.new_record?) || (funder.present? && !funder.new_record?)
 
     if org.present? && !org.new_record?
-      # Load the funder's template(s) minus the default template (that gets swapped in below)
-      @templates = Template.latest_customizable.where(org_id: funder.id, is_default: false).sort_by(&:title).to_a
+      # Load the funder's template(s)
+      @templates = Template.latest_customizable.where(org_id: funder.id).sort_by(&:title).to_a
       # Wherever possible, replace funder templates with organisational customizations
       @templates = @templates.map do |tmplt|
         customization = Template.published
@@ -46,22 +46,10 @@ class TemplateOptionsController < ApplicationController
     else
       # if'No Primary Research Institution' checkbox is checked,
       # only show publicly available template without customization
-      @templates << Template.default if Template.default.present?
-      @templates << Template.published.publicly_visible.where(org_id: funder.id, customization_of: nil,
-                                                              is_default: false).sort_by(&:title).to_a
+      @templates << Template.published.publicly_visible.where(org_id: funder.id,
+                                                              customization_of: nil).sort_by(&:title).to_a
     end
     @templates = @templates.flatten
-    # Always use the default template
-    if Template.default.present? && org.present?
-      # Fetch the org’s latest customization of the default template
-      customization = Template.published.latest_customized_version(Template.default.family_id, org.id).first
-      # In short: check if `customization` is based on `Template.default`
-      # If so, use `customization`; otherwise, fall back to `Template.default`
-      customization = Template.default unless customization.present? && !customization.upgrade_customization?
-      @templates.select! { |t| t.id != Template.default.id && t.id != customization.id }
-      # We want the default template to appear at the beggining of the list
-      @templates.unshift(customization)
-    end
 
     @templates = sort_templates(@templates, org)
   end
