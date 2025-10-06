@@ -2966,10 +2966,15 @@ isobject@^3.0.1:
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha512-WhB9zCku7EGTj/HQQRz5aUQEUeoQZH2bWcltRErOpymJ4boYE6wL9Tbr23krRPSZ+C5zqNSrSw+Cc7sZZ4b7vg==
 
-jasmine-core@^4.1.0, jasmine-core@^4.2.0, jasmine-core@^4.6.0:
+jasmine-core@^4.1.0, jasmine-core@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-4.6.0.tgz#6884fc3d5b66bf293e422751eed6d6da217c38f5"
   integrity sha512-O236+gd0ZXS8YAjFx8xKaJ94/erqUliEkJTDedyE7iHvv4ZVqi+q+8acJxu05/WJDKm512EUNn809In37nWlAQ==
+
+jasmine-core@^5.12.0:
+  version "5.12.0"
+  resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-5.12.0.tgz#a0cd016483756e9537ba354c52a4ec6d8e9e7951"
+  integrity sha512-QqO4pX33GEML5JoGQU6BM5NHKPgEsg+TXp3jCIDek9MbfEp2JUYEFBo9EF1+hegWy/bCHS1m5nP0BOp18G6rVA==
 
 jasmine@^4.2.1:
   version "4.6.0"
