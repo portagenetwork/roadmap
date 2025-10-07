@@ -69,9 +69,21 @@ class TemplateOptionsController < ApplicationController
     %i[id name url language abbreviation ror fundref weight score]
   end
 
-  def alliance_templates(templates)
-    simplified = templates.find { |t| t.title.start_with?('Alliance Simplified Template') }
-    alliance   = templates.find { |t| t.title == 'Alliance Template' }
+  def alliance_templates(templates) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity
+    # The default funder is the Alliance
+    default_funder_id = Rails.application.config.default_funder_id
+
+    simplified = templates.find do |t|
+      t.title.start_with?('Alliance Simplified Template') &&
+        t.org&.id == default_funder_id
+    end
+
+    alliance = templates.find do |t|
+      t.title == 'Alliance Template' &&
+        t.org&.id == default_funder_id &&
+        t.is_default == true
+    end
+
     [simplified, alliance].compact
   end
 
@@ -79,13 +91,13 @@ class TemplateOptionsController < ApplicationController
   # The desired order of templates in the dropdown is:
   # All organizational templates first followed by the Alliance Simplified Template
   # Followed by the Alliance Template and then all remaining templates
-  def sort_templates(templates, org)
+  def sort_templates(templates, org) # rubocop:disable Metrics/AbcSize
     # Get all templates belonging to the selected organization
     org_templates = templates.select { |template| template.org_id == org&.id }
     # Get the Alliance Simplified and Full Templates
     alliance_templates = alliance_templates(templates)
 
-    org_is_alliance = org&.name == 'Digital Research Alliance of Canada'
+    org_is_alliance = org&.id == Rails.application.config.default_funder_id
 
     # If the chosen org is the Alliance, its templates must not be removed
     remaining_templates = if org_is_alliance
