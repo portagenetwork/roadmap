@@ -10,6 +10,7 @@
 
 ### Changed
 
+ - Edit footer logos [#1203](https://github.com/portagenetwork/roadmap/pull/1203)
 
 ### Dependency Updates
 
