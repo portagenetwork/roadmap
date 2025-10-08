@@ -1,6 +1,6 @@
 # Changelog
 
-## [4.1.1+portage-4.6.0]
+## [Unreleased]
 
 ### Added
 
@@ -11,6 +11,8 @@
 ### Changed
 
  - Edit footer logos [#1203](https://github.com/portagenetwork/roadmap/pull/1203)
+
+ - Reorganize template dropdown menu and refactor TemplateOptionsController [#1199](https://github.com/portagenetwork/roadmap/pull/1199)
 
 ### Dependency Updates
 
