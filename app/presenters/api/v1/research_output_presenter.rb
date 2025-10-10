@@ -5,7 +5,8 @@ module Api
     # Helper methods for research outputs
     class ResearchOutputPresenter
       attr_reader :dataset_id, :preservation_statement, :security_and_privacy, :license_start_date,
-                  :data_quality_assurance, :distributions, :metadata, :technical_resources
+                  :data_quality_assurance, :distributions, :metadata, :technical_resources,
+                  :research_output_type
 
       def initialize(output:)
         @research_output = output
@@ -13,6 +14,11 @@ module Api
 
         @plan = output.plan
         @dataset_id = identifier
+
+        # The DMPHub only recognizes the DEFAULT research_output_types, so use 'other' if these
+        # are custom types added by an admin
+        use_other = !ResearchOutput::DEFAULT_OUTPUT_TYPES.include?(output.research_output_type)
+        @research_output_type = use_other ? 'other' : output.research_output_type
 
         load_narrative_content
 
@@ -26,7 +32,7 @@ module Api
       end
 
       def determine_license_start_date(output:)
-        return nil unless output.present?
+        return nil if output.blank?
         return output.release_date.to_formatted_s(:iso8601) if output.release_date.present?
 
         output.created_at.to_formatted_s(:iso8601)
@@ -52,7 +58,7 @@ module Api
       end
 
       def fetch_q_and_a_as_single_statement(themes:)
-        fetch_q_and_a(themes: themes).collect { |item| item[:description] }.join('<br>')
+        fetch_q_and_a(themes: themes).pluck(:description).join('<br>')
       end
 
       # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
