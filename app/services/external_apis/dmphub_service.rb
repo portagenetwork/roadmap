@@ -223,6 +223,8 @@ module ExternalApis
         log_error(method: 'DMPHub parse response: ', error: e)
         nil
       end
+
+      def create_snapshot(plan:); end
     end
   end
 end
