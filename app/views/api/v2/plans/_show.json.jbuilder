@@ -85,19 +85,19 @@ unless @minimal
   json.dmproadmap_privacy presenter.visibility
 
   # TODO: Refactor as we determine how best to fully implement sponsors
-  if plan.template&.sponsor.present?
-    json.dmproadmap_sponsors [plan.template&.sponsor] do |sponsor|
-      json.name sponsor.name
-      json.type 'field_station'
+  # if plan.template&.sponsor.present?
+  #   json.dmproadmap_sponsors [plan.template&.sponsor] do |sponsor|
+  #     json.name sponsor.name
+  #     json.type 'field_station'
 
-      ror = sponsor.identifier_for_scheme(scheme: 'ror')
-      if ror.present?
-        json.sponsor_id do
-          json.partial! 'api/v2/identifiers/show', identifier: ror
-        end
-      end
-    end
-  end
+  #     ror = sponsor.identifier_for_scheme(scheme: 'ror')
+  #     if ror.present?
+  #       json.sponsor_id do
+  #         json.partial! 'api/v2/identifiers/show', identifier: ror
+  #       end
+  #     end
+  #   end
+  # end
 
   # DMPHub extension to send all callback addresses for interested subscribers for changes to the DMP
   # json.dmphub_subscribers presenter.subscriptions
