@@ -18,7 +18,8 @@ module ExternalApis
       end
 
       def name
-        Rails.configuration.x.dmphub&.name
+        'dmphub'
+        # Rails.configuration.x.dmphub&.name
       end
 
       def description
@@ -50,7 +51,8 @@ module ExternalApis
       end
 
       def caller_name
-        ApplicationService.application_name.split('-').first.to_sym
+        'DMPRoadmap'
+        # ApplicationService.application_name.split('-').first.to_sym
       end
 
       def api_client

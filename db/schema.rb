@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_09_29_223135) do
+ActiveRecord::Schema.define(version: 2025_10_14_160549) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -587,6 +587,20 @@ ActiveRecord::Schema.define(version: 2025_09_29_223135) do
     t.string "description"
     t.string "name"
     t.integer "super_region_id"
+  end
+
+  create_table "related_identifiers", force: :cascade do |t|
+    t.bigint "identifier_scheme_id"
+    t.integer "identifier_type", null: false
+    t.integer "relation_type", null: false
+    t.bigint "identifiable_id"
+    t.string "identifiable_type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["identifiable_id", "identifiable_type", "relation_type"], name: "index_relateds_on_identifiable_and_relation_type"
+    t.index ["identifier_scheme_id"], name: "index_related_identifiers_on_identifier_scheme_id"
+    t.index ["identifier_type"], name: "index_related_identifiers_on_identifier_type"
+    t.index ["relation_type"], name: "index_related_identifiers_on_relation_type"
   end
 
   create_table "repositories", force: :cascade do |t|

@@ -95,7 +95,7 @@ module ExternalApis
         message += error.message if error.present? && error.is_a?(StandardError)
         message += error.backtrace || '' if error.present? && error.is_a?(StandardError)
 
-        UserMailer.notify_administrators(message).deliver_now
+        # UserMailer.notify_administrators(message).deliver_now
         true
       end
       # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity

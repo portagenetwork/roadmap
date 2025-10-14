@@ -126,6 +126,8 @@ class Plan < ApplicationRecord
 
   has_many :research_outputs, dependent: :destroy
 
+  has_many :related_identifiers, as: :identifiable, dependent: :destroy
+
   # =====================
   # = Nested Attributes =
   # =====================
@@ -636,6 +638,46 @@ class Plan < ApplicationRecord
     link = dmp_id.value
     "#{authors}. (#{pub_year}). \"#{title}\" [Data Management Plan]. #{app_name}. #{link}"
   end
+
+  # Helper method to convert related_identifier entries from standard form params into
+  # RelatedIdentifier objects.
+  #
+  # Expecting the hash to look like the following, where the initial key is the
+  # RelatedIdentifier.id or "0" if its an empty entry or an absurdly long value
+  # indicating that its a new entry.
+  # The form's JS makes a copy of the "0" entry and generate a long value for an id
+  # when the user clicks the '+add a related identifier' link. We need to do this so
+  # that the user is able to add multiple entries at one time.
+  #
+  #  {
+  #    "56": {
+  #      "work_type": "software", "value": "https://doi.org/10.48321/D1MP4Z"
+  #    },
+  #    "0": {
+  #      "work_type": "article", "value": ""
+  #    },
+  #    "1632773961597": {
+  #      "work_type": "dataset", "value": "http://foo.bar"
+  #    }
+  #  }
+  # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
+  def related_identifiers_attributes=(params)
+    # Remove any that the user may have deleted
+    related_identifiers.reject { |r_id| params.key?(r_id.id.to_s) }.each(&:destroy)
+
+    # Update existing or add new
+    params.each do |id, related_identifier_hash|
+      related_identifier_hash = related_identifier_hash.with_indifferent_access
+      next unless id.present? && id != '0' && related_identifier_hash[:value].present?
+
+      related = RelatedIdentifier.find_by(id: id)
+      related = RelatedIdentifier.new(identifiable: self) if related.blank?
+      related.work_type = related_identifier_hash[:work_type]
+      related.value = related_identifier_hash[:value].strip
+      related_identifiers << related
+    end
+  end
+  # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
 
   private
 

@@ -52,7 +52,7 @@ module Api
       end
 
       # Related identifiers for the Plan
-      # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      # rubocop:disable Metrics/CyclomaticComplexity
       def links
         ret = { get: "#{@callback_base_url}plans/#{@plan.id}" }
 
@@ -60,12 +60,12 @@ module Api
         if @plan.publicly_visible? ||
            (@client.is_a?(User) && @plan.owner_and_coowners.include?(@client)) ||
            (@client.is_a?(User) && @plan.org_id == @plan.owner&.org_id) ||
-           (@client.is_a?(ApiClient) && @client.access_tokens.select { |t| t.resource_owner_id == @plan.owner })
-          ret[:download] = "#{@callback_base_url}plans/#{@plan.id}.pdf"
+           # (@client.is_a?(ApiClient) && @client.access_tokens.select { |t| t.resource_owner_id == @plan.owner })
+           ret[:download] = "#{@callback_base_url}plans/#{@plan.id}.pdf"
         end
         ret
       end
-      # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      # rubocop:enable Metrics/CyclomaticComplexity
 
       # Subscribers of the Plan
       def subscriptions
