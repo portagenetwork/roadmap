@@ -204,6 +204,10 @@ gem 'httparty'
 # Autoload dotenv in Rails. (https://github.com/bkeepers/dotenv)
 gem 'dotenv-rails'
 
+# A library that retrieves an citation for the specified DOI.
+# https://github.com/CDLUC3/uc3-citation
+gem 'uc3-citation'
+
 gem 'activerecord_json_validator'
 
 gem 'mail', '2.8.1'
