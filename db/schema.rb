@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_10_14_160549) do
+ActiveRecord::Schema.define(version: 2025_10_15_201838) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -724,6 +724,20 @@ ActiveRecord::Schema.define(version: 2025_10_14_160549) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "subscriptions", force: :cascade do |t|
+    t.bigint "plan_id"
+    t.integer "subscription_types", null: false
+    t.string "callback_uri"
+    t.bigint "subscriber_id"
+    t.string "subscriber_type"
+    t.datetime "last_notified"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["last_notified"], name: "index_subscriptions_on_last_notified"
+    t.index ["plan_id"], name: "index_subscriptions_on_plan_id"
+    t.index ["subscriber_id", "subscriber_type", "plan_id"], name: "index_subscribers_on_identifiable_and_plan_id"
+  end
+
   create_table "suggested_answers", id: :serial, force: :cascade do |t|
     t.integer "question_id"
     t.integer "organisation_id"
@@ -913,6 +927,7 @@ ActiveRecord::Schema.define(version: 2025_10_14_160549) do
   add_foreign_key "roles", "plans"
   add_foreign_key "roles", "users"
   add_foreign_key "sections", "phases"
+  add_foreign_key "subscriptions", "plans"
   add_foreign_key "templates", "orgs"
   add_foreign_key "themes_in_guidance", "guidances"
   add_foreign_key "themes_in_guidance", "themes"
