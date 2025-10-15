@@ -54,6 +54,25 @@ class TemplateOptionsController < ApplicationController
     @templates = @templates.flatten
 
     @templates = sort_templates(@templates, org)
+
+    # Tag each template with a source
+    # Org and priority funder templates to be displayed first
+    # Followed by "Show more templates" button to display other templates
+    @templates = @templates.map do |t|
+      source = if t.org_id == org&.id
+                 'org_template'
+               elsif t.is_default || (t.title.start_with?('Alliance Simplified Template') &&
+                t.org_id == Rails.application.config.default_funder_id)
+                 'priority_funder'
+               else
+                 'other'
+               end
+      t.as_json.merge(source: source)
+    end
+
+    respond_to do |format|
+      format.json { render json: { templates: @templates } }
+    end
   end
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
   # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity

@@ -21,33 +21,96 @@ $(() => {
     renderAlert(getConstant('NO_TEMPLATE_FOUND_ERROR'));
   };
 
+  // Store templates that should initially be hidden (non-priority/non-org templates)
+  let hiddenTemplates = [];
+
   // AJAX success function for available template search
   const success = (data) => {
     hideNotifications();
 
-    if (isObject(data)
-        && isArray(data.templates)) {
-      // Display the available_templates section
-      if (data.templates.length > 0) {
-        data.templates.forEach((t) => {
-          $('#plan_template_id').append(`<option value="${t.id}">${t.title}</option>`);
-        });
-        // If there is only one template, set the input field value and submit the form
-        // otherwise show the dropdown list and the 'Multiple templates found message'
-        if (data.templates.length === 1) {
-          $('#plan_template_id option').attr('selected', 'true');
-          $('#multiple-templates').hide();
-          $('#available-templates').fadeOut();
-        } else {
-          $('#multiple-templates').show();
-          $('#available-templates').fadeIn();
-        }
-        toggleSubmit();
+    const select = $('#plan_template_id');
+    select.empty(); // clear options
+    hiddenTemplates = []; // reset hidden list each time new data is loaded
+
+    if (!isObject(data) || !isArray(data.templates)) return error();
+
+    const templates = data.templates;
+
+    if (templates.length === 0) return error();
+
+    // Will be populated by the appropriate templates so that the dropdown
+    // can be separated by headers
+    const orgTemplates = [];
+    const funderTemplates = [];
+
+    templates.forEach((t) => {
+      const option = $(`<option value="${t.id}">${t.title}</option>`);
+      // If template is an org template or a priority funder template
+      // Add to the appropriate group
+      if (t.source === 'org_template') {
+        orgTemplates.push(option);
+      } else if (t.source === 'priority_funder') {
+        funderTemplates.push(option);
       } else {
-        error();
+        // Otherwise, delay showing template
+        hiddenTemplates.push(option);
       }
+    });
+
+    // Add the appropriate headers
+    if (orgTemplates.length > 0) {
+      const group = $('<optgroup label="Organisation templates"></optgroup>');
+      orgTemplates.forEach(template => group.append(template));
+      select.append(group);
     }
+
+    if (funderTemplates.length > 0) {
+      const group = $('<optgroup label="Priority funder templates"></optgroup>');
+      funderTemplates.forEach(template => group.append(template));
+      select.append(group);
+    }
+
+    // Add "Show more templates…" as last option to let user reveal the rest
+    if (hiddenTemplates.length > 0) {
+      select.append(`<option value="-1">Show more templates…</option>`);
+    }
+
+    // If there is only one template, set the input field value and submit the form
+    // otherwise show the dropdown list and the 'Multiple templates found message'
+    if (templates.length === 1) {
+      $('#plan_template_id option').attr('selected', 'true');
+      $('#multiple-templates').hide();
+      $('#available-templates').fadeOut();
+    } else {
+      $('#multiple-templates').show();
+      $('#available-templates').fadeIn();
+    }
+
+    toggleSubmit();
   };
+
+  // Listen for selection change
+  $('#plan_template_id').on('change', function () {
+    const selectedVal = $(this).val();
+
+    // If user selected "Show more templates…"
+    if (selectedVal === '-1') {
+      const select = $(this);
+      // Remove "Show more" option
+      select.find('option[value="-1"]').remove();
+      // Append the hidden templates to the dropdown
+      const group = $('<optgroup label="Other templates"></optgroup>');
+      hiddenTemplates.forEach((template) => group.append(template));
+      select.append(group);
+      // Clear the list
+      hiddenTemplates = [];
+      // Reset the dropdown so no template is selected
+      select.val('');
+    }
+
+    toggleSubmit();
+  });
+
 
   // TODO: Refactor this whole thing when we redo the create plan
   //       workflow and use js.erb instead!
