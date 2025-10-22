@@ -38,16 +38,47 @@ $(() => {
       return error();
     }
 
-    // Display the available_templates section
+    // Separate templates by source
+    const orgTemplates = [];
+    const priorityTemplates = [];
+    const otherTemplates = [];
+
     data.templates.forEach((t) => {
-      const item = $(`<a class="dropdown-item" href="#" data-id="${t.id}">${t.title}</a>`);
-      item.on('click', (e) => {
-        $('#templateDropdown').text(t.title);
-        $('#plan_template_id').val(t.id);
-        toggleSubmit(false);
-      });
-      menu.append(item);
+      if (t.source === 'org_template') {
+        orgTemplates.push(t);
+      } else if (t.source === 'priority') {
+        priorityTemplates.push(t);
+      } else {
+        otherTemplates.push(t);
+      }
     });
+
+    // Helper to append a header and templates
+    const appendGroup = (header, templates) => {
+      if (templates.length === 0) return;
+
+      menu.append(`<h6 class="dropdown-header text-muted">${header}</h6>`);
+
+      templates.forEach((t) => {
+        const title = $('<div>').text(t.title).html();
+        const item = $(`<a class="dropdown-item" href="#" data-id="${t.id}">${title}</a>`);
+
+        item.on('click', (e) => {
+          $('#templateDropdown').text(t.title);
+          $('#plan_template_id').val(t.id);
+          toggleSubmit(false);
+        });
+
+        menu.append(item);
+      });
+
+      menu.append('<div class="dropdown-divider"></div>');
+    };
+
+    // Append each category in the correct order
+    appendGroup('Organisational Templates', orgTemplates);
+    appendGroup('Alliance General Templates', priorityTemplates);
+    appendGroup('Additional Alliance Templates', otherTemplates);
         
     // If there is only one template, set the input field value and submit the form
     // otherwise show the dropdown list and the 'Multiple templates found message'
