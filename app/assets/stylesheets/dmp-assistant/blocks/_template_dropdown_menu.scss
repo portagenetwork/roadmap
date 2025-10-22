@@ -1,0 +1,22 @@
+#template-dropdown-menu {
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 1px solid #ccc;
+  z-index: 1050;
+}
+
+#template-dropdown-menu .dropdown-item {
+  display: block;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: normal;
+  color: #212529;
+  text-decoration: none;
+}
+
+#template-dropdown-menu .dropdown-item:hover {
+  background-color: #f0f0f0;
+  text-decoration: none;
+}
