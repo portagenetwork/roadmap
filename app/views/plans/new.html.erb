@@ -112,8 +112,28 @@
         <h2 id="template-selection"><%= _('Which DMP template would you like to use?') %></h2>
         <div class="form-group row">
           <div class="col-xs-6">
-            <%= select_tag(:plan_template_id, "<option value=\"\">#{_('Please select a template')}</option>", name: 'plan[template_id]',
-                           class: 'form-control', 'aria-labelledby': 'template-selection') %>
+            <div class="form-group">
+              <div class="dropdown" id="template-dropdown-container">
+                <button
+                  class="form-control text-left"
+                  type="button"
+                  id="templateDropdown"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <%= _('Please select a template') %>
+                </button>
+                <div
+                  class="dropdown-menu w-100"
+                  aria-labelledby="templateDropdown"
+                  id="template-dropdown-menu"
+                >
+                  <!-- JS will populate this with <a class="dropdown-item"> -->
+                </div>
+                <%= hidden_field_tag 'plan[template_id]', '', id: 'plan_template_id' %>
+              </div>
+            </div>
           </div>
           <div class="col-xs-6">
             <span id="multiple-templates">
