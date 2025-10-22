@@ -56,6 +56,10 @@ class TemplateOptionsController < ApplicationController
     @templates = @templates.flatten
 
     @templates = sort_templates(@templates, org)
+
+    respond_to do |format|
+      format.json { render json: { templates: @templates } }
+    end
   end
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
   # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
@@ -65,6 +69,14 @@ class TemplateOptionsController < ApplicationController
   def plan_params
     params.require(:plan).permit(research_org_id: org_params,
                                  funder_id: org_params)
+  end
+
+  # Tag each template with a source
+  # Will be used to organize templates with headers
+  def tag_templates(templates, tag)
+    templates.map do |t|
+      t.as_json.merge(source: tag)
+    end
   end
 
   def org_params
@@ -83,7 +95,8 @@ class TemplateOptionsController < ApplicationController
     if org&.id && org.id != DEFAULT_FUNDER_ID
       # Return the templates with the org templates ordered in front
       org_templates = templates.select { |t| t.org_id == org.id }
-      org_templates + sorted_funder_templates
+      tagged_org_templates = tag_templates(org_templates, 'org_template')
+      tagged_org_templates + sorted_funder_templates
     # else, either no org or default_funder was selected
     else
       # All of the templates are funder templates
@@ -102,8 +115,12 @@ class TemplateOptionsController < ApplicationController
     simplified = funder_templates.find { |t| t.title.start_with?('Alliance Simplified Template') }
     default   = funder_templates.find(&:is_default)
     priority  = [simplified, default].compact
+    other = funder_templates - priority
+
+    tagged_priority = tag_templates(priority, 'priority')
+    tagged_other = tag_templates(other, 'other')
 
     # Return priority first, then remaining funder templates
-    priority + (funder_templates - priority)
+    tagged_priority + tagged_other
   end
 end
