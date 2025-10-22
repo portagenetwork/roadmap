@@ -32,37 +32,37 @@ $(() => {
     hideNotifications();
     const menu = $('#template-dropdown-menu');
     menu.empty();
+    const templates = data.templates
 
-    if (isObject(data) && isArray(data.templates)) {
-      // Display the available_templates section
-      if (data.templates.length > 0) {
-        data.templates.forEach((t) => {
-          const item = $(`<a class="dropdown-item" href="#" data-id="${t.id}">${t.title}</a>`);
-          item.on('click', (e) => {
-            $('#templateDropdown').text(t.title);
-            $('#plan_template_id').val(t.id);
-            toggleSubmit(false);
-          });
-          menu.append(item);
-        });
-        
-        // If there is only one template, set the input field value and submit the form
-        // otherwise show the dropdown list and the 'Multiple templates found message'
-        if (data.templates.length === 1) {
-          const only = data.templates[0];
-          $('#templateDropdown').text(only.title);
-          $('#plan_template_id').val(only.id);
-          $('#multiple-templates').hide();
-          $('#available-templates').fadeOut();
-        } else {
-          $('#multiple-templates').show();
-          $('#available-templates').fadeIn();
-        }
-        toggleSubmit(false);
-      } else {
-        error();
-      }
+    if (!isObject(data) || !isArray(templates) || templates.length === 0) {
+      return error();
     }
+
+    // Display the available_templates section
+    data.templates.forEach((t) => {
+      const item = $(`<a class="dropdown-item" href="#" data-id="${t.id}">${t.title}</a>`);
+      item.on('click', (e) => {
+        $('#templateDropdown').text(t.title);
+        $('#plan_template_id').val(t.id);
+        toggleSubmit(false);
+      });
+      menu.append(item);
+    });
+        
+    // If there is only one template, set the input field value and submit the form
+    // otherwise show the dropdown list and the 'Multiple templates found message'
+    if (templates.length === 1) {
+      const only_template = templates[0];
+      $('#templateDropdown').text(only_template.title);
+      $('#plan_template_id').val(only_template.id);
+      $('#multiple-templates').hide();
+      $('#available-templates').fadeOut();
+    } else {
+      $('#multiple-templates').show();
+      $('#available-templates').fadeIn();
+    }
+    
+    toggleSubmit(false);
   };
 
   // TODO: Refactor this whole thing when we redo the create plan
