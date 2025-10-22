@@ -7,6 +7,8 @@ class TemplateOptionsController < ApplicationController
 
   after_action :verify_authorized
 
+  DEFAULT_FUNDER_ID = Rails.application.config.default_funder_id
+
   # GET /template_options  (AJAX)
   # Collect all of the templates available for the org+funder combination
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
@@ -17,7 +19,7 @@ class TemplateOptionsController < ApplicationController
     authorize Template.new, :template_options?
 
     org = org_from_params(params_in: { org_id: org_hash.to_json }) if org_hash.present?
-    funder = Org.find(Rails.application.config.default_funder_id)
+    funder = Org.find(DEFAULT_FUNDER_ID)
 
     @templates = []
 
@@ -78,7 +80,7 @@ class TemplateOptionsController < ApplicationController
     sorted_funder_templates = sort_funder_templates(templates)
 
     # If an org was selected and the selected org is not the default funder
-    if org&.id && org.id != Rails.application.config.default_funder_id
+    if org&.id && org.id != DEFAULT_FUNDER_ID
       # Return the templates with the org templates ordered in front
       org_templates = templates.select { |t| t.org_id == org.id }
       org_templates + sorted_funder_templates
@@ -93,7 +95,7 @@ class TemplateOptionsController < ApplicationController
   # 1. Priority (Simplified, Default)
   # 2. Remaining funder templates
   def sort_funder_templates(templates)
-    funder_templates = templates.select { |t| t.org_id == Rails.application.config.default_funder_id }
+    funder_templates = templates.select { |t| t.org_id == DEFAULT_FUNDER_ID }
 
     # Identify priority templates
     # NOTE: This will have to be updated if the `simplified` template is ever renamed
