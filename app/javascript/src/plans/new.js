@@ -27,96 +27,94 @@ $(() => {
     renderAlert(getConstant('NO_TEMPLATE_FOUND_ERROR'));
   };
 
-  // AJAX success function for available template search
-  const success = (data) => {
-    hideNotifications();
-    const menu = $('#template-dropdown-menu');
-    menu.empty();
-    const templates = data.templates
-
-    if (!isObject(data) || !isArray(templates) || templates.length === 0) {
-      return error();
-    }
-
+  // Helper for success() that separates templates by source
+  const categorizeTemplates = (templates) => {
     // Separate templates by source
     const orgTemplates = [];
     const priorityTemplates = [];
     const otherTemplates = [];
 
-    data.templates.forEach((t) => {
-      if (t.source === 'org_template') {
-        orgTemplates.push(t);
-      } else if (t.source === 'priority') {
-        priorityTemplates.push(t);
-      } else {
-        otherTemplates.push(t);
-      }
+    templates.forEach((t) => {
+      if (t.source === 'org_template') orgTemplates.push(t);
+      else if (t.source === 'priority') priorityTemplates.push(t);
+      else otherTemplates.push(t);
     });
 
-    // Helper to append a header and templates
-    const appendGroup = (header, templates) => {
-      if (templates.length === 0) return;
+    return { orgTemplates, priorityTemplates, otherTemplates };
+  };
 
-      menu.append(`<h6 class="dropdown-header text-muted">${header}</h6>`);
+  // Helper for success() that creates a clickable template item
+  const createTemplateItem = (template) => {
+    const title = $('<div>').text(template.title).html();
+    const item = $(`<a class="dropdown-item" href="#" data-id="${template.id}">${title}</a>`);
 
-      templates.forEach((t) => {
-        const title = $('<div>').text(t.title).html();
-        const item = $(`<a class="dropdown-item" href="#" data-id="${t.id}">${title}</a>`);
+    item.on('click', (e) => {
+      $('#templateDropdown').text(template.title);
+      $('#plan_template_id').val(template.id);
+      toggleSubmit(false);
+    });
 
-        item.on('click', (e) => {
-          $('#templateDropdown').text(t.title);
-          $('#plan_template_id').val(t.id);
-          toggleSubmit(false);
-        });
+    return item;
+  };
 
-        menu.append(item);
-      });
+  // Helper for success() that appends a group of templates with a header
+  // for organization in the template dropdown menu
+  const appendGroup = (menu, header, templates) => {
+    if (templates.length === 0) return;
 
-      menu.append('<div class="dropdown-divider"></div>');
-    };
+    menu.append(`<h6 class="dropdown-header text-muted">${header}</h6>`);
+    templates.forEach((t) => menu.append(createTemplateItem(t)));
+    menu.append('<div class="dropdown-divider"></div>');
+  };
 
-    // Append each category in the correct order
-    appendGroup('Organisational Templates', orgTemplates);
-    appendGroup('Alliance General Templates', priorityTemplates);
+  // Helper for success() that appends the "Show more templates" button and other templates
+  const appendShowMoreSection = (menu, otherTemplates) => {
+    if (otherTemplates.length === 0) return;
 
-    // Add "Show more templates" button to display other templates
-    if (otherTemplates.length > 0) {
-      const showMore = $(`
-        <button type="button" class="dropdown-item text-primary" id="show-more-templates">
-          Show more templates
-        </button>
-      `);
+    const showMore = $(`
+      <button type="button" class="dropdown-item text-primary" id="show-more-templates">
+        Show more templates
+      </button>
+    `);
+    
+    menu.append(showMore);
+    // Hidden section for the "other" templates
+    const hiddenContainer = $('<div id="extra-templates" style="display:none;"></div>');
+    menu.append(hiddenContainer);
 
-      menu.append(showMore);
+    // When clicked, expand the hidden templates without closing dropdown
+    showMore.on('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation(); // prevent closing dropdown
 
-      // Hidden section for the "other" templates
-      const hiddenContainer = $('<div id="extra-templates" style="display: none;"></div>');
-      menu.append(hiddenContainer);
+      hiddenContainer.empty(); // clear before adding
+      hiddenContainer.append('<h6 class="dropdown-header text-muted">Additional Alliance Templates</h6>');
+      otherTemplates.forEach((t) => hiddenContainer.append(createTemplateItem(t)));
 
-      // When clicked, expand the hidden templates without closing dropdown
-      showMore.on('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation(); // prevent closing dropdown
+      hiddenContainer.slideDown(10);
+      showMore.remove(); // remove the button after expansion
+    });
+  };
 
-        hiddenContainer.empty(); // clear before adding
-        hiddenContainer.append('<h6 class="dropdown-header text-muted">Additional Alliance Templates</h6>');
-        otherTemplates.forEach((t) => {
-          const title = $('<div>').text(t.title).html();
-          const item = $(`<a class="dropdown-item" href="#" data-id="${t.id}">${title}</a>`);
-          item.on('click', (e2) => {
-            e2.preventDefault();
-            $('#templateDropdown').text(t.title);
-            $('#plan_template_id').val(t.id);
-            toggleSubmit(false);
-          });
-          hiddenContainer.append(item);
-        });
+  // AJAX success function for available template search
+  const success = (data) => {
+    hideNotifications();
+    const menu = $('#template-dropdown-menu');
+    menu.empty();
 
-        hiddenContainer.slideDown(10);
-        showMore.remove(); // remove the button after expansion
-      });
-    }
-        
+    const templates = data.templates;
+    if (!isObject(data) || !isArray(templates) || templates.length === 0) return error();
+
+    // Categorize templates based on their source tag
+    const { orgTemplates, priorityTemplates, otherTemplates } = categorizeTemplates(templates);
+
+    // Add main groups
+    appendGroup(menu, 'Organizational Templates', orgTemplates);
+    appendGroup(menu, 'Alliance General Templates', priorityTemplates);
+
+    // Add “Show more templates”
+    appendShowMoreSection(menu, otherTemplates);
+
     // If there is only one template, set the input field value and submit the form
     // otherwise show the dropdown list and the 'Multiple templates found message'
     if (templates.length === 1) {
@@ -129,7 +127,7 @@ $(() => {
       $('#multiple-templates').show();
       $('#available-templates').fadeIn();
     }
-    
+
     toggleSubmit(false);
   };
 
