@@ -5,8 +5,14 @@ import { isObject, isArray, isString } from '../utils/isType';
 import { renderAlert, hideNotifications } from '../utils/notificationHelper';
 
 $(() => {
-  const toggleSubmit = () => {
-    const tmplt = $('#plan_template_id').find(':selected').val();
+  const toggleSubmit = (select_dropdown = true) => {
+    let tmplt;
+    if (select_dropdown) {
+      tmplt = $('#plan_template_id').find(':selected').val();
+    } else {
+      tmplt = $('#plan_template_id').val();
+    }
+
     if (isString(tmplt)) {
       $('#new_plan button[type="submit"]').removeAttr('disabled')
         .removeAttr('data-toggle').removeAttr('title');
@@ -24,25 +30,35 @@ $(() => {
   // AJAX success function for available template search
   const success = (data) => {
     hideNotifications();
+    const menu = $('#template-dropdown-menu');
+    menu.empty();
 
-    if (isObject(data)
-        && isArray(data.templates)) {
+    if (isObject(data) && isArray(data.templates)) {
       // Display the available_templates section
       if (data.templates.length > 0) {
         data.templates.forEach((t) => {
-          $('#plan_template_id').append(`<option value="${t.id}">${t.title}</option>`);
+          const item = $(`<a class="dropdown-item" href="#" data-id="${t.id}">${t.title}</a>`);
+          item.on('click', (e) => {
+            $('#templateDropdown').text(t.title);
+            $('#plan_template_id').val(t.id);
+            toggleSubmit(false);
+          });
+          menu.append(item);
         });
+        
         // If there is only one template, set the input field value and submit the form
         // otherwise show the dropdown list and the 'Multiple templates found message'
         if (data.templates.length === 1) {
-          $('#plan_template_id option').attr('selected', 'true');
+          const only = data.templates[0];
+          $('#templateDropdown').text(only.title);
+          $('#plan_template_id').val(only.id);
           $('#multiple-templates').hide();
           $('#available-templates').fadeOut();
         } else {
           $('#multiple-templates').show();
           $('#available-templates').fadeIn();
         }
-        toggleSubmit();
+        toggleSubmit(false);
       } else {
         error();
       }
