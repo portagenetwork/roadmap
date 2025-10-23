@@ -10,11 +10,20 @@ RSpec.describe 'Plans', type: :feature do
     @research_org = create(:org, :organisation, :research_institute,
                            name: 'Test Research Org', templates: 1)
     # Create the required default_funder org for DMP Assistant
-    @funding_org  = create(:org, :funder, templates: 1)
-    # Create the default template for the default_funder
-    @default_template = create(:template, :default, :published, org_id: @funding_org.id)
+    @funding_org  = create(:org, :funder, templates: 2)
     @original_default_funder_id = Rails.application.config.default_funder_id
     Rails.application.config.default_funder_id = @funding_org.id
+    # Create the default template for the default_funder
+    @default_template = create(:template, :default, :published, org_id: @funding_org.id, title: 'Default template')
+    @extra_funder_template = create(:template,
+                                    :published,
+                                    :publicly_visible,
+                                    org_id: @funding_org.id,
+                                    title: 'Other Funder Template',
+                                    is_default: false,
+                                    customization_of: nil,
+                                    archived: false)
+
     @template     = create(:template, org: @org)
     @user         = create(:user, org: @org)
     sign_in(@user)
@@ -29,6 +38,7 @@ RSpec.describe 'Plans', type: :feature do
     fill_in :plan_title, with: 'My test plan'
     choose_suggestion('plan_org_org_name', @research_org)
 
+    # Open the dropdown
     find('#templateDropdown').click
 
     within('#template-dropdown-menu') do
@@ -47,5 +57,27 @@ RSpec.describe 'Plans', type: :feature do
     expect(@plan.title).to eql('My test plan')
     expect(@plan.org_id).to eql(@research_org.id)
     expect(@plan.template_id).to eql(@default_template.id)
+  end
+
+  it 'displays template dropdown headers and expands more templates', :js do
+    click_link 'Create plan'
+    fill_in :plan_title, with: 'My test plan'
+    choose_suggestion('plan_org_org_name', @research_org)
+
+    # Open the dropdown
+    find('#templateDropdown').click
+
+    within('#template-dropdown-menu') do
+      expect(page).to have_content('ORGANISATIONAL TEMPLATES')
+      expect(page).to have_content('ALLIANCE GENERAL TEMPLATES')
+      expect(page).to have_content('Show more templates')
+    end
+
+    click_button 'Show more templates'
+
+    within('#extra-templates') do
+      expect(page).to have_content('ADDITIONAL ALLIANCE TEMPLATES')
+      expect(page).to have_selector('.dropdown-item', minimum: 1)
+    end
   end
 end
