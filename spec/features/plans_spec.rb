@@ -29,8 +29,10 @@ RSpec.describe 'Plans', type: :feature do
     fill_in :plan_title, with: 'My test plan'
     choose_suggestion('plan_org_org_name', @research_org)
 
-    within('#plan_template_id') do
-      select @default_template.title
+    find('#templateDropdown').click
+
+    within('#template-dropdown-menu') do
+      click_link @default_template.title
     end
     click_button 'Create plan'
 

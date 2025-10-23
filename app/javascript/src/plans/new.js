@@ -109,7 +109,7 @@ $(() => {
     const { orgTemplates, priorityTemplates, otherTemplates } = categorizeTemplates(templates);
 
     // Add main groups
-    appendGroup(menu, 'Organizational Templates', orgTemplates);
+    appendGroup(menu, 'Organisational Templates', orgTemplates);
     appendGroup(menu, 'Alliance General Templates', priorityTemplates);
 
     // Add “Show more templates”
