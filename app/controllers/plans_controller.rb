@@ -490,6 +490,8 @@ class PlansController < ApplicationController
     @plan = Plan.find(params[:id])
     authorize @plan
 
+    PlanSnapshot.create_for_plan(@plan)
+
     dmp_id = DmpIdService.mint_dmp_id(plan: @plan)
     if dmp_id.save
       @plan = @plan.reload
