@@ -53,6 +53,7 @@ $(() => {
     const item = $(`<a class="dropdown-item" href="#" data-id="${template.id}">${title}</a>`);
 
     item.on('click', (e) => {
+      e.preventDefault()
       $('#templateDropdown').text(template.title);
       $('#plan_template_id').val(template.id);
       toggleSubmit(false);
@@ -106,8 +107,8 @@ $(() => {
     const menu = $('#template-dropdown-menu');
     menu.empty();
 
+    if (!isObject(data) || !isArray(data.templates) || data.templates.length === 0) return error();
     const templates = data.templates;
-    if (!isObject(data) || !isArray(templates) || templates.length === 0) return error();
 
     // Categorize templates based on their source tag
     const { orgTemplates, priorityTemplates, otherTemplates } = categorizeTemplates(templates);
@@ -122,9 +123,9 @@ $(() => {
     // If there is only one template, set the input field value and submit the form
     // otherwise show the dropdown list and the 'Multiple templates found message'
     if (templates.length === 1) {
-      const only_template = templates[0];
-      $('#templateDropdown').text(only_template.title);
-      $('#plan_template_id').val(only_template.id);
+      const onlyTemplate = templates[0];
+      $('#templateDropdown').text(onlyTemplate.title);
+      $('#plan_template_id').val(onlyTemplate.id);
       $('#multiple-templates').hide();
       $('#available-templates').fadeOut();
     } else {
