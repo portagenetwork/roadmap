@@ -13,12 +13,16 @@ $(() => {
       tmplt = $('#plan_template_id').val();
     }
 
-    if (isString(tmplt)) {
-      $('#new_plan button[type="submit"]').removeAttr('disabled')
-        .removeAttr('data-toggle').removeAttr('title');
+    const submitButton = $('#new_plan button[type="submit"]');
+
+    // If a template has been selected and it is a string
+    if (tmplt && isString(tmplt)) {
+      // remove the disabled attribute and make the button clickable
+      submitButton.removeAttr('disabled').removeAttr('data-toggle').removeAttr('title');
     } else {
-      $('#new_plan button[type="submit"]').attr('disabled', true)
-        .attr('data-toggle', 'tooltip').attr('title', getConstant('NEW_PLAN_DISABLED_TOOLTIP'));
+      // otherwise keep it disabled
+      submitButton.attr('disabled', true).attr('data-toggle', 'tooltip')
+      .attr('title', getConstant('NEW_PLAN_DISABLED_TOOLTIP'));
     }
   };
 
