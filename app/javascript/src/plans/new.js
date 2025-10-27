@@ -136,6 +136,25 @@ $(() => {
     toggleSubmit(false);
   };
 
+  // Function to reset the template dropdown
+  const resetTemplateDropdown = () => {
+    // Reset dropdown text and hidden field
+    $('#templateDropdown').text('Please select a template');
+    $('#plan_template_id').val('');
+
+    // Clear any existing menu items
+    $('#template-dropdown-menu').empty();
+
+    // Fade out templates section while new ones are fetched
+    $('#available-templates').fadeOut();
+  };
+
+  // Reset dropdown when a new research organisation is selected
+  $('#research-org-controls input.autocomplete-result').on('change', resetTemplateDropdown);
+
+  // Reset dropdown when "No research organisation" checkbox is toggled
+  $('#plan_no_org').on('change', resetTemplateDropdown);
+
   // TODO: Refactor this whole thing when we redo the create plan
   //       workflow and use js.erb instead!
   const getValue = (context) => {
