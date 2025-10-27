@@ -14,6 +14,8 @@
 
  - Reorganize template dropdown menu and refactor TemplateOptionsController [#1199](https://github.com/portagenetwork/roadmap/pull/1199)
 
+ - Refactor: Consolidate repeated custom colour variables across stylesheets [#1218](https://github.com/portagenetwork/roadmap/pull/1218)
+
 ### Dependency Updates
 
  - chore(deps): bump nginx from 1.29.1-alpine to 1.29.2-alpine [#1207](https://github.com/portagenetwork/roadmap/pull/1207)
