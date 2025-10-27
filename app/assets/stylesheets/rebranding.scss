@@ -23,15 +23,6 @@ defined by the original reference in each scss sheet (see comments) for easier m
 navigation
 *****/
 
-//logo style apply for all screen size
-//_logos.scss
-.app-logo{
-    height: 200px;
-    margin-top: 0.6em;
-    // padding: 0;
-}
-
-
 //overriding the row margins to the zero. needs to addressed while refractoring css
 .row.no-row-margin{
     margin: 0px !important;
@@ -108,18 +99,6 @@ navigation
 
 #app-navbar{
     font-weight: 700;
-}
-
-/*****
-Forms & Tables
-*****/
-.nav-tabs, .nav-pills{ //_navs.scss
-    background-color: $color-alliance-darker-yellow;
-}
-
-//_table.scss
-thead th{
-    background-color: $color-alliance-darker-yellow;
 }
 
 //for the on focus and hover change the border left
