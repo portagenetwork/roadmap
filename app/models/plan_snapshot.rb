@@ -30,3 +30,10 @@ class PlanSnapshot < ApplicationRecord
     (where(plan_id: plan.id).maximum(:version) || 0) + 1
   end
 end
+
+# What needs to be saved for `additional_data`?
+# We definitely need template questions and answers
+# Do we need additional template data as well (e.g. sections and phases)?
+# Templates already have versioning implmented, so maybe only a template.id
+# is needed for reference, rather than an entire extra snapshot.
+# - Figure out if you can edit a template without creating a new version

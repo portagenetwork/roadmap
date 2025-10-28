@@ -490,8 +490,10 @@ class PlansController < ApplicationController
     @plan = Plan.find(params[:id])
     authorize @plan
 
+    # Always create the snapshot
     PlanSnapshot.create_for_plan(@plan)
 
+    # Minting depends on `@plan.published_visibility`
     # dmp_id = DmpIdService.mint_dmp_id(plan: @plan)
     if false
       @plan = @plan.reload
