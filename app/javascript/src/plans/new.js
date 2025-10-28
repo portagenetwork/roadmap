@@ -149,8 +149,23 @@ $(() => {
     $('#available-templates').fadeOut();
   };
 
-  // Reset dropdown when a new research organisation is selected
-  $('#research-org-controls input.autocomplete-result').on('change', resetTemplateDropdown);
+  // Reset dropdown only when a *valid org* is selected
+  $('#research-org-controls input.autocomplete-result').on('change', function () {
+    const val = $(this).val();
+
+    if (val) {
+      try {
+        const json = JSON.parse(val);
+        if (json.id) {
+          // Only reset if the selection actually represents a valid org
+          resetTemplateDropdown();
+        }
+      } catch (e) {
+        // Ignore invalid JSON (user still typing, etc.)
+        console.log('Autocomplete change ignored (invalid JSON)');
+      }
+    }
+  });
 
   // Reset dropdown when "No research organisation" checkbox is toggled
   $('#plan_no_org').on('change', resetTemplateDropdown);
