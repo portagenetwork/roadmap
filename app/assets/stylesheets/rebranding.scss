@@ -13,12 +13,6 @@ h1, h2, h3, h4, h5, h6{
     font-weight: bold;
 }
 
-
-/***********************
-Individual Changes
-defined by the original reference in each scss sheet (see comments) for easier move around
-************************/
-
 /*****
 navigation
 *****/
@@ -26,11 +20,6 @@ navigation
 //overriding the row margins to the zero. needs to addressed while refractoring css
 .row.no-row-margin{
     margin: 0px !important;
-}
-
-
-.navbar-nav{
-    margin-left: 2.5em;
 }
 
 .sign-in{
@@ -76,10 +65,6 @@ navigation
         color: $color-alliance-darker-yellow;
             }
         }
-    }
-
-    #org-navbar{ //_navbars.scss
-        margin: auto;
     }
 
     #main{

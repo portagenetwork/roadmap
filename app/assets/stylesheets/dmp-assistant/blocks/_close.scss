@@ -1,0 +1,9 @@
+/* Notification close icon visibility and position*/
+.close {
+  opacity: 1 !important;
+}
+
+button.close{
+  position: relative;
+  margin-right: -12px;
+}

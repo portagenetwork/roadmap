@@ -1,10 +1,5 @@
 @use './dmp-assistant/variables/colours' as *;
 
- /** Table content shadow added to make it look good**/
-.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-   box-shadow: 5px 5px 5px $color-alliance-light-grey, 0px -5px 5px $color-alliance-light-grey;
-  }
-
 /* General styling for link visibility/accessibility */
 a,
 .btn.btn-link.dropdown-toggle, // "Actions" dropdown buttons
@@ -31,36 +26,6 @@ a.btn,
   text-decoration: none;
 }
 
-  /* This is added to the header of the Write Plan section in the Plans*/
-  .heading-button > .panel-heading,
-  .panel-default > .panel-heading {
-  color: $color-alliance-digital-grey;
-  background-color: $color-alliance-lighter-grey;
-  border-top: 3px solid $color-alliance-yellow;
-  cursor: pointer;
-  transition: color 1s ease, background 1s ease; /* Combine transitions */
-
-  &:hover,
-  &:focus {
-    background-color: $color-alliance-yellow;
-    i.fas.fa-plus.pull-right,
-    i.fas.pull-right.fa-minus{
-      color: $color-alliance-digital-grey;
-    }
-  }
-}
-
-/* Guidance collapse bar in Templates section icon color issues fix on-hover OR on focus*/
-.panel-heading {
-  &:hover,
-  &:focus {
-    i.fas.pull-left.fa-minus,
-    i.fas.fa-plus.pull-left,
-    i.fas.fa-arrows-alt.pull-right{
-      color: $color-alliance-digital-grey !important;
-    }
-  }
-}
 // form > fieldset > button.btn.btn-default {
 //   animation: wiggle 2s linear infinite;
 // }

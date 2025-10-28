@@ -1,0 +1,20 @@
+@use '../variables/colours' as *;
+
+.navbar-nav{
+    margin-left: 2.5em;
+}
+
+#org-navbar{
+    margin: auto;
+}
+
+/* For org navbar custom background color */
+@media (min-width: 768px) {
+    #admin-dropdown ul li a, #super-admin-dropdown ul li a {
+      &:hover,
+      &:focus{
+        color: $color-alliance-darker-yellow !important;
+        background-color: $color-alliance-digital-grey;
+      }
+    }
+  }
