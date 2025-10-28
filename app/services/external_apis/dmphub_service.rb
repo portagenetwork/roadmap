@@ -56,7 +56,8 @@ module ExternalApis
       end
 
       def api_client
-        ApiClient.find_by(name: name.gsub('Service', '').downcase)
+        nil
+        # ApiClient.find_by(name: name.gsub('Service', '').downcase)
       end
 
       def callback_path
@@ -170,6 +171,15 @@ module ExternalApis
       end
       # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
+      # Prepare the DMP for transmission to the DMPHub (RDA Common Standard format)
+      def json_from_template(plan:)
+        payload = ActionController::Base.new.render_to_string(
+          partial: '/api/v2/plans/show', locals: { plan: plan, client: api_client }
+        )
+
+        { dmp: JSON.parse(payload) }.to_json
+      end
+
       private
 
       attr_accessor :token
@@ -202,15 +212,6 @@ module ExternalApis
       rescue JSON::ParserError => e
         log_error(method: 'DMPHub authentication', error: e)
         nil
-      end
-
-      # Prepare the DMP for transmission to the DMPHub (RDA Common Standard format)
-      def json_from_template(plan:)
-        payload = ActionController::Base.new.render_to_string(
-          partial: '/api/v2/plans/show', locals: { plan: plan, client: api_client }
-        )
-
-        { dmp: JSON.parse(payload) }.to_json
       end
 
       # Extract the DMP ID from the response from the DMPHub

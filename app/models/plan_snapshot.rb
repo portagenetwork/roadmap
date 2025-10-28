@@ -16,7 +16,8 @@ class PlanSnapshot < ApplicationRecord
     create!(
       plan: plan,
       version: next_version_for_plan(plan),
-      rda_json: plan.to_rda_json
+      rda_json: plan.to_rda_json,
+      additional_json: plan.to_additional_json
     )
   end
 

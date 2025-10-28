@@ -679,6 +679,26 @@ class Plan < ApplicationRecord
   end
   # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
 
+  # Returns RDA JSON suitable for snapshots or transmission
+  def to_rda_json
+    ExternalApis::DmphubService.json_from_template(plan: self)
+  end
+
+  # Do I need more than Template questions and answers here?
+  def to_additional_json
+    answers = Answer.where(plan_id: id)
+    question_ids = answers.pluck(:question_id)
+    questions = Question.where(id: question_ids)
+    {
+      questions: questions.map do |q|
+                   {
+                     text: q.text,
+                     answer: answers.find { |a| a.question_id == q.id }&.text
+                   }
+                 end
+    }
+  end
+
   private
 
   # Validation to prevent end date from coming before the start date

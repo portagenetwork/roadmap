@@ -492,8 +492,8 @@ class PlansController < ApplicationController
 
     PlanSnapshot.create_for_plan(@plan)
 
-    dmp_id = DmpIdService.mint_dmp_id(plan: @plan)
-    if dmp_id.save
+    # dmp_id = DmpIdService.mint_dmp_id(plan: @plan)
+    if false
       @plan = @plan.reload
 
       # Only allow ORCID publication for the DMP ID if it is enabled in the config!
