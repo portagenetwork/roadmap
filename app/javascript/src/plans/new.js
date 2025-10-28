@@ -77,7 +77,7 @@ $(() => {
     if (otherTemplates.length === 0) return;
 
     const showMore = $(`
-      <button type="button" class="dropdown-item text-primary" id="show-more-templates">
+      <button type="button" class="btn btn-default" id="show-more-templates">
         Show more templates
       </button>
     `);

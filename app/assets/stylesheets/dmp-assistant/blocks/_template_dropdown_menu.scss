@@ -1,9 +1,10 @@
+@use '../../dmp-assistant/variables/colours' as *;
+
 #template-dropdown-menu {
   max-height: 300px;
   overflow-y: auto;
   overflow-x: hidden;
-  border: 1px solid #ccc;
-  z-index: 1050;
+  border: 1px solid $color-alliance-lighter-grey;
 }
 
 #template-dropdown-menu .dropdown-item {
@@ -12,13 +13,13 @@
   font-size: 14px;
   line-height: 1.4;
   white-space: normal;
-  color: #212529;
+  color: $color-alliance-digital-grey;
   text-decoration: none;
 }
 
 #template-dropdown-menu .dropdown-item:hover {
-  background-color: #f0f0f0;
-  text-decoration: none;
+  color: $color-alliance-yellow;
+  background-color:$color-alliance-digital-grey;
 }
 
 /* Style for the template headers */
@@ -27,8 +28,8 @@
   font-weight: 500;
   font-size: 1rem;
   text-transform: uppercase;
-  color: #050404;
-  background-color: #f8f9fa;
+  color: $color-alliance-yellow;
+  background-color: $color-alliance-digital-grey;
 }
 
 .dropdown-divider {
@@ -42,21 +43,9 @@
 /* Style for the 'Show more templates' button inside dropdown */
 #show-more-templates {
   width: 100%;
-  background: transparent;
-  border: none;
   text-align: center;
   font-family: inherit;
   font-weight: 500;
   padding: 0.5rem 0.75rem;
   cursor: pointer;
-}
-
-#show-more-templates:hover {
-  text-decoration: underline;
-  background-color: rgba(0, 0, 0, 0.03);
-}
-
-#show-more-templates:focus {
-  outline: none;
-  box-shadow: none;
 }
