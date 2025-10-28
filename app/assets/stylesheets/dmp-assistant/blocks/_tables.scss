@@ -1,0 +1,10 @@
+@use '../variables/colours' as *;
+
+/** Table content shadow added to make it look good**/
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+   box-shadow: 5px 5px 5px $color-alliance-light-grey, 0px -5px 5px $color-alliance-light-grey;
+  }
+
+thead th {
+    background-color: $color-alliance-digital-grey;
+}
