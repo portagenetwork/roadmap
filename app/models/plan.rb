@@ -685,6 +685,17 @@ class Plan < ApplicationRecord
   end
 
   # Do I need more than Template questions and answers here?
+  # Some of the following is included in `app/views/api/v2/plans/_show.json.jbuilder`
+  # as "DMPRoadmap extensions to the RDA common metadata standard"
+  # - `dmproadmap_template`: Information about the template used.
+  #   - id:
+  #   - title:
+  # - `dmproadmap_external_system_identifier`: External system identifiers.
+  # - `dmproadmap_related_identifiers`: Related identifiers.
+  # - `dmproadmap_privacy`: Privacy settings.
+  # - `dmproadmap_sponsors`: Information about sponsors.
+  # - `dmphub_subscribers`: Subscribers for DMPHub notifications.
+  # - `dmproadmap_links`: Links related to the DMP.
   def to_additional_json
     answers = Answer.where(plan_id: id)
     question_ids = answers.pluck(:question_id)
