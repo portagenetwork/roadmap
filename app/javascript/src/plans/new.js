@@ -5,9 +5,9 @@ import { isObject, isArray, isString } from '../utils/isType';
 import { renderAlert, hideNotifications } from '../utils/notificationHelper';
 
 $(() => {
-  const toggleSubmit = (select_dropdown = true) => {
+  const toggleSubmit = (selectDropdown = true) => {
     let tmplt;
-    if (select_dropdown) {
+    if (selectDropdown) {
       tmplt = $('#plan_template_id').find(':selected').val();
     } else {
       tmplt = $('#plan_template_id').val();
