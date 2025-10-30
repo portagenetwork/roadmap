@@ -6,26 +6,19 @@ RSpec.describe 'Plans', type: :feature do
   include Webmocks
 
   before do
-    @org = create(:org)
-    @research_org = create(:org, :organisation, :research_institute,
-                           name: 'Test Research Org', templates: 1)
+    # Create an org to be selected from the dropdown
+    # (The associated template will serve as an ORGANISATIONAL TEMPLATE)
+    @org = create(:org, :organisation, :research_institute,
+                  name: 'Test Research Org', templates: 1)
     # Create the required default_funder org for DMP Assistant
-    @funding_org  = create(:org, :funder, templates: 2)
+    @funding_org = create(:org, :funder)
     @original_default_funder_id = Rails.application.config.default_funder_id
     Rails.application.config.default_funder_id = @funding_org.id
-    # Create the default template for the default_funder
-    @default_template = create(:template, :default, :published, org_id: @funding_org.id, title: 'Default template')
-    @extra_funder_template = create(:template,
-                                    :published,
-                                    :publicly_visible,
-                                    org_id: @funding_org.id,
-                                    title: 'Other Funder Template',
-                                    is_default: false,
-                                    customization_of: nil,
-                                    archived: false)
-
-    @template     = create(:template, org: @org)
-    @user         = create(:user, org: @org)
+    # Create the required default template (also serves as an ALLIANCE GENERAL TEMPLATE)
+    @default_template = create(:template, :default, :published, org_id: @funding_org.id)
+    # Create an ADDITIONAL ALLIANCE TEMPLATE
+    @extra_funder_template = create(:template, :published, :publicly_visible, org_id: @funding_org.id)
+    @user = create(:user, org: create(:org))
     sign_in(@user)
   end
 
@@ -36,7 +29,7 @@ RSpec.describe 'Plans', type: :feature do
   it 'User creates a new Plan', :js do
     click_link 'Create plan'
     fill_in :plan_title, with: 'My test plan'
-    choose_suggestion('plan_org_org_name', @research_org)
+    choose_suggestion('plan_org_org_name', @org)
 
     # Open the dropdown
     find('#templateDropdown').click
@@ -55,14 +48,14 @@ RSpec.describe 'Plans', type: :feature do
     expect(current_path).to eql(plan_path(@plan))
     expect(page).to have_css("input[type=text][value='#{@plan.title}']")
     expect(@plan.title).to eql('My test plan')
-    expect(@plan.org_id).to eql(@research_org.id)
+    expect(@plan.org_id).to eql(@org.id)
     expect(@plan.template_id).to eql(@default_template.id)
   end
 
   it 'displays template dropdown headers and expands more templates', :js do
     click_link 'Create plan'
     fill_in :plan_title, with: 'My test plan'
-    choose_suggestion('plan_org_org_name', @research_org)
+    choose_suggestion('plan_org_org_name', @org)
 
     # Open the dropdown
     find('#templateDropdown').click
