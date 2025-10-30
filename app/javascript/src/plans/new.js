@@ -85,6 +85,27 @@ $(() => {
     });
   };
 
+  // Helper function to adjust the height of the template dropdown
+  // and make sure it does not extend beyond the footer
+  const adjustDropdownMaxHeight = () => {
+    const dropdown = document.getElementById('templateDropdown');
+    const dropdownMenu = document.getElementById('template-dropdown-menu');
+    const footer = document.getElementById('footer-navbar');
+
+    const dropdownRect = dropdown.getBoundingClientRect();
+    const footerRect = footer.getBoundingClientRect();
+
+    // Ideal location for dropdown to end is middle of the footer
+    const footerMiddle = (footerRect.bottom + footerRect.top) / 2;
+
+    const spaceAvailable = footerMiddle - dropdownRect.bottom;
+
+    if (spaceAvailable > 0) {
+      dropdownMenu.style.maxHeight = `${spaceAvailable}px`;
+    }
+  };
+
+
   // AJAX success function for available template search
   const success = (data) => {
     hideNotifications();
@@ -116,6 +137,16 @@ $(() => {
     } else {
       $('#multiple-templates').show();
       $('#available-templates').fadeIn();
+    }
+
+    const dropdown = document.getElementById('templateDropdown');
+    // offsetParent returns the nearest ancestor that has a position other than static
+    // offsetParent property returns null if the element is not visible
+    const dropdownIsVisible = dropdown.offsetParent !== null
+
+    // Adjust the height of the dropdown when it is visible
+    if (dropdown && dropdownIsVisible) {
+      adjustDropdownMaxHeight();
     }
 
     toggleSubmit(false);
