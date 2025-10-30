@@ -1,7 +1,7 @@
 import debounce from '../utils/debounce';
 import { initAutocomplete, scrubOrgSelectionParamsOnSubmit } from '../utils/autoComplete';
 import getConstant from '../utils/constants';
-import { isObject, isArray, isString } from '../utils/isType';
+import { isObject, isString } from '../utils/isType';
 import { renderAlert, hideNotifications } from '../utils/notificationHelper';
 
 $(() => {
@@ -29,22 +29,6 @@ $(() => {
   // AJAX error function for available template search
   const error = () => {
     renderAlert(getConstant('NO_TEMPLATE_FOUND_ERROR'));
-  };
-
-  // Helper for success() that separates templates by source
-  const categorizeTemplates = (templates) => {
-    // Separate templates by source
-    const orgTemplates = [];
-    const priorityTemplates = [];
-    const otherTemplates = [];
-
-    templates.forEach((t) => {
-      if (t.source === 'org_template') orgTemplates.push(t);
-      else if (t.source === 'priority') priorityTemplates.push(t);
-      else otherTemplates.push(t);
-    });
-
-    return { orgTemplates, priorityTemplates, otherTemplates };
   };
 
   // Helper for success() that creates a clickable template item
@@ -107,23 +91,24 @@ $(() => {
     const menu = $('#template-dropdown-menu');
     menu.empty();
 
-    if (!isObject(data) || !isArray(data.templates) || data.templates.length === 0) return error();
+    if (!isObject(data) || !isObject(data.templates) || data.total_templates === 0) return error();
     const templates = data.templates;
-
-    // Categorize templates based on their source tag
-    const { orgTemplates, priorityTemplates, otherTemplates } = categorizeTemplates(templates);
-
+  
     // Add main groups
-    appendGroup(menu, 'Organisational Templates', orgTemplates);
-    appendGroup(menu, 'Alliance General Templates', priorityTemplates);
-
+    appendGroup(menu, 'Organisational Templates', templates.org_templates);
+    appendGroup(menu, 'Alliance General Templates', templates.priority_templates);
     // Add “Show more templates”
-    appendShowMoreSection(menu, otherTemplates);
+    appendShowMoreSection(menu, templates.other_templates);
 
     // If there is only one template, set the input field value and submit the form
     // otherwise show the dropdown list and the 'Multiple templates found message'
-    if (templates.length === 1) {
-      const onlyTemplate = templates[0];
+    if (data.total_templates === 1) {
+      // Get the first and only template across all groups
+      const onlyTemplate = [
+        ...templates.org_templates,
+        ...templates.priority_templates,
+        ...templates.other_templates
+      ][0]
       $('#templateDropdown').text(onlyTemplate.title);
       $('#plan_template_id').val(onlyTemplate.id);
       $('#multiple-templates').hide();

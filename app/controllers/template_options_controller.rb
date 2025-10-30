@@ -55,10 +55,8 @@ class TemplateOptionsController < ApplicationController
     end
     @templates = @templates.flatten
 
-    @templates = sort_templates(@templates, org)
-
     respond_to do |format|
-      format.json { render json: { templates: @templates } }
+      format.json { render json: build_templates_payload(@templates) }
     end
   end
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
@@ -71,56 +69,25 @@ class TemplateOptionsController < ApplicationController
                                  funder_id: org_params)
   end
 
-  # Tag each template with a source
-  # Will be used to organize templates with headers
-  def tag_templates(templates, tag)
-    templates.map do |t|
-      t.as_json.merge(source: tag)
-    end
-  end
-
   def org_params
     %i[id name url language abbreviation ror fundref weight score]
   end
 
-  # Orders templates for dropdown:
-  # 1. Org templates
-  # 2. Priority funder templates (Simplified, Default)
-  # 3. Remaining funder templates
-  def sort_templates(templates, org)
-    # Get the funder templates with the Priority templates ordered in front
-    sorted_funder_templates = sort_funder_templates(templates)
-
-    # If an org was selected and the selected org is not the default funder
-    if org&.id && org.id != DEFAULT_FUNDER_ID
-      # Return the templates with the org templates ordered in front
-      org_templates = templates.select { |t| t.org_id == org.id }
-      tagged_org_templates = tag_templates(org_templates, 'org_template')
-      tagged_org_templates + sorted_funder_templates
-    # else, either no org or default_funder was selected
-    else
-      # All of the templates are funder templates
-      sorted_funder_templates
-    end
-  end
-
-  # Orders funder templates:
-  # 1. Priority (Simplified, Default)
-  # 2. Remaining funder templates
-  def sort_funder_templates(templates)
+  # Returns a JSON payload with the following structure:
+  # - templates:
+  #   - org_templates: [All non-funder templates]
+  #   - priority_templates: [The simplified and default funder templates]
+  #   - other_templates: [All non-priority funder templates]
+  # - total_templates: Count of all templates
+  def build_templates_payload(templates)
     funder_templates = templates.select { |t| t.org_id == DEFAULT_FUNDER_ID }
-
-    # Identify priority templates
-    # NOTE: This will have to be updated if the `simplified` template is ever renamed
     simplified = funder_templates.find { |t| t.title.start_with?('Alliance Simplified Template') }
-    default   = funder_templates.find(&:is_default)
-    priority  = [simplified, default].compact
-    other = funder_templates - priority
+    default    = funder_templates.find(&:is_default)
+    priority_templates = [simplified, default].compact
 
-    tagged_priority = tag_templates(priority, 'priority')
-    tagged_other = tag_templates(other, 'other')
-
-    # Return priority first, then remaining funder templates
-    tagged_priority + tagged_other
+    { templates: { org_templates: templates - funder_templates,
+                   priority_templates: priority_templates,
+                   other_templates: funder_templates - priority_templates },
+      total_templates: templates.size }
   end
 end
