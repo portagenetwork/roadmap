@@ -1,8 +1,23 @@
 # frozen_string_literal: true
 
 class PlanSnapshot < ApplicationRecord
+  # ==============
+  # = Attributes =
+  # ==============
+
+  enum visibility: %i[privately_visible organisationally_visible publicly_visible]
+
+  # ================
+  # = Associations =
+  # ================
+
   belongs_to :plan
 
+  # ===============
+  # = Validations =
+  # ===============
+
+  validates :visibility, inclusion: { in: visibilities.keys }
   validates :version, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :rda_json, presence: true
   # Prevent two snapshots from having the same (plan_id, version) pairing

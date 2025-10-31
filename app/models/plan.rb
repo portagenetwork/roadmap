@@ -679,6 +679,11 @@ class Plan < ApplicationRecord
   end
   # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
 
+  def mint_doi?
+    # TODO: Implement this after adding PlanSnaphot.visibilty radio buttons
+    false
+  end
+
   # Returns RDA JSON suitable for snapshots or transmission
   def to_rda_json
     ExternalApis::DmphubService.json_from_template(plan: self)

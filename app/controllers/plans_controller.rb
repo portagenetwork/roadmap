@@ -493,24 +493,27 @@ class PlansController < ApplicationController
     # Always create the snapshot
     PlanSnapshot.create_for_plan(@plan)
 
-    # Minting depends on `@plan.published_visibility`
-    # dmp_id = DmpIdService.mint_dmp_id(plan: @plan)
-    if false
-      @plan = @plan.reload
+    if @plan.mint_doi?
+      dmp_id = DmpIdService.mint_dmp_id(plan: @plan)
+      if dmp_id.save
+        @plan = @plan.reload
 
-      # Only allow ORCID publication for the DMP ID if it is enabled in the config!
-      if Rails.configuration.x.madmp.enable_orcid_publication
-        @orcid_access_token = ExternalApiAccessToken.for_user_and_service(user: current_user, service: 'orcid')
+        # Only allow ORCID publication for the DMP ID if it is enabled in the config!
+        if Rails.configuration.x.madmp.enable_orcid_publication
+          @orcid_access_token = ExternalApiAccessToken.for_user_and_service(user: current_user, service: 'orcid')
+        end
+
+        # If a DMP ID was successfully acquired and the User has authorized us to write to their ORCID record
+        if @plan.dmp_id.present? && @orcid_access_token.present?
+          ExternalApis::OrcidService.add_work(user: current_user, plan: @plan)
+        end
+
+        redirect_to publish_plan_path(@plan), notice: success_message(@plan, _('registered'))
+      else
+        redirect_to publish_plan_path(@plan), alert: failure_message(@plan, _('register'))
       end
-
-      # If a DMP ID was successfully acquired and the User has authorized us to write to their ORCID record
-      if @plan.dmp_id.present? && @orcid_access_token.present?
-        ExternalApis::OrcidService.add_work(user: current_user, plan: @plan)
-      end
-
-      redirect_to publish_plan_path(@plan), notice: success_message(@plan, _('registered'))
     else
-      redirect_to publish_plan_path(@plan), alert: failure_message(@plan, _('register'))
+      redirect_to publish_plan_path(@plan), alert: _('DOI minting skipped.') # TODO: alert message is for debugging
     end
   rescue StandardError => e
     # rubocop:disable Layout/LineLength
