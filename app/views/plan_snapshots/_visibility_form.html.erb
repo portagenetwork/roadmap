@@ -1,0 +1,15 @@
+<%= form_with model: PlanSnapshot.new, url: plan_snapshots_path, local: true do |f| %>
+  <%= f.hidden_field :plan_id, value: plan.id %>
+
+  <div class="form-group">
+    <label>Visibility</label>
+    <% PlanSnapshot.visibilities.keys.each do |v| %>
+      <div class="form-check">
+        <%= f.radio_button :visibility, v, id: "plan_snapshot_visibility_#{v}", class: "form-check-input" %>
+        <%= f.label "plan_snapshot_visibility_#{v}", v.humanize, class: "form-check-label" %>
+      </div>
+    <% end %>
+  </div>
+
+  <%= f.submit "Create Snapshot", class: "btn btn-primary" %>
+<% end %>

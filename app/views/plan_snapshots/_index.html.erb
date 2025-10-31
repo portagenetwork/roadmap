@@ -1,0 +1,28 @@
+<h2>Versions</h2>
+
+<% snapshots = PlanSnapshot.for_plan(plan) %>
+
+<% if snapshots.any? %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Version</th>
+        <th>Visibility</th>
+        <th>Created At</th>
+        <th>DOI</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% snapshots.each do |s| %>
+        <tr>
+          <td><%= s.version %></td>
+          <td><%= s.visibility.humanize %></td>
+          <td><%= l(s.created_at, format: :short) %></td>
+          <td><%= 'TODO' %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No versions found.</p>
+<% end %>

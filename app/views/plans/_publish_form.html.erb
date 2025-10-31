@@ -1,10 +1,15 @@
 <%# locals: plan, plan_roles %>
 
-<%= render partial: "plans/visibility_form", locals: { plan: plan } %>
+<%#  %>
+<%#= render partial: "plans/visibility_form", locals: { plan: plan } %>
 
 <% if Rails.configuration.x.show_collaborators_on_share_tab %>
   <%= render partial: "plans/collaborator_form", locals: { plan: @plan, plan_roles: @plan_roles } %>
 <% end %>
+
+<%= render partial: 'plan_snapshots/index', locals: { plan: @plan } %>
+
+<%= render partial: 'plan_snapshots/visibility_form', locals: { plan: @plan } %>
 
 <%#
 NOTE: In order for this to be true, you must:
