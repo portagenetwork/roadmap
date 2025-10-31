@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_10_15_201838) do
+ActiveRecord::Schema.define(version: 2025_10_31_054415) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -437,6 +437,18 @@ ActiveRecord::Schema.define(version: 2025_10_15_201838) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "release_time"
+  end
+
+  create_table "plan_snapshots", force: :cascade do |t|
+    t.bigint "plan_id", null: false
+    t.integer "version", null: false
+    t.integer "visibility", default: 0, null: false
+    t.jsonb "rda_json", null: false
+    t.jsonb "additional_json"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["plan_id", "version"], name: "index_plan_snapshots_on_plan_id_and_version", unique: true
+    t.index ["plan_id"], name: "index_plan_snapshots_on_plan_id"
   end
 
   create_table "plans", id: :serial, force: :cascade do |t|
@@ -913,6 +925,7 @@ ActiveRecord::Schema.define(version: 2025_10_15_201838) do
   add_foreign_key "orgs", "languages"
   add_foreign_key "orgs", "regions"
   add_foreign_key "phases", "templates"
+  add_foreign_key "plan_snapshots", "plans"
   add_foreign_key "plans", "orgs"
   add_foreign_key "plans", "templates"
   add_foreign_key "plans_guidance_groups", "guidance_groups"
