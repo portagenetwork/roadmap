@@ -5,14 +5,8 @@ import { isObject, isString } from '../utils/isType';
 import { renderAlert, hideNotifications } from '../utils/notificationHelper';
 
 $(() => {
-  const toggleSubmit = (selectDropdown = true) => {
-    let tmplt;
-    if (selectDropdown) {
-      tmplt = $('#plan_template_id').find(':selected').val();
-    } else {
-      tmplt = $('#plan_template_id').val();
-    }
-
+  const toggleSubmit = () => {
+    const tmplt = $('#plan_template_id').val();
     const submitButton = $('#new_plan button[type="submit"]');
 
     // If a template has been selected and it is a string
@@ -40,7 +34,7 @@ $(() => {
       e.preventDefault()
       $('#templateDropdown').text(template.title);
       $('#plan_template_id').val(template.id);
-      toggleSubmit(false);
+      toggleSubmit();
     });
 
     return item;
@@ -149,7 +143,7 @@ $(() => {
       adjustDropdownMaxHeight();
     }
 
-    toggleSubmit(false);
+    toggleSubmit();
   };
 
   // Function to reset the template dropdown
@@ -231,13 +225,9 @@ $(() => {
     // if (!validOrg || !validFunder) {
     if (!validOrg) {
       $('#available-templates').fadeOut();
-      $('#plan_template_id').find(':selected').removeAttr('selected');
       $('#plan_template_id').val('');
       toggleSubmit();
     } else {
-      // Clear out the old template dropdown contents
-      $('#plan_template_id option').remove();
-
       let orgId = orgContext.find('input[id$="org_id"]').val();
       let funderId = funderContext.find('input[id$="funder_id"]').val(); // funder id is default to 8 (Portage Network)
 
