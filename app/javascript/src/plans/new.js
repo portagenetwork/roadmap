@@ -147,38 +147,18 @@ $(() => {
   };
 
   // Function to reset the template dropdown
-  const resetTemplateDropdown = () => {
-    // Reset dropdown text and hidden field
-    $('#templateDropdown').text('Please select a template');
+  const resetTemplateDropdown = (isValidOrg = false) => {
+    // Always fade out and reset hidden value
+    $('#available-templates').fadeOut();
     $('#plan_template_id').val('');
 
-    // Clear any existing menu items
-    $('#template-dropdown-menu').empty();
-
-    // Fade out templates section while new ones are fetched
-    $('#available-templates').fadeOut();
-  };
-
-  // Reset dropdown only when a *valid org* is selected
-  $('#research-org-controls input.autocomplete-result').on('change', function () {
-    const val = $(this).val();
-
-    if (val) {
-      try {
-        const json = JSON.parse(val);
-        if (json.id) {
-          // Only reset if the selection actually represents a valid org
-          resetTemplateDropdown();
-        }
-      } catch (e) {
-        // Ignore invalid JSON (user still typing, etc.)
-        console.log('Autocomplete change ignored (invalid JSON)');
-      }
+    if (isValidOrg) {
+      // Reset dropdown text
+      $('#templateDropdown').text('Please select a template');
+      // Clear any existing menu items
+      $('#template-dropdown-menu').empty();
     }
-  });
-
-  // Reset dropdown when "No research organisation" checkbox is toggled
-  $('#plan_no_org').on('change', resetTemplateDropdown);
+  };
 
   // TODO: Refactor this whole thing when we redo the create plan
   //       workflow and use js.erb instead!
@@ -216,16 +196,14 @@ $(() => {
     const orgContext = $('#research-org-controls');
     const funderContext = $('#funder-org-controls');
     const validOrg = validOptions(orgContext);
+    resetTemplateDropdown(validOrg)
 
     // DMP Assistant does not require a funder for creating a plan. Instead the
     // Plan controller will search for the default funder when creating the
     // plan. In our current case this will be "Portage Network"
     // const validFunder = validOptions(funderContext);
 
-    // if (!validOrg || !validFunder) {
     if (!validOrg) {
-      $('#available-templates').fadeOut();
-      $('#plan_template_id').val('');
       toggleSubmit();
     } else {
       let orgId = orgContext.find('input[id$="org_id"]').val();
