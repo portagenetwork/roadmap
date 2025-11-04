@@ -5,9 +5,17 @@ import { isObject, isString } from '../utils/isType';
 import { renderAlert, hideNotifications } from '../utils/notificationHelper';
 
 $(() => {
+  // Cache repeatedly used selectors
+  const newPlanForm = $('#new_plan');
+  const planTemplateID = $('#plan_template_id');
+  const templateDropdown = $('#templateDropdown');
+  const templateDropdownMenu = $('#template-dropdown-menu');
+  const multipleTemplates = $('#multiple-templates');
+  const availableTemplates = $('#available-templates');
+
   const toggleSubmit = () => {
-    const tmplt = $('#plan_template_id').val();
-    const submitButton = $('#new_plan button[type="submit"]');
+    const tmplt = planTemplateID.val();
+    const submitButton = newPlanForm.find('button[type="submit"]');
 
     // If a template has been selected and it is a string
     if (tmplt && isString(tmplt)) {
@@ -32,8 +40,8 @@ $(() => {
 
     item.on('click', (e) => {
       e.preventDefault()
-      $('#templateDropdown').text(template.title);
-      $('#plan_template_id').val(template.id);
+      templateDropdown.text(template.title);
+      planTemplateID.val(template.id);
       toggleSubmit();
     });
 
@@ -82,11 +90,9 @@ $(() => {
   // Helper function to adjust the height of the template dropdown
   // and make sure it does not extend beyond the footer
   const adjustDropdownMaxHeight = () => {
-    const dropdown = document.getElementById('templateDropdown');
-    const dropdownMenu = document.getElementById('template-dropdown-menu');
     const footer = document.getElementById('footer-navbar');
 
-    const dropdownRect = dropdown.getBoundingClientRect();
+    const dropdownRect = templateDropdown.get(0).getBoundingClientRect();
     const footerRect = footer.getBoundingClientRect();
 
     // Ideal location for dropdown to end is middle of the footer
@@ -95,7 +101,7 @@ $(() => {
     const spaceAvailable = footerMiddle - dropdownRect.bottom;
 
     if (spaceAvailable > 0) {
-      dropdownMenu.style.maxHeight = `${spaceAvailable}px`;
+      templateDropdownMenu.get(0).style.maxHeight = `${spaceAvailable}px`;
     }
   };
 
@@ -103,17 +109,16 @@ $(() => {
   // AJAX success function for available template search
   const success = (data) => {
     hideNotifications();
-    const menu = $('#template-dropdown-menu');
-    menu.empty();
+    templateDropdownMenu.empty();
 
     if (!isObject(data) || !isObject(data.templates) || data.total_templates === 0) return error();
     const templates = data.templates;
   
     // Add main groups
-    appendGroup(menu, 'Organisational Templates', templates.org_templates);
-    appendGroup(menu, 'Alliance General Templates', templates.priority_templates);
+    appendGroup(templateDropdownMenu, 'Organisational Templates', templates.org_templates);
+    appendGroup(templateDropdownMenu, 'Alliance General Templates', templates.priority_templates);
     // Add “Show more templates”
-    appendShowMoreSection(menu, templates.other_templates);
+    appendShowMoreSection(templateDropdownMenu, templates.other_templates);
 
     // If there is only one template, set the input field value and submit the form
     // otherwise show the dropdown list and the 'Multiple templates found message'
@@ -124,16 +129,16 @@ $(() => {
         ...templates.priority_templates,
         ...templates.other_templates
       ][0]
-      $('#templateDropdown').text(onlyTemplate.title);
-      $('#plan_template_id').val(onlyTemplate.id);
-      $('#multiple-templates').hide();
-      $('#available-templates').fadeOut();
+      templateDropdown.text(onlyTemplate.title);
+      planTemplateID.val(onlyTemplate.id);
+      multipleTemplates.hide();
+      availableTemplates.fadeOut();
     } else {
-      $('#multiple-templates').show();
-      $('#available-templates').fadeIn();
+      multipleTemplates.show();
+      availableTemplates.fadeIn();
     }
 
-    const dropdown = document.getElementById('templateDropdown');
+    const dropdown = templateDropdown.get(0);
     // offsetParent returns the nearest ancestor that has a position other than static
     // offsetParent property returns null if the element is not visible
     const dropdownIsVisible = dropdown.offsetParent !== null
@@ -149,14 +154,14 @@ $(() => {
   // Function to reset the template dropdown
   const resetTemplateDropdown = (isValidOrg = false) => {
     // Always fade out and reset hidden value
-    $('#available-templates').fadeOut();
-    $('#plan_template_id').val('');
+    availableTemplates.fadeOut();
+    planTemplateID.val('');
 
     if (isValidOrg) {
       // Reset dropdown text
-      $('#templateDropdown').text('Please select a template');
+      templateDropdown.text('Please select a template');
       // Clear any existing menu items
-      $('#template-dropdown-menu').empty();
+      templateDropdownMenu.empty();
     }
   };
 
@@ -275,15 +280,15 @@ $(() => {
 
   // When the user checks the 'mock project' box we need to set the
   // visibility to 'is_test'
-  $('#new_plan #is_test').click((e) => {
+  newPlanForm.find('#is_test').click((e) => {
     $('#plan_visibility').val(($(e.currentTarget)[0].checked ? 'is_test' : defaultVisibility));
   });
 
   // Initialize the form
-  $('#new_plan #available-templates').hide();
+  availableTemplates.hide();
   handleComboboxChange();
   // Scrub out the large arrays of data used for the Org Selector JS so that they
   // are not a part of the form submissiomn
-  scrubOrgSelectionParamsOnSubmit('#new_plan');
+  scrubOrgSelectionParamsOnSubmit(newPlanForm);
   toggleSubmit();
 });
