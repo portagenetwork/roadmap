@@ -9,7 +9,7 @@ module Orgs
     CSV_FILE_PATH = Rails.root.join('tmp', 'ror_fundref_ids.csv')
     CSV_HEADERS = %w[org_id org_name ror_name ror_id fundref_id weight].freeze
 
-    def run
+    def run(update_existing: false)
       ror, fundref = fetch_identifier_schemes
       # Only proceed if the identifier schemes and the ROR API are all available
       return unless ror && fundref && ror_service_available?
@@ -17,15 +17,15 @@ module Orgs
       print_intro_message
 
       CSV.open(CSV_FILE_PATH, 'w', write_headers: true, headers: CSV_HEADERS) do |csv|
-        org_scope.each { |org| process_org(org, ror, fundref, csv) }
+        org_scope.each { |org| process_org(org, ror, fundref, csv, update_existing: update_existing) }
       end
     end
 
     private
 
-    def process_org(org, ror, fundref, csv)
+    def process_org(org, ror, fundref, csv, update_existing: false)
       # If the Org already has a ROR identifier, skip it
-      return if org_has_ror_identifier?(org, ror)
+      return if !update_existing && org_has_ror_identifier?(org, ror)
 
       results = ror_search_results_for_org(org)
       result = best_match_from_results(results) if results.any?
@@ -90,7 +90,7 @@ module Orgs
     def best_match_from_results(results)
       # Find the best match
       # (See OrgSelection::SearchService#weigh for how weight is calculated.)
-      results.find { |r| (r[:weight]).zero? } || results.find { |r| r[:weight] == 1 }
+      results.find { |r| r[:weight].zero? } || results.find { |r| r[:weight] == 1 }
     end
 
     def handle_unmatched_result(org, csv)
