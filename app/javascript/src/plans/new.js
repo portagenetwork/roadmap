@@ -33,19 +33,21 @@ $(() => {
     renderAlert(getConstant('NO_TEMPLATE_FOUND_ERROR'));
   };
 
-  // Helper for success() that creates a clickable template item
-  const createTemplateItem = (template) => {
-    const title = $('<div>').text(template.title).html();
-    const item = $(`<a class="dropdown-item" href="#" data-id="${template.id}">${title}</a>`);
-
-    item.on('click', (e) => {
-      e.preventDefault()
-      templateDropdown.text(template.title);
-      planTemplateID.val(template.id);
+  // Binds a delegated click handler on templateDropdownMenu to handle clicks on template items
+  const bindTemplateDropdownMenuClickHandler = () => {
+    templateDropdownMenu.on('click', 'a.dropdown-item', (e) => {
+      e.preventDefault();
+      const target = $(e.currentTarget);
+      planTemplateID.val(target.data('id'));
+      templateDropdown.text(target.data('title'));
       toggleSubmit();
     });
+  }
 
-    return item;
+  // Helper for success() that creates a template item
+  const createTemplateItem = (template) => {
+    const title = $('<div>').text(template.title).html();
+    return $(`<a class="dropdown-item" href="#" data-id="${template.id}" data-title="${template.title}">${title}</a>`);
   };
 
   // Helper for success() that appends a group of templates with a header
@@ -286,6 +288,7 @@ $(() => {
 
   // Initialize the form
   availableTemplates.hide();
+  bindTemplateDropdownMenuClickHandler();
   handleComboboxChange();
   // Scrub out the large arrays of data used for the Org Selector JS so that they
   // are not a part of the form submissiomn
