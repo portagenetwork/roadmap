@@ -92,10 +92,18 @@ $(() => {
   // Helper function to adjust the height of the template dropdown
   // and make sure it does not extend beyond the footer
   const adjustDropdownMaxHeight = () => {
-    const footer = document.getElementById('footer-navbar');
+    const templateDropdownEl = templateDropdown.get(0);
+    const templateDropdownMenuEl = templateDropdownMenu.get(0);
+    const footerEl = document.getElementById('footer-navbar');
+    // .offsetParent returns the nearest ancestor that has a position other than static
+    // (returns null if the element is not visible)
+    const isVisible = templateDropdownEl.offsetParent !== null;
 
-    const dropdownRect = templateDropdown.get(0).getBoundingClientRect();
-    const footerRect = footer.getBoundingClientRect();
+    // Return early if any required element is missing or dropdown is not visible
+    if (!(templateDropdownEl && templateDropdownMenuEl && footerEl  && isVisible)) return;
+
+    const dropdownRect = templateDropdownEl.getBoundingClientRect();
+    const footerRect = footerEl.getBoundingClientRect();
 
     // Ideal location for dropdown to end is middle of the footer
     const footerMiddle = (footerRect.bottom + footerRect.top) / 2;
@@ -103,7 +111,7 @@ $(() => {
     const spaceAvailable = footerMiddle - dropdownRect.bottom;
 
     if (spaceAvailable > 0) {
-      templateDropdownMenu.get(0).style.maxHeight = `${spaceAvailable}px`;
+      templateDropdownMenuEl.style.maxHeight = `${spaceAvailable}px`;
     }
   };
 
@@ -139,17 +147,8 @@ $(() => {
       multipleTemplates.show();
       availableTemplates.fadeIn();
     }
-
-    const dropdown = templateDropdown.get(0);
-    // offsetParent returns the nearest ancestor that has a position other than static
-    // offsetParent property returns null if the element is not visible
-    const dropdownIsVisible = dropdown.offsetParent !== null
-
-    // Adjust the height of the dropdown when it is visible
-    if (dropdown && dropdownIsVisible) {
-      adjustDropdownMaxHeight();
-    }
-
+    // Adjust templateDropdown's maxHeight to not overextend
+    adjustDropdownMaxHeight();
     toggleSubmit();
   };
 
