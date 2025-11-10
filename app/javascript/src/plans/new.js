@@ -46,8 +46,13 @@ $(() => {
 
   // Helper for success() that creates a template item
   const createTemplateItem = (template) => {
-    const title = $('<div>').text(template.title).html();
-    return $(`<a class="dropdown-item" href="#" data-id="${template.id}" data-title="${template.title}">${title}</a>`);
+    const a = $('<a>', {
+      class: 'dropdown-item',
+      href: '#',
+      'data-id': template.id,
+      'data-title': template.title,
+    }).text(template.title);
+    return a;
   };
 
   // Helper for success() that appends a group of templates with a header
