@@ -32,7 +32,7 @@ RSpec.describe 'Plans', type: :feature do
     choose_suggestion('plan_org_org_name', @org)
 
     # Open the dropdown
-    find('#templateDropdown').click
+    find('#template-dropdown').click
 
     within('#template-dropdown-menu') do
       click_link @default_template.title
@@ -58,7 +58,7 @@ RSpec.describe 'Plans', type: :feature do
     choose_suggestion('plan_org_org_name', @org)
 
     # Open the dropdown
-    find('#templateDropdown').click
+    find('#template-dropdown').click
 
     within('#template-dropdown-menu') do
       expect(page).to have_content('ORGANISATIONAL TEMPLATES')

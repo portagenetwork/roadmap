@@ -8,7 +8,7 @@ $(() => {
   // Cache repeatedly used selectors
   const newPlanForm = $('#new_plan');
   const planTemplateID = $('#plan_template_id');
-  const templateDropdown = $('#templateDropdown');
+  const templateDropdown = $('#template-dropdown');
   const templateDropdownMenu = $('#template-dropdown-menu');
   const multipleTemplates = $('#multiple-templates');
   const availableTemplates = $('#available-templates');
@@ -94,19 +94,21 @@ $(() => {
     });
   };
 
-  // Helper function to adjust the height of the template dropdown
-  // and make sure it does not extend beyond the footer
-  const adjustDropdownMaxHeight = () => {
+  // Helper for resizing width and height of templateDropdownMenu
+  // Matches width to that of the dropdown button (prevents resizing when "Show more..." is clicked)
+  // Sets max-height to avoid extending beyond the footer
+  const resizeTemplateDropdownMenu = () => {
     const templateDropdownEl = templateDropdown.get(0);
     const templateDropdownMenuEl = templateDropdownMenu.get(0);
     const footerEl = document.getElementById('footer-navbar');
-    // .offsetParent returns the nearest ancestor that has a position other than static
-    // (returns null if the element is not visible)
-    const isVisible = templateDropdownEl.offsetParent !== null;
 
     // Return early if any required element is missing or dropdown is not visible
-    if (!(templateDropdownEl && templateDropdownMenuEl && footerEl  && isVisible)) return;
+    if (!(templateDropdownEl && templateDropdownMenuEl && footerEl  && templateDropdown.is(':visible'))) return;
 
+    // Set width
+    templateDropdownMenu.outerWidth(templateDropdown.outerWidth());
+
+    // Set maxHeight
     const dropdownRect = templateDropdownEl.getBoundingClientRect();
     const footerRect = footerEl.getBoundingClientRect();
 
@@ -152,8 +154,7 @@ $(() => {
       multipleTemplates.show();
       availableTemplates.fadeIn();
     }
-    // Adjust templateDropdown's maxHeight to not overextend
-    adjustDropdownMaxHeight();
+    resizeTemplateDropdownMenu();
     toggleSubmit();
   };
 
