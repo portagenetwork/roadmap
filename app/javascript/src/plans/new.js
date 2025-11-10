@@ -71,7 +71,7 @@ $(() => {
 
     const showMore = $(`
       <button type="button" class="btn btn-default" id="show-more-templates">
-        Show more templates
+        ${getConstant('SHOW_MORE_TEMPLATES')}
       </button>
     `);
     
@@ -86,7 +86,7 @@ $(() => {
       e.stopPropagation(); // prevent closing dropdown
 
       hiddenContainer.empty(); // clear before adding
-      hiddenContainer.append('<h6 class="dropdown-header text-muted">Additional Alliance Templates</h6>');
+      hiddenContainer.append(`<h6 class="dropdown-header text-muted">${getConstant('OTHER_TEMPLATES')}</h6>`);
       otherTemplates.forEach((t) => hiddenContainer.append(createTemplateItem(t)));
 
       hiddenContainer.slideDown(10);
@@ -130,8 +130,8 @@ $(() => {
     const templates = data.templates;
   
     // Add main groups
-    appendGroup(templateDropdownMenu, 'Organisational Templates', templates.org_templates);
-    appendGroup(templateDropdownMenu, 'Alliance General Templates', templates.priority_templates);
+    appendGroup(templateDropdownMenu, getConstant('ORG_TEMPLATES'), templates.org_templates);
+    appendGroup(templateDropdownMenu, getConstant('PRIORITY_TEMPLATES'), templates.priority_templates);
     // Add “Show more templates”
     appendShowMoreSection(templateDropdownMenu, templates.other_templates);
 
@@ -165,7 +165,7 @@ $(() => {
 
     if (isValidOrg) {
       // Reset dropdown text
-      templateDropdown.text('Please select a template');
+      templateDropdown.text(getConstant('SELECT_TEMPLATE'));
       // Clear any existing menu items
       templateDropdownMenu.empty();
     }
