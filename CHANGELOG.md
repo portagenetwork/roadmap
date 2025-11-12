@@ -3,7 +3,7 @@
 ## [Unreleased]
 
 ### Added
-
+ - Add headers and "Show more templates" button to template dropdown [#1215](https://github.com/portagenetwork/roadmap/pull/1215) 
 
 ### Fixed
 
