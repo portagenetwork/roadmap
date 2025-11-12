@@ -16,6 +16,8 @@
 
  - Refactor: Consolidate repeated custom colour variables across stylesheets [#1218](https://github.com/portagenetwork/roadmap/pull/1218)
 
+ - Update template validation on plan creation [#1225](https://github.com/portagenetwork/roadmap/pull/1225)
+
 ### Dependency Updates
 
  - chore(deps): bump nginx from 1.29.1-alpine to 1.29.2-alpine [#1207](https://github.com/portagenetwork/roadmap/pull/1207)
