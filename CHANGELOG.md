@@ -3,7 +3,7 @@
 ## [Unreleased]
 
 ### Added
-
+ - Add headers and "Show more templates" button to template dropdown [#1215](https://github.com/portagenetwork/roadmap/pull/1215) 
 
 ### Fixed
 
@@ -15,6 +15,8 @@
  - Reorganize template dropdown menu and refactor TemplateOptionsController [#1199](https://github.com/portagenetwork/roadmap/pull/1199)
 
  - Refactor: Consolidate repeated custom colour variables across stylesheets [#1218](https://github.com/portagenetwork/roadmap/pull/1218)
+
+ - Update template validation on plan creation [#1225](https://github.com/portagenetwork/roadmap/pull/1225)
 
 ### Dependency Updates
 

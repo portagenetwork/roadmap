@@ -126,6 +126,8 @@
       </footer>
 
     <%
+      # TODO: Update `/constants.js` to allow us to pass objects here
+      # (e.g. `PLAN_VISIBILITY: { TEST: _('N/A'), NOT_TEST: ...}`)
     constants_json = {
       HOST: request.host,
       PASSWORD_MIN_LENGTH: 8,
@@ -162,7 +164,13 @@
       CURRENT_LOCALE: LocaleService.to_gettext(locale: @current_locale.to_s),
 
       MORE_INFO: _("More info"),
-      LESS_INFO: _("Less info")
+      LESS_INFO: _("Less info"),
+
+      SELECT_TEMPLATE: _('Please select a template'),
+      SHOW_MORE_TEMPLATES: _('Show more templates'),
+      ORG_TEMPLATES: _('Organisational Templates'),
+      PRIORITY_TEMPLATES: _('Alliance General Templates'),
+      OTHER_TEMPLATES: _('Additional Alliance Templates')
     }.to_json
     %>
 

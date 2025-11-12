@@ -1,0 +1,48 @@
+@use '../../dmp-assistant/variables/colours' as *;
+
+#template-dropdown-menu {
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 1px solid $color-alliance-lighter-grey;
+
+  /* Style for individual dropdown items */
+  .dropdown-item {
+    display: block;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: normal;
+    color: $color-alliance-digital-grey;
+    text-decoration: none;
+    padding-left: 1.5rem;
+
+    &:hover {
+      color: $color-alliance-yellow;
+      background-color: $color-alliance-digital-grey;
+    }
+  }
+
+  /* Style for the template headers */
+  .dropdown-header {
+    font-family: inherit;
+    font-weight: 500;
+    font-size: 1rem;
+    text-transform: uppercase;
+    color: $color-alliance-yellow;
+    background-color: $color-alliance-digital-grey;
+  }
+
+  .dropdown-divider {
+    margin: 0.5rem 0;
+  }
+
+  /* Style for the 'Show more templates' button inside dropdown */
+  #show-more-templates {
+    width: 100%;
+    text-align: center;
+    font-family: inherit;
+    font-weight: 500;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+  }
+}
