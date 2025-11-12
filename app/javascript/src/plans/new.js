@@ -292,7 +292,6 @@ $(() => {
   });
 
   // Initialize the form
-  availableTemplates.hide();
   bindTemplateDropdownMenuClickHandler();
   handleComboboxChange();
   // Scrub out the large arrays of data used for the Org Selector JS so that they
