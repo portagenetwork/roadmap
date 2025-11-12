@@ -63,10 +63,9 @@ class PlansController < ApplicationController
     @plan = Plan.new
     authorize @plan
 
-    # If the template_id is blank then we need to look up the available templates and
-    # return JSON
-    if plan_params[:template_id].blank?
-      # Something went wrong there should always be a template id
+    # Ensure the plan will be associated with a valid Template
+    template = find_valid_template(plan_params[:template_id])
+    if template.nil?
       respond_to do |format|
         flash[:alert] = _('Unable to identify a suitable template for your plan.')
         format.html { redirect_to new_plan_path }
@@ -78,7 +77,7 @@ class PlansController < ApplicationController
                            plan_params[:visibility]
                          end
 
-      @plan.template = Template.find(plan_params[:template_id])
+      @plan.template = template
 
       @plan.title = if plan_params[:title].blank?
                       if current_user.firstname.blank?
@@ -481,6 +480,12 @@ class PlansController < ApplicationController
                   grant: %i[name value],
                   org: %i[id org_id org_name org_sources org_crosswalk],
                   funder: %i[id org_id org_name org_sources org_crosswalk])
+  end
+
+  # Returns the template if it exists, is published, and not archived;
+  # otherwise returns nil
+  def find_valid_template(template_id)
+    Template.where(id: template_id, published: true, archived: false).first
   end
 
   # different versions of the same template have the same family_id
