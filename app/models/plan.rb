@@ -321,15 +321,17 @@ class Plan < ApplicationRecord
   #  emails confirmation messages to owners
   #  emails org admins and org contact
   #  adds org admins to plan with the 'reviewer' Role
-  def request_feedback(user)
+  def request_feedback(user) # rubocop:disable Metrics/AbcSize
     Plan.transaction do
       self.feedback_requested = true
       return false unless save!
 
+      current_app_language = Language.find_by(abbreviation: I18n.locale.to_s)
       # Send an email to the org-admin contact
       if user.org.contact_email.present?
         contact = User.new(email: user.org.contact_email,
-                           firstname: user.org.contact_name)
+                           firstname: user.org.contact_name,
+                           language: current_app_language)
         UserMailer.feedback_notification(contact, self, user).deliver_now
       end
       true
