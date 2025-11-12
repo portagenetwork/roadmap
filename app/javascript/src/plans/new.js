@@ -53,6 +53,18 @@ $(() => {
     )
   );
 
+  // Helper for success() to extract total_templates and all template groups from the response
+  const extractTemplateData = (data) => {
+    const { total_templates: totalTemplates, templates } = data;
+    const {
+      org_templates: orgTemplates,
+      priority_templates: priorityTemplates,
+      other_templates: otherTemplates
+    } = templates;
+
+    return { totalTemplates, orgTemplates, priorityTemplates, otherTemplates };
+  };
+
   // Helper for success() that creates a template item
   const createTemplateItem = (template) => {
     const a = $('<a>', {
@@ -137,23 +149,19 @@ $(() => {
     templateDropdownMenu.empty();
 
     if (!isValidTemplateResponse(data)) return error();
-    const templates = data.templates;
+    const { orgTemplates, priorityTemplates, otherTemplates, totalTemplates } = extractTemplateData(data);
   
     // Add main groups
-    appendGroup(templateDropdownMenu, getConstant('ORG_TEMPLATES'), templates.org_templates);
-    appendGroup(templateDropdownMenu, getConstant('PRIORITY_TEMPLATES'), templates.priority_templates);
+    appendGroup(templateDropdownMenu, getConstant('ORG_TEMPLATES'), orgTemplates);
+    appendGroup(templateDropdownMenu, getConstant('PRIORITY_TEMPLATES'), priorityTemplates);
     // Add “Show more templates”
-    appendShowMoreSection(templateDropdownMenu, templates.other_templates);
+    appendShowMoreSection(templateDropdownMenu, otherTemplates);
 
     // If there is only one template, set the input field value and submit the form
     // otherwise show the dropdown list and the 'Multiple templates found message'
-    if (data.total_templates === 1) {
+    if (totalTemplates === 1) {
       // Get the only template
-      const onlyTemplate = [
-        ...templates.org_templates,
-        ...templates.priority_templates,
-        ...templates.other_templates
-      ][0];
+      const onlyTemplate = [...orgTemplates, ...priorityTemplates, ...otherTemplates][0];
       // Ensure there is in fact a template
       if (!onlyTemplate) return error();
 
