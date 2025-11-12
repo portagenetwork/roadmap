@@ -1,7 +1,7 @@
 import debounce from '../utils/debounce';
 import { initAutocomplete, scrubOrgSelectionParamsOnSubmit } from '../utils/autoComplete';
 import getConstant from '../utils/constants';
-import { isObject, isString } from '../utils/isType';
+import { isObject, isArray, isString, isNumber } from '../utils/isType';
 import { renderAlert, hideNotifications } from '../utils/notificationHelper';
 
 $(() => {
@@ -43,6 +43,15 @@ $(() => {
       toggleSubmit();
     });
   }
+
+  // Helper for success() to validate the structure and content of the template response
+  const isValidTemplateResponse = (data) => (
+    isObject(data) && isObject(data.templates) &&
+    isNumber(data.total_templates) && data.total_templates > 0 &&
+    ['org_templates', 'priority_templates', 'other_templates'].every(
+      (k) => isArray(data.templates[k])
+    )
+  );
 
   // Helper for success() that creates a template item
   const createTemplateItem = (template) => {
@@ -122,13 +131,12 @@ $(() => {
     }
   };
 
-
   // AJAX success function for available template search
   const success = (data) => {
     hideNotifications();
     templateDropdownMenu.empty();
 
-    if (!isObject(data) || !isObject(data.templates) || data.total_templates === 0) return error();
+    if (!isValidTemplateResponse(data)) return error();
     const templates = data.templates;
   
     // Add main groups
@@ -140,12 +148,15 @@ $(() => {
     // If there is only one template, set the input field value and submit the form
     // otherwise show the dropdown list and the 'Multiple templates found message'
     if (data.total_templates === 1) {
-      // Get the first and only template across all groups
+      // Get the only template
       const onlyTemplate = [
         ...templates.org_templates,
         ...templates.priority_templates,
         ...templates.other_templates
-      ][0]
+      ][0];
+      // Ensure there is in fact a template
+      if (!onlyTemplate) return error();
+
       templateDropdown.text(onlyTemplate.title);
       planTemplateID.val(onlyTemplate.id);
       multipleTemplates.hide();
