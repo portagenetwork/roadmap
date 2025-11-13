@@ -63,8 +63,11 @@ class PlansController < ApplicationController
     @plan = Plan.new
     authorize @plan
 
-    # Ensure the plan will be associated with a valid Template
-    template = find_valid_template(plan_params[:template_id])
+    # Get the org from plan_params
+    org = resolve_plan_org
+
+    # Ensure this is a valid template
+    template = find_valid_template(org)
     if template.nil?
       respond_to do |format|
         flash[:alert] = _('Unable to identify a suitable template for your plan.')
@@ -89,7 +92,7 @@ class PlansController < ApplicationController
                       plan_params[:title]
                     end
 
-      @plan.org = resolve_plan_org
+      @plan.org = org
 
       if plan_params[:funder].present? && plan_params[:funder][:id].present?
         attrs = plan_params[:funder]
@@ -487,10 +490,13 @@ class PlansController < ApplicationController
     end
   end
 
-  # Returns the template if it exists, is published, and not archived;
-  # otherwise returns nil
-  def find_valid_template(template_id)
-    Template.where(id: template_id, published: true, archived: false).first
+  # Returns the template if it is permitted for the given org; otherwise nil.
+  def find_valid_template(org)
+    template_id = plan_params[:template_id].to_i
+    return if template_id.zero? # True if the param value was nil or non-numeric
+
+    valid_templates = Templates::TemplateOptionsService.available_templates(org)
+    valid_templates.find { |t| t.id == template_id }
   end
 
   # different versions of the same template have the same family_id
