@@ -89,19 +89,8 @@ class PlansController < ApplicationController
                       plan_params[:title]
                     end
 
-      # bit of hackery here. There are 2 org selectors on the page
-      # and each is within its own specific context, plan.org or
-      # plan.funder which forces the hidden id hash to be :id
-      # so we need to convert it to :org_id so it works with the
-      # OrgSelectable and OrgSelection services
-      if plan_params[:org].present? && plan_params[:org][:id].present?
-        attrs = plan_params[:org]
-        attrs[:org_id] = attrs[:id]
-        @plan.org = org_from_params(params_in: attrs, allow_create: false)
-      else
-        # The user did not specify a research Org, so default to their Org
-        @plan.org = current_user.org
-      end
+      @plan.org = resolve_plan_org
+
       if plan_params[:funder].present? && plan_params[:funder][:id].present?
         attrs = plan_params[:funder]
         attrs[:org_id] = attrs[:id]
@@ -480,6 +469,22 @@ class PlansController < ApplicationController
                   grant: %i[name value],
                   org: %i[id org_id org_name org_sources org_crosswalk],
                   funder: %i[id org_id org_name org_sources org_crosswalk])
+  end
+
+  def resolve_plan_org
+    # bit of hackery here. There are 2 org selectors on the page
+    # and each is within its own specific context, plan.org or
+    # plan.funder which forces the hidden id hash to be :id
+    # so we need to convert it to :org_id so it works with the
+    # OrgSelectable and OrgSelection services
+    if plan_params[:org].present? && plan_params[:org][:id].present?
+      attrs = plan_params[:org]
+      attrs[:org_id] = attrs[:id]
+      org_from_params(params_in: attrs, allow_create: false)
+    else
+      # The user did not specify a research Org, so default to their Org
+      current_user.org
+    end
   end
 
   # Returns the template if it exists, is published, and not archived;
