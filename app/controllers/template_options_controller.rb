@@ -81,8 +81,8 @@ class TemplateOptionsController < ApplicationController
   # - total_templates: Count of all templates
   def build_templates_payload(templates)
     funder_templates = templates.select { |t| t.org_id == DEFAULT_FUNDER_ID }
-    simplified = funder_templates.find { |t| t.title.start_with?('Alliance Simplified Template') }
-    default    = funder_templates.find(&:is_default)
+    simplified = funder_templates.find { |t| t.title == _('Alliance Simplified Template (Funding Application Stage)') }
+    default = funder_templates.find(&:is_default)
     priority_templates = [simplified, default].compact
 
     { templates: { org_templates: templates - funder_templates,
