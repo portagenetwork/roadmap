@@ -1,12 +1,12 @@
 # Changelog
 
-## [Unreleased]
+## [4.1.1+portage-4.6.0]
 
 ### Added
  - Add headers and "Show more templates" button to template dropdown [#1215](https://github.com/portagenetwork/roadmap/pull/1215) 
 
 ### Fixed
-
+ - Edit request feedback email to send in app language [#1227](https://github.com/portagenetwork/roadmap/pull/1227)
 
 ### Changed
 
