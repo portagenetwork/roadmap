@@ -12,7 +12,7 @@
 
  - Edit footer logos [#1203](https://github.com/portagenetwork/roadmap/pull/1203)
 
- - Reorganize template dropdown menu and refactor TemplateOptionsController [#1199](https://github.com/portagenetwork/roadmap/pull/1199)
+ - Reorganize template dropdown menu and refactor TemplateOptionsController [#1199](https://github.com/portagenetwork/roadmap/pull/1199), [#1229](https://github.com/portagenetwork/roadmap/pull/1229)
 
  - Refactor: Consolidate repeated custom colour variables across stylesheets [#1218](https://github.com/portagenetwork/roadmap/pull/1218)
 
