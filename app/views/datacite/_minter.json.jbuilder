@@ -60,6 +60,7 @@ json.data do
     json.relatedIdentifiers [data_management_plan] do
       url = Rails.application.routes.url_helpers.api_v1_plan_url(data_management_plan)
       json.relatedIdentifier url
+      # TODO: Why is `json.relatedIdentifierType` repeated here?
       json.relatedIdentifierType 'URL'
       json.relatedIdentifierType 'IsMetadataFor'
     end

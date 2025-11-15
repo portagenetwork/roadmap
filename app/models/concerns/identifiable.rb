@@ -74,6 +74,17 @@ module Identifiable
       end
       true
     end
+
+    # Retrieves the most recent DOI for a Plan or PlanSnapshot
+    def dmp_id
+      return unless is_a?(Plan) || is_a?(PlanSnapshot)
+      return unless Rails.configuration.x.madmp.enable_dmp_id_registration
+
+      identifiers
+        .includes(:identifier_scheme)
+        .reverse
+        .detect { |i| i.identifier_scheme == DmpIdService.identifier_scheme }
+    end
   end
   # rubocop:enable Metrics/BlockLength
 end

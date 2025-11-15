@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PlanSnapshot < ApplicationRecord
+  include Identifiable
+
   # ==============
   # = Attributes =
   # ==============
@@ -27,9 +29,12 @@ class PlanSnapshot < ApplicationRecord
   # Scope to fetch snapshots for a given plan ordered by version
   scope :for_plan, ->(plan) { where(plan_id: plan.id).order(version: :asc) }
 
-  def self.create_for_plan(plan)
+  # CLASS METHODS
+
+  def self.create_for_plan(plan, visibility:)
     create!(
-      plan: plan,
+      plan:,
+      visibility:,
       version: next_version_for_plan(plan),
       rda_json: plan.to_rda_json,
       additional_json: plan.to_additional_json
@@ -43,6 +48,14 @@ class PlanSnapshot < ApplicationRecord
 
   def self.next_version_for_plan(plan)
     (where(plan_id: plan.id).maximum(:version) || 0) + 1
+  end
+
+  def previous_public_snapshot
+    self.class.where(plan_id: plan_id)
+        .where('version < ?', version)
+        .publicly_visible
+        .order(version: :desc)
+        .first
   end
 end
 

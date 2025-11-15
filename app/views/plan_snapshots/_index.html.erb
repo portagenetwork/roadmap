@@ -1,6 +1,6 @@
 <h2>Versions</h2>
 
-<% snapshots = PlanSnapshot.for_plan(plan) %>
+<% snapshots = PlanSnapshot.for_plan(@plan) %>
 
 <% if snapshots.any? %>
   <table class="table table-striped">
@@ -18,7 +18,7 @@
           <td><%= s.version %></td>
           <td><%= s.visibility.humanize %></td>
           <td><%= l(s.created_at, format: :short) %></td>
-          <td><%= 'TODO' %></td>
+          <td><%= s&.dmp_id ? sandbox_dmp_id(id: s.dmp_id, with_domain: true) : 'Unpublished' %></td>
         </tr>
       <% end %>
     </tbody>

@@ -1,4 +1,4 @@
-<%= form_with model: PlanSnapshot.new, url: plan_snapshots_path, local: true do |f| %>
+<%= form_with model: PlanSnapshot.new, url: plan_plan_snapshots_path(plan), local: true do |f| %>
   <%= f.hidden_field :plan_id, value: plan.id %>
 
   <div class="form-group">
@@ -11,5 +11,5 @@
     <% end %>
   </div>
 
-  <%= f.submit "Create Snapshot", class: "btn btn-primary" %>
+  <%= f.submit "Publish new version", class: "btn btn-primary" %>
 <% end %>

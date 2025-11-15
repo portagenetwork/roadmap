@@ -128,6 +128,8 @@ class Plan < ApplicationRecord
 
   has_many :related_identifiers, as: :identifiable, dependent: :destroy
 
+  has_many :snapshots, class_name: 'PlanSnapshot'
+
   # =====================
   # = Nested Attributes =
   # =====================
@@ -584,15 +586,6 @@ class Plan < ApplicationRecord
   # Returns the plan's identifier (either a DOI/ARK)
   def landing_page
     identifiers.find { |i| DMP_ID_TYPES.include?(i.identifier_format) }
-  end
-
-  # Retrieves the Plan's most recent DOI
-  def dmp_id
-    return nil unless Rails.configuration.x.madmp.enable_dmp_id_registration
-
-    id = identifiers.includes(:identifier_scheme)
-                    .reverse.find { |i| i.identifier_scheme == DmpIdService.identifier_scheme }
-    id if id.present?
   end
 
   # Since the Grant is not a normal AR association, override the getter and setter

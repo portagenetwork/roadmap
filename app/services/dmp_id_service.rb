@@ -5,19 +5,25 @@ class DmpIdService
   class << self
     # Registers a DMP ID for the specified plan.
     # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-    def mint_dmp_id(plan:)
-      # plan must exist and not already have a DMP ID!
-      return nil unless plan.present? && plan.is_a?(Plan)
-      return plan.dmp_id if plan.dmp_id.present?
+    def mint_dmp_id(plan:, snapshot:, is_canonical: false)
+      return nil unless snapshot.present? && snapshot.is_a?(PlanSnapshot)
+      return snapshot.dmp_id if !is_canonical && snapshot.dmp_id.present?
 
       svc = minter
       return nil if svc.blank? # || !minting_service_defined?
 
+      # mint the plan, not the snapshot
+      # (`app/views/datacite/_minter.json.jbuilder` serializes the plan)
       dmp_id = svc.mint_dmp_id(plan: plan)
       return nil if dmp_id.blank?
 
       dmp_id = "#{svc.landing_page_url}#{dmp_id}" unless dmp_id.downcase.start_with?('http')
-      Identifier.new(identifier_scheme: identifier_scheme, identifiable: plan, value: dmp_id)
+
+      identifiable = is_canonical ? plan : snapshot
+
+      Identifier.create(identifier_scheme: identifier_scheme,
+                        identifiable: identifiable,
+                        value: dmp_id)
     rescue StandardError => e
       Rails.logger.debug e.message
       Rails.logger.error "DmpIdService.mint_dmp_id for Plan #{plan&.id} resulted in: #{e.message}"

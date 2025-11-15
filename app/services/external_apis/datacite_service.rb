@@ -64,7 +64,6 @@ module ExternalApis
       end
 
       # Create a new DMP ID
-      # rubocop:disable Metrics/AbcSize
       def mint_dmp_id(plan:)
         return nil unless active?
 
@@ -83,13 +82,11 @@ module ExternalApis
         json = process_response(response: resp)
         return nil if json.blank?
 
-        dmp_id = json.fetch('data', attributes: { doi: nil })
-                     .fetch('attributes', { doi: nil })['doi']
+        json.fetch('data', attributes: { doi: nil })
+            .fetch('attributes', { doi: nil })['doi']
 
-        add_subscription(plan: plan, dmp_id: dmp_id) if dmp_id.present?
-        dmp_id
+        # add_subscription(plan: plan, dmp_id: dmp_id) if dmp_id.present?
       end
-      # rubocop:enable Metrics/AbcSize
 
       # Update the DMP ID
       # rubocop:disable Metrics/AbcSize
@@ -157,6 +154,58 @@ module ExternalApis
         plan.present?
       end
 
+      # Link a canonical DOI to a version DOI in Datacite
+      # https://support.datacite.org/docs/versioning#linking-a-resource-to-specific-versions
+      def link_canonical_and_version_dois(canonical_doi, version_doi)
+        return unless active? && canonical_doi.present? && version_doi.present?
+
+        # Update canonical DOI: add "HasVersion" pointing to version DOI
+        update_related_identifiers(
+          doi: canonical_doi,
+          related_identifiers: [
+            {
+              'relatedIdentifier' => version_doi,
+              'relatedIdentifierType' => 'DOI',
+              'relationType' => 'HasVersion',
+              'resourceTypeGeneral' => 'Dataset' # TODO: Is 'Dataset' correct?
+            }
+          ]
+        )
+
+        # Update version DOI: add "IsVersionOf" pointing to canonical DOI
+        update_related_identifiers(
+          doi: version_doi,
+          related_identifiers: [
+            {
+              'relatedIdentifier' => canonical_doi,
+              'relatedIdentifierType' => 'DOI',
+              'relationType' => 'IsVersionOf',
+              'resourceTypeGeneral' => 'Dataset'
+            }
+          ]
+        )
+      end
+
+      # Link a canonical DOI to a version DOI in Datacite
+      # https://support.datacite.org/docs/versioning#linking-a-resource-to-specific-versions
+      def link_previous_and_new_version_dois(previous_doi, new_version_doi)
+        return unless active? && previous_doi.present? && new_version_doi.present?
+
+        # Update previous DOI: IsPreviousVersionOf → new DOI
+        append_related_identifier(
+          doi: previous_doi,
+          relation_type: 'IsPreviousVersionOf',
+          related_doi: new_version_doi
+        )
+
+        # Update new DOI: IsNewVersionOf → previous DOI
+        append_related_identifier(
+          doi: new_version_doi,
+          relation_type: 'IsNewVersionOf',
+          related_doi: previous_doi
+        )
+      end
+
       private
 
       def auth
@@ -187,6 +236,96 @@ module ExternalApis
       rescue JSON::ParserError => e
         log_error(method: 'Datacite mint_dmp_id', error: e)
         nil
+      end
+
+      def update_related_identifiers(doi:, related_identifiers:)
+        return unless doi.present? && related_identifiers.present?
+
+        data = {
+          'data' => {
+            'type' => 'dois',
+            'attributes' => {
+              'relatedIdentifiers' => related_identifiers
+            }
+          }
+        }
+
+        id = doi.gsub(%r{https?://doi.org/}, '') # remove scheme for API
+        resp = http_put(
+          uri: "#{api_base_url}#{update_path}#{id}",
+          additional_headers: { 'Content-Type': 'application/vnd.api+json' },
+          data: data,
+          basic_auth: auth,
+          debug: false
+        )
+
+        unless resp.present? && resp.code == 200
+          handle_http_failure(method: 'Datacite link_canonical_and_version_dois', http_response: resp)
+          notify_administrators(obj: doi, response: resp)
+        end
+
+        resp
+      end
+
+      def append_related_identifier(doi:, relation_type:, related_doi:)
+        return unless doi.present? && relation_type.present? && related_doi.present?
+
+        id = doi.gsub(%r{https?://doi.org/}, '')
+
+        # 1. Fetch current metadata
+        resp = http_get(
+          uri: "#{api_base_url}#{update_path}#{id}",
+          additional_headers: { 'Content-Type': 'application/vnd.api+json' },
+          basic_auth: auth,
+          debug: false
+        )
+
+        unless resp.present? && resp.code == 200
+          handle_http_failure(method: 'Datacite append_related_identifier (GET)', http_response: resp)
+          notify_administrators(obj: doi, response: resp)
+          return nil
+        end
+
+        body = begin
+          JSON.parse(resp.body)
+        rescue StandardError
+          {}
+        end
+        existing = body.dig('data', 'attributes', 'relatedIdentifiers') || []
+
+        # 2. Append the new entry
+        existing << {
+          'relatedIdentifier' => related_doi,
+          'relatedIdentifierType' => 'DOI',
+          'relationType' => relation_type,
+          'resourceTypeGeneral' => 'Dataset'
+        }
+
+        # 3. PUT the updated list
+        data = {
+          'data' => {
+            'type' => 'dois',
+            'attributes' => {
+              'relatedIdentifiers' => existing
+            }
+          }
+        }
+
+        update_resp = http_put(
+          uri: "#{api_base_url}#{update_path}#{id}",
+          additional_headers: { 'Content-Type': 'application/vnd.api+json' },
+          data: data,
+          basic_auth: auth,
+          debug: false
+        )
+
+        unless update_resp.present? && update_resp.code == 200
+          handle_http_failure(method: 'Datacite append_related_identifier (PUT)', http_response: update_resp)
+          notify_administrators(obj: doi, response: update_resp)
+          return nil
+        end
+
+        update_resp
       end
     end
   end

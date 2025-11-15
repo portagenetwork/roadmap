@@ -125,6 +125,10 @@ Rails.application.routes.draw do
 
     resources :contributors, except: %i[show]
 
+    resources :plan_snapshots, only: [:create] do
+      post :mint_doi, on: :member
+    end
+
     resources :research_outputs, except: %i[show]
 
     member do

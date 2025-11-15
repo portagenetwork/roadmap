@@ -70,7 +70,7 @@ allow_minting = orcid.present? && orcid_access_token.present? if allow_minting &
         </ul>
       </legend>
       <div class="form-group col-xs-8">
-        <%= button_to _("Register Plan"), {
+        <%= button_to _("Publish new version"), {
           controller: 'plans',
           action: 'mint',
           data: { disable_with: "registering ..." }
