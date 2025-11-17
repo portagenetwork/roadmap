@@ -1,5 +1,11 @@
 @use '../../dmp-assistant/variables/colours' as *;
 
+#template-dropdown {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 #template-dropdown-menu {
   overflow-y: auto;
   overflow-x: hidden;
