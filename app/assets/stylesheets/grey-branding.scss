@@ -1,23 +1,11 @@
 /**
- This file contains ALL the redefined variables of the DMP Assistant.
- I put it here in order to avoid merge conflict from upstream in the future. It needs to be loaded before other styles
- PENDING:
- This style sheet can be separated to multiple stylesheets and moved to corresponding folders once finished
-
  Follow Bootstrap 3 media standard (explicitly defined instead of adding classes in view):
 - phone (<768px)
 - tablets (≥768px)
 - laptops (≥992px)
 - desktops (≥1200px)
 **/
-
-/** The color variables **/
-$color-alliance-yellow: #D6AB00;
-$color-alliance-darker-yellow: #F5C400;
-$color-alliance-digital-grey: #32322F;
-$color-alliance-darkest-yellow: #8A6E00;
-$color-white: #FFF;
-$color-alliance-lighter-grey: #CCC;
+@use './dmp-assistant/variables/colours' as *;
 
 .code-darkest-yellow {
   color: $color-alliance-darkest-yellow;
