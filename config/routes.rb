@@ -203,6 +203,13 @@ Rails.application.routes.draw do
       resources :plans, only: %i[create show index]
       resources :templates, only: [:index]
     end
+    
+    namespace :v2 do 
+      get :heartbeat, controller: :base_api 
+      get :me, controller: :base_api
+
+      resources :plans, only: [:index, :show]
+    end
   end
 
   namespace :paginable do
