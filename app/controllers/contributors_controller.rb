@@ -111,19 +111,59 @@ class ContributorsController < ApplicationController
 
   # Convert the Org Hash into an Org object (creating it if allowed)
   # and then remove all of the Org args
-  def process_org(hash:)
-    return hash unless hash.present? && hash[:org_id].present?
+  def process_org(hash:) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
+    return hash unless hash.present?
 
-    allow = !Rails.configuration.x.application.restrict_orgs
-    org = org_from_params(params_in: hash,
-                          allow_create: allow)
+    has_org_input = hash[:org_id].present? || hash[:org_name].present?
+    return hash unless has_org_input
+
+    parsed = {}
+
+    # hash[:org_id] may be a number ('62') or JSON ('{"ror":"...","name":"..."}') if picked from dropdown
+    # /\A\d+\z/ : regex meaning "start to end, only digits"
+    # check if org_id is JSON
+    is_json = hash[:org_id].to_s !~ /\A\d+\z/
+
+    if hash[:org_id].present? && is_json
+      parsed = JSON.parse(hash[:org_id])
+      hash[:org_name] = parsed['name']
+      # org_crosswalk = all of the info about each Org returned by the OrgsController # search action
+      hash[:org_crosswalk] = parsed['ror'] if parsed['ror'].present?
+    end
+
+    # ROR search
+    ror_result = nil
+    # Make external API call to ROR (only if there is an ROR field in hash) to ensure ROR is valid
+    ror_result = ExternalApis::RorService.search(term: hash[:org_crosswalk])&.first if hash[:org_crosswalk].present?
+    allow_create = ror_result.present?
+
+    # Build Org JSON for org_from_params
+    if hash[:org_name].present?
+      org_hash = { name: hash[:org_name] }
+      org_hash[:ror] = ror_result[:ror] if ror_result.present?
+      # convert to json for org_from_params
+      hash[:org_id] = org_hash.to_json
+    end
+
+    # Convert hash to org or create new one
+    org = org_from_params(params_in: hash, allow_create: allow_create)
+
+    if org.present? && allow_create
+      # Add fundref identifier if provided
+      fundref_id = ror_result[:fundref]
+      fundref_scheme = IdentifierScheme.find_by(name: 'fundref')
+      if fundref_id.present? && fundref_scheme.present?
+        Identifier.find_or_create_by!(
+          identifiable: org,
+          identifier_scheme: fundref_scheme
+        ) do |identifier|
+          identifier.value = "#{fundref_scheme.identifier_prefix}#{fundref_id}"
+        end
+      end
+    end
 
     hash = remove_org_selection_params(params_in: hash)
-
-    return hash if org.blank? && !allow
-    return hash unless org.present?
-
-    hash[:org_id] = org.id
+    hash[:org_id] = org.id if org.present?
     hash
   end
 
