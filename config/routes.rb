@@ -208,6 +208,13 @@ Rails.application.routes.draw do
     namespace :ca_dashboard do
       resources :stats, only: [:index]
     end
+    
+    namespace :v2 do 
+      get :heartbeat, controller: :base_api 
+      get :me, controller: :base_api
+
+      resources :plans, only: [:index, :show]
+    end
   end
 
   namespace :paginable do
