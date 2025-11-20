@@ -4,6 +4,15 @@ require 'rails_helper'
 
 RSpec.describe ContributorsController, type: :controller do
   before(:each) do
+    # Stub external ROR heartbeat or search endpoint
+    # %r{https://api\.ror\.org/v1/.*} matches any ROR API URL starting with https://api.ror.org/v1/
+    stub_request(:get, %r{https://api\.ror\.org/v1/.*})
+      .with(headers: {
+              'Accept' => 'application/json',
+              'Content-Type' => 'application/json'
+            })
+      .to_return(status: 200, body: '[]', headers: { 'Content-Type' => 'application/json' })
+
     @scheme = create(:identifier_scheme, name: 'orcid')
     @org = create(:org, managed: true)
     @plan = create(:plan, :creator, org: @org)
