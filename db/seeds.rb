@@ -33,6 +33,22 @@ identifier_schemes = [
     description: 'Your institutional credentials',
     active: true,
     context: 11
+  },
+  {
+    name: 'fundref',
+    description: 'Crossref Funder Registry (FundRef)',
+    active: true,
+    identifier_prefix: 'https://api.crossref.org/funders/',
+    # Only add the :for_orgs context
+    context: 2
+  },
+  {
+    name: 'ror',
+    description: 'Research Organization Registry (ROR)',
+    active: true,
+    identifier_prefix: 'https://ror.org/',
+    # Only add the :for_orgs context
+    context: 2
   }
 ]
 identifier_schemes.each { |is| IdentifierScheme.find_or_create_by(is) }
