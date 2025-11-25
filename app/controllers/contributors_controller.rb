@@ -109,86 +109,98 @@ class ContributorsController < ApplicationController
     hash
   end
 
-  # Convert the Org Hash into an Org object (creating it if allowed)
-  # and then remove all of the Org args
-  def process_org(hash:) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
-    return hash unless hash.present?
-
-    has_org_input = hash[:org_id].present? || hash[:org_name].present?
-    return hash unless has_org_input
-
+    # Parses org_id JSON and updates hash with parsed name and ror
+  def parse_org_id(hash)
     parsed = {}
-
     # hash[:org_id] may be a number ('62') or JSON ('{"ror":"...","name":"..."}') if picked from dropdown
     # /\A\d+\z/ : regex meaning "start to end, only digits"
     # check if org_id is JSON
     is_json = hash[:org_id].to_s !~ /\A\d+\z/
-
     if hash[:org_id].present? && is_json
       parsed = JSON.parse(hash[:org_id])
       hash[:org_name] = parsed['name']
       # org_crosswalk = all of the info about each Org returned by the OrgsController # search action
       hash[:org_crosswalk] = parsed['ror'] if parsed['ror'].present?
     end
+    parsed
+  end
 
-    # Check if org already exists in DB
-    existing_org =
-      if parsed['id'].present?
-        Org.find_by(id: parsed['id'])
-        puts('Check here')
-      elsif parsed['ror'].present?
-        ror_id = parsed['ror'].split('/').last
-        ror_scheme = IdentifierScheme.find_by(name: 'ror')
-        Identifier.find_by(value: ror_id, identifier_scheme: ror_scheme)&.identifiable
-      elsif hash[:org_name].present?
-        Org.find_by(name: hash[:org_name])
-      end
+  # Try to find existing Org in DB using parsed values or org_name
+  def find_existing_org(parsed, hash)
+    if parsed['id'].present?
+      Org.find_by(id: parsed['id'])
+    elsif parsed['ror'].present?
+      ror_id = parsed['ror'].split('/').last
+      ror_scheme = IdentifierScheme.find_by(name: 'ror')
+      Identifier.find_by(value: ror_id, identifier_scheme: ror_scheme)&.identifiable
+    elsif hash[:org_name].present?
+      Org.find_by(name: hash[:org_name])
+    end
+  end
 
-    return finalize_org_hash(hash, existing_org) if existing_org.present?
-
-    # Make external API call to ROR (only if there is an ROR field in hash) to ensure ROR is valid
+  # Call ROR API unless org already exists
+  def fetch_ror_result(hash)
+    return unless hash[:org_crosswalk].present?
     ror_result = nil
-    if hash[:org_crosswalk].present?
       begin
         ror_result = ExternalApis::RorService.search(term: hash[:org_crosswalk])&.first
       rescue StandardError => e
         Rails.logger.warn("ROR lookup failed: #{e.message}")
       end
-    end
+    ror_result
+  end
 
-    allow_create = ror_result.present?
+  # Updates org_id JSON with org_name and ror for org_from_params
+  def prepare_org_json_for_params(hash, ror_result)
+    return unless hash[:org_name].present?
+    org_hash = { name: hash[:org_name] }
+    org_hash[:ror] = ror_result[:ror] if ror_result.present?
+    hash[:org_id] = org_hash.to_json
+  end
 
-    # Build Org JSON for org_from_params
-    if hash[:org_name].present?
-      org_hash = { name: hash[:org_name] }
-      org_hash[:ror] = ror_result[:ror] if ror_result.present?
-      hash[:org_id] = org_hash.to_json
-    end
+  # Adds fundref identifier if available in ROR result
+  def add_fundref_identifier(org, ror_result)
+    fundref_id = ror_result[:fundref]
+    fundref_scheme = IdentifierScheme.find_by(name: 'fundref')
+    return unless fundref_id.present? && fundref_scheme.present?
 
-    # Convert hash to org or create new one
-    org = org_from_params(params_in: hash, allow_create: allow_create)
-
-    if org.present? && allow_create
-      # Add fundref identifier if provided
-      fundref_id = ror_result[:fundref]
-      fundref_scheme = IdentifierScheme.find_by(name: 'fundref')
-      if fundref_id.present? && fundref_scheme.present?
-        Identifier.find_or_create_by!(
+    Identifier.find_or_create_by!(
           identifiable: org,
           identifier_scheme: fundref_scheme
         ) do |identifier|
           identifier.value = "#{fundref_scheme.identifier_prefix}#{fundref_id}"
         end
-      end
-    end
-
-    finalize_org_hash(hash, org)
   end
 
+  # Final clean-up and assignment of org_id
   def finalize_org_hash(hash, org)
     hash = remove_org_selection_params(params_in: hash)
     hash[:org_id] = org.id if org.present?
     hash
+  end
+
+  # Convert the Org Hash into an Org object (creating it if allowed)
+  # and then remove all of the Org args
+  def process_org(hash:)
+    return hash unless hash.present?
+
+    has_org_input = hash[:org_id].present? || hash[:org_name].present?
+    return hash unless has_org_input
+
+    parsed = parse_org_id(hash)
+    existing_org = find_existing_org(parsed, hash)
+
+    return finalize_org_hash(hash, existing_org) if existing_org.present?
+
+    ror_result = fetch_ror_result(hash)
+    allow_create = ror_result
+
+    prepare_org_json_for_params(hash, ror_result)
+
+    org = org_from_params(params_in: hash, allow_create: allow_create)
+    add_fundref_identifier(org, ror_result) if org.present? && allow_create
+
+    finalize_org_hash(hash, org)
   end
 
   # When creating, just remove the ORCID if it was left blank
