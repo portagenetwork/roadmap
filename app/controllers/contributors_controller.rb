@@ -131,17 +131,37 @@ class ContributorsController < ApplicationController
       hash[:org_crosswalk] = parsed['ror'] if parsed['ror'].present?
     end
 
-    # ROR search
-    ror_result = nil
+    # Check if org already exists in DB
+    existing_org =
+      if parsed['id'].present?
+        Org.find_by(id: parsed['id'])
+        puts('Check here')
+      elsif parsed['ror'].present?
+        ror_id = parsed['ror'].split('/').last
+        ror_scheme = IdentifierScheme.find_by(name: 'ror')
+        Identifier.find_by(value: ror_id, identifier_scheme: ror_scheme)&.identifiable
+      elsif hash[:org_name].present?
+        Org.find_by(name: hash[:org_name])
+      end
+
+    return finalize_org_hash(hash, existing_org) if existing_org.present?
+
     # Make external API call to ROR (only if there is an ROR field in hash) to ensure ROR is valid
-    ror_result = ExternalApis::RorService.search(term: hash[:org_crosswalk])&.first if hash[:org_crosswalk].present?
+    ror_result = nil
+    if hash[:org_crosswalk].present?
+      begin
+        ror_result = ExternalApis::RorService.search(term: hash[:org_crosswalk])&.first
+      rescue StandardError => e
+        Rails.logger.warn("ROR lookup failed: #{e.message}")
+      end
+    end
+
     allow_create = ror_result.present?
 
     # Build Org JSON for org_from_params
     if hash[:org_name].present?
       org_hash = { name: hash[:org_name] }
       org_hash[:ror] = ror_result[:ror] if ror_result.present?
-      # convert to json for org_from_params
       hash[:org_id] = org_hash.to_json
     end
 
@@ -162,6 +182,10 @@ class ContributorsController < ApplicationController
       end
     end
 
+    finalize_org_hash(hash, org)
+  end
+
+  def finalize_org_hash(hash, org)
     hash = remove_org_selection_params(params_in: hash)
     hash[:org_id] = org.id if org.present?
     hash
