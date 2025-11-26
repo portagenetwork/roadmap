@@ -111,8 +111,13 @@ class ContributorsController < ApplicationController
 
   # Convert the Org Hash into an Org object (creating it if allowed)
   # and then remove all of the Org args
-  def process_org(hash:)
-    return hash unless hash.present? && hash[:org_id].present?
+  def process_org(hash:) # rubocop:disable Metrics/AbcSize
+    return hash unless hash.present?
+
+    has_org_input = hash[:org_id].present? || hash[:org_name].present?
+    return hash unless has_org_input
+
+    parsed = parse_org_id(hash)
 
     allow = !Rails.configuration.x.application.restrict_orgs
     org = org_from_params(params_in: hash,
@@ -125,6 +130,22 @@ class ContributorsController < ApplicationController
 
     hash[:org_id] = org.id
     hash
+  end
+
+  # Parses org_id JSON and updates hash with parsed name and ror
+  def parse_org_id(hash)
+    parsed = {}
+    # hash[:org_id] may be a number ('62') or JSON ('{"ror":"...","name":"..."}') if picked from dropdown
+    # /\A\d+\z/ : regex meaning "start to end, only digits"
+    # check if org_id is JSON
+    is_json = hash[:org_id].to_s !~ /\A\d+\z/
+    if hash[:org_id].present? && is_json
+      parsed = JSON.parse(hash[:org_id])
+      hash[:org_name] = parsed['name']
+      # org_crosswalk = all of the info about each Org returned by the OrgsController # search action
+      hash[:org_crosswalk] = parsed['ror'] if parsed['ror'].present?
+    end
+    parsed
   end
 
   # When creating, just remove the ORCID if it was left blank
