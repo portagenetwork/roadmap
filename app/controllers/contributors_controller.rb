@@ -118,18 +118,15 @@ class ContributorsController < ApplicationController
     return hash unless has_org_input
 
     parsed = parse_org_id(hash)
+    existing_org = find_existing_org(parsed, hash)
+
+    return finalize_org_hash(hash, existing_org) if existing_org.present?
 
     allow = !Rails.configuration.x.application.restrict_orgs
     org = org_from_params(params_in: hash,
                           allow_create: allow)
 
-    hash = remove_org_selection_params(params_in: hash)
-
-    return hash if org.blank? && !allow
-    return hash unless org.present?
-
-    hash[:org_id] = org.id
-    hash
+    finalize_org_hash(hash, org)
   end
 
   # Parses org_id JSON and updates hash with parsed name and ror
@@ -146,6 +143,26 @@ class ContributorsController < ApplicationController
       hash[:org_crosswalk] = parsed['ror'] if parsed['ror'].present?
     end
     parsed
+  end
+
+  # Try to find existing Org in DB using parsed values or org_name
+  def find_existing_org(parsed, hash)
+    if parsed['id'].present?
+      Org.find_by(id: parsed['id'])
+    elsif parsed['ror'].present?
+      ror_id = parsed['ror'].split('/').last
+      ror_scheme = IdentifierScheme.find_by(name: 'ror')
+      Identifier.find_by(value: ror_id, identifier_scheme: ror_scheme)&.identifiable
+    elsif hash[:org_name].present?
+      Org.find_by(name: hash[:org_name])
+    end
+  end
+
+  # Final clean-up and assignment of org_id
+  def finalize_org_hash(hash, org)
+    hash = remove_org_selection_params(params_in: hash)
+    hash[:org_id] = org.id if org.present?
+    hash
   end
 
   # When creating, just remove the ORCID if it was left blank
