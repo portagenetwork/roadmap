@@ -129,6 +129,8 @@ class ContributorsController < ApplicationController
     org = org_from_params(params_in: hash,
                           allow_create: allow_create)
 
+    add_fundref_identifier(org, ror_result) if org.present? && allow_create
+
     finalize_org_hash(hash, org)
   end
 
@@ -181,6 +183,20 @@ class ContributorsController < ApplicationController
     org_hash = { name: hash[:org_name] }
     org_hash[:ror] = ror_result[:ror] if ror_result.present?
     hash[:org_id] = org_hash.to_json
+  end
+
+  # Adds fundref identifier if available in ROR result
+  def add_fundref_identifier(org, ror_result)
+    fundref_id = ror_result[:fundref]
+    fundref_scheme = IdentifierScheme.find_by(name: 'fundref')
+    return unless fundref_id.present? && fundref_scheme.present?
+
+    Identifier.find_or_create_by!(
+      identifiable: org,
+      identifier_scheme: fundref_scheme
+    ) do |identifier|
+      identifier.value = "#{fundref_scheme.identifier_prefix}#{fundref_id}"
+    end
   end
 
   # Final clean-up and assignment of org_id
