@@ -109,7 +109,7 @@ class ContributorsController < ApplicationController
     hash
   end
 
-    # Parses org_id JSON and updates hash with parsed name and ror
+  # Parses org_id JSON and updates hash with parsed name and ror
   def parse_org_id(hash)
     parsed = {}
     # hash[:org_id] may be a number ('62') or JSON ('{"ror":"...","name":"..."}') if picked from dropdown
@@ -141,18 +141,20 @@ class ContributorsController < ApplicationController
   # Call ROR API unless org already exists
   def fetch_ror_result(hash)
     return unless hash[:org_crosswalk].present?
+
     ror_result = nil
-      begin
-        ror_result = ExternalApis::RorService.search(term: hash[:org_crosswalk])&.first
-      rescue StandardError => e
-        Rails.logger.warn("ROR lookup failed: #{e.message}")
-      end
+    begin
+      ror_result = ExternalApis::RorService.search(term: hash[:org_crosswalk])&.first
+    rescue StandardError => e
+      Rails.logger.warn("ROR lookup failed: #{e.message}")
+    end
     ror_result
   end
 
   # Updates org_id JSON with org_name and ror for org_from_params
   def prepare_org_json_for_params(hash, ror_result)
     return unless hash[:org_name].present?
+
     org_hash = { name: hash[:org_name] }
     org_hash[:ror] = ror_result[:ror] if ror_result.present?
     hash[:org_id] = org_hash.to_json
@@ -165,11 +167,11 @@ class ContributorsController < ApplicationController
     return unless fundref_id.present? && fundref_scheme.present?
 
     Identifier.find_or_create_by!(
-          identifiable: org,
-          identifier_scheme: fundref_scheme
-        ) do |identifier|
-          identifier.value = "#{fundref_scheme.identifier_prefix}#{fundref_id}"
-        end
+      identifiable: org,
+      identifier_scheme: fundref_scheme
+    ) do |identifier|
+      identifier.value = "#{fundref_scheme.identifier_prefix}#{fundref_id}"
+    end
   end
 
   # Final clean-up and assignment of org_id
@@ -181,7 +183,7 @@ class ContributorsController < ApplicationController
 
   # Convert the Org Hash into an Org object (creating it if allowed)
   # and then remove all of the Org args
-  def process_org(hash:)
+  def process_org(hash:) # rubocop:disable Metrics/AbcSize
     return hash unless hash.present?
 
     has_org_input = hash[:org_id].present? || hash[:org_name].present?
