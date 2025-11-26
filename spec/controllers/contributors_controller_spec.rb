@@ -4,6 +4,15 @@ require 'rails_helper'
 
 RSpec.describe ContributorsController, type: :controller do
   before(:each) do
+    # Stub external ROR heartbeat or search endpoint
+    # %r{https://api\.ror\.org/v1/.*} matches any ROR API URL starting with https://api.ror.org/v1/
+    stub_request(:get, %r{https://api\.ror\.org/v1/.*})
+      .with(headers: {
+              'Accept' => 'application/json',
+              'Content-Type' => 'application/json'
+            })
+      .to_return(status: 200, body: '[]', headers: { 'Content-Type' => 'application/json' })
+
     @scheme = create(:identifier_scheme, name: 'orcid')
     @org = create(:org, managed: true)
     @plan = create(:plan, :creator, org: @org)
@@ -159,6 +168,10 @@ RSpec.describe ContributorsController, type: :controller do
       end
       it 'sets the org_id to the idea of the org' do
         new_org = create(:org)
+        # Clear name, id, and ror to prevent matching any existing org
+        @params_hash[:contributor][:org_name] = nil
+        @params_hash[:contributor][:org_id] = { id: nil, name: nil, ror: nil }.to_json
+
         @controller.stubs(:org_from_params).returns(new_org)
         hash = @controller.send(:process_org, hash: @params_hash[:contributor])
         expect(hash[:org_id]).to eql(new_org.id)

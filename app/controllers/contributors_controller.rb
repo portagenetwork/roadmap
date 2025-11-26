@@ -111,7 +111,7 @@ class ContributorsController < ApplicationController
 
   # Convert the Org Hash into an Org object (creating it if allowed)
   # and then remove all of the Org args
-  def process_org(hash:)
+  def process_org(hash:) # rubocop:disable Metrics/AbcSize
     return hash unless hash.present?
 
     has_org_input = hash[:org_id].present? || hash[:org_name].present?
