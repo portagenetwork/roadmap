@@ -168,6 +168,10 @@ RSpec.describe ContributorsController, type: :controller do
       end
       it 'sets the org_id to the idea of the org' do
         new_org = create(:org)
+        # Clear name, id, and ror to prevent matching any existing org
+        @params_hash[:contributor][:org_name] = nil
+        @params_hash[:contributor][:org_id] = { id: nil, name: nil, ror: nil }.to_json
+
         @controller.stubs(:org_from_params).returns(new_org)
         hash = @controller.send(:process_org, hash: @params_hash[:contributor])
         expect(hash[:org_id]).to eql(new_org.id)
