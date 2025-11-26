@@ -111,7 +111,7 @@ class ContributorsController < ApplicationController
 
   # Convert the Org Hash into an Org object (creating it if allowed)
   # and then remove all of the Org args
-  def process_org(hash:) # rubocop:disable Metrics/AbcSize
+  def process_org(hash:)
     return hash unless hash.present?
 
     has_org_input = hash[:org_id].present? || hash[:org_name].present?
@@ -122,9 +122,12 @@ class ContributorsController < ApplicationController
 
     return finalize_org_hash(hash, existing_org) if existing_org.present?
 
-    allow = !Rails.configuration.x.application.restrict_orgs
+    ror_result = fetch_ror_result(hash)
+    allow_create = ror_result
+
+    prepare_org_json_for_params(hash, ror_result)
     org = org_from_params(params_in: hash,
-                          allow_create: allow)
+                          allow_create: allow_create)
 
     finalize_org_hash(hash, org)
   end
@@ -156,6 +159,28 @@ class ContributorsController < ApplicationController
     elsif hash[:org_name].present?
       Org.find_by(name: hash[:org_name])
     end
+  end
+
+  # Make external API call to ROR (only if there is an ROR field in hash) to ensure ROR is valid
+  def fetch_ror_result(hash)
+    return unless hash[:org_crosswalk].present?
+
+    ror_result = nil
+    begin
+      ror_result = ExternalApis::RorService.search(term: hash[:org_crosswalk])&.first
+    rescue StandardError => e
+      Rails.logger.warn("ROR lookup failed: #{e.message}")
+    end
+    ror_result
+  end
+
+  # Updates org_id JSON with org_name and ror for org_from_params
+  def prepare_org_json_for_params(hash, ror_result)
+    return unless hash[:org_name].present?
+
+    org_hash = { name: hash[:org_name] }
+    org_hash[:ror] = ror_result[:ror] if ror_result.present?
+    hash[:org_id] = org_hash.to_json
   end
 
   # Final clean-up and assignment of org_id
