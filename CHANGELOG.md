@@ -5,13 +5,17 @@
 ### Fixed
  - Update outdated organisation-related config values [#1237](https://github.com/portagenetwork/roadmap/pull/1237)
 
+### Dependency Updates
+ - chore(deps): bump nginx from 1.29.2-alpine to 1.29.3-alpine
 
 ## [4.1.1+portage-4.6.0]
 
 ### Added
+
  - Add headers and "Show more templates" button to template dropdown [#1215](https://github.com/portagenetwork/roadmap/pull/1215) 
 
 ### Fixed
+
  - Edit request feedback email to send in app language [#1227](https://github.com/portagenetwork/roadmap/pull/1227)
 
 ### Changed
