@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Added
+ - Add initial request specs for PlansController [#1238](https://github.com/portagenetwork/roadmap/pull/1238)
+
 ### Fixed
  - Update outdated organisation-related config values [#1237](https://github.com/portagenetwork/roadmap/pull/1237)
 

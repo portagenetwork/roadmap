@@ -57,13 +57,16 @@ FactoryBot.define do
     funding_status { Plan.funding_statuses.keys.sample }
 
     transient do
+      creator { nil }
       phases { 0 }
       answers { 0 }
       guidance_groups { 0 }
     end
     trait :creator do
-      after(:create) do |obj|
-        obj.roles << create(:role, :creator, user: create(:user, org: create(:org)))
+      after(:create) do |obj, evaluator|
+        # If a User was passed in, use them as the creator; otherwise, create a new User with a new org.
+        user = evaluator.creator || create(:user, org: create(:org))
+        obj.roles << create(:role, :creator, user: user)
       end
     end
     trait :commenter do
