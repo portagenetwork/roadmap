@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+ - Update outdated organisation-related config values [#1237](https://github.com/portagenetwork/roadmap/pull/1237)
+
+
 ## [4.1.1+portage-4.6.0]
 
 ### Added
