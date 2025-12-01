@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-module Api 
+module Api
   module V2
     class TemplatesPolicy < ApplicationPolicy
-      class Scope < Scope
-        def initialize(resource_owner)
+      class Scope < Scope # rubocop:todo Style/Documentation
+        def initialize(resource_owner) # rubocop:todo Lint/MissingSuper
           @resource_owner = resource_owner
         end
 
@@ -16,16 +16,15 @@ module Api
           SQL
 
           # get the templates
-          templates = Template.
-            includes(org: :identifiers).
-            joins(:org).
-            published.
-            where(
-              where_clause, 
+          Template
+            .includes(org: :identifiers)
+            .joins(:org)
+            .published
+            .where(
+              where_clause,
               @resource_owner.org&.id
             )
             .order(:title)
-          templates
         end
       end
     end
