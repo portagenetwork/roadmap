@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-module PlanPermittedParams 
+module PlanPermittedParams # rubocop:todo Metrics/ModuleLength, Style/Documentation
   extend ActiveSupport::Concern
 
   def plan_permitted_params
     [
       :created,
-      :title, 
-      :description, 
-      :language, 
+      :title,
+      :description,
+      :language,
       :ethical_issues_exist,
       :ethical_issues_description,
       :ethical_issues_report,
@@ -22,17 +22,17 @@ module PlanPermittedParams
   end
 
   def identifier_permitted_params
-    [
-      :type,
-      :identifier
+    %i[
+      type
+      identifier
     ]
   end
 
   def contributor_permitted_params
     [
-      :firstname, 
-      :surname, 
-      :mbox, 
+      :firstname,
+      :surname,
+      :mbox,
       :role,
       { affiliations: affiliation_permitted_params },
       { contributor_ids: identifier_permitted_params }
@@ -41,26 +41,26 @@ module PlanPermittedParams
 
   def affiliation_permitted_params
     [
-      :name, 
+      :name,
       :abbreviation,
       { affiliation_ids: identifier_permitted_params }
     ]
   end
 
   def cost_permitted_params
-    [
-      :title,
-      :description, 
-      :value, 
-      :currency_code
+    %i[
+      title
+      description
+      value
+      currency_code
     ]
   end
 
   def project_permitted_params
     [
-      :title, 
-      :description, 
-      :start_on, 
+      :title,
+      :description,
+      :start_on,
       :end_on,
       { funding: funding_permitted_params }
     ]
@@ -79,14 +79,14 @@ module PlanPermittedParams
     [
       :title,
       :doi_url,
-      :description, 
-      :type, 
-      :issued, 
-      :language, 
-      :personal_data, 
+      :description,
+      :type,
+      :issued,
+      :language,
+      :personal_data,
       :sensitive_data,
       :keywords,
-      :data_quality_assurance, 
+      :data_quality_assurance,
       :preservation_statement,
       { dataset_ids: identifier_permitted_params },
       { metadata: metadatum_permitted_params },
@@ -105,9 +105,9 @@ module PlanPermittedParams
   end
 
   def security_and_privacy_statement_permitted_params
-    [
-      :title,
-      :description
+    %i[
+      title
+      description
     ]
   end
 
@@ -123,20 +123,20 @@ module PlanPermittedParams
       :title,
       :description,
       :format,
-      :byte_size, 
-      :access_url, 
+      :byte_size,
+      :access_url,
       :download_url,
       :data_access,
       :available_until,
-      { licenses: license_permitted_params }, 
+      { licenses: license_permitted_params },
       { host: host_permitted_params }
     ]
   end
 
   def license_permitted_params
-    [
-      :license_ref,
-      :start_date
+    %i[
+      license_ref
+      start_date
     ]
   end
 
@@ -155,5 +155,4 @@ module PlanPermittedParams
       { host_ids: identifier_permitted_params }
     ]
   end
-
 end

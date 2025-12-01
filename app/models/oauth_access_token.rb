@@ -15,7 +15,5 @@
 # revoked_at:             :datetime
 # previous_refresh_token: :string
 
-
 class OauthAccessToken < ApplicationRecord
-
 end
