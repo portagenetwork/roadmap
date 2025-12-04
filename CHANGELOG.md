@@ -4,6 +4,7 @@
 
 ### Added
  - Add initial request specs for PlansController [#1238](https://github.com/portagenetwork/roadmap/pull/1238)
+ - Refactor template options logic into `Templates::TemplateOptionService` and update template validation in `PlansController#create` [#1228](https://github.com/portagenetwork/roadmap/pull/1228)
 
 ### Fixed
  - Update outdated organisation-related config values [#1237](https://github.com/portagenetwork/roadmap/pull/1237)
