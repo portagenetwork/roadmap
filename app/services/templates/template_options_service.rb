@@ -6,7 +6,7 @@ module Templates
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def self.available_templates(org)
-      funder = Org.find(Rails.application.config.default_funder_id)
+      funder = Org.find_by(id: Rails.application.config.default_funder_id)
 
       templates = []
 
