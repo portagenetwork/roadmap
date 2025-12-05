@@ -119,7 +119,9 @@ class ContributorsController < ApplicationController
 
     return finalize_org_hash(hash, existing_org, false) if existing_org.present?
 
-    allow = !Rails.configuration.x.application.restrict_orgs
+    # Check if entered org has a valid ROR
+    # If so, allow creation
+    allow = validate_ror(hash)
     org = org_from_params(params_in: hash,
                           allow_create: allow)
 
@@ -130,7 +132,7 @@ class ContributorsController < ApplicationController
     # hash[:org_id] is a JSON string like:
     # "{\"id\":1200,\"name\":\"Some Org\",\"ror\":\"https://ror.org/123\"}"
     # So it must be parsed into a Ruby hash for HashToOrgService
-    parsed = JSON.parse(hash[:org_id]) rescue {} # rubocop:disable Style/RescueModifier
+    parsed = JSON.parse(hash[:org_id]) rescue nil # rubocop:disable Style/RescueModifier
 
     return nil unless parsed.present?
 
@@ -149,6 +151,21 @@ class ContributorsController < ApplicationController
 
     hash[:org_id] = org.id
     hash
+  end
+
+  def validate_ror(hash)
+    # Make external API call to ROR to find org with entered name
+    ror_result = ExternalApis::RorService.search(term: hash[:org_name]).first
+
+    # Find ROR value in org hash
+    parsed = JSON.parse(hash[:org_id]) rescue nil # rubocop:disable Style/RescueModifier
+    parsed_ror = parsed['ror']
+
+    # If org hash ROR and external ROR values are the same
+    # The org is valid and has the correct ROR
+    return ror_result[:ror] == parsed_ror if ror_result.present? && parsed_ror.present?
+
+    false
   end
 
   # When creating, just remove the ORCID if it was left blank
