@@ -114,10 +114,34 @@ class ContributorsController < ApplicationController
   def process_org(hash:)
     return hash unless hash.present? && hash[:org_id].present?
 
+    # Check if org already exists in the DB
+    existing_org = existing_org_from_hash(hash)
+
+    return finalize_org_hash(hash, existing_org, false) if existing_org.present?
+
     allow = !Rails.configuration.x.application.restrict_orgs
     org = org_from_params(params_in: hash,
                           allow_create: allow)
 
+    finalize_org_hash(hash, org, allow)
+  end
+
+  def existing_org_from_hash(hash)
+    # hash[:org_id] is a JSON string like:
+    # "{\"id\":1200,\"name\":\"Some Org\",\"ror\":\"https://ror.org/123\"}"
+    # So it must be parsed into a Ruby hash for HashToOrgService
+    parsed = JSON.parse(hash[:org_id]) rescue {} # rubocop:disable Style/RescueModifier
+
+    return nil unless parsed.present?
+
+    # Returns org in DB if it exists
+    OrgSelection::HashToOrgService.to_org(
+      hash: parsed.to_h,
+      allow_create: false
+    )
+  end
+
+  def finalize_org_hash(hash, org, allow)
     hash = remove_org_selection_params(params_in: hash)
 
     return hash if org.blank? && !allow
