@@ -128,11 +128,15 @@ class ContributorsController < ApplicationController
     finalize_org_hash(hash, org, allow)
   end
 
+  def parse_org_json(hash)
+    JSON.parse(hash[:org_id]) rescue nil # rubocop:disable Style/RescueModifier
+  end
+
   def existing_org_from_hash(hash)
     # hash[:org_id] is a JSON string like:
     # "{\"id\":1200,\"name\":\"Some Org\",\"ror\":\"https://ror.org/123\"}"
     # So it must be parsed into a Ruby hash for HashToOrgService
-    parsed = JSON.parse(hash[:org_id]) rescue nil # rubocop:disable Style/RescueModifier
+    parsed = parse_org_json(hash)
 
     return nil unless parsed.present?
 
@@ -158,8 +162,7 @@ class ContributorsController < ApplicationController
     ror_result = ExternalApis::RorService.search(term: hash[:org_name]).first
 
     # Find ROR value in org hash
-    parsed = JSON.parse(hash[:org_id]) rescue nil # rubocop:disable Style/RescueModifier
-    parsed_ror = parsed['ror']
+    parsed_ror = parse_org_json(hash)['ror']
 
     # If org hash ROR and external ROR values are the same
     # The org is valid and has the correct ROR
