@@ -154,6 +154,11 @@ class RegistrationsController < Devise::RegistrationsController
 
   private
 
+  def org_from_params_is_user_org?
+    org = org_from_params(params_in: update_params)
+    org.is_a?(Org) && org == current_user.org
+  end
+
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   # rubocop:disable Style/OptionalBooleanParameter
@@ -171,8 +176,8 @@ class RegistrationsController < Devise::RegistrationsController
       message += _('Please enter a Last name. ')
       mandatory_params &&= false
     end
-    if restrict_orgs && update_params[:org_id]['id'].blank?
-      message += _("Please select an organisation from the list, or enter your organisation's name.")
+    if restrict_orgs && update_params[:org_id]['id'].blank? && !org_from_params_is_user_org?
+      message += _('Please select an organisation from the list.')
       mandatory_params &&= false
     end
     # has the user entered all the details
@@ -270,7 +275,7 @@ class RegistrationsController < Devise::RegistrationsController
 
     # Remove the extraneous Org Selector hidden fields
     attrs = remove_org_selection_params(params_in: attrs)
-    return attrs unless org.present?
+    return attrs unless org.present? && org.managed?
 
     # reattach the org_id but with the Org id instead of the hash
     attrs[:org_id] = org.id
