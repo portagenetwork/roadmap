@@ -3,7 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe 'PlansController', type: :request do
-  let(:user) { create(:user) }
+  let(:user_org) { create(:org) }
+  let(:user) { create(:user, org: user_org) }
 
   before { sign_in(user) }
 
@@ -87,41 +88,101 @@ RSpec.describe 'PlansController', type: :request do
   end
 
   describe 'POST /plans' do
-    let(:template) { create(:template, published: true) }
-    let(:unpublished_template) { create(:template) }
+    let(:default_funder) { create(:org, :funder) }
+    let(:default_template) { create(:template, org: default_funder, is_default: true, published: true) }
+    let(:user_org_template) { create(:template, :organisationally_visible, org: user.org, published: true) }
+    let(:other_org) { create(:org) }
+    let(:other_org_template) { create(:template, :organisationally_visible, org: other_org, published: true) }
 
-    it 'creates a plan when only the template_id is provided' do
-      post plans_path, params: {
-        plan: { template_id: template.id }
-      }
-      plan = Plan.last
-      expect(response).to have_http_status(:redirect)
-      expect(response).to redirect_to(plan_path(plan.id))
-
-      expect(plan.template_id).to eql(template.id)
-      # Ensure plan.title is as expected when none is provided
-      expect(plan.title).to eql("#{user.firstname}'s Plan")
-      # Ensure plan.org_id == user.org_id when none is provided
-      expect(plan.org_id).to eql(user.org_id)
+    before do
+      @original_default_funder_id = Rails.application.config.default_funder_id
+      Rails.application.config.default_funder_id = default_template.org.id
     end
 
-    it 'does not create a plan when the associated template is unpublished' do
-      post plans_path, params: {
-        plan: { template_id: unpublished_template.id }
-      }
-      expect(response).to have_http_status(:redirect)
-      expect(response).to redirect_to(new_plan_path)
-      follow_redirect!
+    after do
+      Rails.application.config.default_funder_id = @original_default_funder_id
+    end
 
-      # Verify the expected flash message is rendered
-      expect(flash[:alert]).to eq('Unable to identify a suitable template for your plan.')
+    # Our tests reference default_template, rather than Template.default
+    # This test simply ensures that we are correct in doing so.
+    it 'Template.default returns the correct template' do
+      expect(Template.default).to eq(default_template)
+    end
 
-      # Ensure a Plan was not created
-      expect(Plan.count).to be_zero
+    RSpec.shared_examples 'create plan' do |template_key, org_key, should_create|
+      it "#{should_create ? 'creates' : 'does not create'} a plan" do
+        template, org = fetch_template_and_org(template_key, org_key)
+        post plans_path, params: post_plans_payload(template, org)
+
+        if should_create
+          expect(Plan.count).to_not be_zero
+          plan = Plan.last
+
+          expect(response).to have_http_status(:redirect)
+          expect(response).to redirect_to(plan_path(plan.id))
+
+          expect(plan.template_id).to eql(template.id)
+          # Expect the default plan.title when none is specified in POST request
+          expect(plan.title).to eql("#{user.firstname}'s Plan")
+          # `plan.org_id` depends on whether or not `org` was included in POST request payload
+          expect(plan.org_id).to eql(org ? org.id : user.org_id) if plan.respond_to?(:org_id)
+        else
+          expect(response).to have_http_status(:redirect)
+          expect(response).to redirect_to(new_plan_path)
+          follow_redirect!
+          expect(flash[:alert]).to eq('Unable to identify a suitable template for your plan.')
+          expect(Plan.count).to be_zero
+        end
+      end
+    end
+
+    # TODO: Refactor/extract the matrix of template/org availability checks into
+    # spec/services/templates/template_options_service_spec.rb and keep only a small
+    # set of focused controller request specs here.
+    [
+      # POST /plans without `org` sets plan.org = current_user.org
+      { template: :default_template },
+      { template: :user_org_template },
+      { template: :other_org_template, should_create: false },
+
+      # Test plan creation with explicit (template + org) combinations.
+      { template: :default_template, org: :default_funder },
+      { template: :user_org_template, org: :user_org },
+      { template: :other_org_template, org: :other_org },
+      { template: :other_org_template, org: :user_org, should_create: false },
+      { template: :user_org_template, org: :default_funder, should_create: false }
+    ].each do |example|
+      include_examples(
+        'create plan',
+        example[:template],
+        example[:org],
+        example.fetch(:should_create, true)
+      )
     end
   end
 
   private
+
+  # Constructs and returns the POST /plans payload
+  def post_plans_payload(template, org = nil)
+    params = {}
+    params[:plan] = { template_id: template.id }
+    return params unless org
+
+    params[:plan][:org] = {
+      id: { id: org.id, name: org.name, sort_name: org.name }.to_json,
+      org_name: org.name,
+      org_sources: [].to_json,
+      org_crosswalk: [].to_json
+    }
+    params
+  end
+
+  def fetch_template_and_org(template_key, org_key)
+    template = send(template_key)
+    org = org_key ? send(org_key) : nil
+    [template, org]
+  end
 
   def parse_crosswalk_data(html)
     crosswalk_json = html.at_css('#plan_org_org_crosswalk')['value']
