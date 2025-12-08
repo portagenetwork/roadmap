@@ -8,6 +8,7 @@
 
 ### Fixed
  - Update outdated organisation-related config values [#1237](https://github.com/portagenetwork/roadmap/pull/1237)
+ - Prevent unmanaged organisations from being assigned in profile editing and creation [#1242](https://github.com/portagenetwork/roadmap/pull/1242)
 
 ### Dependency Updates
  - chore(deps): bump nginx from 1.29.2-alpine to 1.29.3-alpine
