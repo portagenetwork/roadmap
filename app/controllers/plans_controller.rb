@@ -63,8 +63,11 @@ class PlansController < ApplicationController
     @plan = Plan.new
     authorize @plan
 
-    # Ensure the plan will be associated with a valid Template
-    template = find_valid_template(plan_params[:template_id])
+    # Get the org from plan_params
+    org = resolve_plan_org
+
+    # Ensure this is a valid template
+    template = find_valid_template(org)
     if template.nil?
       respond_to do |format|
         flash[:alert] = _('Unable to identify a suitable template for your plan.')
@@ -89,19 +92,8 @@ class PlansController < ApplicationController
                       plan_params[:title]
                     end
 
-      # bit of hackery here. There are 2 org selectors on the page
-      # and each is within its own specific context, plan.org or
-      # plan.funder which forces the hidden id hash to be :id
-      # so we need to convert it to :org_id so it works with the
-      # OrgSelectable and OrgSelection services
-      if plan_params[:org].present? && plan_params[:org][:id].present?
-        attrs = plan_params[:org]
-        attrs[:org_id] = attrs[:id]
-        @plan.org = org_from_params(params_in: attrs, allow_create: false)
-      else
-        # The user did not specify a research Org, so default to their Org
-        @plan.org = current_user.org
-      end
+      @plan.org = org
+
       if plan_params[:funder].present? && plan_params[:funder][:id].present?
         attrs = plan_params[:funder]
         attrs[:org_id] = attrs[:id]
@@ -482,10 +474,29 @@ class PlansController < ApplicationController
                   funder: %i[id org_id org_name org_sources org_crosswalk])
   end
 
-  # Returns the template if it exists, is published, and not archived;
-  # otherwise returns nil
-  def find_valid_template(template_id)
-    Template.where(id: template_id, published: true, archived: false).first
+  def resolve_plan_org
+    # bit of hackery here. There are 2 org selectors on the page
+    # and each is within its own specific context, plan.org or
+    # plan.funder which forces the hidden id hash to be :id
+    # so we need to convert it to :org_id so it works with the
+    # OrgSelectable and OrgSelection services
+    if plan_params[:org].present? && plan_params[:org][:id].present?
+      attrs = plan_params[:org]
+      attrs[:org_id] = attrs[:id]
+      org_from_params(params_in: attrs, allow_create: false)
+    else
+      # The user did not specify a research Org, so default to their Org
+      current_user.org
+    end
+  end
+
+  # Returns the template if it is permitted for the given org; otherwise nil.
+  def find_valid_template(org)
+    template_id = plan_params[:template_id].to_i
+    return if template_id.zero? # True if the param value was nil or non-numeric
+
+    valid_templates = Templates::TemplateOptionsService.available_templates(org)
+    valid_templates.find { |t| t.id == template_id }
   end
 
   # different versions of the same template have the same family_id
