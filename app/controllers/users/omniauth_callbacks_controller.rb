@@ -5,6 +5,8 @@ module Users
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     include EmailConfirmationHandler
 
+    before_action :block_openid_connect_in_sandbox, only: [:openid_connect]
+
     # This is for the OpenidConnect CILogon
     def openid_connect
       auth = request.env['omniauth.auth']
@@ -109,6 +111,12 @@ module Users
     end
 
     private
+
+    def block_openid_connect_in_sandbox
+      return unless FeatureFlagHelper.enabled?(:on_sandbox)
+
+      redirect_to root_path, alert: _('OpenID Connect is not available in sandbox.')
+    end
 
     def handle_missing_email_for_new_sso_entry
       flash[:alert] = generate_flash_message_for_missing_email

@@ -76,16 +76,18 @@
     </div>
   </div>
 
-  <div class="form-group col-xs-8">
-        <label class='control-label'>
-          <span class="aria-only" aria-hidden="false"><%= _('Institutional credentials') %></span>
-        </label>
-        <div class='identifier-scheme'>
-        <%= render partial: 'external_openid_connect',
-                   locals: { scheme: IdentifierScheme.find_by( name: 'openid_connect'),
-                             id: current_user.identifier_for('openid_connect')} %>
-        </div>
-  </div>
+  <% unless FeatureFlagHelper.enabled?(:on_sandbox) %>
+    <div class="form-group col-xs-8">
+          <label class='control-label'>
+            <span class="aria-only" aria-hidden="false"><%= _('Institutional credentials') %></span>
+          </label>
+          <div class='identifier-scheme'>
+          <%= render partial: 'external_openid_connect',
+                    locals: { scheme: IdentifierScheme.find_by( name: 'openid_connect'),
+                              id: current_user.identifier_for('openid_connect')} %>
+          </div>
+    </div>
+  <% end %>
 
 
   <div class="form-group col-xs-8">
