@@ -234,17 +234,27 @@ module ExternalApis
         website.gsub('www.', '')
       end
 
-      # Extracts the FundRef Id if available
+      # Extracts the FundRef Id from external ids if available
+      # "external_ids": [
+      #   {"type": "fundref", "preferred": "12345", "all": ["12345", "67890"]},
+      #   {"type": "SomeOtherID", "preferred": "501100000000", "all": ["501100000000"]}
+      # ]
       def fundref_id(item:)
-        return '' unless item.present? && item['external_ids'].present?
-        return '' unless item['external_ids'].fetch('FundRef', {}).any?
+        external_ids = item['external_ids']
+        return '' unless external_ids.present?
+
+        fundref = external_ids.find { |id| id['type'].to_s.casecmp('fundref').zero? }
+        return '' unless fundref.present?
 
         # If a preferred Id was specified then use it
-        ret = item['external_ids'].fetch('FundRef', {}).fetch('preferred', '')
-        return ret if ret.present?
+        preferred = fundref['preferred']
+        return preferred if preferred.present?
 
         # Otherwise take the first one listed
-        item['external_ids'].fetch('FundRef', {}).fetch('all', []).first
+        all = fundref['all']
+        return all.first if all.present? && all.first.present?
+
+        ''
       end
     end
   end
