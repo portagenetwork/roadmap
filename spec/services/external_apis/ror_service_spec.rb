@@ -293,29 +293,32 @@ RSpec.describe ExternalApis::RorService do
 
     describe '#org_name' do
       it 'returns nil if there is no name' do
-        json = { country: { country_name: 'Nowhere' } }.to_json
+        json = { country: { country_name: 'Nowhere' }, names: [] }.to_json
         expect(described_class.send(:org_name, item: JSON.parse(json))).to eql('')
       end
+
       it 'properly appends the website if available' do
         json = {
-          name: 'Example College',
-          links: ['https://example.edu'],
+          names: [{ types: ['ror_display'], value: 'Example College' }],
+          links: [{ 'type' => 'website', 'value' => 'https://example.edu' }],
           country: { country_name: 'Nowhere' }
         }.to_json
         expected = 'Example College (example.edu)'
         expect(described_class.send(:org_name, item: JSON.parse(json))).to eql(expected)
       end
+
       it 'properly appends the country if available and no website is available' do
         json = {
-          name: 'Example College',
+          names: [{ types: ['ror_display'], value: 'Example College' }],
           country: { country_name: 'Nowhere' }
         }.to_json
         expected = 'Example College (Nowhere)'
         expect(described_class.send(:org_name, item: JSON.parse(json))).to eql(expected)
       end
+
       it 'properly handles an item with no website or country' do
         json = {
-          name: 'Example College',
+          names: [{ types: ['ror_display'], value: 'Example College' }],
           links: [],
           country: {}
         }.to_json
@@ -329,15 +332,18 @@ RSpec.describe ExternalApis::RorService do
         item = JSON.parse({ links: nil }.to_json)
         expect(described_class.send(:org_website, item: item)).to eql(nil)
       end
+
       it 'returns nil if the item is nil' do
         expect(described_class.send(:org_website, item: nil)).to eql(nil)
       end
+
       it 'returns the domain only' do
-        item = JSON.parse({ links: ['https://example.org/path?a=b'] }.to_json)
+        item = JSON.parse({ links: [{ 'type' => 'website', 'value' => 'https://example.org/path?a=b' }] }.to_json)
         expect(described_class.send(:org_website, item: item)).to eql('example.org')
       end
+
       it 'removes the www prefix' do
-        item = JSON.parse({ links: ['www.example.org'] }.to_json)
+        item = JSON.parse({ links: [{ 'type' => 'website', 'value' => 'www.example.org' }] }.to_json)
         expect(described_class.send(:org_website, item: item)).to eql('example.org')
       end
     end
@@ -346,22 +352,32 @@ RSpec.describe ExternalApis::RorService do
       before(:each) do
         @hash = { external_ids: {} }
       end
+
       it 'returns a blank if no external_ids are present' do
         json = JSON.parse(@hash.to_json)
         expect(described_class.send(:fundref_id, item: json)).to eql('')
       end
+
       it 'returns a blank if no FundRef ids are present' do
-        @hash['external_ids'] = { FundRef: {} }
+        @hash['external_ids'] = [
+          { 'type' => 'fundref', 'preferred' => '' }
+        ]
         json = JSON.parse(@hash.to_json)
         expect(described_class.send(:fundref_id, item: json)).to eql('')
       end
+
       it 'returns the preferred id when specified' do
-        @hash['external_ids'] = { FundRef: { preferred: '1', all: %w[2 1] } }
+        @hash['external_ids'] = [
+          { 'type' => 'FundRef', 'preferred' => '1', 'all' => %w[2 1] }
+        ]
         json = JSON.parse(@hash.to_json)
         expect(described_class.send(:fundref_id, item: json)).to eql('1')
       end
-      it 'returns the firstid if no preferred is specified' do
-        @hash['external_ids'] = { FundRef: { preferred: nil, all: %w[2 1] } }
+
+      it 'returns the first id if no preferred is specified' do
+        @hash['external_ids'] = [
+          { 'type' => 'FundRef', 'preferred' => nil, 'all' => %w[2 1] }
+        ]
         json = JSON.parse(@hash.to_json)
         expect(described_class.send(:fundref_id, item: json)).to eql('2')
       end
