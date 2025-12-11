@@ -190,15 +190,17 @@ module ExternalApis
       #    "Example College (example.edu)"
       #    "Example College (Brazil)"
       def org_name(item:)
-        return '' unless item.present? && item['name'].present?
+        name = display_name(item)
+        return '' unless name.present?
 
         country = item.fetch('country', {}).fetch('country_name', '')
         website = org_website(item: item)
+
         # If no website or country then just return the name
-        return item['name'] unless website.present? || country.present?
+        return name unless website.present? || country.present?
 
         # Otherwise return the contextualized name
-        "#{item['name']} (#{website || country})"
+        "#{name} (#{website || country})"
       end
 
       # Extracts the org's ISO639 if available
