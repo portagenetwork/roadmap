@@ -71,28 +71,32 @@ RSpec.describe ExternalApis::RorService do
           items: [
             {
               id: 'https://ror.org/1234567890',
-              name: 'Example University',
+              names: [
+                { value: 'Example University', types: ['ror_display'] }
+              ],
               types: ['Education'],
-              links: ['http://example.edu/'],
-              aliases: ['Example'],
+              links: [
+                { type: 'website', value: 'http://example.edu/' }
+              ],
               acronyms: ['EU'],
               status: 'active',
               country: { country_name: 'United States', country_code: 'US' },
-              external_ids: {
-                GRID: { preferred: 'grid.12345.1', all: 'grid.12345.1' }
-              }
+              external_ids: [
+                { type: 'grid', preferred: 'grid.12345.1', all: ['grid.12345.1'] }
+              ]
             }, {
               id: 'https://ror.org/0987654321',
-              name: 'Universidade de Example',
+              names: [
+                { value: 'Universidade de Example', types: ['ror_display'] }
+              ],
               types: ['Education'],
               links: [],
-              aliases: ['Example'],
               acronyms: ['EU'],
               status: 'active',
               country: { country_name: 'Mexico', country_code: 'MX' },
-              external_ids: {
-                GRID: { preferred: 'grid.98765.8', all: 'grid.98765.8' }
-              }
+              external_ids: [
+                { type: 'FundRef', preferred: 'fundref.12345', all: ['fundref.12345'] }
+              ]
             }
           ]
         }
@@ -108,19 +112,11 @@ RSpec.describe ExternalApis::RorService do
       end
 
       it 'includes the website in the name (if available)' do
-        expected = {
-          id: 'https://ror.org/1234567890',
-          name: 'Example University (example.edu)'
-        }
-        expect(@orgs.map { |i| i[:name] }.include?(expected[:name])).to eql(true)
+        expect(@orgs.map { |i| i[:name] }).to include('Example University (example.edu)')
       end
 
       it 'includes the country in the name (if no website is available)' do
-        expected = {
-          id: 'https://ror.org/0987654321',
-          name: 'Universidade de Example (Mexico)'
-        }
-        expect(@orgs.map { |i| i[:name] }.include?(expected[:name])).to eql(true)
+        expect(@orgs.map { |i| i[:name] }).to include('Universidade de Example (Mexico)')
       end
     end
   end
