@@ -129,7 +129,7 @@ RSpec.describe ExternalApis::RorService do
           time_taken: 5,
           items: [{
             id: Faker::Internet.url,
-            name: Faker::Lorem.word,
+            names: [{ types: ['ror_display'], value: Faker::Lorem.word }],
             country: { country_name: Faker::Lorem.word }
           }]
         }
@@ -203,7 +203,7 @@ RSpec.describe ExternalApis::RorService do
         items = Array.new(4).map do
           {
             id: Faker::Internet.unique.url,
-            name: Faker::Lorem.word,
+            names: [{ types: ['ror_display'], value: Faker::Lorem.word }],
             country: { country_name: Faker::Lorem.word }
           }
         end
@@ -222,7 +222,7 @@ RSpec.describe ExternalApis::RorService do
         items = Array.new(7).map do
           {
             id: Faker::Internet.unique.url,
-            name: Faker::Lorem.word,
+            names: [{ types: ['ror_display'], value: Faker::Lorem.word }],
             country: { country_name: Faker::Lorem.word }
           }
         end
@@ -244,7 +244,7 @@ RSpec.describe ExternalApis::RorService do
         items = Array.new(12).map do
           {
             id: Faker::Internet.unique.url,
-            name: Faker::Lorem.word,
+            names: [{ types: ['ror_display'], value: Faker::Lorem.word }],
             country: { country_name: Faker::Lorem.word }
           }
         end
@@ -268,20 +268,24 @@ RSpec.describe ExternalApis::RorService do
       it 'returns an empty array if there are no items' do
         expect(described_class.send(:parse_results, json: nil)).to eql([])
       end
+
       it 'ignores items with no name or id' do
         json = { items: [
-          { id: Faker::Internet.url, name: Faker::Lorem.word },
-          { id: Faker::Internet.url },
-          { name: Faker::Lorem.word }
+          { id: Faker::Internet.url, names: [{ types: ['ror_display'], value: Faker::Lorem.word }] },
+          { id: Faker::Internet.url, names: [] },
+          { names: [{ types: ['ror_display'], value: Faker::Lorem.word }] }
         ] }.to_json
+
         items = described_class.send(:parse_results, json: JSON.parse(json))
         expect(items.length).to eql(1)
       end
+
       it 'returns the correct number of results' do
         json = { items: [
-          { id: Faker::Internet.url, name: Faker::Lorem.word },
-          { id: Faker::Internet.url, name: Faker::Lorem.word }
+          { id: Faker::Internet.url, names: [{ types: ['ror_display'], value: Faker::Lorem.word }] },
+          { id: Faker::Internet.url, names: [{ types: ['ror_display'], value: Faker::Lorem.word }] }
         ] }.to_json
+
         items = described_class.send(:parse_results, json: JSON.parse(json))
         expect(items.length).to eql(2)
       end
