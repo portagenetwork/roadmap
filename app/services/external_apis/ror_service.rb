@@ -77,7 +77,7 @@ module ExternalApis
 
       private
 
-      # Queries the ROR API for the sepcified name and page
+      # Queries the ROR API for the specified name and page
       def query_ror(term:, page: 1, filters: [])
         return [] unless term.present?
 
@@ -135,6 +135,32 @@ module ExternalApis
       end
       # rubocop:enable Metrics/AbcSize
 
+      # Extracts the org's display name from `names`
+      # "names": [
+      #     {"lang": "en", "types": ["ror_display","label"], "value": "Harvard University"},
+      #     {"lang": "es","types": ["label"], "value": "Universidad de Harvard"}
+      # ]
+      def display_name(item)
+        item['names']
+          &.find { |n| n['types']&.include?('ror_display') }
+          &.fetch('value', nil)
+      end
+
+      # Returns the website link hash
+      # "links": [
+      #   { "type": "website", "value": "https://example.edu" },
+      #   { "type": "Wikipedia", "value": "https://en.wikipedia.org/wiki/Example_University" }
+      # ]
+      def org_url(item)
+        # "links" may be nil, a non‑array, or the whole item may not be a Hash
+        return nil unless item.is_a?(Hash)
+
+        links = item['links']
+        return nil unless links.is_a?(Array)
+
+        links.find { |l| l['type'] == 'website' }
+      end
+
       # Convert the JSON items into a hash
       # rubocop:disable Metrics/AbcSize
       def parse_results(json:)
@@ -142,13 +168,14 @@ module ExternalApis
         return results unless json.present? && json.fetch('items', []).any?
 
         json['items'].each do |item|
-          next unless item['id'].present? && item['name'].present?
+          name = display_name(item)
+          next unless item['id'].present? && name.present?
 
           results << {
             ror: item['id'].gsub(/^#{landing_page_url}/, ''),
             name: org_name(item: item),
-            sort_name: item['name'],
-            url: item.fetch('links', []).first,
+            sort_name: name,
+            url: org_url(item)&.dig('value'),
             language: org_language(item: item),
             fundref: fundref_id(item: item),
             abbreviation: item.fetch('acronyms', []).first
