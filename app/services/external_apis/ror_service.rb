@@ -203,13 +203,20 @@ module ExternalApis
         "#{name} (#{website || country})"
       end
 
-      # Extracts the org's ISO639 if available
-      def org_language(item:)
+      # Extracts the org's language
+      # {
+      #   "id": "https://ror.org/012345678",
+      #   "names": [
+      #     { "value": "Université de Montréal", "types": ["ror_display"], "lang": "fr" },
+      #     { "value": "University of Montreal", "types": ["alias"], "lang": "en" }
+      #   ]
+      # }
+      def org_language(item:) # rubocop:disable Metrics/CyclomaticComplexity
         dflt = I18n.default_locale || 'en'
         return dflt unless item.present?
 
-        labels = item.fetch('labels', [{ iso639: dflt }])
-        labels.first&.fetch('iso639', I18n.default_locale) || dflt
+        display = item['names']&.find { |n| n['types']&.include?('ror_display') }
+        display&.fetch('lang', dflt) || dflt
       end
 
       # Extracts the website domain from the item
