@@ -220,13 +220,17 @@ module ExternalApis
       end
 
       # Extracts the website domain from the item
+      # "links": [
+      #   { "type": "website", "value": "https://example.edu" },
+      #   { "type": "Wikipedia", "value": "https://en.wikipedia.org/wiki/Example_University" }
+      # ]
       def org_website(item:)
-        return nil unless item.present? && item.fetch('links', [])&.any?
-        return nil if item['links'].first.blank?
+        link = org_url(item)&.fetch('value', nil)
+        return nil unless link.present?
 
         # A website was found, so extract just the domain without the www
         domain_regex = %r{^(?:http://|www\.|https://)([^/]+)}
-        website = item['links'].first.scan(domain_regex).last.first
+        website = link.scan(domain_regex).last.first
         website.gsub('www.', '')
       end
 
