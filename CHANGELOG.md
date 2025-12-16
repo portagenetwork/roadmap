@@ -12,6 +12,8 @@
 
  - chore(deps): bump browser-actions/setup-chrome from 1 to 2 [#1138](https://github.com/portagenetwork/roadmap/pull/1138)
 
+ - chore(deps): bump webpack from 5.94.0 to 5.102.1 [#1206](https://github.com/portagenetwork/roadmap/pull/1206)
+
 ## [4.1.1+portage-4.6.1]
 
 ### Added
