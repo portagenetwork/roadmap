@@ -8,6 +8,8 @@
 
  - chore(deps): bump actions/checkout from 5 to 6 [#1236](https://github.com/portagenetwork/roadmap/pull/1236)
 
+ - chore(deps): bump omniauth from 2.1.2 to 2.1.4 [#1201](https://github.com/portagenetwork/roadmap/pull/1201)
+
 ## [4.1.1+portage-4.6.1]
 
 ### Added
