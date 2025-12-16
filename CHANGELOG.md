@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Dependency Updates
+
+ - chore(deps): bump nginx from 1.29.3-alpine to 1.29.4-alpine [#1246](https://github.com/portagenetwork/roadmap/pull/1246)
+
 ## [4.1.1+portage-4.6.1]
 
 ### Added
