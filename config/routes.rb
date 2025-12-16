@@ -215,6 +215,7 @@ Rails.application.routes.draw do
       get :me, controller: :base_api
 
       resources :plans, only: %i[index show]
+      resources :templates, only: :index
     end
   end
 
