@@ -1,17 +1,24 @@
 # Changelog
 
-## [Unreleased]
+## [4.1.1+portage-4.6.1]
 
 ### Added
+
  - Add initial request specs for PlansController [#1238](https://github.com/portagenetwork/roadmap/pull/1238)
+
  - Refactor template options logic into `Templates::TemplateOptionService` and update template validation in `PlansController#create` [#1228](https://github.com/portagenetwork/roadmap/pull/1228)
 
 ### Fixed
+
  - Update outdated organisation-related config values [#1237](https://github.com/portagenetwork/roadmap/pull/1237)
+
  - Prevent unmanaged organisations from being assigned in profile editing and creation [#1242](https://github.com/portagenetwork/roadmap/pull/1242)
 
 ### Dependency Updates
- - chore(deps): bump nginx from 1.29.2-alpine to 1.29.3-alpine
+
+ - chore(deps): bump nginx from 1.29.2-alpine to 1.29.3-alpine [#1221](https://github.com/portagenetwork/roadmap/pull/1221)
+
+ - chore(deps): bump js-yaml from 4.1.0 to 4.1.1 [#1231](https://github.com/portagenetwork/roadmap/pull/1245)
 
 ## [4.1.1+portage-4.6.0]
 
@@ -38,6 +45,8 @@
  - chore(deps): bump nginx from 1.29.1-alpine to 1.29.2-alpine [#1207](https://github.com/portagenetwork/roadmap/pull/1207)
 
  - chore(deps): bump docker/login-action from 3.5.0 to 3.6.0 [#1197](https://github.com/portagenetwork/roadmap/pull/1197)
+ 
+ - chore(deps): bump rack from 2.2.14 to 2.2.18 [#1195](https://github.com/portagenetwork/roadmap/pull/1195)
 
 ## [4.1.1+portage-4.5.0]
 
