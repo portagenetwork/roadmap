@@ -10,6 +10,8 @@
 
  - chore(deps): bump omniauth from 2.1.2 to 2.1.4 [#1201](https://github.com/portagenetwork/roadmap/pull/1201)
 
+ - chore(deps): bump browser-actions/setup-chrome from 1 to 2 [#1138](https://github.com/portagenetwork/roadmap/pull/1138)
+
 ## [4.1.1+portage-4.6.1]
 
 ### Added
