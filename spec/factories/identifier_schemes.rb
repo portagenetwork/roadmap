@@ -38,5 +38,19 @@ FactoryBot.define do
       description { 'CILogon' }
       identifier_prefix { 'https://www.cilogon.org/' }
     end
+
+    %i[
+      authentication
+      orgs
+      plans
+      users
+      contributors
+      identification
+      research_outputs
+    ].each do |context|
+      trait :"for_#{context}" do
+        add_attribute(:"for_#{context}") { true }
+      end
+    end
   end
 end
