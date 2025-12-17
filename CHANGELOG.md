@@ -14,6 +14,8 @@
 
  - chore(deps): bump webpack from 5.94.0 to 5.102.1 [#1206](https://github.com/portagenetwork/roadmap/pull/1206)
 
+ - chore(deps): bump actions/setup-node from 5 to 6 [#1211](https://github.com/portagenetwork/roadmap/pull/1211)
+
 ## [4.1.1+portage-4.6.1]
 
 ### Added
