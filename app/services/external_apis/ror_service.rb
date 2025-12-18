@@ -238,10 +238,9 @@ module ExternalApis
       #   {"type": "SomeOtherID", "preferred": "501100000000", "all": ["501100000000"]}
       # ]
       def fundref_id(item:)
-        external_ids = item['external_ids']
-        return '' unless external_ids.present?
+        external_ids = item['external_ids'] if item
 
-        fundref = external_ids.find { |id| id['type'].to_s.casecmp('fundref').zero? }
+        fundref = external_ids.find { |id| id['type'] == 'fundref' }
         return '' unless fundref.present?
 
         # If a preferred Id was specified then use it
@@ -250,7 +249,7 @@ module ExternalApis
 
         # Otherwise take the first one listed
         all = fundref['all']
-        return all.first if all.present? && all.first.present?
+        return all.first if all.present?
 
         ''
       end

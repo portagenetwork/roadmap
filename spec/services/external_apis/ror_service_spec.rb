@@ -95,7 +95,7 @@ RSpec.describe ExternalApis::RorService do
               status: 'active',
               country: { country_name: 'Mexico', country_code: 'MX' },
               external_ids: [
-                { type: 'FundRef', preferred: 'fundref.12345', all: ['fundref.12345'] }
+                { type: 'fundref', preferred: 'fundref.12345', all: ['fundref.12345'] }
               ]
             }
           ]
@@ -204,7 +204,8 @@ RSpec.describe ExternalApis::RorService do
           {
             id: Faker::Internet.unique.url,
             names: [{ types: ['ror_display'], value: Faker::Lorem.word }],
-            country: { country_name: Faker::Lorem.word }
+            country: { country_name: Faker::Lorem.word },
+            external_ids: []
           }
         end
         results1 = { number_of_results: 4, items: items }
@@ -223,7 +224,8 @@ RSpec.describe ExternalApis::RorService do
           {
             id: Faker::Internet.unique.url,
             names: [{ types: ['ror_display'], value: Faker::Lorem.word }],
-            country: { country_name: Faker::Lorem.word }
+            country: { country_name: Faker::Lorem.word },
+            external_ids: []
           }
         end
         results1 = { number_of_results: 7, items: items[0..4] }
@@ -245,7 +247,8 @@ RSpec.describe ExternalApis::RorService do
           {
             id: Faker::Internet.unique.url,
             names: [{ types: ['ror_display'], value: Faker::Lorem.word }],
-            country: { country_name: Faker::Lorem.word }
+            country: { country_name: Faker::Lorem.word },
+            external_ids: []
           }
         end
         results1 = { number_of_results: 12, items: items[0..4] }
@@ -271,9 +274,9 @@ RSpec.describe ExternalApis::RorService do
 
       it 'ignores items with no name or id' do
         json = { items: [
-          { id: Faker::Internet.url, names: [{ types: ['ror_display'], value: Faker::Lorem.word }] },
-          { id: Faker::Internet.url, names: [] },
-          { names: [{ types: ['ror_display'], value: Faker::Lorem.word }] }
+          { id: Faker::Internet.url, names: [{ types: ['ror_display'], value: Faker::Lorem.word }], external_ids: [] },
+          { id: Faker::Internet.url, names: [], external_ids: [] },
+          { names: [{ types: ['ror_display'], value: Faker::Lorem.word }], external_ids: [] }
         ] }.to_json
 
         items = described_class.send(:parse_results, json: JSON.parse(json))
@@ -282,8 +285,8 @@ RSpec.describe ExternalApis::RorService do
 
       it 'returns the correct number of results' do
         json = { items: [
-          { id: Faker::Internet.url, names: [{ types: ['ror_display'], value: Faker::Lorem.word }] },
-          { id: Faker::Internet.url, names: [{ types: ['ror_display'], value: Faker::Lorem.word }] }
+          { id: Faker::Internet.url, names: [{ types: ['ror_display'], value: Faker::Lorem.word }], external_ids: [] },
+          { id: Faker::Internet.url, names: [{ types: ['ror_display'], value: Faker::Lorem.word }], external_ids: [] }
         ] }.to_json
 
         items = described_class.send(:parse_results, json: JSON.parse(json))
@@ -368,7 +371,7 @@ RSpec.describe ExternalApis::RorService do
 
       it 'returns the preferred id when specified' do
         @hash['external_ids'] = [
-          { 'type' => 'FundRef', 'preferred' => '1', 'all' => %w[2 1] }
+          { 'type' => 'fundref', 'preferred' => '1', 'all' => %w[2 1] }
         ]
         json = JSON.parse(@hash.to_json)
         expect(described_class.send(:fundref_id, item: json)).to eql('1')
@@ -376,7 +379,7 @@ RSpec.describe ExternalApis::RorService do
 
       it 'returns the first id if no preferred is specified' do
         @hash['external_ids'] = [
-          { 'type' => 'FundRef', 'preferred' => nil, 'all' => %w[2 1] }
+          { 'type' => 'fundref', 'preferred' => nil, 'all' => %w[2 1] }
         ]
         json = JSON.parse(@hash.to_json)
         expect(described_class.send(:fundref_id, item: json)).to eql('2')
