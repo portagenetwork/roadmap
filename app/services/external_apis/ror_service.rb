@@ -135,32 +135,6 @@ module ExternalApis
       end
       # rubocop:enable Metrics/AbcSize
 
-      # Extracts the org's display name from `names`
-      # "names": [
-      #     {"lang": "en", "types": ["ror_display","label"], "value": "Harvard University"},
-      #     {"lang": "es","types": ["label"], "value": "Universidad de Harvard"}
-      # ]
-      def display_name(item)
-        item['names']
-          &.find { |n| n['types']&.include?('ror_display') }
-          &.fetch('value', nil)
-      end
-
-      # Returns the website link hash
-      # "links": [
-      #   { "type": "website", "value": "https://example.edu" },
-      #   { "type": "Wikipedia", "value": "https://en.wikipedia.org/wiki/Example_University" }
-      # ]
-      def org_url(item)
-        # "links" may be nil, a non‑array, or the whole item may not be a Hash
-        return nil unless item.is_a?(Hash)
-
-        links = item['links']
-        return nil unless links.is_a?(Array)
-
-        links.find { |l| l['type'] == 'website' }
-      end
-
       # Convert the JSON items into a hash
       # rubocop:disable Metrics/AbcSize
       def parse_results(json:)
@@ -168,14 +142,14 @@ module ExternalApis
         return results unless json.present? && json.fetch('items', []).any?
 
         json['items'].each do |item|
-          name = display_name(item)
+          name = sort_name(item)
           next unless item['id'].present? && name.present?
 
           results << {
             ror: item['id'].gsub(/^#{landing_page_url}/, ''),
             name: org_name(item: item),
             sort_name: name,
-            url: org_url(item)&.dig('value'),
+            url: org_url(item),
             language: org_language(item: item),
             fundref: fundref_id(item: item),
             abbreviation: item.fetch('acronyms', []).first
@@ -185,12 +159,36 @@ module ExternalApis
       end
       # rubocop:enable Metrics/AbcSize
 
+      # Extracts the org's display name from `names` to be used as sort_name
+      # "names": [
+      #     {"lang": "en", "types": ["ror_display","label"], "value": "Harvard University"},
+      #     {"lang": "es","types": ["label"], "value": "Universidad de Harvard"}
+      # ]
+      def sort_name(item)
+        item['names']
+          &.find { |n| n['types']&.include?('ror_display') }
+          &.fetch('value', nil)
+      end
+
+      # Returns the website link value
+      # "links": [
+      #   { "type": "website", "value": "https://example.edu" },
+      #   { "type": "Wikipedia", "value": "https://en.wikipedia.org/wiki/Example_University" }
+      # ]
+      def org_url(item)
+        links = item['links'] if item
+        # links must be an array
+        return nil unless links.is_a?(Array)
+
+        links.find { |l| l['type'] == 'website' }&.fetch('value', nil)
+      end
+
       # Org names are not unique, so include the Org URL if available or
       # the country. For example:
       #    "Example College (example.edu)"
       #    "Example College (Brazil)"
       def org_name(item:)
-        name = display_name(item)
+        name = sort_name(item)
         return '' unless name.present?
 
         country = item.fetch('country', {}).fetch('country_name', '')
@@ -225,7 +223,7 @@ module ExternalApis
       #   { "type": "Wikipedia", "value": "https://en.wikipedia.org/wiki/Example_University" }
       # ]
       def org_website(item:)
-        link = org_url(item)&.fetch('value', nil)
+        link = org_url(item)
         return nil unless link.present?
 
         # A website was found, so extract just the domain without the www
