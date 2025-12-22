@@ -125,7 +125,15 @@ module OrgSelection
       def language_from_hash(hash:)
         return Language.default unless hash.present? && hash[:language].present?
 
-        Language.where(abbreviation: hash[:language]).first || Language.default
+        # Try exact match first
+        exact = Language.find_by(abbreviation: hash[:language])
+        return exact if exact.present?
+
+        # `hash[:language]` comes from ROR and is a two-char ISO 639-1 language code (e.g., "en").
+        # Language.abbreviation stores BCP 47 tags (e.g., "en-CA").
+        Language.where('abbreviation LIKE ?', "#{hash[:language]}-%")
+                .order(default_language: :desc) # prefer default language if multiple results exist
+                .first || Language.default
       end
 
       def identifier_keys
