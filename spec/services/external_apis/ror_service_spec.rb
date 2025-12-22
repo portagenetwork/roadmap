@@ -295,11 +295,6 @@ RSpec.describe ExternalApis::RorService do
     end
 
     describe '#org_name' do
-      it 'returns nil if there is no name' do
-        json = { country: { country_name: 'Nowhere' }, names: [] }.to_json
-        expect(described_class.send(:org_name, item: JSON.parse(json))).to eql('')
-      end
-
       it 'properly appends the website if available' do
         json = {
           names: [{ types: ['ror_display'], value: 'Example College' }],
@@ -334,10 +329,6 @@ RSpec.describe ExternalApis::RorService do
       it "returns nil if no 'links' are in the json" do
         item = JSON.parse({ links: nil }.to_json)
         expect(described_class.send(:org_website, item: item)).to eql(nil)
-      end
-
-      it 'returns nil if the item is nil' do
-        expect(described_class.send(:org_website, item: nil)).to eql(nil)
       end
 
       it 'returns the domain only' do

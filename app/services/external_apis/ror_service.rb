@@ -176,11 +176,11 @@ module ExternalApis
       #   { "type": "Wikipedia", "value": "https://en.wikipedia.org/wiki/Example_University" }
       # ]
       def org_url(item)
-        links = item['links'] if item
-        # links must be an array
-        return nil unless links.is_a?(Array)
+        links = item['links']
+        # links must not be empty
+        return nil unless links.present?
 
-        links.find { |l| l['type'] == 'website' }&.fetch('value', nil)
+        links.find { |l| l['type'] == 'website' }&.fetch('value')
       end
 
       # Org names are not unique, so include the Org URL if available or
@@ -189,7 +189,6 @@ module ExternalApis
       #    "Example College (Brazil)"
       def org_name(item:)
         name = sort_name(item)
-        return '' unless name.present?
 
         country = item.fetch('country', {}).fetch('country_name', '')
         website = org_website(item: item)
@@ -209,9 +208,9 @@ module ExternalApis
       #     { "value": "University of Montreal", "types": ["alias"], "lang": "en" }
       #   ]
       # }
-      def org_language(item:) # rubocop:disable Metrics/CyclomaticComplexity
-        dflt = I18n.default_locale || 'en'
-        return dflt unless item.present?
+      def org_language(item:)
+        # ROR uses two-letter / ISO 639-1 language codes (e.g. "en")
+        dflt = I18n.default_locale.to_s.split('-').first
 
         display = item['names']&.find { |n| n['types']&.include?('ror_display') }
         display&.fetch('lang', dflt) || dflt
@@ -238,7 +237,7 @@ module ExternalApis
       #   {"type": "SomeOtherID", "preferred": "501100000000", "all": ["501100000000"]}
       # ]
       def fundref_id(item:)
-        external_ids = item['external_ids'] if item
+        external_ids = item['external_ids']
 
         fundref = external_ids.find { |id| id['type'] == 'fundref' }
         return '' unless fundref.present?
