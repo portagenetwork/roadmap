@@ -159,15 +159,17 @@ module ExternalApis
       end
       # rubocop:enable Metrics/AbcSize
 
+      def ror_display_entry(item)
+        item['names'].find { |n| n['types'].include?('ror_display') }
+      end
+
       # Extracts the org's display name from `names` to be used as sort_name
       # "names": [
       #     {"lang": "en", "types": ["ror_display","label"], "value": "Harvard University"},
       #     {"lang": "es","types": ["label"], "value": "Universidad de Harvard"}
       # ]
       def sort_name(item)
-        item['names']
-          &.find { |n| n['types']&.include?('ror_display') }
-          &.fetch('value', nil)
+        ror_display_entry(item).fetch('value')
       end
 
       # Returns the website link value
@@ -212,8 +214,7 @@ module ExternalApis
         # ROR uses two-letter / ISO 639-1 language codes (e.g. "en")
         dflt = I18n.default_locale.to_s.split('-').first
 
-        display = item['names']&.find { |n| n['types']&.include?('ror_display') }
-        display&.fetch('lang', dflt) || dflt
+        ror_display_entry(item: item)['lang'] || dflt
       end
 
       # Extracts the website domain from the item

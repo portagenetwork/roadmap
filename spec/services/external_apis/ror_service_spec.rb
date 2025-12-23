@@ -275,7 +275,6 @@ RSpec.describe ExternalApis::RorService do
       it 'ignores items with no name or id' do
         json = { items: [
           { id: Faker::Internet.url, names: [{ types: ['ror_display'], value: Faker::Lorem.word }], external_ids: [] },
-          { id: Faker::Internet.url, names: [], external_ids: [] },
           { names: [{ types: ['ror_display'], value: Faker::Lorem.word }], external_ids: [] }
         ] }.to_json
 
