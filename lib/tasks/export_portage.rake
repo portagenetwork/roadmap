@@ -26,58 +26,61 @@ namespace :export_production_data do
   ## Following tasks needs to be run in sequence
   #####################################################
 
-  # rubocop:disable Layout/LineLength
   # seed_1: org & question format must be created before templates and template-related components
   desc 'Export org and question format from 3.0.2 database to seeds_1.rb'
+
+  # rubocop:disable Metrics/MethodLength
+  def build_sandbox_orgs
+    default_org = Org.find(Rails.application.config.default_funder_id)
+    # Add one English and one French sandbox org
+    updates = [
+      {
+        name: 'Test Organization',
+        abbreviation: 'IEO',
+        contact_name: 'Test User',
+        contact_email: 'dmp.test.user.admin@engagedri.ca',
+        language_id: 1, # English
+        feedback_msg: <<~HTML
+          <p>Hello %{user_name}.</p>
+          <br><p>
+          Your plan "%{plan_name}" has been submitted for feedback from an administrator at your organisation.
+          <br>If you have questions pertaining to this action, please contact us at %{organisation_email}.
+          </p>
+        HTML
+      },
+      { name: 'Organisation de test',
+        abbreviation: 'OEO',
+        contact_name: 'Utilisateur test',
+        contact_email: 'dmp.utilisateur.test.admin@engagedri.ca',
+        language_id: 2, # French
+        feedback_msg: <<~HTML
+          <p>Bonjour %{user_name}.</p>
+          <br><p>Votre plan "%{plan_name}" a été soumis pour commentaires d’un administrateur de votre organisation.
+          <br>Si vous avez des questions concernant cette action, veuillez communiquer avec nous à %{organisation_email}.
+          </p>
+        HTML
+      }
+    ]
+
+    test_orgs = updates.map do |attrs|
+      # Use `.find_or_initialize_by` to avoid "Name must be unique" validation error
+      org = Org.find_or_initialize_by(name: attrs[:name])
+      org.update!(attrs.except(:name))
+      org
+    end
+
+    [default_org] + test_orgs
+  end
+  # rubocop:enable Metrics/MethodLength
+
   task seed_1_export: :environment do
     file_name = 'db/seeds/sandbox/seeds_1.rb'
     FileUtils.rm_f(file_name)
     Faker::Config.random = Random.new(Org.count)
     File.open(file_name, 'a') do |f|
       excluded_keys = %w[created_at updated_at]
-      created = 6.years.ago # hard-code org creation date because it must be created before all templates/plans created
-      Org.all.each do |org|
-        # feedback message must fit the default language
-        if org.language_id == 2 || org.id == Rails.application.secrets.french_org_id.to_i
-          org.feedback_msg = '<p>Bonjour %{user_name}.</p>
-                              <br><p>Votre plan "%{plan_name}" a été soumis pour commentaires d’un administrateur de votre organisation.
-                              <br>Si vous avez des questions concernant cette action, veuillez communiquer avec nous à %{organisation_email}.
-                              </p>'
-        else
-          org.feedback_msg = '<p>Hello %{user_name}.</p>
-                              <br><p>
-                              Your plan "%{plan_name}" has been submitted for feedback from an administrator at your organisation.
-                              <br>If you have questions pertaining to this action, please contact us at %{organisation_email}.
-                              </p>'
-        end
-        # Only FUNDER_ORG(Portage) keep its original information
-        # Only Portage keep its original name and all other information
-        if org.id.to_i != Rails.application.secrets.funder_org_id.to_i
-          org.created_at = created
-          org.target_url = Org.column_defaults['target_url']
-          org.logo_uid = Org.column_defaults['logo_uid']
-          org.logo_name = Org.column_defaults['logo_name']
-          org.banner_name = Org.column_defaults['banner_name']
-          org.contact_email = Faker::Internet.email
-          org.links = Org.column_defaults['links']
-          org.contact_name = Faker::Name.name
-          if org.id == Rails.application.secrets.english_org_id.to_i
-            org.name = 'Test Organization'
-            org.contact_email = 'dmp.test.user.admin@engagedri.ca'
-            org.contact_name = 'Test User'
-            org.abbreviation = 'IEO'
-            org.language_id = 1 # English Default
-          elsif org.id == Rails.application.secrets.french_org_id.to_i
-            org.name = 'Organisation de test'
-            org.contact_email = 'dmp.utilisateur.test.admin@engagedri.ca'
-            org.contact_name = 'Utilisateur test'
-            org.abbreviation = 'OEO'
-            org.language_id = 2 # French Default
-          else
-            org.name = Faker::University.name
-            org.abbreviation = "#{org.name}_abbreviation"
-          end
-        end
+      orgs = build_sandbox_orgs
+      orgs.each do |org|
         serialized = org.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
         f.puts "Org.create!(#{serialized})"
       end
@@ -89,7 +92,6 @@ namespace :export_production_data do
       end
     end
   end
-  # rubocop:enable Layout/LineLength
 
   # seed2: guidance group and theme must be created before guidance and questions (using theme)
   desc 'Export guidance group and theme format from 3.0.2 database to seeds_2.rb'
