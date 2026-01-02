@@ -57,7 +57,7 @@
         surname: Faker::Name.last_name,
         password: pwd,
         password_confirmation: pwd,
-        org: Org.find_by(id: Rails.application.secrets.funder_org_id.to_i),
+        org: Org.find_by(id: Rails.application.config.default_funder_id),
         language: Language.all.first,
         perms: [],
         accept_terms: true,

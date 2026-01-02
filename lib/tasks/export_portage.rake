@@ -175,7 +175,7 @@ namespace :export_production_data do
     file_name = 'db/seeds/sandbox/seeds_5.rb'
     FileUtils.rm_f(file_name)
     excluded_keys = %w[created_at updated_at start_date end_date]
-    org_list = [Rails.application.secrets.funder_org_id.to_i, Rails.application.secrets.english_org_id.to_i,
+    org_list = [Rails.application.config.default_funder_id, Rails.application.secrets.english_org_id.to_i,
                 Rails.application.secrets.french_org_id.to_i]
     File.open(file_name, 'a') do |f|
       Plan.where(org_id: org_list).all.each_with_index do |plan, index|
@@ -191,7 +191,7 @@ namespace :export_production_data do
         f.puts "Plan.create(#{serialized})"
         # import related roles
         Role.where(plan_id: plan.id).all.each do |role|
-          role.user_id = if plan.org_id == Rails.application.secrets.funder_org_id.to_i # change all user id to 1
+          role.user_id = if plan.org_id == Rails.application.config.default_funder_id # change all user id to 1
                            1
                          elsif plan.org_id == Rails.application.secrets.english_org_id.to_i # change all user id to 2
                            2
