@@ -100,10 +100,10 @@ namespace :export_production_data do
     FileUtils.rm_f(file_name)
     excluded_keys = %w[created_at updated_at]
     File.open(file_name, 'a') do |f|
-      GuidanceGroup.all.each do |guidance_group|
-        serialized = guidance_group.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
-        f.puts "GuidanceGroup.create!(#{serialized})"
-      end
+      # GuidanceGroup.all.each do |guidance_group|
+      #   serialized = guidance_group.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
+      #   f.puts "GuidanceGroup.create!(#{serialized})"
+      # end
       Theme.all.each do |theme|
         serialized = theme.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
         f.puts "Theme.create!(#{serialized})"
@@ -118,14 +118,14 @@ namespace :export_production_data do
     FileUtils.rm_f(file_name)
     excluded_keys = %w[created_at updated_at]
     File.open(file_name, 'a') do |f|
-      GuidanceGroup.all.each do |guidance_group|
-        guidances = Guidance.where(guidance_group_id: guidance_group.id)
-        guidances.all.each do |guidance|
-          guidance.theme_ids = [Theme.all.sample.id]
-          serialized = guidance.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
-          f.puts "Guidance.create(#{serialized})"
-        end
-      end
+      # GuidanceGroup.all.each do |guidance_group|
+      #   guidances = Guidance.where(guidance_group_id: guidance_group.id)
+      #   guidances.all.each do |guidance|
+      #     guidance.theme_ids = [Theme.all.sample.id]
+      #     serialized = guidance.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
+      #     f.puts "Guidance.create(#{serialized})"
+      #   end
+      # end
       # only use portage network template
       Template.where('title LIKE ?', '%Portage%').where(published: true).all.each do |template|
         # Too many version of template crashes rake, just get the published version
