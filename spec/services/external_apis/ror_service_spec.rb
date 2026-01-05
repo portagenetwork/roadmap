@@ -272,7 +272,9 @@ RSpec.describe ExternalApis::RorService do
         expect(described_class.send(:parse_results, json: nil)).to eql([])
       end
 
-      it 'ignores items with no name or id' do
+      it 'ignores items with no name or id and logs an error' do
+        Rails.logger.expects(:error).at_least(1)
+
         json = { items: [
           { id: Faker::Internet.url, names: [{ types: ['ror_display'], value: Faker::Lorem.word }], external_ids: [] },
           { names: [{ types: ['ror_display'], value: Faker::Lorem.word }], external_ids: [] }

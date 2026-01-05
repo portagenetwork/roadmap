@@ -142,18 +142,19 @@ module ExternalApis
         return results unless json.present? && json.fetch('items', []).any?
 
         json['items'].each do |item|
-          name = sort_name(item: item)
-          next unless item['id'].present? && name.present?
-
           results << {
             ror: item['id'].gsub(/^#{landing_page_url}/, ''),
             name: org_name(item: item),
-            sort_name: name,
+            sort_name: sort_name(item: item),
             url: org_url(item: item),
             language: org_language(item: item),
             fundref: fundref_id(item: item),
             abbreviation: item.fetch('acronyms', []).first
           }
+        rescue KeyError, NoMethodError => e
+          Rails.logger.error(
+            "Invalid ROR record: #{e.class} - #{e.message}, item: #{item.inspect}"
+          )
         end
         results
       end
