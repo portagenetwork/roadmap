@@ -72,10 +72,6 @@ data:
   DEFAULT_FUNDER_ID: {{ .Values.config.environment.defaultFunderId | quote }}
   {{- end }}
 
-  {{- if .Values.config.environment.funderOrgId }}
-  FUNDER_ORG_ID: {{ .Values.config.environment.funderOrgId | quote }}
-  {{- end }}
-
   {{- if .Values.config.environment.frenchOrgId }}
   FRENCH_ORG_ID: {{ .Values.config.environment.frenchOrgId | quote }}
   {{- end }}
