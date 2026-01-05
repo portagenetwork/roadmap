@@ -104,16 +104,3 @@
     }
     User.create!(user)
   end
-  
-  # Before enter plan data, change two template's org to the two test organization to add data to user statistics
-  t1 = Template.where(:title => "Portage Template").where.not(:org_id => 8).first           
-  t1.org_id =  Rails.application.secrets.english_org_id.to_i.to_i
-  t1.title += "-Test1"
-  t1.save!
-
-  t2 = Template.where(:title => "Portage Template").where.not(:org_id => 8).first     
-  t2.org_id =  Rails.application.secrets.french_org_id.to_i.to_i
-  t2.title += "-Test2"
-  t2.save!
-
-  

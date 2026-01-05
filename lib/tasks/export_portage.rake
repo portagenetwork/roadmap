@@ -113,6 +113,22 @@ namespace :export_production_data do
 
   # seed3: guidance and template related components runs lastly
   desc 'Export guidance and template_related content from 3.0.2 database to seeds_3.rb'
+
+  def sandbox_templates
+    funder_templates = Template.where(org_id: Rails.application.config.default_funder_id, published: true)
+    # test_org_templates are needed for db/seeds/sandbox/seeds_4.rb
+    test_templates = Template.where(title: 'Alliance Template')
+                             .where.not(org_id: Rails.application.config.default_funder_id)
+                             .limit(2)
+                             .to_a
+    english_test_org = Org.find_by(name: 'Test Organization')
+    french_test_org = Org.find_by(name: 'Organisation de test')
+    # Assign the templates to the two test organisations
+    test_templates.first.update!(org_id: english_test_org.id, title: 'Alliance Template-Test1')
+    test_templates.last.update!(org_id: french_test_org.id, title: 'Alliance Template-Test2')
+    funder_templates + test_templates
+  end
+
   task seed_3_export: :environment do
     file_name = 'db/seeds/sandbox/seeds_3.rb'
     FileUtils.rm_f(file_name)
@@ -126,8 +142,7 @@ namespace :export_production_data do
       #     f.puts "Guidance.create(#{serialized})"
       #   end
       # end
-      # only use portage network template
-      Template.where('title LIKE ?', '%Portage%').where(published: true).all.each do |template|
+      sandbox_templates.each do |template|
         # Too many version of template crashes rake, just get the published version
         serialized = template.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
         f.puts "Template.create!(#{serialized})"
@@ -185,9 +200,9 @@ namespace :export_production_data do
         plan.description = Faker::Lorem.sentence
         # force a few plan to use modified template from the two test organizations for statistics
         if [20..50].include?(index) # rubocop:disable Performance/CollectionLiteralInLoop
-          plan.template = Template.find(title: 'Portage Template-Test1')
+          plan.template = Template.find(title: 'Alliance Template-Test1')
         elsif [60..90].include?(index) # rubocop:disable Performance/CollectionLiteralInLoop
-          plan.template = Template.find(title: 'Portage Template-Test2')
+          plan.template = Template.find(title: 'Alliance Template-Test2')
         end
         serialized = plan.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
         f.puts "Plan.create(#{serialized})"
