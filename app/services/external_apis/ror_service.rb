@@ -142,14 +142,14 @@ module ExternalApis
         return results unless json.present? && json.fetch('items', []).any?
 
         json['items'].each do |item|
-          name = sort_name(item)
+          name = sort_name(item: item)
           next unless item['id'].present? && name.present?
 
           results << {
             ror: item['id'].gsub(/^#{landing_page_url}/, ''),
             name: org_name(item: item),
             sort_name: name,
-            url: org_url(item),
+            url: org_url(item: item),
             language: org_language(item: item),
             fundref: fundref_id(item: item),
             abbreviation: item.fetch('acronyms', []).first
@@ -159,7 +159,7 @@ module ExternalApis
       end
       # rubocop:enable Metrics/AbcSize
 
-      def ror_display_entry(item)
+      def ror_display_entry(item:)
         item['names'].find { |n| n['types'].include?('ror_display') }
       end
 
@@ -168,8 +168,8 @@ module ExternalApis
       #     {"lang": "en", "types": ["ror_display","label"], "value": "Harvard University"},
       #     {"lang": "es","types": ["label"], "value": "Universidad de Harvard"}
       # ]
-      def sort_name(item)
-        ror_display_entry(item).fetch('value')
+      def sort_name(item:)
+        ror_display_entry(item: item).fetch('value')
       end
 
       # Returns the website link value
@@ -177,7 +177,7 @@ module ExternalApis
       #   { "type": "website", "value": "https://example.edu" },
       #   { "type": "Wikipedia", "value": "https://en.wikipedia.org/wiki/Example_University" }
       # ]
-      def org_url(item)
+      def org_url(item:)
         links = item['links']
         # links must not be empty
         return nil unless links.present?
@@ -190,7 +190,7 @@ module ExternalApis
       #    "Example College (example.edu)"
       #    "Example College (Brazil)"
       def org_name(item:)
-        name = sort_name(item)
+        name = sort_name(item: item)
 
         country = item.fetch('country', {}).fetch('country_name', '')
         website = org_website(item: item)
@@ -223,7 +223,7 @@ module ExternalApis
       #   { "type": "Wikipedia", "value": "https://en.wikipedia.org/wiki/Example_University" }
       # ]
       def org_website(item:)
-        link = org_url(item)
+        link = org_url(item: item)
         return nil unless link.present?
 
         # A website was found, so extract just the domain without the www
