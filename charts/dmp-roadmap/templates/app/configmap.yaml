@@ -72,14 +72,6 @@ data:
   DEFAULT_FUNDER_ID: {{ .Values.config.environment.defaultFunderId | quote }}
   {{- end }}
 
-  {{- if .Values.config.environment.frenchOrgId }}
-  FRENCH_ORG_ID: {{ .Values.config.environment.frenchOrgId | quote }}
-  {{- end }}
-
-  {{- if .Values.config.environment.englishOrgId }}
-  ENGLISH_ORG_ID: {{ .Values.config.environment.englishOrgId | quote }}
-  {{- end }}
-
   {{- if .Values.config.environment.orcidClientMember }}
   ORCID_CLIENT_MEMBER: {{ .Values.config.environment.orcidClientMember | quote }}
   {{- end }}
