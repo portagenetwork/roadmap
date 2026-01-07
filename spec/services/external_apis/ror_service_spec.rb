@@ -72,13 +72,13 @@ RSpec.describe ExternalApis::RorService do
             {
               id: 'https://ror.org/1234567890',
               names: [
-                { value: 'Example University', types: ['ror_display'] }
+                { value: 'Example University', types: ['ror_display'] },
+                { value: 'EU', types: ['acronym'] }
               ],
               types: ['Education'],
               links: [
                 { type: 'website', value: 'http://example.edu/' }
               ],
-              acronyms: ['EU'],
               status: 'active',
               locations: [
                 {
@@ -95,11 +95,11 @@ RSpec.describe ExternalApis::RorService do
             }, {
               id: 'https://ror.org/0987654321',
               names: [
-                { value: 'Universidade de Example', types: ['ror_display'] }
+                { value: 'Universidade de Example', types: ['ror_display'] },
+                { value: 'EU', types: ['acronym'] }
               ],
               types: ['Education'],
               links: [],
-              acronyms: ['EU'],
               status: 'active',
               locations: [
                 {
@@ -145,7 +145,7 @@ RSpec.describe ExternalApis::RorService do
           time_taken: 5,
           items: [{
             id: Faker::Internet.url,
-            names: [{ types: ['ror_display'], value: Faker::Lorem.word }],
+            names: [{ types: ['ror_display'], value: Faker::Lorem.word }, { value: 'EU', types: ['acronym'] }],
             locations: [
               {
                 geonames_id: Faker::Number.number(digits: 6),
@@ -227,7 +227,7 @@ RSpec.describe ExternalApis::RorService do
         items = Array.new(4).map do
           {
             id: Faker::Internet.unique.url,
-            names: [{ types: ['ror_display'], value: Faker::Lorem.word }],
+            names: [{ types: ['ror_display'], value: Faker::Lorem.word }, { value: 'EU', types: ['acronym'] }],
             locations: [
               {
                 geonames_id: Faker::Number.number(digits: 6),
@@ -255,7 +255,7 @@ RSpec.describe ExternalApis::RorService do
         items = Array.new(7).map do
           {
             id: Faker::Internet.unique.url,
-            names: [{ types: ['ror_display'], value: Faker::Lorem.word }],
+            names: [{ types: ['ror_display'], value: Faker::Lorem.word }, { value: 'EU', types: ['acronym'] }],
             locations: [
               {
                 geonames_id: Faker::Number.number(digits: 6),
@@ -286,7 +286,7 @@ RSpec.describe ExternalApis::RorService do
         items = Array.new(12).map do
           {
             id: Faker::Internet.unique.url,
-            names: [{ types: ['ror_display'], value: Faker::Lorem.word }],
+            names: [{ types: ['ror_display'], value: Faker::Lorem.word }, { value: 'EU', types: ['acronym'] }],
             locations: [
               {
                 geonames_id: Faker::Number.number(digits: 6),
@@ -334,7 +334,7 @@ RSpec.describe ExternalApis::RorService do
         json = { items: [
           { id: Faker::Internet.url,
             names: [{ types: ['ror_display'], value: Faker::Lorem.word }, { value: 'EU', types: ['acronym'] }],
-            external_ids: [], locations: [location] }
+            external_ids: [], locations: [location] },
           { names: [{ types: ['ror_display'], value: Faker::Lorem.word }, { value: 'EU', types: ['acronym'] }],
             external_ids: [], locations: [location] }
         ] }.to_json
@@ -369,7 +369,7 @@ RSpec.describe ExternalApis::RorService do
     describe '#org_name' do
       it 'properly appends the website if available' do
         json = {
-          names: [{ types: ['ror_display'], value: 'Example College' }],
+          names: [{ types: ['ror_display'], value: 'Example College' }, { value: 'EU', types: ['acronym'] }],
           links: [{ 'type' => 'website', 'value' => 'https://example.edu' }],
           locations: [
             {
@@ -387,7 +387,7 @@ RSpec.describe ExternalApis::RorService do
 
       it 'properly appends the country if available and no website is available' do
         json = {
-          names: [{ types: ['ror_display'], value: 'Example College' }],
+          names: [{ types: ['ror_display'], value: 'Example College' }, { value: 'EU', types: ['acronym'] }],
           locations: [
             {
               geonames_id: Faker::Number.number(digits: 6),
@@ -404,7 +404,7 @@ RSpec.describe ExternalApis::RorService do
 
       it 'properly handles an item with no website or country' do
         json = {
-          names: [{ types: ['ror_display'], value: 'Example College' }],
+          names: [{ types: ['ror_display'], value: 'Example College' }, { value: 'EU', types: ['acronym'] }],
           links: [],
           locations: [
             {

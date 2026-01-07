@@ -149,7 +149,7 @@ module ExternalApis
             url: org_url(item: item),
             language: org_language(item: item),
             fundref: fundref_id(item: item),
-            abbreviation: item.fetch('acronyms', []).first
+            abbreviation: org_abbreviation(item: item)
           }
         rescue KeyError, NoMethodError => e
           Rails.logger.error(
@@ -191,6 +191,12 @@ module ExternalApis
       def org_country(item:)
         location = item['locations']&.find { |l| l['geonames_details'].present? }
         location&.dig('geonames_details', 'country_name').to_s
+      end
+
+      # Extract acronym/abbreviation from names
+      # "names" : [ { "value" : "UC", "types": ["acronym"], "lang" : "en" } ]
+      def org_abbreviation(item:)
+        item['names'].find { |n| n['types'].include?('acronym') }&.fetch('value')
       end
 
       # Org names are not unique, so include the Org URL if available or
