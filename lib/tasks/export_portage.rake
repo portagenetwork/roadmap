@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
+ALLIANCE_TEMPLATE_TITLE = 'Alliance Template'
+TEST_ORG_NAMES = { english: 'Test Organization', french: 'Organisation de test' }.freeze
+
 namespace :export_production_data do
+  def sandbox_orgs
+    # NOTE: This helper should only be called after build_sandbox_orgs (seeds_1) has run.
+    Org.where(id: Rails.application.config.default_funder_id)
+       .or(Org.where(name: TEST_ORG_NAMES.values))
+  end
   desc 'Generate seed files'
   # The procedure can be adjusted depending on whether the task will be run in a different server first
   task build_sandbox_data: :environment do
@@ -31,11 +39,10 @@ namespace :export_production_data do
 
   # rubocop:disable Metrics/MethodLength
   def build_sandbox_orgs
-    default_org = Org.find(Rails.application.config.default_funder_id)
     # Add one English and one French sandbox org
     updates = [
       {
-        name: 'Test Organization',
+        name: TEST_ORG_NAMES[:english],
         abbreviation: 'IEO',
         contact_name: 'Test User',
         contact_email: 'dmp.test.user.admin@engagedri.ca',
@@ -48,7 +55,7 @@ namespace :export_production_data do
           </p>
         HTML
       },
-      { name: 'Organisation de test',
+      { name: TEST_ORG_NAMES[:french],
         abbreviation: 'OEO',
         contact_name: 'Utilisateur test',
         contact_email: 'dmp.utilisateur.test.admin@engagedri.ca',
@@ -62,14 +69,11 @@ namespace :export_production_data do
       }
     ]
 
-    test_orgs = updates.map do |attrs|
+    updates.map do |attrs|
       # Use `.find_or_initialize_by` to avoid "Name must be unique" validation error
       org = Org.find_or_initialize_by(name: attrs[:name])
       org.update!(attrs.except(:name))
-      org
     end
-
-    [default_org] + test_orgs
   end
   # rubocop:enable Metrics/MethodLength
 
@@ -79,8 +83,8 @@ namespace :export_production_data do
     Faker::Config.random = Random.new(Org.count)
     File.open(file_name, 'a') do |f|
       excluded_keys = %w[created_at updated_at]
-      orgs = build_sandbox_orgs
-      orgs.each do |org|
+      build_sandbox_orgs
+      sandbox_orgs.each do |org|
         serialized = org.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
         f.puts "Org.create!(#{serialized})"
       end
@@ -96,9 +100,7 @@ namespace :export_production_data do
   # seed2: guidance group and theme must be created before guidance and questions (using theme)
   desc 'Export guidance group and theme format from 3.0.2 database to seeds_2.rb'
   def sandbox_guidance_groups
-    orgs = Org.where(id: Rails.application.config.default_funder_id)
-              .or(Org.where(name: ['Test Organization', 'Organisation de test']))
-    GuidanceGroup.where(org_id: orgs.pluck(:id))
+    GuidanceGroup.where(org_id: sandbox_orgs.pluck(:id))
   end
   task seed_2_export: :environment do
     file_name = 'db/seeds/sandbox/seeds_2.rb'
@@ -119,25 +121,28 @@ namespace :export_production_data do
   # seed3: guidance and template related components runs lastly
   desc 'Export guidance and template_related content from 3.0.2 database to seeds_3.rb'
 
+  def update_test_templates(test_templates)
+    english_test_org = Org.find_by(name: TEST_ORG_NAMES[:english])
+    french_test_org = Org.find_by(name: TEST_ORG_NAMES[:french])
+    # Assign the templates to the two test organisations
+    test_templates.first.update!(org_id: english_test_org.id, title: "#{ALLIANCE_TEMPLATE_TITLE}-Test1")
+    test_templates.last.update!(org_id: french_test_org.id, title: "#{ALLIANCE_TEMPLATE_TITLE}-Test2")
+    test_templates
+  end
+
   def sandbox_templates
     funder_templates = Template.where(org_id: Rails.application.config.default_funder_id, published: true)
     # test_org_templates are needed for db/seeds/sandbox/seeds_4.rb
-    test_templates = Template.where(title: 'Alliance Template')
+    test_templates = Template.where(title: ALLIANCE_TEMPLATE_TITLE)
                              .where.not(org_id: Rails.application.config.default_funder_id)
                              .limit(2)
                              .to_a
-    english_test_org = Org.find_by(name: 'Test Organization')
-    french_test_org = Org.find_by(name: 'Organisation de test')
-    # Assign the templates to the two test organisations
-    test_templates.first.update!(org_id: english_test_org.id, title: 'Alliance Template-Test1')
-    test_templates.last.update!(org_id: french_test_org.id, title: 'Alliance Template-Test2')
+    test_templates = update_test_templates(test_templates)
     funder_templates + test_templates
   end
 
   def sandbox_guidances
-    orgs = Org.where(id: Rails.application.config.default_funder_id)
-              .or(Org.where(name: ['Test Organization', 'Organisation de test']))
-    guidance_groups = GuidanceGroup.where(org_id: orgs.pluck(:id))
+    guidance_groups = GuidanceGroup.where(org_id: sandbox_orgs.pluck(:id))
     Guidance.where(guidance_group_id: guidance_groups.pluck(:id))
   end
 
@@ -201,18 +206,17 @@ namespace :export_production_data do
     file_name = 'db/seeds/sandbox/seeds_5.rb'
     FileUtils.rm_f(file_name)
     excluded_keys = %w[created_at updated_at start_date end_date]
-    english_org_id = Org.find_by(abbreviation: 'IEO').id
-    french_org_id = Org.find_by(abbreviation: 'OEO').id
-    org_list = [Rails.application.config.default_funder_id, english_org_id, french_org_id]
+    orgs = sandbox_orgs
+    english_org_id = orgs.find_by(name: TEST_ORG_NAMES[:english]).id
     File.open(file_name, 'a') do |f|
-      Plan.where(org_id: org_list).all.each_with_index do |plan, index|
+      Plan.where(org_id: orgs.pluck(:id)).all.each_with_index do |plan, index|
         plan.title = "Test Plan #{index}"
         plan.description = Faker::Lorem.sentence
         # force a few plan to use modified template from the two test organizations for statistics
         if [20..50].include?(index) # rubocop:disable Performance/CollectionLiteralInLoop
-          plan.template = Template.find(title: 'Alliance Template-Test1')
+          plan.template = Template.find(title: "#{ALLIANCE_TEMPLATE_TITLE}-Test1")
         elsif [60..90].include?(index) # rubocop:disable Performance/CollectionLiteralInLoop
-          plan.template = Template.find(title: 'Alliance Template-Test2')
+          plan.template = Template.find(title: "#{ALLIANCE_TEMPLATE_TITLE}-Test2")
         end
         serialized = plan.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
         f.puts "Plan.create(#{serialized})"
