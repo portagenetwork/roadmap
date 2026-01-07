@@ -186,6 +186,13 @@ module ExternalApis
         links.find { |l| l['type'] == 'website' }&.fetch('value')
       end
 
+      # Returns the country name from locations
+      # "locations" : [ { "geonames_details" : { "country_name" : "Germany",}, "geonames_id" : 2928810 } ]
+      def org_country(item:)
+        location = item['locations']&.find { |l| l['geonames_details'].present? }
+        location&.dig('geonames_details', 'country_name').to_s
+      end
+
       # Org names are not unique, so include the Org URL if available or
       # the country. For example:
       #    "Example College (example.edu)"
@@ -193,7 +200,7 @@ module ExternalApis
       def org_name(item:)
         name = sort_name(item: item)
 
-        country = item.fetch('country', {}).fetch('country_name', '')
+        country = org_country(item: item)
         website = org_website(item: item)
 
         # If no website or country then just return the name

@@ -80,7 +80,15 @@ RSpec.describe ExternalApis::RorService do
               ],
               acronyms: ['EU'],
               status: 'active',
-              country: { country_name: 'United States', country_code: 'US' },
+              locations: [
+                {
+                  geonames_id: 123_456,
+                  geonames_details: {
+                    country_name: 'United States',
+                    country_code: 'US'
+                  }
+                }
+              ],
               external_ids: [
                 { type: 'grid', preferred: 'grid.12345.1', all: ['grid.12345.1'] }
               ]
@@ -93,7 +101,15 @@ RSpec.describe ExternalApis::RorService do
               links: [],
               acronyms: ['EU'],
               status: 'active',
-              country: { country_name: 'Mexico', country_code: 'MX' },
+              locations: [
+                {
+                  geonames_id: 12_345,
+                  geonames_details: {
+                    country_name: 'Mexico',
+                    country_code: 'MX'
+                  }
+                }
+              ],
               external_ids: [
                 { type: 'fundref', preferred: 'fundref.12345', all: ['fundref.12345'] }
               ]
@@ -130,7 +146,15 @@ RSpec.describe ExternalApis::RorService do
           items: [{
             id: Faker::Internet.url,
             names: [{ types: ['ror_display'], value: Faker::Lorem.word }],
-            country: { country_name: Faker::Lorem.word }
+            locations: [
+              {
+                geonames_id: Faker::Number.number(digits: 6),
+                geonames_details: {
+                  country_name: Faker::Lorem.word,
+                  country_code: Faker::Lorem.characters(number: 2).upcase
+                }
+              }
+            ]
           }]
         }
         @term = Faker::Lorem.word
@@ -204,7 +228,15 @@ RSpec.describe ExternalApis::RorService do
           {
             id: Faker::Internet.unique.url,
             names: [{ types: ['ror_display'], value: Faker::Lorem.word }],
-            country: { country_name: Faker::Lorem.word },
+            locations: [
+              {
+                geonames_id: Faker::Number.number(digits: 6),
+                geonames_details: {
+                  country_name: Faker::Lorem.word,
+                  country_code: Faker::Lorem.characters(number: 2).upcase
+                }
+              }
+            ],
             external_ids: []
           }
         end
@@ -224,7 +256,15 @@ RSpec.describe ExternalApis::RorService do
           {
             id: Faker::Internet.unique.url,
             names: [{ types: ['ror_display'], value: Faker::Lorem.word }],
-            country: { country_name: Faker::Lorem.word },
+            locations: [
+              {
+                geonames_id: Faker::Number.number(digits: 6),
+                geonames_details: {
+                  country_name: Faker::Lorem.word,
+                  country_code: Faker::Lorem.characters(number: 2).upcase
+                }
+              }
+            ],
             external_ids: []
           }
         end
@@ -247,7 +287,15 @@ RSpec.describe ExternalApis::RorService do
           {
             id: Faker::Internet.unique.url,
             names: [{ types: ['ror_display'], value: Faker::Lorem.word }],
-            country: { country_name: Faker::Lorem.word },
+            locations: [
+              {
+                geonames_id: Faker::Number.number(digits: 6),
+                geonames_details: {
+                  country_name: Faker::Lorem.word,
+                  country_code: Faker::Lorem.characters(number: 2).upcase
+                }
+              }
+            ],
             external_ids: []
           }
         end
@@ -275,9 +323,20 @@ RSpec.describe ExternalApis::RorService do
       it 'ignores items with no name or id and logs an error' do
         Rails.logger.expects(:error).at_least(1)
 
+        location = {
+          geonames_id: Faker::Number.number(digits: 6),
+          geonames_details: {
+            country_name: 'Nowhere',
+            country_code: Faker::Lorem.characters(number: 2).upcase
+          }
+        }
+
         json = { items: [
-          { id: Faker::Internet.url, names: [{ types: ['ror_display'], value: Faker::Lorem.word }], external_ids: [] },
-          { names: [{ types: ['ror_display'], value: Faker::Lorem.word }], external_ids: [] }
+          { id: Faker::Internet.url,
+            names: [{ types: ['ror_display'], value: Faker::Lorem.word }, { value: 'EU', types: ['acronym'] }],
+            external_ids: [], locations: [location] }
+          { names: [{ types: ['ror_display'], value: Faker::Lorem.word }, { value: 'EU', types: ['acronym'] }],
+            external_ids: [], locations: [location] }
         ] }.to_json
 
         items = described_class.send(:parse_results, json: JSON.parse(json))
@@ -285,9 +344,21 @@ RSpec.describe ExternalApis::RorService do
       end
 
       it 'returns the correct number of results' do
+        location = {
+          geonames_id: Faker::Number.number(digits: 6),
+          geonames_details: {
+            country_name: 'Nowhere',
+            country_code: Faker::Lorem.characters(number: 2).upcase
+          }
+        }
+
         json = { items: [
-          { id: Faker::Internet.url, names: [{ types: ['ror_display'], value: Faker::Lorem.word }], external_ids: [] },
-          { id: Faker::Internet.url, names: [{ types: ['ror_display'], value: Faker::Lorem.word }], external_ids: [] }
+          { id: Faker::Internet.url,
+            names: [{ types: ['ror_display'], value: Faker::Lorem.word }, { value: 'EU', types: ['acronym'] }],
+            external_ids: [], locations: [location] },
+          { id: Faker::Internet.url,
+            names: [{ types: ['ror_display'], value: Faker::Lorem.word }, { value: 'EU', types: ['acronym'] }],
+            external_ids: [], locations: [location] }
         ] }.to_json
 
         items = described_class.send(:parse_results, json: JSON.parse(json))
@@ -300,7 +371,15 @@ RSpec.describe ExternalApis::RorService do
         json = {
           names: [{ types: ['ror_display'], value: 'Example College' }],
           links: [{ 'type' => 'website', 'value' => 'https://example.edu' }],
-          country: { country_name: 'Nowhere' }
+          locations: [
+            {
+              geonames_id: Faker::Number.number(digits: 6),
+              geonames_details: {
+                country_name: 'Nowhere',
+                country_code: Faker::Lorem.characters(number: 2).upcase
+              }
+            }
+          ]
         }.to_json
         expected = 'Example College (example.edu)'
         expect(described_class.send(:org_name, item: JSON.parse(json))).to eql(expected)
@@ -309,7 +388,15 @@ RSpec.describe ExternalApis::RorService do
       it 'properly appends the country if available and no website is available' do
         json = {
           names: [{ types: ['ror_display'], value: 'Example College' }],
-          country: { country_name: 'Nowhere' }
+          locations: [
+            {
+              geonames_id: Faker::Number.number(digits: 6),
+              geonames_details: {
+                country_name: 'Nowhere',
+                country_code: Faker::Lorem.characters(number: 2).upcase
+              }
+            }
+          ]
         }.to_json
         expected = 'Example College (Nowhere)'
         expect(described_class.send(:org_name, item: JSON.parse(json))).to eql(expected)
@@ -319,7 +406,15 @@ RSpec.describe ExternalApis::RorService do
         json = {
           names: [{ types: ['ror_display'], value: 'Example College' }],
           links: [],
-          country: {}
+          locations: [
+            {
+              geonames_id: Faker::Number.number(digits: 6),
+              geonames_details: {
+                country_name: '',
+                country_code: ''
+              }
+            }
+          ]
         }.to_json
         expected = 'Example College'
         expect(described_class.send(:org_name, item: JSON.parse(json))).to eql(expected)
