@@ -95,15 +95,20 @@ namespace :export_production_data do
 
   # seed2: guidance group and theme must be created before guidance and questions (using theme)
   desc 'Export guidance group and theme format from 3.0.2 database to seeds_2.rb'
+  def sandbox_guidance_groups
+    orgs = Org.where(id: Rails.application.config.default_funder_id)
+              .or(Org.where(name: ['Test Organization', 'Organisation de test']))
+    GuidanceGroup.where(org_id: orgs.pluck(:id))
+  end
   task seed_2_export: :environment do
     file_name = 'db/seeds/sandbox/seeds_2.rb'
     FileUtils.rm_f(file_name)
     excluded_keys = %w[created_at updated_at]
     File.open(file_name, 'a') do |f|
-      # GuidanceGroup.all.each do |guidance_group|
-      #   serialized = guidance_group.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
-      #   f.puts "GuidanceGroup.create!(#{serialized})"
-      # end
+      sandbox_guidance_groups.each do |guidance_group|
+        serialized = guidance_group.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
+        f.puts "GuidanceGroup.create!(#{serialized})"
+      end
       Theme.all.each do |theme|
         serialized = theme.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
         f.puts "Theme.create!(#{serialized})"
@@ -129,19 +134,23 @@ namespace :export_production_data do
     funder_templates + test_templates
   end
 
+  def sandbox_guidances
+    orgs = Org.where(id: Rails.application.config.default_funder_id)
+              .or(Org.where(name: ['Test Organization', 'Organisation de test']))
+    guidance_groups = GuidanceGroup.where(org_id: orgs.pluck(:id))
+    Guidance.where(guidance_group_id: guidance_groups.pluck(:id))
+  end
+
   task seed_3_export: :environment do
     file_name = 'db/seeds/sandbox/seeds_3.rb'
     FileUtils.rm_f(file_name)
     excluded_keys = %w[created_at updated_at]
     File.open(file_name, 'a') do |f|
-      # GuidanceGroup.all.each do |guidance_group|
-      #   guidances = Guidance.where(guidance_group_id: guidance_group.id)
-      #   guidances.all.each do |guidance|
-      #     guidance.theme_ids = [Theme.all.sample.id]
-      #     serialized = guidance.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
-      #     f.puts "Guidance.create(#{serialized})"
-      #   end
-      # end
+      sandbox_guidances.each do |guidance|
+        guidance.theme_ids = [Theme.all.sample.id]
+        serialized = guidance.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
+        f.puts "Guidance.create(#{serialized})"
+      end
       sandbox_templates.each do |template|
         # Too many version of template crashes rake, just get the published version
         serialized = template.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
