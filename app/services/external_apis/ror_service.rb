@@ -179,11 +179,7 @@ module ExternalApis
       #   { "type": "Wikipedia", "value": "https://en.wikipedia.org/wiki/Example_University" }
       # ]
       def org_url(item:)
-        links = item['links']
-        # links must not be empty
-        return nil unless links.present?
-
-        links.find { |l| l['type'] == 'website' }&.fetch('value')
+        item['links']&.find { |l| l['type'] == 'website' }&.fetch('value')
       end
 
       # Returns the country name from locations
