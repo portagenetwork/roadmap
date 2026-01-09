@@ -235,7 +235,10 @@ module ExternalApis
 
         # A website was found, so extract just the domain without the www
         domain_regex = %r{^(?:http://|www\.|https://)([^/]+)}
-        website = link.scan(domain_regex).last.first
+        matches = link.scan(domain_regex)
+        return nil if matches.empty?
+
+        website = matches.last.first
         website.gsub('www.', '')
       end
 
