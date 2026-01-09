@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Changed
+ - Upgrade ROR API From V1 to V2 [#1247](https://github.com/portagenetwork/roadmap/pull/1247)
+
 ### Dependency Updates
 
  - chore(deps): bump nginx from 1.29.3-alpine to 1.29.4-alpine [#1246](https://github.com/portagenetwork/roadmap/pull/1246)

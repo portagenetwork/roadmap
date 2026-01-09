@@ -123,9 +123,19 @@ module OrgSelection
 
       # Get the language from the hash or use the default
       def language_from_hash(hash:)
-        return Language.default unless hash.present? && hash[:language].present?
+        abbr = hash&.dig(:language)
+        # RorService.org_language returns I18n.default_locale.to_s as a fallback
+        return Language.default if abbr.blank? || abbr == I18n.default_locale.to_s
 
-        Language.where(abbreviation: hash[:language]).first || Language.default
+        # ROR provides ISO 639-1 codes (e.g., "en"). Attempt to match against BCP 47 tags (e.g., "en-CA") in db
+        pattern = "#{ActiveRecord::Base.sanitize_sql_like(abbr)}-%"
+
+        results = Language.where('abbreviation = ?  OR abbreviation LIKE ?', abbr, pattern)
+                          .order(default_language: :desc) # prefer default language if multiple results exist
+                          .to_a
+
+        # Return (in order): exact match || first pattern match || app default language
+        results.find { |lang| lang.abbreviation == abbr } || results.first || Language.default
       end
 
       def identifier_keys
