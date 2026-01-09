@@ -221,10 +221,7 @@ module ExternalApis
       #   ]
       # }
       def org_language(item:)
-        # ROR uses two-letter / ISO 639-1 language codes (e.g. "en")
-        dflt = I18n.default_locale.to_s.split('-').first
-
-        ror_display_entry(item: item)['lang'] || dflt
+        ror_display_entry(item: item)['lang'] || I18n.default_locale.to_s
       end
 
       # Extracts the website domain from the item
