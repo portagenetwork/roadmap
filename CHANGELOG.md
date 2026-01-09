@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+ - Add rake task to clean up unmanaged orgs w/ users [#1250](https://github.com/portagenetwork/roadmap/pull/1250)
+
 ### Changed
  - Upgrade ROR API From V1 to V2 [#1247](https://github.com/portagenetwork/roadmap/pull/1247)
 
