@@ -78,7 +78,7 @@ namespace :export_production_data do
   # rubocop:enable Metrics/MethodLength
 
   task seed_1_export: :environment do
-    file_name = 'db/seeds/sandbox/seeds_1.rb'
+    file_name = 'db/seeds/production/seeds_1.rb'
     FileUtils.rm_f(file_name)
     Faker::Config.random = Random.new(Org.count)
     File.open(file_name, 'a') do |f|
@@ -103,7 +103,7 @@ namespace :export_production_data do
     GuidanceGroup.where(org_id: sandbox_orgs.pluck(:id))
   end
   task seed_2_export: :environment do
-    file_name = 'db/seeds/sandbox/seeds_2.rb'
+    file_name = 'db/seeds/production/seeds_2.rb'
     FileUtils.rm_f(file_name)
     excluded_keys = %w[created_at updated_at]
     File.open(file_name, 'a') do |f|
@@ -132,7 +132,7 @@ namespace :export_production_data do
 
   def sandbox_templates
     funder_templates = Template.where(org_id: Rails.application.config.default_funder_id, published: true)
-    # test_org_templates are needed for db/seeds/sandbox/seeds_4.rb
+    # test_org_templates are needed for db/seeds/production/seeds_4.rb
     test_templates = Template.where(title: ALLIANCE_TEMPLATE_TITLE)
                              .where.not(org_id: Rails.application.config.default_funder_id)
                              .limit(2)
@@ -147,7 +147,7 @@ namespace :export_production_data do
   end
 
   task seed_3_export: :environment do
-    file_name = 'db/seeds/sandbox/seeds_3.rb'
+    file_name = 'db/seeds/production/seeds_3.rb'
     FileUtils.rm_f(file_name)
     excluded_keys = %w[created_at updated_at]
     File.open(file_name, 'a') do |f|
@@ -203,7 +203,7 @@ namespace :export_production_data do
   # seed5: export all plan which org belongs to testers, this task generate the seed file that runs lastly
   desc 'Export plan content from 3.0.2 database to seeds_5.rb'
   task seed_5_export: :environment do
-    file_name = 'db/seeds/sandbox/seeds_5.rb'
+    file_name = 'db/seeds/production/seeds_5.rb'
     FileUtils.rm_f(file_name)
     excluded_keys = %w[created_at updated_at start_date end_date]
     orgs = sandbox_orgs
