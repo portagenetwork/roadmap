@@ -6,6 +6,8 @@
 
  - Add rake task to clean up unmanaged orgs w/ users [#1250](https://github.com/portagenetwork/roadmap/pull/1250)
 
+ - Implement tiered Rack::Attack throttles [#1254](https://github.com/portagenetwork/roadmap/pull/1254)
+
 ### Changed
  - Upgrade ROR API From V1 to V2 [#1247](https://github.com/portagenetwork/roadmap/pull/1247)
 
