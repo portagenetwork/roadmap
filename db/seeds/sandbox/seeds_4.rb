@@ -13,7 +13,7 @@
      language_id: 1,
      password: pwd,
      password_confirmation: pwd,
-     org: Org.find_by(abbreviation: "Portage"),
+     org: Org.find_by(id: Rails.application.config.default_funder_id),
      language: Language.all.first,
      perms: Perm.all,
      accept_terms: true,
