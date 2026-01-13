@@ -9,7 +9,10 @@
  - Implement tiered Rack::Attack throttles [#1254](https://github.com/portagenetwork/roadmap/pull/1254)
 
 ### Changed
+
  - Upgrade ROR API From V1 to V2 [#1247](https://github.com/portagenetwork/roadmap/pull/1247)
+
+ - Ignore CSRF exceptions in Rollbar [#1256](https://github.com/portagenetwork/roadmap/pull/1256)
 
 ### Dependency Updates
 
