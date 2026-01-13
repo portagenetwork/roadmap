@@ -114,14 +114,7 @@ class ContributorsController < ApplicationController
   def process_org(hash:)
     return hash unless hash.present? && hash[:org_id].present?
 
-    # Check if org already exists in the DB
-    existing_org = existing_org_from_hash(hash)
-
-    return finalize_org_hash(hash, existing_org, false) if existing_org.present?
-
-    # Check if entered org has a valid ROR
-    # If so, allow creation
-    allow = validate_ror(hash)
+    hash, allow = OrgSelection::HashToOrgService.process_org(hash: hash)
 
     # If org ROR cannot be validated, then contributor org is invalid
     # Only trigger flash during a real request (tests calling this method directly have no request object)
@@ -137,25 +130,6 @@ class ContributorsController < ApplicationController
     finalize_org_hash(hash, org, allow)
   end
 
-  def parse_org_json(hash)
-    JSON.parse(hash[:org_id]) rescue nil # rubocop:disable Style/RescueModifier
-  end
-
-  def existing_org_from_hash(hash)
-    # hash[:org_id] is a JSON string like:
-    # "{\"id\":1200,\"name\":\"Some Org\",\"ror\":\"https://ror.org/123\"}"
-    # So it must be parsed into a Ruby hash for HashToOrgService
-    parsed = parse_org_json(hash)
-
-    return nil unless parsed.present?
-
-    # Returns org in DB if it exists
-    OrgSelection::HashToOrgService.to_org(
-      hash: parsed.to_h,
-      allow_create: false
-    )
-  end
-
   def finalize_org_hash(hash, org, allow)
     hash = remove_org_selection_params(params_in: hash)
 
@@ -164,20 +138,6 @@ class ContributorsController < ApplicationController
 
     hash[:org_id] = org.id
     hash
-  end
-
-  def validate_ror(hash)
-    # Make external API call to ROR to find org with entered name
-    ror_result = ExternalApis::RorService.search(term: hash[:org_name]).first
-
-    # Find ROR value in org hash
-    parsed_ror = parse_org_json(hash)['ror']
-
-    # If org hash ROR and external ROR values are the same
-    # The org is valid and has the correct ROR
-    return ror_result[:ror] == parsed_ror if ror_result.present? && parsed_ror.present?
-
-    false
   end
 
   # When creating, just remove the ORCID if it was left blank
