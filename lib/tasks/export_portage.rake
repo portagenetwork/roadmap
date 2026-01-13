@@ -213,9 +213,9 @@ namespace :export_production_data do
         plan.title = "Test Plan #{index}"
         plan.description = Faker::Lorem.sentence
         # force a few plan to use modified template from the two test organizations for statistics
-        if [20..50].include?(index) # rubocop:disable Performance/CollectionLiteralInLoop
+        if (20..50).include?(index)
           plan.template = Template.find(title: "#{ALLIANCE_TEMPLATE_TITLE}-Test1")
-        elsif [60..90].include?(index) # rubocop:disable Performance/CollectionLiteralInLoop
+        elsif (60..90).include?(index)
           plan.template = Template.find(title: "#{ALLIANCE_TEMPLATE_TITLE}-Test2")
         end
         serialized = plan.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
