@@ -208,26 +208,30 @@ namespace :export_production_data do
     excluded_keys = %w[created_at updated_at start_date end_date]
     orgs = sandbox_orgs
     english_org_id = orgs.find_by(name: TEST_ORG_NAMES[:english]).id
+    default_template = Template.latest_customizable
+                               .where(org_id: Rails.application.config.default_funder_id,
+                                      title: 'Alliance Simplified Template (Funding Application Stage)')
+                               .first
+    test1_template = Template.find_by(title: "#{ALLIANCE_TEMPLATE_TITLE}-Test1")
+    test2_template = Template.find_by(title: "#{ALLIANCE_TEMPLATE_TITLE}-Test2")
     File.open(file_name, 'a') do |f|
-      Plan.where(org_id: orgs.pluck(:id)).all.each_with_index do |plan, index|
+      Plan.where(org_id: orgs.pluck(:id)).limit(15).each_with_index do |plan, index|
         plan.title = "Test Plan #{index}"
         plan.description = Faker::Lorem.sentence
         # force a few plan to use modified template from the two test organizations for statistics
-        if (20..50).include?(index)
-          plan.template = Template.find(title: "#{ALLIANCE_TEMPLATE_TITLE}-Test1")
-        elsif (60..90).include?(index)
-          plan.template = Template.find(title: "#{ALLIANCE_TEMPLATE_TITLE}-Test2")
-        end
+        plan.template = case index
+                        when 0..4 then default_template
+                        when 5..9 then test1_template
+                        else test2_template
+                        end
         serialized = plan.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
         f.puts "Plan.create(#{serialized})"
         # import related roles
         Role.where(plan_id: plan.id).all.each do |role|
-          role.user_id = if plan.org_id == Rails.application.config.default_funder_id # change all user id to 1
-                           1
-                         elsif plan.org_id == english_org_id # change all user id to 2
-                           2
-                         else # change all user id to 3
-                           3
+          role.user_id = case plan.org_id
+                         when Rails.application.config.default_funder_id then 1
+                         when english_org_id then 2
+                         else 3
                          end
           serialized = role.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
           f.puts "Role.create(#{serialized})"
