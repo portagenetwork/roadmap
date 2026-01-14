@@ -16,6 +16,16 @@
 # Forcing load seed file in sequence by last number
 # seeds_1 to seeds_3 are rake-generated. Other seeds file are manually edited
 ########## Uncomment following if we need to redo sandbox data injection
+
+unless FeatureFlagHelper.enabled?(:on_sandbox)
+  raise <<~ERROR
+    ERROR: These seeds are for the sandbox overlay only!
+    The ON_SANDBOX flag is not enabled.
+    Please verify you are on the sandbox overlay and ON_SANDBOX='true' is set.
+    Do NOT run db:setup against any non-sandbox overlays!
+  ERROR
+end
+
 puts 'run seeds.rb file now...'
 Dir[File.join(Rails.root, 'db', 'seeds', 'production', '*.rb')].sort.each_with_index do |seed, index|
     if seed.include? index.to_s
