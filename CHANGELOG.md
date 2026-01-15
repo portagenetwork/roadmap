@@ -28,6 +28,8 @@
 
  - chore(deps): bump actions/setup-node from 5 to 6 [#1211](https://github.com/portagenetwork/roadmap/pull/1211)
 
+ - chore(deps): bump surnet/alpine-wkhtmltopdf from 3.22.0-0.12.6-small to 3.23.2-0.12.6-small [#1258](https://github.com/portagenetwork/roadmap/pull/1258)
+
 ## [4.1.1+portage-4.6.1]
 
 ### Added
