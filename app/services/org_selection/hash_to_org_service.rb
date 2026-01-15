@@ -61,6 +61,7 @@ module OrgSelection
       end
       # rubocop:enable Metrics/AbcSize
 
+      # Returns [hash, allow_create, existing_org]
       def process_org(hash:)
         # Check if org already exists in the DB
         parsed = parse_org_json(hash)
@@ -73,30 +74,24 @@ module OrgSelection
           allow_create: false
         )
 
-        return [hash, false] if existing_org.present?
+        return [hash, false, true] if existing_org.present?
 
-        # Check if entered org has a valid ROR
-        # If so, allow creation
-        allow = validate_ror(hash)
+        # If org does not exist in local DB, search for external org through ROR
+        ror_result = OrgSelection::SearchService
+                     .search_externally(search_term: hash[:org_name])
+                     .first
+        parsed_ror = parsed['ror']
 
-        [hash, allow]
+        # Ensure that external search result matches entered org
+        allow =
+          ror_result.present? &&
+          parsed_ror.present? &&
+          ror_result[:ror] == parsed_ror
+
+        [hash, allow, false]
       end
 
       private
-
-      def validate_ror(hash)
-        # Make external API call to ROR to find org with entered name
-        ror_result = ExternalApis::RorService.search(term: hash[:org_name]).first
-
-        # Find ROR value in org hash
-        parsed_ror = parse_org_json(hash)['ror']
-
-        # If org hash ROR and external ROR values are the same
-        # The org is valid and has the correct ROR
-        return ror_result[:ror] == parsed_ror if ror_result.present? && parsed_ror.present?
-
-        false
-      end
 
       def parse_org_json(hash)
         JSON.parse(hash[:org_id]) rescue nil # rubocop:disable Style/RescueModifier
