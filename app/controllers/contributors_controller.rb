@@ -116,17 +116,12 @@ class ContributorsController < ApplicationController
 
     org = org_from_params(params_in: hash, allow_create: true)
 
-    # Only trigger flash during a real request (tests calling this method directly have no request object)
-    if org.nil? && request.present?
+    if org.nil?
       flash[:alert] =
         _('Invalid contributor affiliation. Please double check that your organisation does not appear in the list ' \
           'in a slightly different form.')
     end
 
-    finalize_org_hash(hash, org)
-  end
-
-  def finalize_org_hash(hash, org)
     hash = remove_org_selection_params(params_in: hash)
 
     return hash if org.blank?

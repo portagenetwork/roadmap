@@ -134,6 +134,12 @@ RSpec.describe ContributorsController, type: :controller do
     end
 
     describe '#process_org(hash:)' do
+      before do
+        @request = ActionDispatch::TestRequest.create
+        @response = ActionDispatch::TestResponse.create
+        @controller.request = @request
+        @controller.response = @response
+      end
       it 'returns the hash as is if no :org_id is present' do
         @params_hash[:contributor].delete(:org_id)
         hash = @controller.send(:process_org, hash: @params_hash[:contributor])
