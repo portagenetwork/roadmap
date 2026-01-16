@@ -124,7 +124,6 @@ class ContributorsController < ApplicationController
 
     hash = remove_org_selection_params(params_in: hash)
 
-    return hash if org.blank?
     return hash unless org.present?
 
     hash[:org_id] = org.id
