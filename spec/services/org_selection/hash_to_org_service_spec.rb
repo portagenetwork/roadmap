@@ -45,6 +45,20 @@ RSpec.describe OrgSelection::HashToOrgService do
       expect(described_class.to_org(hash: @hash)).to eql(org)
     end
     it 'returns a new Org instance' do
+      fake_ror = {
+        ror: Faker::Alphanumeric.alphanumeric(number: 9),
+        name: "#{@name} (#{@abbrev})",
+        sort_name: @name,
+        url: @url,
+        language: @lang.abbreviation,
+        fundref: '',
+        abbreviation: @abbrev,
+        score: @hash[:score],
+        weight: @hash[:weight]
+      }
+      # Stub the ROR matcher to return the fake ROR hash
+      # As valid ROR hash is needed for new org creation
+      described_class.stubs(:match_hash_to_ror_org).returns(fake_ror)
       expect(described_class.to_org(hash: @hash).new_record?).to eql(true)
     end
   end
@@ -95,6 +109,21 @@ RSpec.describe OrgSelection::HashToOrgService do
         expect(rslt).to eql(nil)
       end
       it 'returns a new instance of Org' do
+        fake_ror = {
+          ror: Faker::Alphanumeric.alphanumeric(number: 9),
+          name: "#{@name} (#{@abbrev})",
+          sort_name: @name,
+          url: @url,
+          language: @lang.abbreviation,
+          fundref: '',
+          abbreviation: @abbrev,
+          score: @hash[:score],
+          weight: @hash[:weight]
+        }
+        # Stub the ROR matcher to return the fake ROR hash
+        # As valid ROR hash is needed for new org creation
+        described_class.stubs(:match_hash_to_ror_org).returns(fake_ror)
+
         rslt = described_class.send(:initialize_org, hash: @hash)
         nm = "#{@name} (#{@abbrev})"
         lnks = JSON.parse({ org: [{ link: @url, text: nm }] }.to_json)
