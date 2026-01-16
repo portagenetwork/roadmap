@@ -114,26 +114,22 @@ class ContributorsController < ApplicationController
   def process_org(hash:)
     return hash unless hash.present? && hash[:org_id].present?
 
-    hash, allow, existing_org = OrgSelection::HashToOrgService.process_org(hash: hash)
+    org = org_from_params(params_in: hash, allow_create: true)
 
-    # If org ROR cannot be validated, then contributor org is invalid
     # Only trigger flash during a real request (tests calling this method directly have no request object)
-    if !allow && !existing_org && request.present?
+    if org.nil? && request.present?
       flash[:alert] =
         _('Invalid contributor affiliation. Please double check that your organisation does not appear in the list ' \
           'in a slightly different form.')
     end
 
-    org = org_from_params(params_in: hash,
-                          allow_create: allow)
-
-    finalize_org_hash(hash, org, allow)
+    finalize_org_hash(hash, org)
   end
 
-  def finalize_org_hash(hash, org, allow)
+  def finalize_org_hash(hash, org)
     hash = remove_org_selection_params(params_in: hash)
 
-    return hash if org.blank? && !allow
+    return hash if org.blank?
     return hash unless org.present?
 
     hash[:org_id] = org.id

@@ -61,40 +61,24 @@ module OrgSelection
       end
       # rubocop:enable Metrics/AbcSize
 
-      # Returns [hash, allow_create, existing_org]
-      def process_org(hash:)
-        # Check if org already exists in the DB
-        parsed = parse_org_json(hash)
-
-        return nil unless parsed.present?
-
-        # Returns org in DB if it exists
-        existing_org = to_org(
-          hash: parsed.to_h,
-          allow_create: false
-        )
-
-        return [hash, false, true] if existing_org.present?
-
-        # If org does not exist in local DB, search for external org through ROR
-        ror_result = OrgSelection::SearchService
-                     .search_externally(search_term: hash[:org_name])
-                     .first
-        parsed_ror = parsed['ror']
-
-        # Ensure that external search result matches entered org
-        allow =
-          ror_result.present? &&
-          parsed_ror.present? &&
-          ror_result[:ror] == parsed_ror
-
-        [hash, allow, false]
-      end
-
       private
 
-      def parse_org_json(hash)
-        JSON.parse(hash[:org_id]) rescue nil # rubocop:disable Style/RescueModifier
+      def match_hash_to_ror_org(hash:)
+        return nil unless hash.present?
+        return nil unless hash[:name].present?
+
+        ror_results =
+          OrgSelection::SearchService.search_externally(
+            search_term: hash[:name]
+          )
+
+        return nil unless ror_results.present?
+
+        # If ROR is provided, require it to match
+        correct_org = ror_results.find { |r| r[:ror] == hash[:ror] } if hash[:ror].present?
+        return correct_org if correct_org
+
+        nil
       end
 
       # Lookup the Org by it's :id and return if the name matches the search
@@ -126,14 +110,18 @@ module OrgSelection
       def initialize_org(hash:)
         return nil unless hash.present? && hash[:name].present?
 
+        # Attempt to find an ROR match to the hash
+        ror_hash = match_hash_to_ror_org(hash: hash)
+        return nil unless ror_hash
+
         Org.new(
-          name: hash[:name],
-          links: links_from_hash(name: hash[:name], website: hash[:url]),
-          language: language_from_hash(hash: hash),
-          target_url: hash[:url],
+          name: ror_hash[:name],
+          links: links_from_hash(name: ror_hash[:name], website: ror_hash[:url]),
+          language: language_from_hash(hash: ror_hash),
+          target_url: ror_hash[:url],
           institution: true,
           is_other: false,
-          abbreviation: abbreviation_from_hash(hash: hash)
+          abbreviation: abbreviation_from_hash(hash: ror_hash)
         )
       end
 
