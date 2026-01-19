@@ -118,8 +118,8 @@ class ContributorsController < ApplicationController
 
     if org.nil?
       flash[:alert] =
-        _('Invalid contributor affiliation. Please double check that your organisation does not appear in the list ' \
-          'in a slightly different form.')
+        _('Contributor saved without affiliation. If you intended to add an affiliation, please check ' \
+          'if the organisation appears in the list in a different form.')
     end
 
     hash = remove_org_selection_params(params_in: hash)
