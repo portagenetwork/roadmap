@@ -44,7 +44,7 @@ RSpec.describe OrgSelection::HashToOrgService do
       org = create(:org, name: @name)
       expect(described_class.to_org(hash: @hash)).to eql(org)
     end
-    it 'Ensures a successful response from the ROR API' do
+    it 'returns a new Org instance when no existing DB matches exist but an ROR match does' do
       ror_id = Faker::Alphanumeric.alphanumeric(number: 9)
 
       hash_with_ror = @hash.merge(ror: ror_id)
@@ -101,23 +101,6 @@ RSpec.describe OrgSelection::HashToOrgService do
 
       expect(org).not_to be_nil
       expect(org).to be_new_record
-    end
-    it 'returns a new Org instance' do
-      fake_ror = {
-        ror: Faker::Alphanumeric.alphanumeric(number: 9),
-        name: "#{@name} (#{@abbrev})",
-        sort_name: @name,
-        url: @url,
-        language: @lang.abbreviation,
-        fundref: '',
-        abbreviation: @abbrev,
-        score: @hash[:score],
-        weight: @hash[:weight]
-      }
-      # Stub the ROR matcher to return the fake ROR hash
-      # As valid ROR hash is needed for new org creation
-      described_class.stubs(:match_hash_to_ror_org).returns(fake_ror)
-      expect(described_class.to_org(hash: @hash).new_record?).to eql(true)
     end
   end
 
