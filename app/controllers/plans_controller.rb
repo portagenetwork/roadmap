@@ -239,7 +239,7 @@ class PlansController < ApplicationController
 
   # PUT /plans/1
   # rubocop:disable Metrics/MethodLength, Metrics/PerceivedComplexity
-  def update
+  def update # rubocop:disable Metrics/CyclomaticComplexity
     @plan = Plan.find(params[:id])
     authorize @plan
     attrs = plan_params
@@ -258,15 +258,14 @@ class PlansController < ApplicationController
       # TODO: For some reason the `fields_for` isn't adding the
       #       appropriate namespace, so org_id represents our funder
       funder_attrs = plan_params[:funder]
-      funder_attrs[:org_id] = plan_params[:funder][:id]
       funder = org_from_params(params_in: funder_attrs, allow_create: true)
-      @plan.funder_id = funder&.id
+      @plan.funder_id = funder&.id if funder
       @plan.grant = plan_params[:grant]
       attrs.delete(:funder)
       attrs.delete(:grant)
       attrs = remove_org_selection_params(params_in: attrs)
 
-      if @plan.update(attrs) # _attributes(attrs)
+      if @plan.update(attrs) && funder.present? # _attributes(attrs)
         format.html do
           redirect_to plan_path(@plan),
                       notice: success_message(@plan, _('saved'))
@@ -275,13 +274,15 @@ class PlansController < ApplicationController
           render json: { code: 1, msg: success_message(@plan, _('saved')) }
         end
       else
+        failure_msg = failure_message(@plan, _('save'))
+        failure_msg += _(' Invalid funder.') if funder.nil?
         format.html do
           # TODO: Should do a `render :show` here instead but show defines too many
           #       instance variables in the controller
-          redirect_to plan_path(@plan).to_s, alert: failure_message(@plan, _('save'))
+          redirect_to plan_path(@plan).to_s, alert: failure_msg
         end
         format.json do
-          render json: { code: 0, msg: failure_message(@plan, _('save')) }
+          render json: { code: 0, msg: failure_message }
         end
       end
     rescue StandardError => e
