@@ -265,7 +265,9 @@ class PlansController < ApplicationController
       attrs.delete(:grant)
       attrs = remove_org_selection_params(params_in: attrs)
 
-      if @plan.update(attrs) && funder.present? # _attributes(attrs)
+      invalid_funder = invalid_funder?(funder_attrs)
+
+      if @plan.update(attrs) && !invalid_funder # _attributes(attrs)
         format.html do
           redirect_to plan_path(@plan),
                       notice: success_message(@plan, _('saved'))
@@ -275,14 +277,14 @@ class PlansController < ApplicationController
         end
       else
         failure_msg = failure_message(@plan, _('save'))
-        failure_msg += _(' Invalid funder.') if funder.nil?
+        failure_msg += _(' Invalid funder.') if invalid_funder
         format.html do
           # TODO: Should do a `render :show` here instead but show defines too many
           #       instance variables in the controller
           redirect_to plan_path(@plan).to_s, alert: failure_msg
         end
         format.json do
-          render json: { code: 0, msg: failure_message }
+          render json: { code: 0, msg: failure_msg }
         end
       end
     rescue StandardError => e
@@ -559,6 +561,12 @@ class PlansController < ApplicationController
              Org.includes(identifiers: :identifier_scheme).institution +
              Org.includes(identifiers: :identifier_scheme).default_orgs)
     @orgs = @orgs.flatten.uniq.sort_by(&:name)
+  end
+
+  def invalid_funder?(funder_attrs)
+    funder_json = funder_attrs[:org_id].present? ? (JSON.parse(funder_attrs[:org_id]) rescue {}) : {} # rubocop:disable Style/RescueModifier
+    # Only returns true when name is present but ror is not, which only occurs when user enters invalid funder
+    funder_json['name'].present? && funder_json['ror'].blank?
   end
 end
 # rubocop:enable Metrics/ClassLength
