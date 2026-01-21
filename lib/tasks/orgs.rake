@@ -13,4 +13,9 @@ namespace :orgs do
   task cleanup_unmanaged_orgs_with_users: :environment do
     Orgs::CleanupUnmanagedOrgsWithUsersService.run
   end
+
+  desc 'Deletes junk trackers from the DB (i.e. Tracker.where(code: ""))'
+  task delete_junk_trackers: :environment do
+    Orgs::DeleteJunkTrackersService.run
+  end
 end
