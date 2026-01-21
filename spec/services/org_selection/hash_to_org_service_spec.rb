@@ -44,6 +44,64 @@ RSpec.describe OrgSelection::HashToOrgService do
       org = create(:org, name: @name)
       expect(described_class.to_org(hash: @hash)).to eql(org)
     end
+    it 'Ensures a successful response from the ROR API' do
+      ror_id = Faker::Alphanumeric.alphanumeric(number: 9)
+
+      hash_with_ror = @hash.merge(ror: ror_id)
+
+      # heartbeat
+      stub_request(
+        :get,
+        "#{ExternalApis::RorService.api_base_url}#{ExternalApis::RorService.heartbeat_path}"
+      ).with(headers: ExternalApis::RorService.headers)
+        .to_return(status: 200, body: '', headers: {})
+
+      # search
+      search_uri =
+        "#{ExternalApis::RorService.api_base_url}" \
+        "#{ExternalApis::RorService.search_path}" \
+        "?page=1&query=#{URI.encode_www_form_component(hash_with_ror[:name])}"
+
+      ror_response = {
+        number_of_results: 1,
+        time_taken: 1,
+        items: [
+          {
+            id: ror_id,
+            names: [
+              { value: hash_with_ror[:name], types: ['ror_display'] },
+              { value: hash_with_ror[:abbreviation], types: ['acronym'] }
+            ],
+            links: [{ type: 'website', value: hash_with_ror[:url] }],
+            types: ['Education'],
+            status: 'active',
+            locations: [
+              {
+                geonames_id: 123,
+                geonames_details: {
+                  country_name: 'United States',
+                  country_code: 'US'
+                }
+              }
+            ],
+            external_ids: []
+          }
+        ]
+      }
+
+      stub_request(:get, search_uri)
+        .with(headers: ExternalApis::RorService.headers)
+        .to_return(
+          status: 200,
+          body: ror_response.to_json,
+          headers: { 'Content-Type' => 'application/json' }
+        )
+
+      org = described_class.to_org(hash: hash_with_ror)
+
+      expect(org).not_to be_nil
+      expect(org).to be_new_record
+    end
     it 'returns a new Org instance' do
       fake_ror = {
         ror: Faker::Alphanumeric.alphanumeric(number: 9),
@@ -98,6 +156,43 @@ RSpec.describe OrgSelection::HashToOrgService do
   end
 
   context 'private methods' do
+    describe '#match_hash_to_ror_org' do
+      it 'returns nil if the hash is blank' do
+        expect(described_class.send(:match_hash_to_ror_org, hash: nil)).to be_nil
+      end
+
+      it 'returns nil if no ROR results are found' do
+        OrgSelection::SearchService.stubs(:search_externally)
+                                   .with(search_term: @hash[:name])
+                                   .returns([])
+
+        result = described_class.send(:match_hash_to_ror_org, hash: @hash)
+        expect(result).to be_nil
+      end
+
+      it 'returns the ROR-matching result when ror is present' do
+        ror_id = Faker::Alphanumeric.alphanumeric(number: 9)
+
+        ror_results = [{
+          ror: ror_id,
+          name: "#{@name} (#{@abbrev})",
+          sort_name: @name,
+          url: @url,
+          language: @lang.abbreviation,
+          fundref: '',
+          abbreviation: @abbrev,
+          score: @hash[:score],
+          weight: @hash[:weight]
+        }]
+
+        OrgSelection::SearchService.stubs(:search_externally).returns(ror_results)
+        hash_with_ror = @hash.merge(ror: ror_id)
+        result = described_class.send(:match_hash_to_ror_org, hash: hash_with_ror)
+
+        expect(result).to eq(ror_results.first)
+      end
+    end
+
     describe '#initialize_org(hash:)' do
       it 'returns nil if the hash is nil' do
         rslt = described_class.send(:initialize_org, hash: nil)
