@@ -8,8 +8,7 @@ namespace :orgs do
 
   desc 'Cleans up unmanaged orgs having 1 or more users.
         For each such org:
-        - Reassign associated users and plans to the "default org"
-        - Attempt deletion of the org'
+        - Reassign associated users and plans to the "default org"'
   task cleanup_unmanaged_orgs_with_users: :environment do
     Orgs::CleanupUnmanagedOrgsWithUsersService.run
   end

@@ -5,7 +5,7 @@ module Orgs
   # Cleanup service for unmanaged orgs having 1 or more users.
   # For each such org:
   # - Reassign associated users and plans to the "default org"
-  # - Attempt deletion of the org
+  # NOTE: Org deletion is handled separately by the `delete_orphan_orgs` task
   module CleanupUnmanagedOrgsWithUsersService
     extend self
 
@@ -13,8 +13,6 @@ module Orgs
       :processed_orgs_count,
       :reassigned_users_count,
       :reassigned_plans_count,
-      :deleted_orgs_count,
-      :failed_deletions_count,
       keyword_init: true
     )
 
@@ -29,8 +27,6 @@ module Orgs
           reassign_users_to_default_org(org, default_org, result)
           reassign_plans_to_default_org(org, default_org, result)
         end
-        # Don't rollback org.users + org.plans reassignment if the org cannot be deleted
-        handle_org_deletion(org, result)
       end
 
       print_summary(result)
@@ -42,9 +38,7 @@ module Orgs
       Result.new(
         processed_orgs_count: 0,
         reassigned_users_count: 0,
-        reassigned_plans_count: 0,
-        deleted_orgs_count: 0,
-        failed_deletions_count: 0
+        reassigned_plans_count: 0
       )
     end
 
@@ -74,35 +68,12 @@ module Orgs
       puts "✅ Reassigned #{reassigned_count} plan(s) from '#{org.name}'."
     end
 
-    def handle_org_deletion(org, result)
-      if org.destroy
-        increment_successful_org_deletions(org, result)
-      else
-        msg = org.errors.full_messages.presence || ["Unknown deletion error (org inspect: #{org.inspect})"]
-        increment_failed_org_deletions(org, result, msg)
-      end
-    rescue StandardError => e
-      increment_failed_org_deletions(org, result, ["Exception: #{e.message}"])
-    end
-
-    def increment_successful_org_deletions(org, result)
-      result.deleted_orgs_count += 1
-      puts "✅ Deleted unmanaged org: #{org.id} - #{org.name}"
-    end
-
-    def increment_failed_org_deletions(org, result, messages)
-      result.failed_deletions_count += 1
-      puts "⚠️ Failed to delete unmanaged org: #{org.id} - #{org.name}: #{messages.join(', ')}"
-    end
-
     def print_summary(result)
       puts <<~MSG
         ----- Summary -----
         Unmanaged orgs processed: #{result.processed_orgs_count}
         Users reassigned: #{result.reassigned_users_count}
         Plans reassigned: #{result.reassigned_plans_count}
-        Successfully deleted orgs: #{result.deleted_orgs_count}
-        Failed org deletions: #{result.failed_deletions_count}
       MSG
     end
   end
