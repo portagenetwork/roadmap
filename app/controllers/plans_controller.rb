@@ -255,17 +255,22 @@ class PlansController < ApplicationController
                            end
       @plan.guidance_groups = GuidanceGroup.where(id: guidance_group_ids)
 
-      # TODO: For some reason the `fields_for` isn't adding the
-      #       appropriate namespace, so org_id represents our funder
       funder_attrs = plan_params[:funder]
-      funder = org_from_params(params_in: funder_attrs, allow_create: true)
-      @plan.funder_id = funder&.id if funder
+
+      funder =
+        if funder_attrs[:org_name].blank?
+          nil # user cleared funder — valid
+        else
+          org_from_params(params_in: funder_attrs, allow_create: true)
+        end
+
+      invalid_funder = funder_attrs[:org_name].present? && funder.nil?
+
+      @plan.funder_id = funder&.id
       @plan.grant = plan_params[:grant]
       attrs.delete(:funder)
       attrs.delete(:grant)
       attrs = remove_org_selection_params(params_in: attrs)
-
-      invalid_funder = invalid_funder?(funder_attrs)
 
       if @plan.update(attrs) && !invalid_funder # _attributes(attrs)
         format.html do
@@ -561,12 +566,6 @@ class PlansController < ApplicationController
              Org.includes(identifiers: :identifier_scheme).institution +
              Org.includes(identifiers: :identifier_scheme).default_orgs)
     @orgs = @orgs.flatten.uniq.sort_by(&:name)
-  end
-
-  def invalid_funder?(funder_attrs)
-    funder_json = funder_attrs[:org_id].present? ? (JSON.parse(funder_attrs[:org_id]) rescue {}) : {} # rubocop:disable Style/RescueModifier
-    # Only returns true when name is present but ror is not, which only occurs when user enters invalid funder
-    funder_json['name'].present? && funder_json['ror'].blank?
   end
 end
 # rubocop:enable Metrics/ClassLength
