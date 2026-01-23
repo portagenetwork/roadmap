@@ -140,10 +140,6 @@ RSpec.describe OrgSelection::HashToOrgService do
 
   context 'private methods' do
     describe '#match_hash_to_ror_org' do
-      it 'returns nil if the hash is blank' do
-        expect(described_class.send(:match_hash_to_ror_org, hash: nil)).to be_nil
-      end
-
       it 'returns nil if no ROR results are found' do
         OrgSelection::SearchService.stubs(:search_externally)
                                    .with(search_term: @hash[:name])

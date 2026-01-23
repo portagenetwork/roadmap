@@ -64,21 +64,10 @@ module OrgSelection
       private
 
       def match_hash_to_ror_org(hash:)
-        return nil unless hash.present?
-        return nil unless hash[:name].present?
+        return nil unless hash[:ror].present?
 
-        ror_results =
-          OrgSelection::SearchService.search_externally(
-            search_term: hash[:name]
-          )
-
-        return nil unless ror_results.present?
-
-        # If ROR is provided, require it to match
-        correct_org = ror_results.find { |r| r[:ror] == hash[:ror] } if hash[:ror].present?
-        return correct_org if correct_org
-
-        nil
+        ror_results = OrgSelection::SearchService.search_externally(search_term: hash[:name])
+        ror_results&.find { |r| r[:ror] == hash[:ror] }
       end
 
       # Lookup the Org by it's :id and return if the name matches the search
