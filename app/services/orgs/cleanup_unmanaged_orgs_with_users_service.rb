@@ -16,12 +16,18 @@ module Orgs
       keyword_init: true
     )
 
-    def run
+    def run(dry_run: false)
       result = initial_result
 
       default_org = fetch_default_org
+      orgs_to_process = unmanaged_orgs_with_users
 
-      unmanaged_orgs_with_users.find_each do |org|
+      if dry_run
+        handle_dry_run(orgs: orgs_to_process, result: result)
+        return
+      end
+
+      orgs_to_process.find_each do |org|
         result.processed_orgs_count += 1
         Org.transaction do
           reassign_users_to_default_org(org, default_org, result)
@@ -68,12 +74,33 @@ module Orgs
       puts "✅ Reassigned #{reassigned_count} plan(s) from '#{org.name}'."
     end
 
+    def handle_dry_run(orgs:, result:)
+      handle_dry_run_result(orgs: orgs, result: result)
+      print_dry_run_summary(result)
+    end
+
+    def handle_dry_run_result(orgs:, result:)
+      org_ids = orgs.pluck(:id)
+      result.processed_orgs_count = org_ids.size
+      result.reassigned_users_count = User.where(org_id: org_ids).count
+      result.reassigned_plans_count = Plan.where(org_id: org_ids).count
+    end
+
+    def print_dry_run_summary(result)
+      puts <<~MSG
+        ----- DRY RUN Summary -----
+        Unmanaged orgs with users:  #{result.processed_orgs_count}
+        Users to be reassigned:     #{result.reassigned_users_count}
+        Plans to be reassigned:     #{result.reassigned_plans_count}
+      MSG
+    end
+
     def print_summary(result)
       puts <<~MSG
         ----- Summary -----
         Unmanaged orgs processed: #{result.processed_orgs_count}
-        Users reassigned: #{result.reassigned_users_count}
-        Plans reassigned: #{result.reassigned_plans_count}
+        Users reassigned:         #{result.reassigned_users_count}
+        Plans reassigned:         #{result.reassigned_plans_count}
       MSG
     end
   end
