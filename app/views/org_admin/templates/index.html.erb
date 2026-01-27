@@ -32,6 +32,18 @@
       <%= _('If you wish to add an organisational template for a Data Management Plan, use the \'create template\' button. You can create more than one template if desired e.g. one for researchers and one for PhD students. Your template will be presented to users within your organisation when no funder templates apply. If you want to add questions to funder templates use the \'customise template\' options below.') %>
     </p>
   </div>
+
+  <% if @unpublished_count > 0 %>
+  <div class="col-md-12">
+    <div class="alert alert-info" role="alert">
+      <%= (_('A template marked with %{icon} means it has unpublished changes.') % {
+          icon: '<i class="fas fa-pencil-square" aria-hidden="true"></i>'
+        }
+      ).html_safe %>
+    </div>
+  </div>
+  <% end %>
+
 </div>
 
 <div class="row">
