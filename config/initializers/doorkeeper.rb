@@ -56,5 +56,6 @@ Doorkeeper.configure do # rubocop:todo Metrics/BlockLength
   use_refresh_token expiry: 90.days
 
   # enable ssl requirement for redirect url
-  force_ssl_in_redirect_uri true
+  # - Allow HTTP in test and development environments
+  force_ssl_in_redirect_uri !(Rails.env.test? || Rails.env.development?)
 end
