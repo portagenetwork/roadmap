@@ -266,7 +266,9 @@ class PlansController < ApplicationController
 
       invalid_funder = funder_attrs[:org_name].present? && funder.nil?
 
-      @plan.funder_id = funder&.id
+      # Only change funder_id when it is valid OR explicitly cleared
+      @plan.funder_id = funder&.id unless invalid_funder
+
       @plan.grant = plan_params[:grant]
       attrs.delete(:funder)
       attrs.delete(:grant)
@@ -282,7 +284,7 @@ class PlansController < ApplicationController
         end
       else
         failure_msg = failure_message(@plan, _('save'))
-        failure_msg += _(' Invalid funder.') if invalid_funder
+        failure_msg = _(' Invalid funder.') if invalid_funder
         format.html do
           # TODO: Should do a `render :show` here instead but show defines too many
           #       instance variables in the controller
