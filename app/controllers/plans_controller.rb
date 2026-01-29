@@ -255,19 +255,7 @@ class PlansController < ApplicationController
                            end
       @plan.guidance_groups = GuidanceGroup.where(id: guidance_group_ids)
 
-      funder_attrs = plan_params[:funder]
-
-      funder =
-        if funder_attrs[:org_name].blank?
-          nil # user cleared funder — valid
-        else
-          org_from_params(params_in: funder_attrs, allow_create: true)
-        end
-
-      invalid_funder = funder_attrs[:org_name].present? && funder.nil?
-
-      # Only change funder_id when it is valid OR explicitly cleared
-      @plan.funder_id = funder&.id unless invalid_funder
+      invalid_funder = assign_funder(plan_params)
 
       @plan.grant = plan_params[:grant]
       attrs.delete(:funder)
@@ -568,6 +556,24 @@ class PlansController < ApplicationController
              Org.includes(identifiers: :identifier_scheme).institution +
              Org.includes(identifiers: :identifier_scheme).default_orgs)
     @orgs = @orgs.flatten.uniq.sort_by(&:name)
+  end
+
+  def assign_funder(plan_params)
+    funder_attrs = plan_params[:funder]
+
+    funder =
+      if funder_attrs[:org_name].blank?
+        nil # user cleared funder — valid
+      else
+        org_from_params(params_in: funder_attrs, allow_create: true)
+      end
+
+    invalid_funder = funder_attrs[:org_name].present? && funder.nil?
+
+    # Only change funder_id when it is valid OR explicitly cleared
+    @plan.funder_id = funder&.id unless invalid_funder
+
+    invalid_funder
   end
 end
 # rubocop:enable Metrics/ClassLength
