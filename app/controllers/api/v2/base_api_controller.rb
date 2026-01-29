@@ -19,7 +19,7 @@ module Api
       # set up pages in response
       before_action :pagination_params, except: %i[heartbeat]
 
-      rescue_from Exception, with: :handle_exception
+      rescue_from StandardError, with: :handle_exception
 
       # GET /api/v2/heartbeat
       def heartbeat
