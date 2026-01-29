@@ -9,22 +9,21 @@ module Api
         end
 
         def resolve
-          # create the sql where clause
-          where_clause = <<-SQL
-          (visibility = 0 AND org_id = ?) OR
-          (visibility = 1 AND customization_of IS NULL)
-          SQL
-
           # get the templates
           Template
             .includes(org: :identifiers)
             .joins(:org)
             .published
-            .where(
-              where_clause,
-              @resource_owner.org&.id
-            )
+            .merge(accessible_templates)
             .order(:title)
+        end
+
+        private
+
+        def accessible_templates
+          org_templates = Template.organisationally_visible.where(org_id: @resource_owner.org&.id)
+          public_templates = Template.publicly_visible.where(customization_of: nil)
+          org_templates.or(public_templates)
         end
       end
     end
