@@ -55,23 +55,30 @@ module Api
         fetch_q_and_a(themes: themes).collect { |item| item[:description] }.join('<br>')
       end
 
-      # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-      def fetch_q_and_a(themes:)
+      def fetch_q_and_a(themes:) # rubocop:disable Metrics/CyclomaticComplexity
         return [] unless themes.is_a?(Array) && themes.any?
 
-        ret = themes.map do |theme|
-          qs = @plan.questions.select { |q| q.themes.collect(&:title).include?(theme) }
-          descr = qs.map do |q|
+        themes.filter_map do |theme|
+          qs = questions_for_theme(theme)
+          descr = qs.filter_map do |q|
             a = @plan.answers.find { |ans| ans.question_id == q.id }
-            next unless a.present? && !a.blank?
+            next unless a.present?
 
-            "<strong>Question:</strong> #{q.text}<br><strong>Answer:</strong> #{a.text}"
+            format_q_and_a(q, a)
           end
+          next if descr.blank?
+
           { title: theme, description: descr }
         end
-        ret.select { |item| item[:description].present? }
       end
-      # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+
+      def questions_for_theme(theme)
+        @plan.questions.select { |q| q.themes.collect(&:title).include?(theme) }
+      end
+
+      def format_q_and_a(question, answer)
+        "<strong>Question:</strong> #{question.text}<br><strong>Answer:</strong> #{answer.text}"
+      end
     end
   end
 end
