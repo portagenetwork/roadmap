@@ -28,7 +28,10 @@ module Api
 
       # GET /me.json - recommended for doorkeeper gem
       def me
-        respond_with @resource_owner
+        render json: @resource_owner.slice(:firstname, :surname, :email).merge(
+          organisation: @resource_owner.org.name,
+          language: @resource_owner.language&.name
+        )
       end
 
       private
