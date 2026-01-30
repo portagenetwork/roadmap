@@ -44,9 +44,10 @@ module Api
 
         # TODO: define a new 'Currency' question type that includes a float field
         #       any currency type selector (e.g GBP or USD)
-        answers = plan.answers.includes(question: :themes).select do |answer|
-          answer.question.themes.include?(theme)
-        end
+        answers = plan.answers
+                      .joins(question: :themes)
+                      .where(themes: { id: theme.id })
+                      .includes(:question)
 
         answers.map do |answer|
           # TODO: Investigate whether question level guidance should be the description
