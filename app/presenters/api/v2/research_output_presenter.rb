@@ -55,25 +55,37 @@ module Api
         fetch_q_and_a(themes: themes).collect { |item| item[:description] }.join('<br>')
       end
 
-      def fetch_q_and_a(themes:) # rubocop:disable Metrics/CyclomaticComplexity
+      def fetch_q_and_a(themes:)
         return [] unless themes.is_a?(Array) && themes.any?
 
-        themes.filter_map do |theme|
-          qs = questions_for_theme(theme)
-          descr = qs.filter_map do |q|
-            a = @plan.answers.find { |ans| ans.question_id == q.id }
-            next unless a.present?
+        answers = answers_for_themes(themes)
 
-            format_q_and_a(q, a)
-          end
-          next if descr.blank?
+        descs_by_theme = build_descriptions_by_theme_hash(answers, themes)
 
-          { title: theme, description: descr }
+        descs_by_theme.map do |theme, descs|
+          { title: theme, description: descs }
         end
       end
 
-      def questions_for_theme(theme)
-        @plan.questions.select { |q| q.themes.collect(&:title).include?(theme) }
+      def answers_for_themes(themes)
+        @plan.answers
+             .joins(question: :themes)
+             .where(themes: { title: themes })
+             .includes(question: :themes)
+             .distinct
+      end
+
+      def build_descriptions_by_theme_hash(answers, themes)
+        descs_by_theme = Hash.new { |h, k| h[k] = [] }
+
+        answers.each do |answer|
+          answer.question.themes.each do |theme|
+            next unless themes.include?(theme.title)
+
+            descs_by_theme[theme.title] << format_q_and_a(answer.question, answer)
+          end
+        end
+        descs_by_theme
       end
 
       def format_q_and_a(question, answer)
