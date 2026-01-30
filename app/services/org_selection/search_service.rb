@@ -11,8 +11,8 @@ module OrgSelection
       def search_combined(search_term:)
         return [] unless search_term.present? && search_term.length > 2
 
-        orgs = local_search(search_term: search_term)
-        orgs = [] unless orgs.present?
+        orgs = Array(local_search(search_term: search_term))
+               .select { |org| org[:managed] }
         # If we got an exact match out of the database then skip the
         # external searches
         matches = orgs.select do |org|
