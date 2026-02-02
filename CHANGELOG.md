@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Dependency Updates
+
+ - chore(deps): bump httparty from 0.23.1 to 0.24.0 [#1253](https://github.com/portagenetwork/roadmap/pull/1253)
+
 ## [4.1.1+portage-4.6.1]
 
 ### Added
