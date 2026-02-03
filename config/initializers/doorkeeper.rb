@@ -17,13 +17,7 @@ Doorkeeper.configure do
 
   # ensure only super-admins can manage oauth applications
   admin_authenticator do |_routes|
-    if current_user
-      unless current_user.can_super_admin?
-        redirect_to root_path, alert: "You are not authorized to perform this action."
-      end
-    else
-      warden.authenticate!(scope: :user)
-    end
+    redirect_to root_path, alert: "You are not authorized to perform this action." unless current_user&.can_super_admin?
   end
 
   # grant flows enabled
