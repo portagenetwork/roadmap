@@ -64,7 +64,8 @@ class ApplicationController < ActionController::Base
   # rubocop:disable Metrics/AbcSize
   def after_sign_in_path_for(_resource)
     # ensure oauth2 authorization flow is not interrupted
-    return session[:user_return_to] if user_is_in_oauth_flow
+    # TODO: Unless nil, should stored_location_for(resource) always be returned?
+    return stored_location_for(:user) if user_is_in_oauth_flow?
 
     referer_path = URI(request.referer).path unless request.referer.nil?
     if from_external_domain? || referer_path.eql?(new_user_session_path) ||
@@ -77,9 +78,11 @@ class ApplicationController < ActionController::Base
   end
   # rubocop:enable Metrics/AbcSize
 
-  def after_sign_up_path_for(_resource) # rubocop:todo Metrics/AbcSize
+  # rubocop:disable Metrics/AbcSize
+  def after_sign_up_path_for(_resource)
     # ensure oauth2 authorization flow is not interrupted
-    return session[:user_return_to] if user_is_in_oauth_flow
+    # TODO: Unless nil, should stored_location_for(resource) always be returned?
+    return stored_location_for(:user) if user_is_in_oauth_flow?
 
     referer_path = URI(request.referer).path unless request.referer.nil?
     if from_external_domain? ||
@@ -90,6 +93,7 @@ class ApplicationController < ActionController::Base
       request.referer
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   def after_sign_in_error_path_for(_resource)
     (from_external_domain? ? root_path : request.referer || root_path)
@@ -201,7 +205,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def user_is_in_oauth_flow
-    session[:user_return_to].present? && session[:user_return_to].include?('/oauth/authorize')
+  def user_is_in_oauth_flow?
+    session[:user_return_to]&.start_with?(oauth_authorization_path)
   end
 end
