@@ -255,7 +255,7 @@ class PlansController < ApplicationController
                            end
       @plan.guidance_groups = GuidanceGroup.where(id: guidance_group_ids)
 
-      invalid_funder = assign_funder(plan_params)
+      invalid_funder = invalid_funder?(plan_params)
 
       @plan.grant = plan_params[:grant]
       attrs.delete(:funder)
@@ -572,7 +572,7 @@ class PlansController < ApplicationController
     @orgs = @orgs.flatten.uniq.sort_by(&:name)
   end
 
-  def assign_funder(plan_params)
+  def invalid_funder?(plan_params)
     funder_attrs = plan_params[:funder]
 
     funder =
