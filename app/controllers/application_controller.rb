@@ -64,39 +64,26 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # rubocop:disable Metrics/AbcSize
   def after_sign_in_path_for(_resource)
-    # ensure oauth2 authorization flow is not interrupted
-    # TODO: Unless nil, should stored_location_for(resource) always be returned?
-    return stored_location_for(:user) if user_is_in_oauth_flow?
-
-    referer_path = URI(request.referer).path unless request.referer.nil?
-    if from_external_domain? || referer_path.eql?(new_user_session_path) ||
-       referer_path.eql?(new_user_registration_path) ||
-       referer_path.nil?
-      root_path
-    else
-      request.referer
-    end
+    after_auth_path(disallowed_paths: [new_user_session_path, new_user_registration_path])
   end
-  # rubocop:enable Metrics/AbcSize
 
-  # rubocop:disable Metrics/AbcSize
   def after_sign_up_path_for(_resource)
+    after_auth_path(disallowed_paths: [new_user_session_path])
+  end
+
+  def after_auth_path(disallowed_paths:)
     # ensure oauth2 authorization flow is not interrupted
     # TODO: Unless nil, should stored_location_for(resource) always be returned?
     return stored_location_for(:user) if user_is_in_oauth_flow?
 
-    referer_path = URI(request.referer).path unless request.referer.nil?
-    if from_external_domain? ||
-       referer_path.eql?(new_user_session_path) ||
-       referer_path.nil?
-      root_path
-    else
-      request.referer
-    end
+    return root_path if request.referer.nil? || from_external_domain?
+
+    referer_path = URI(request.referer).path
+    return root_path if disallowed_paths.include?(referer_path)
+
+    request.referer
   end
-  # rubocop:enable Metrics/AbcSize
 
   def after_sign_in_error_path_for(_resource)
     (from_external_domain? ? root_path : request.referer || root_path)
