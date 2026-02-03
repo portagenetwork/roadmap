@@ -262,34 +262,48 @@ class PlansController < ApplicationController
       attrs.delete(:grant)
       attrs = remove_org_selection_params(params_in: attrs)
 
-      if @plan.update(attrs) && !invalid_funder # _attributes(attrs)
+      saved = @plan.update(attrs)
+
+      if saved
+        notice = success_message(@plan, _('saved'))
+        alert  =
+          (_('The plan was saved, but the funder was not updated because it is invalid.') if invalid_funder)
+
         format.html do
           redirect_to plan_path(@plan),
-                      notice: success_message(@plan, _('saved'))
+                      notice: notice,
+                      alert: alert
         end
+
         format.json do
-          render json: { code: 1, msg: success_message(@plan, _('saved')) }
+          render json: {
+            code: 1,
+            msg: notice,
+            warning: invalid_funder ? _('Invalid funder.') : nil
+          }
         end
       else
         failure_msg = failure_message(@plan, _('save'))
-        failure_msg = _(' Invalid funder.') if invalid_funder
         format.html do
           # TODO: Should do a `render :show` here instead but show defines too many
           #       instance variables in the controller
           redirect_to plan_path(@plan).to_s, alert: failure_msg
         end
+
         format.json do
           render json: { code: 0, msg: failure_msg }
         end
       end
     rescue StandardError => e
-      flash[:alert] = failure_message(@plan, _('save'))
+      Rails.logger.error "Unable to save plan #{@plan&.id} - #{e.message}"
+      alert = failure_message(@plan, _('save'))
+
       format.html do
-        Rails.logger.error "Unable to save plan #{@plan&.id} - #{e.message}"
-        redirect_to plan_path(@plan).to_s, alert: failure_message(@plan, _('save'))
+        redirect_to plan_path(@plan).to_s, alert: alert
       end
+
       format.json do
-        render json: { code: 0, msg: flash[:alert] }
+        render json: { code: 0, msg: alert }
       end
     end
     # rubocop:enable Metrics/BlockLength
