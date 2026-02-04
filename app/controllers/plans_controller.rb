@@ -255,7 +255,7 @@ class PlansController < ApplicationController
                            end
       @plan.guidance_groups = GuidanceGroup.where(id: guidance_group_ids)
 
-      invalid_funder = validate_and_set_funder(plan_params[:funder])
+      valid_funder = validate_and_set_funder(plan_params[:funder])
 
       @plan.grant = plan_params[:grant]
       attrs.delete(:funder)
@@ -267,7 +267,7 @@ class PlansController < ApplicationController
       if saved
         notice = success_message(@plan, _('saved'))
         alert  =
-          (_('The plan was saved, but the funder was not updated because it is invalid.') if invalid_funder)
+          (_('The plan was saved, but the funder was not updated because it is invalid.') unless valid_funder)
 
         format.html do
           redirect_to plan_path(@plan),
@@ -279,7 +279,7 @@ class PlansController < ApplicationController
           render json: {
             code: 1,
             msg: notice,
-            warning: invalid_funder ? _('Invalid funder.') : nil
+            warning: valid_funder ? nil : _('Invalid funder.')
           }
         end
       else
@@ -580,12 +580,12 @@ class PlansController < ApplicationController
         org_from_params(params_in: funder_attrs, allow_create: true)
       end
 
-    invalid_funder = funder_attrs[:org_name].present? && funder.nil?
+    valid_funder = funder_attrs[:org_name].blank? || funder.present?
 
     # Only change funder_id when it is valid OR explicitly cleared
-    @plan.funder_id = funder&.id unless invalid_funder
+    @plan.funder_id = funder&.id if valid_funder
 
-    invalid_funder
+    valid_funder
   end
 end
 # rubocop:enable Metrics/ClassLength
