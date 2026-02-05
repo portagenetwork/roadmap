@@ -239,7 +239,7 @@ class PlansController < ApplicationController
 
   # PUT /plans/1
   # rubocop:disable Metrics/MethodLength, Metrics/PerceivedComplexity
-  def update
+  def update # rubocop:disable Metrics/CyclomaticComplexity
     @plan = Plan.find(params[:id])
     authorize @plan
     attrs = plan_params
@@ -255,43 +255,53 @@ class PlansController < ApplicationController
                            end
       @plan.guidance_groups = GuidanceGroup.where(id: guidance_group_ids)
 
-      # TODO: For some reason the `fields_for` isn't adding the
-      #       appropriate namespace, so org_id represents our funder
-      funder_attrs = plan_params[:funder]
-      funder_attrs[:org_id] = plan_params[:funder][:id]
-      funder = org_from_params(params_in: funder_attrs, allow_create: true)
-      @plan.funder_id = funder&.id
+      valid_funder = validate_and_set_funder(plan_params[:funder])
+
       @plan.grant = plan_params[:grant]
       attrs.delete(:funder)
       attrs.delete(:grant)
       attrs = remove_org_selection_params(params_in: attrs)
 
-      if @plan.update(attrs) # _attributes(attrs)
+      if @plan.update(attrs)
+        notice = success_message(@plan, _('saved'))
+        alert  =
+          (_('The plan was saved, but the funder was not updated because it is invalid.') unless valid_funder)
+
         format.html do
           redirect_to plan_path(@plan),
-                      notice: success_message(@plan, _('saved'))
+                      notice: notice,
+                      alert: alert
         end
+
         format.json do
-          render json: { code: 1, msg: success_message(@plan, _('saved')) }
+          render json: {
+            code: 1,
+            msg: notice,
+            warning: valid_funder ? nil : _('Invalid funder.')
+          }
         end
       else
+        failure_msg = failure_message(@plan, _('save'))
         format.html do
           # TODO: Should do a `render :show` here instead but show defines too many
           #       instance variables in the controller
-          redirect_to plan_path(@plan).to_s, alert: failure_message(@plan, _('save'))
+          redirect_to plan_path(@plan).to_s, alert: failure_msg
         end
+
         format.json do
-          render json: { code: 0, msg: failure_message(@plan, _('save')) }
+          render json: { code: 0, msg: failure_msg }
         end
       end
     rescue StandardError => e
-      flash[:alert] = failure_message(@plan, _('save'))
+      Rails.logger.error "Unable to save plan #{@plan&.id} - #{e.message}"
+      alert = failure_message(@plan, _('save'))
+
       format.html do
-        Rails.logger.error "Unable to save plan #{@plan&.id} - #{e.message}"
-        redirect_to plan_path(@plan).to_s, alert: failure_message(@plan, _('save'))
+        redirect_to plan_path(@plan).to_s, alert: alert
       end
+
       format.json do
-        render json: { code: 0, msg: flash[:alert] }
+        render json: { code: 0, msg: alert }
       end
     end
     # rubocop:enable Metrics/BlockLength
@@ -558,6 +568,22 @@ class PlansController < ApplicationController
              Org.includes(identifiers: :identifier_scheme).institution +
              Org.includes(identifiers: :identifier_scheme).default_orgs)
     @orgs = @orgs.flatten.uniq.sort_by(&:name)
+  end
+
+  def validate_and_set_funder(funder_attrs)
+    funder =
+      if funder_attrs[:org_name].blank?
+        nil # user cleared funder — valid
+      else
+        org_from_params(params_in: funder_attrs, allow_create: true)
+      end
+
+    valid_funder = funder_attrs[:org_name].blank? || funder.present?
+
+    # Only change funder_id when it is valid OR explicitly cleared
+    @plan.funder_id = funder&.id if valid_funder
+
+    valid_funder
   end
 end
 # rubocop:enable Metrics/ClassLength
