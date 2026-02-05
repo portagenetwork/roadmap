@@ -262,9 +262,7 @@ class PlansController < ApplicationController
       attrs.delete(:grant)
       attrs = remove_org_selection_params(params_in: attrs)
 
-      saved = @plan.update(attrs)
-
-      if saved
+      if @plan.update(attrs)
         notice = success_message(@plan, _('saved'))
         alert  =
           (_('The plan was saved, but the funder was not updated because it is invalid.') unless valid_funder)
