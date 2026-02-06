@@ -62,7 +62,7 @@ module OrgSelection
 
       def expiry
         expiration = Rails.configuration.x.cache.org_selection_expiration
-        expiration.present? ? expiration : 1.day
+        expiration.present? ? expiration : 1.hour
       end
 
       def local_search(search_term:, managed_orgs_only: false)
