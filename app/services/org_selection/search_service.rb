@@ -11,7 +11,7 @@ module OrgSelection
       def search_combined(search_term:)
         return [] unless search_term.present? && search_term.length > 2
 
-        orgs = local_search(search_term: search_term)
+        orgs = local_search(search_term: search_term, managed_orgs_only: true)
         orgs = [] unless orgs.present?
         # If we got an exact match out of the database then skip the
         # external searches
@@ -65,12 +65,14 @@ module OrgSelection
         expiration.present? ? expiration : 1.day
       end
 
-      def local_search(search_term:)
+      def local_search(search_term:, managed_orgs_only: false)
         return [] unless search_term.present?
 
-        Rails.cache.fetch(['org_selection-local', search_term], expires_in: expiry) do
-          Org.includes(identifiers: :identifier_scheme)
-             .search(name_without_alias(name: search_term)).to_a
+        cache_key = ['org_selection-local', search_term, managed_orgs_only]
+        Rails.cache.fetch(cache_key, expires_in: expiry) do
+          scope = Org.includes(identifiers: :identifier_scheme)
+          scope = scope.where(managed: true) if managed_orgs_only
+          scope.search(name_without_alias(name: search_term)).to_a
         end
       end
 
