@@ -68,6 +68,7 @@ module Api
           next unless q.present?
 
           {
+            id: q.id,
             title: "Question #{q.number || q.id}",
             section: q.section&.title,
             question: q.text.to_s,
