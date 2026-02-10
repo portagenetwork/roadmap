@@ -75,6 +75,7 @@ unless @minimal
         next if q_and_a.blank?
 
         json.array! q_and_a do |item|
+          json.question_id item[:id]
           json.title item[:title]
           json.section item[:section]
           json.question item[:question]
