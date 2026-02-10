@@ -26,6 +26,7 @@ module Api
         raise Pundit::NotAuthorizedError unless @scopes.include?('read')
 
         @plans = PlansPolicy::Scope.new(@resource_owner).resolve
+        @plans = @plans.includes(answers: { question: :section }) if @complete
         @items = paginate_response(results: @plans)
         render '/api/v2/plans/index', status: :ok
       end

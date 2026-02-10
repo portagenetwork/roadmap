@@ -60,7 +60,7 @@ module Api
 
       # Fetch all questions and answers from a plan, regardless of theme
       def fetch_all_q_and_a
-        answers = @plan.answers.includes(question: [:section])
+        answers = @plan.answers
         return [] unless answers.present?
 
         answers.filter_map do |answer|
