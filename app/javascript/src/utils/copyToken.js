@@ -1,22 +1,22 @@
 const initCopyToken = () => {
-  const tokenInput = document.getElementById('api-token-val');
-  const copyButton = document.getElementById('copy-token-btn');
+  document.addEventListener('click', function (e) {
+    const button = e.target.closest('#copy-token-btn');
+    if (!button) return;
 
-  // Exit early if elements are missing
-  if (!tokenInput || !copyButton) return;
-
-  const originalHTML = copyButton.innerHTML;
-
-  copyButton.addEventListener('click', (e) => {
     e.preventDefault();
+
+    const tokenInput = document.getElementById('api-token-val');
+    if (!tokenInput) return;
+
+    const originalHTML = button.innerHTML;
 
     navigator.clipboard.writeText(tokenInput.value).then(() => {
       // Replace button contents with check icon
-      copyButton.innerHTML = '<i class="fa fa-circle-check" aria-hidden="true"></i>';
+      button.innerHTML = '<i class="fa fa-circle-check" aria-hidden="true"></i>';
 
       // Restore after 2s
       setTimeout(() => {
-        copyButton.innerHTML = originalHTML;
+        button.innerHTML = originalHTML;
       }, 2000);
     }).catch(() => {
       alert('Failed to copy token');
