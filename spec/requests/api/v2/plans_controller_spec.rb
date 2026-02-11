@@ -91,7 +91,7 @@ RSpec.describe Api::V2::PlansController do
           create(:plan, :creator, org: @user.org)
           inactive_plan = create(:plan, :creator)
           inactive_plan.add_user!(@user.id, :editor)
-          Role.where(plan_id: inactive_plan.id, user_id: @user.id).update!(active: false)
+          Role.where(plan_id: inactive_plan.id, user_id: @user.id).update(active: false)
 
           expect(json[:items].length).to be(included_plans.length)
 
