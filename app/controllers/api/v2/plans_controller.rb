@@ -35,7 +35,7 @@ module Api
 
       # GET /api/v2/plans?complete=true and  /api/v2/plans/:id?complete=true
       def set_complete_param
-        @complete = params[:complete].to_s.downcase == 'true'
+        @complete = params[:complete].to_s.casecmp('true').zero?
       end
     end
   end
