@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-class CreateDoorkeeperTables < ActiveRecord::Migration[7.1]
+class CreateDoorkeeperTables < ActiveRecord::Migration[6.1]
   def change
     create_table :oauth_applications do |t|
       t.string  :name,    null: false
       t.string  :uid,     null: false
+      # Remove `null: false` or use conditional constraint if you are planning to use public clients.
       t.string  :secret,  null: false
 
       # Remove `null: false` if you are planning to use grant flows
