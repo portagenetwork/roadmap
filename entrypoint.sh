@@ -12,6 +12,10 @@ done
 echo "Database is ready."
 
 
+echo "==> Running database migrations..."
+bundle exec rails db:migrate
+
+
 echo "==> Executing translation:sync..."
 if ! bundle exec rake translation:sync; then
   echo "ERROR: translation:sync failed, continuing anyway."
