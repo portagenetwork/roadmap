@@ -1,13 +1,13 @@
 <%# locals: user %>
 
-<div id="v2-api-token" class="card mb-4">
-  <div class="card-heading">
+<div id="v2-api-token" class="panel mb-4" style="border: 1px solid #0a0a0a">
+  <div class="nav nav-tabs">
     <%= _('V2 API') %>
   </div>
-  <div class="card-body">
+  <div class="panel-body">
     <% if Api::V2::InternalUserAccessTokenService.application_present? %>
       <% token = Api::V2::InternalUserAccessTokenService.for_user(user) %>
-      <div class="form-control mb-3 col-xs-8">
+      <div class="form-group mb-3 col-xs-8">
         <%= label_tag(:api_token, _('Access token'), class: 'form-label') %>
         <% if token.present? %>
           <code><%= token.token %></code>
@@ -16,11 +16,11 @@
         <% end %>
       </div>
 
-      <div class="form-control mb-3 col-xs-8">
+      <div class="form-group mb-3 col-xs-8">
         <%= link_to _("Regenerate token"),
                     api_v2_internal_user_access_token_path,
                     method: :post,
-                    class: 'btn btn-secondary',
+                    class: 'btn btn-default',
                     remote: true %>
       </div>
     <% else %>
