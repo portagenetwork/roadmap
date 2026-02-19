@@ -1,4 +1,4 @@
-class AllowNullRedirectUriInOauthApplications < ActiveRecord::Migration[7.1]
+class AllowNullRedirectUriInOauthApplications < ActiveRecord::Migration[6.1]
   def change
     # We currently have `allow_blank_redirect_uri true` in
     # `config/initializers/doorkeeper.rb`. Removing the NOT NULL constraint
