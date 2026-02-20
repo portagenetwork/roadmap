@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_08_20_190548) do
+ActiveRecord::Schema.define(version: 2024_12_12_180047) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -819,7 +819,7 @@ ActiveRecord::Schema.define(version: 2024_08_20_190548) do
     t.string "api_token"
     t.integer "invited_by_id"
     t.string "invited_by_type"
-    t.integer "language_id"
+    t.integer "language_id", null: false
     t.string "recovery_email"
     t.boolean "active", default: true
     t.integer "department_id"
