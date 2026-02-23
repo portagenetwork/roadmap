@@ -8,6 +8,8 @@
 
  - Implement tiered Rack::Attack throttles [#1254](https://github.com/portagenetwork/roadmap/pull/1254)
 
+ - Add Internal v2 API Access Token Generation for Users [#1279](https://github.com/portagenetwork/roadmap/pull/1279)
+
 ### Changed
 
  - Upgrade ROR API From V1 to V2 [#1247](https://github.com/portagenetwork/roadmap/pull/1247)
