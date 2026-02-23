@@ -1,0 +1,39 @@
+<%# locals: user %>
+
+<div id="v2-api-token" class="panel mb-4" style="border: 1px solid #0a0a0a">
+  <div class="nav nav-tabs">
+    <span style="margin-left: 12px;"><%= _('V2 API') %></span>
+  </div>
+  <div class="panel-body">
+    <% if Api::V2::InternalUserAccessTokenService.application_present? %>
+      <div class="form-group mb-3 col-xs-8">
+        <%= label_tag(:api_token, _('Access token'), class: 'form-label') %>
+        <% if token.present? %>
+          <code><%= token %></code>
+          <div class="alert alert-warning">
+            <%= _( "Please copy this token now and store it somewhere safely." ) %><br>
+            <%= _( "It will disappear after you leave or refresh this page." ) %>
+          </div>
+        <% else %>
+          <%= _( "Click the button below to generate an API token" ) %><br>
+          <div class="alert alert-warning">
+            <%= _("If you previously generated and saved a token, please continue using that token.") %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="form-group mb-3 col-xs-8">
+        <%= button_tag _("Regenerate token"),
+              type: :submit,
+              class: "btn btn-default",
+              disabled: token.present?,
+              data: { remote: true, url: api_v2_internal_user_access_token_path, method: :post } %>
+      </div>
+    <% else %>
+      <div class="alert alert-warning">
+        <%= _("V2 API token service is currently unavailable. Please contact us for help.") %>
+        <%= mail_to Rails.application.config.x.organisation.helpdesk_email %>
+      </div>
+    <% end %>
+  </div>
+</div>
