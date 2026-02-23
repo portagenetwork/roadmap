@@ -6,6 +6,8 @@
 
  - chore(deps): bump httparty from 0.23.1 to 0.24.0 [#1253](https://github.com/portagenetwork/roadmap/pull/1253)
 
+ - chore(deps): bump lodash from 4.17.21 to 4.17.23 [#1264](https://github.com/portagenetwork/roadmap/pull/1264)
+
 ## [4.1.1+portage-4.6.1]
 
 ### Added
