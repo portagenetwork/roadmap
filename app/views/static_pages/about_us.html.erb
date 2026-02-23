@@ -10,71 +10,35 @@
     <div>
       <h2 class="fontsize-h3"><%= _(Rails.configuration.branding[:application][:name]) %></h2>
 
-      <p><%= _('DMP Assistant is an all-purpose tool for preparing data management plans (DMPs).') %></p>
-      <p><%= _('Researchers will be guided through best practices in data stewardship.') %></p>
+      <p>
+       <%= sanitize(_('The <a href="%{dmp_url}">DMP Assistant</a> is a national, online, bilingual data management planning tool developed and supported by the Digital Research Alliance of Canada (formerly the Portage Network), with partnerships through the University of Alberta Library (development partner) and Arbutus at the University of Victoria (infrastructure partner) to assist researchers in preparing data management plans (DMPs). The tool can also help organizations manage organizational DMP services through customizable organizational profiles, templates, guidance, and usage reporting.') %
+  { dmp_url: "https://dmp-pgd.ca" }) %>
+      </p>
+
+      <p><%= _('Researchers will be guided using best practices in data stewardship:') %></p>
 
       <ul>
-        <li><%= _('The tool walks researchers step-by-step through a number of key questions about data management.') %></li>
-        <li><%= _('Guidance and examples are provided.') %></li>
-        <li><%= _('Not all questions will apply to all research projects. Researchers are encouraged to answer the questions relevant to their work.') %></li>
-        <li><%= _('Researchers should revisit the tool throughout their research to review or complete their responses.') %></li>
+        <li><%= _('The tool walks researchers step-by-step through a number of key questions regarding different components of data management.') %></li>
+        <li><%= _('Guidance and examples are available.') %></li>
+        <li><%= _('Not all questions may apply to all research projects. Researchers and users are encouraged to answer the questions relevant to their work, while ensuring consideration is given to all questions before determining if a question is not relevant.') %></li>
+        <li><%= _('Researchers and users should revisit the tool throughout the lifecycle of their research project to review, complete or adjust their responses as the project progresses.') %></li>
       </ul>
 
-      <h2 class="fontsize-h3"><%= _('How the tool works') %></h2>
-      
-      <p><%= _('Currently, this tool includes a generic Alliance template for researchers to use. Guidance is provided to help you interpret and answer the questions.') %></p>
-    
+      <h2 class="fontsize-h3"><%= _('Historical Context') %></h2>
 
       <p>
-        <% email_link = Rails.configuration.branding[:organisation][:helpdesk_email] %>
-        <% email_subject = _('DMP Assistant feedback').gsub(' ', '%20') %>
-        <% contact_your_institution_url = contacts_at_your_instutution_path %>
-        <%= sanitize(_('We want your feedback! If you have suggestions on how to improve the existing template, or you would like to add additional templates based on funding agency requirements or disciplinary needs, please <a href="%{contact_your_institution_url}">contact your local institution</a> or contact us at <a href="mailto:%{email_link}?Subject=%{email_subject}">%{email_link}</a>.') % {contact_your_institution_url: contact_your_institution_url, email_link: email_link, email_subject: email_subject}) %>        
+        <%= sanitize(_('Launched in 2015, the DMP Assistant was adapted from the <a href="%{dcc_url}" target="_blank" rel="noopener">Digital Curation Centre (DCC)</a>’s <a href="%{dmponline_url}" target="_blank" rel="noopener">DMPonline</a> tool and uses the <a href="%{roadmap_url}" target="_blank" rel="noopener">DMP Roadmap</a> codebase. DMP Assistant was originally developed for Canada by the Portage Network, then a part of the Canadian Association of Research Libraries (CARL). In 2021, Portage Network and its portfolio of platforms and services merged into the Digital Research Alliance of Canada. DMP Assistant in Canada is administered by the Digital Research Alliance of Canada, with support from development partner the University of Alberta Library and hosted on the Arbutus Cloud at the University of Victoria.') %
+        { 
+          dcc_url: "https://dcc.ac.uk/",
+          dmponline_url: "https://dmponline.dcc.ac.uk/",
+          roadmap_url: "https://github.com/DMPRoadmap/roadmap"
+        }) %>
       </p>
 
-      <h2 class="fontsize-h3"><%= _('Getting started') %></h2>
-
-      <p><%= _("If you have an account, please sign in and start creating or editing your DMP.") %></p>
-
-      <% unless user_signed_in? %>
-        <p>
-          <% sign_up_url = request.base_url %>
-          <%= sanitize(_('If you do not have a DMP Assistant account, click on <a href="%{sign_up_url}"> \'Sign up\' </a> on the homepage.') % { sign_up_url: sign_up_url} ) %>
-        </p>
-
-        <p>
-          <%= _('You may sign up for an account as part of your institution, or if you do not have one you may sign up under the Digital Research Alliance of Canada.') %>
-        </p>
-      <% end %>
-
-      <p>
-        <%= _('DMP Assistant has recently implemented single sign on, which will allow you to use CI Logon to use institutional or social accounts in order to sign into your DMP Assistant account.') %>
-      </p>
-
-      <p>
-        <% help_url = help_path %>
-        <%= sanitize(_('Please visit the <a href="%{help_url}"> \'Help\' </a> page for guidance.') % {help_url: help_path}) %>
-      </p>
-
-      <h2 class="fontsize-h3"><%= _('Feedback') %></h2>
-
-      <p>
-        <%= sanitize(_('If you have any questions or comments about the DMP Assistant, <a href="%{contact_your_institution_url}"> contact your local institution </a> or email us at  <a href="mailto:%{email_link}?Subject=%{email_subject}">%{email_link}</a>.') % { contact_your_institution_url: contact_your_institution_url, email_link: email_link, email_subject: email_subject} )  %>
-      </p>
-
-      <h2 class="fontsize-h3"><%= _('About templates') %></h2>
-      
-      <p>
-        <%= _('The Alliance template is based on internationally accepted standards and best practices. It has been prepared and is maintained by a group of research data management experts from research libraries across Canada. It was developed by the Data Management Planning Expert Group, then part of the Portage Network. Portage became part of the Digital Research Alliance of Canada in 2021.') %>
-      </p>
-
-      <p>
-        <%= _('Organizations may provide their own DMP templates. The Alliance is the default DMP. Select templates from other organizations from the drop-down Organization list when creating your plan. Users can make use of templates in any available organization, and collaborate across organizations.') %>
-      </p>
-
-      <p>
-        <%= sanitize(_('For funding agencies, research institutions, and other organizations, please contact <a href="mailto:%{email_link}">%{email_link}</a> if you would like to add your organization templates to DMP Assistant.') % { email_link: email_link}) %>
-      </p>
+      <h2 class="fontsize-h3">
+        <%= sanitize(_('<a href="%{contact_link}">Contact Us</a>') % 
+            { contact_link: "https://dmp-pgd.ca/contact-us" }) %>
+      </h2>
 
     </div>
   </div>
