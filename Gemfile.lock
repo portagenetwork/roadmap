@@ -488,7 +488,7 @@ GEM
     rb-inotify (0.11.1)
       ffi (~> 1.0)
     rchardet (1.8.0)
-    recaptcha (5.18.0)
+    recaptcha (5.21.1)
     regexp_parser (2.8.2)
     reline (0.6.1)
       io-console (~> 0.5)
