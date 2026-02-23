@@ -83,7 +83,7 @@ GEM
     api-pagination (5.0.0)
     ast (2.4.2)
     attr_required (1.0.2)
-    autoprefixer-rails (10.4.19.0)
+    autoprefixer-rails (10.4.21.0)
       execjs (~> 2)
     base64 (0.1.2)
     bcrypt (3.1.20)
