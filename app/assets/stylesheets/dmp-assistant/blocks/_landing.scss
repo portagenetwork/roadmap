@@ -1,0 +1,59 @@
+@use '../../dmp-assistant/variables/colours' as *;
+
+.custom-accordion {
+  max-width: 800px;
+
+  summary {
+    cursor: pointer;
+    padding: 16px 20px;
+    font-weight: 600;
+    font-size: 18px;
+    color: $color-alliance-digital-grey;
+    position: relative;
+
+    &::before {
+      content: "▸";
+      display: inline-block;
+      margin-right: 12px;
+      transition: transform 0.2s ease;
+    }
+  }
+
+  details[open] summary::before {
+    transform: rotate(90deg);
+  }
+
+  details > *:not(summary) {
+    padding: 0 20px 20px 40px;
+    background: $color-white;
+  }
+}
+
+.welcome-features {
+  margin: 30px 0;
+  padding: 30px;
+  border: 2px solid $color-alliance-yellow;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  text-align: center;
+}
+
+.feature {
+  flex: 1;
+
+  .feature-icon {
+    margin-bottom: 15px;
+
+    img {
+      height: 70px;
+      width: auto;
+    }
+  }
+
+  p {
+    font-weight: 600;
+    color: $color-alliance-digital-grey;
+  }
+}
