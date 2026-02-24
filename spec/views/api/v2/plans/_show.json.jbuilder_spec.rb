@@ -37,8 +37,10 @@ describe 'api/v2/plans/_show.json.jbuilder' do
     end
 
     it 'includes the :language' do
-      expected = Api::V1::LanguagePresenter.three_char_code(
-        lang: LocaleService.default_locale
+      # Set @plan.owner
+      @plan.roles << create(:role, :creator, user: create(:user))
+      expected = Api::V2::LanguagePresenter.three_char_code(
+        lang: @plan.owner&.language&.abbreviation
       )
       expect(@json[:language]).to eql(expected)
     end
@@ -52,7 +54,7 @@ describe 'api/v2/plans/_show.json.jbuilder' do
     end
 
     it 'includes :ethical_issues' do
-      expected = Api::V1::ConversionService.boolean_to_yes_no_unknown(@plan.ethical_issues)
+      expected = Api::V2::ConversionService.boolean_to_yes_no_unknown(@plan.ethical_issues)
       expect(@json[:ethical_issues_exist]).to eql(expected)
     end
 
