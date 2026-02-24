@@ -47,10 +47,7 @@ if defined?(Rollbar)
     # via the rollbar interface.
     # Valid levels: 'critical', 'error', 'warning', 'info', 'debug', 'ignore'
     # 'ignore' will cause the exception to not be reported at all.
-
-    # protect_from_forgery with: :exception is enabled in app/controllers/application_controller.rb.
-    # Due to this configuration, bots can generate a lot of Rollbar noise.
-    config.exception_level_filters['ActionController::InvalidAuthenticityToken'] = 'ignore'
+    # config.exception_level_filters.merge!('MyCriticalException' => 'critical')
     #
     # You can also specify a callable, which will be called with the exception instance.
     # config.exception_level_filters.merge!('MyCriticalException' => lambda { |e| 'critical' })

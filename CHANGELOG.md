@@ -10,11 +10,10 @@
 
  - Add Internal v2 API Access Token Generation for Users [#1279](https://github.com/portagenetwork/roadmap/pull/1279)
 
+ - Add `bundle exec rails db:migrate` to entrypoint.sh [#1278](https://github.com/portagenetwork/roadmap/pull/1278)
+
 ### Changed
-
  - Upgrade ROR API From V1 to V2 [#1247](https://github.com/portagenetwork/roadmap/pull/1247)
-
- - Ignore CSRF exceptions in Rollbar [#1256](https://github.com/portagenetwork/roadmap/pull/1256)
 
 ### Dependency Updates
 
@@ -33,6 +32,10 @@
  - chore(deps): bump surnet/alpine-wkhtmltopdf from 3.22.0-0.12.6-small to 3.23.2-0.12.6-small [#1258](https://github.com/portagenetwork/roadmap/pull/1258)
 
  - chore(deps): bump docker/login-action from 3.6.0 to 3.7.0 [#1268](https://github.com/portagenetwork/roadmap/pull/1268)
+
+ - chore(deps): bump docker/build-push-action from 6.18.0 to 6.19.2 [#1277](https://github.com/portagenetwork/roadmap/pull/1277)
+
+ - chore(deps): bump nginx from 1.29.4-alpine to 1.29.5-alpine [#1271](https://github.com/portagenetwork/roadmap/pull/1271)
 
 ## [4.1.1+portage-4.6.1]
 
