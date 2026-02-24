@@ -14,7 +14,7 @@ presenter = Api::V2::PlanPresenter.new(plan: plan, complete: @complete)
 json.title plan.title
 json.description plan.description
 json.language Api::V2::LanguagePresenter.three_char_code(
-  lang: LocaleService.default_locale
+  lang: plan.owner&.language&.abbreviation
 )
 json.created plan.created_at.to_formatted_s(:iso8601)
 json.modified plan.updated_at.to_formatted_s(:iso8601)

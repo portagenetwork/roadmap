@@ -75,6 +75,7 @@ module Api
         # Convert the incoming 2 (e.g. en - ISO 639-1) or 2+region (e.g. en-UK)
         # into the 3 character code (e.g. eng - ISO 639-2)
         def three_char_code(lang:)
+          lang ||= LocaleService.default_locale
           two_char_code = lang.to_s.split('-').first
           LANGUAGE_MAP[two_char_code.to_sym]
         end
