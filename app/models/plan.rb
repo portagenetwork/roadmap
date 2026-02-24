@@ -211,6 +211,21 @@ class Plan < ApplicationRecord
     includes(:phases, :sections, :questions, template: [:org]).find(id)
   }
 
+  scope :for_api_v2, lambda { |user_id|
+    joins(:roles)
+      .includes(
+        :identifiers,
+        :research_outputs,
+        :template,
+        funder: :identifiers,
+        contributors: [:identifiers, { org: :identifiers }],
+        org: %i[region identifiers],
+        roles: [user: [:identifiers, { org: :identifiers }]]
+      )
+      .where(roles: { user_id: user_id, active: true })
+      .distinct
+  }
+
   ##
   # Settings for the template
   has_settings :export, class_name: 'Settings::Template' do |s|

@@ -21,19 +21,7 @@ module Api
         end
 
         def resolve
-          Plan.joins(
-            :roles
-          ).includes(
-            :identifiers,
-            :research_outputs,
-            :template,
-            funder: :identifiers,
-            contributors: [:identifiers, { org: :identifiers }],
-            org: %i[region identifiers],
-            roles: [user: [:identifiers, { org: :identifiers }]]
-          )
-              .where(roles: { user_id: @resource_owner.id, active: true })
-              .distinct
+          Plan.for_api_v2(@resource_owner.id)
         end
       end
     end
