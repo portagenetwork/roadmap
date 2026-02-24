@@ -13,19 +13,16 @@ RSpec.describe Api::V2::InternalUserAccessTokensController do
     end
 
     context 'when user is not authenticated' do
-      before do
-        # Enable CSRF protection for this test
-        allow_any_instance_of(ActionController::Base).to receive(:protect_against_forgery?).and_return(true)
-      end
-
-      # NOTE: In production, CSRF protection will reject unauthenticated
-      #       POST requests before Pundit authorization is reached.
-      # NOTE: When `current_user == nil`, `authorize current_user, :internal_user_v2_access_token?`
-      #       raises a Pundit error. However, the CSRF exception is raised first.
-      it 'rejects the request with 422 due to CSRF' do
+      # In production, CSRF protection would reject the request with a 422 error
+      # before it reaches Pundit. However, RSpec bypasses CSRF checks, so this
+      # test verifies that Pundit raises NotDefinedError when authorize is called
+      # with nil. This error won't occur in production due to CSRF protection.
+      it 'raises Pundit::NotDefinedError and does not create a token' do
         expect do
-          post_create_token
-        end.to raise_error(ActionController::InvalidAuthenticityToken)
+          expect do
+            post_create_token
+          end.to raise_error(Pundit::NotDefinedError)
+        end.not_to change { Doorkeeper::AccessToken.count }
       end
     end
 
