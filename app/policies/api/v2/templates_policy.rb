@@ -10,20 +10,7 @@ module Api
 
         def resolve
           # get the templates
-          Template
-            .includes(org: :identifiers)
-            .joins(:org)
-            .published
-            .merge(accessible_templates)
-            .order(:title)
-        end
-
-        private
-
-        def accessible_templates
-          org_templates = Template.organisationally_visible.where(org_id: @resource_owner.org&.id)
-          public_templates = Template.publicly_visible.where(customization_of: nil)
-          org_templates.or(public_templates)
+          Template.for_api_v2(@resource_owner.org&.id)
         end
       end
     end
