@@ -53,15 +53,6 @@ module ApplicationHelper
     end
   end
 
-  def how_to_manage_your_data_path
-    if I18n.locale == :'fr-CA'
-      'https://portagenetwork.ca/fr/outils-et-ressources/assistant-pgd/comment-gerer-vos-donnees/'
-    else
-      # Handling :'en-CA' locale
-      'https://portagenetwork.ca/tools-and-resources/dmp-assistant/how-to-manage-your-data/'
-    end
-  end
-
   def contacts_at_your_instutution_path
     if I18n.locale == :'fr-CA'
       'https://alliancecan.ca/fr/services/gestion-des-donnees-de-recherche/apprentissage-et-ressources/personnes-ressources-dans-les-etablissements'
