@@ -117,31 +117,36 @@
 
 </div>
 
+<%
+  faqs = [
+    {
+      question: _('How can I sign in through my institution?'),
+      answer: section_1
+    },
+    {
+      question: _('What is DMP Assistant?'),
+      answer: section_2
+    },
+    {
+      question: _('What are Data Management Plans (DMPs)?'),
+      answer: section_3
+    },
+    {
+      question: _('Getting Started - Tutorials and Webinars'),
+      answer: section_4
+    },
+    {
+      question: _('History of DMP Assistant'),
+      answer: section_5
+    }
+  ]
+%>
+
 <div class="custom-accordion">
-
-  <details>
-    <summary> <%= _('How can I sign in through my institution?') %> </summary>
-    <%= section_1.html_safe %>
-  </details>
-
-  <details>
-    <summary> <%= _('What is DMP Assistant?') %> </summary>
-    <%= section_2.html_safe %>
-  </details>
-
-  <details>
-    <summary> <%= _('What are Data Management Plans (DMPs)?') %> </summary>
-    <%= section_3.html_safe %>
-  </details>
-
-  <details>
-    <summary> <%= _('Getting Started - Tutorials and Webinars') %> </summary>
-    <%= section_4.html_safe %>
-  </details>
-
-  <details>
-    <summary> <%= _('History of DMP Assistant') %> </summary>
-    <%= section_5.html_safe %>
-  </details>
-
+  <% faqs.each do |faq| %>
+    <details>
+      <summary><%= faq[:question] %></summary>
+      <%= faq[:answer].html_safe %>
+    </details>
+  <% end %>
 </div>
