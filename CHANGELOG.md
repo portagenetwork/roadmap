@@ -10,6 +10,8 @@
 
  - chore(deps): bump webpack from 5.94.0 to 5.104.1 [#1273](https://github.com/portagenetwork/roadmap/pull/1273)
 
+ - chore(deps): bump minimatch from 3.1.2 to 3.1.4 [#1282](https://github.com/portagenetwork/roadmap/pull/1282)
+
 ## [4.1.1+portage-4.6.1]
 
 ### Added
