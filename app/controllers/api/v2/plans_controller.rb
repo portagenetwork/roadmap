@@ -8,9 +8,7 @@ module Api
 
       # GET /api/v2/plans/:id
       def show
-        @plan = Plan.includes(roles: :user).find_by(id: params[:id])
-
-        raise Pundit::NotAuthorizedError unless @plan.present?
+        @plan = plans_scope.find_by(id: params[:id])
 
         plans_policy = PlansPolicy.new(@resource_owner, @plan)
         raise Pundit::NotAuthorizedError unless plans_policy.show?
@@ -21,8 +19,7 @@ module Api
 
       # GET /api/v2/plans
       def index
-        @plans = PlansPolicy::Scope.new(@resource_owner).resolve
-        @plans = @plans.includes(answers: { question: :section }) if @complete
+        @plans = plans_scope
         @items = paginate_response(results: @plans)
         render '/api/v2/plans/index', status: :ok
       end
@@ -32,6 +29,11 @@ module Api
       # GET /api/v2/plans?complete=true and  /api/v2/plans/:id?complete=true
       def set_complete_param
         @complete = params[:complete].to_s.downcase == 'true'
+      end
+
+      def plans_scope
+        scope = PlansPolicy::Scope.new(@resource_owner).resolve
+        @complete ? scope.includes(answers: { question: :section }) : scope
       end
     end
   end

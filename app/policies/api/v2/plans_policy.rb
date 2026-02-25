@@ -12,7 +12,9 @@ module Api
       end
 
       def show?
-        @plan.roles.where(user_id: @resource_owner.id, active: true).exists?
+        # The show action uses the resolve method, so only a presence check
+        # is needed here (see the resolve method comment for more).
+        @plan.present?
       end
 
       class Scope < Scope # rubocop:todo Style/Documentation
@@ -20,6 +22,9 @@ module Api
           @resource_owner = resource_owner
         end
 
+        # Eager loads all associations needed for API v2 serialization,
+        # and restricts to plans where the user_id has an active role.
+        # - (i.e. .where(roles: { user_id: @resource_owner.id, active: true }))
         def resolve
           Plan.for_api_v2(@resource_owner.id)
         end
