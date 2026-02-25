@@ -18,6 +18,7 @@ module.exports = {
   },
   entry: {
     application: './app/javascript/application.js',
+    passwordChecklist: './app/javascript/packs/passwordChecklist.js',
   },
   optimization: {
     moduleIds: 'deterministic',

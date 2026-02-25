@@ -61,7 +61,6 @@ import './src/publicTemplates/show';
 import './src/researchOutputs/form';
 import './src/roles/edit';
 import './src/shared/createAccountForm';
-import './src/shared/passwordChecklist';
 import './src/shared/signInForm';
 import './src/usage/index';
 import './src/users/adminGrantPermissions';
