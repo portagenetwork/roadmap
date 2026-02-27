@@ -21,7 +21,7 @@
     <h2 class="fontsize-h3"><%= _("Help Desk") %></h2>
     <p>
       <%= _("If you have any questions that are not addressed here, or have any comments or concerns please email the DMP Assistant Service Team helpdesk at") %>
-      <a href="mailto:dmp-assistant@tech.alliancecan.ca">dmp-assistant@tech.alliancecan.ca</a>.
+      <%= mail_to Rails.configuration.x.organisation.helpdesk_email %>
     </p>
 
     <!-- ================= RESOURCES ================= -->
