@@ -73,42 +73,99 @@
 
       <details>
         <summary><%= _("What is a data management plan (DMP)?") %></summary>
-        <p><%= _("A DMP is a written document that articulates strategies and tools that you are planning or using to effectively manage your research data. It addresses data management before, during and after your project and is considered a living document.") %></p>
+        <p><%= _("A DMP is a written document that articulates strategies and tools that you are planning or using to effectively manage your research data. It addresses the management of research data before, during and after the active phases of your research project. It is considered a living document and can be updated and modified as needed throughout your research project.") %></p>
       </details>
 
       <details>
         <summary><%= _("How do I create an account?") %></summary>
-        <p><%= _("Visit dmp-pgd.ca. You can create an account using the ‘Create account’ tab or sign in using institutional or social ID. You must confirm your email before accessing the platform.") %></p>
+        <p><%= _("Visit dmp-pgd.ca. You can either create an account by selecting the ‘Create account’ tab and filling in your information, or by selecting ‘Signing in with institutional or social ID’.") %></p>
+        <p><%= _("Once you’ve created an account, an email confirmation will be sent, and you will need to confirm your email address before accessing the platform. If you require assistance with this step, please contact the help desk.") %></p>
       </details>
 
       <details>
         <summary><%= _("Does it cost anything to create an account?") %></summary>
-        <p><%= _("No. DMP Assistant is free for researchers and institutions.") %></p>
+        <p><%= _("No, DMP Assistant is a free to use platform for researchers and institutions.") %></p>
       </details>
 
       <details>
-        <summary><%= _("How do I create a DMP?") %></summary>
-        <p><%= _("After signing in, select ‘Create plan’, provide a project title, select your organization and template. Once selected, templates cannot be changed.") %></p>
+        <summary><%= _("Why doesn't my organisation appear in the list of available organisations when creating an account?") %></summary>
+        <p><%= _("If your institution is not one of the available options, you can use the ‘Digital Research Alliance of Canada’, until your organisation has an account created, and then you may change your organisation on your profile page. Please contact your local organisation’s research data management contact to request the organisation be added to the platform.") %></p>
       </details>
 
       <details>
-        <summary><%= _("How do I share or add collaborators?") %></summary>
-        <p><%= _("Use the ‘Share’ tab to invite collaborators and assign permission levels (co-owner, editor, read-only). Contributors can be listed separately but cannot edit.") %></p>
+        <summary><%= _("Why doesn't my organisation appear in the ‘Sign in with institutional or social ID’ menu?") %></summary>
+        <p><%= _("If your institution does not integrate with CILogin, then unfortunately you will not be able to sign into the platform with your institutional credentials. However, this does not mean that you cannot access the platform, you can select a social sign in, such as ORCID, or create an account directly on the platform.") %></p>
+      </details>
+
+      <details>
+        <summary><%= _("How do I create a data management plan (DMP) in DMP Assistant?") %></summary>
+        <p><%= _("After signing in or creating an account, there are two ways to create a DMP within the platform, either by selecting ‘Create plan’ under the dashboard, or on the top header menu select ‘Create plans’.") %></p>
+        <p><%= _("Provide a title for your research project, this can be changed at a later time as needed. Select your organization from the drop down menu, if your organization is not listed, you can select ‘Digital Research Alliance of Canada’ to access all national DMP templates. If you think your organization should be listed, reach out to your local Research Data Management contact and they can request an organization to be added to the platform.") %></p>
+        <p><%= _("After selecting your organization, a list of available templates will appear. Your organization may have local templates to use, but if not, all Alliance templates are available to use. Which template you select will depend on your research project. Note: templates may not completely align with your research project and you may need to select the one that best fits your project. Once a template has been selected, you cannot change the template, you will need to create a new plan, selecting a different template.") %></p>
+      </details>
+
+      <details>
+        <summary><%= _("What is a template?") %></summary>
+        <p><%= _("A template is a designed set of questions and guidance to help guide researchers to develop a data management plan within DMP Assistant.") %></p>
+      </details>
+
+      <details>
+        <summary><%= _("How to share or add collaborators to a plan?") %></summary>
+        <p><%= _("There are different ways to share a DMP, whether you want to share your plan internally within your team, externally with other researchers or with staff at your local institution.") %></p>
+        <p><%= _("To share plans with members of your team so that they can view/edit the DMP, under the ‘Share’ tab when writing your DMP, you can invite who you wish to add and assign them a level of permission (co-owner, editor, read-only). You can add as many collaborators as you would like.") %></p>
+        <p><%= _("You can add contributors to your plan, but this does NOT provide access to view/edit the DMP, but if you want to name contributors such as a PI (Principal Investigator) on the DMP this would be where you can add their names.") %></p>
+      </details>
+
+      <details>
+        <summary><%= _("What is the Request Feedback feature?") %></summary>
+        <p><%= _("Some organisations have the Request Feedback feature enabled. If your organisation utilizes this feature, you will see an extra tab while writing your plan. If you see this tab, you can request feedback and a notification will be sent to your local administrators.") %></p>
+        <p><%= _("If you do not see this tab, you may still be able to receive feedback from expertise at your organisation, however you will need to reach out to your local contact separately.") %></p>
+      </details>
+
+      <details>
+        <summary><%= _("What are Research Outputs?") %></summary>
+        <p><%= _("Research outputs are optional fields for researchers to complete in addition to the fields of the ‘Write Plan’ component of the DMP. The Research Outputs include fields such as the type of research, title of research, repositories and metadata standards that will be used to share your research, anticipated release date, level of initial access and if applicable and licenses. This is not a required page but may assist researchers in the long term planning of their research project.") %></p>
       </details>
 
       <details>
         <summary><%= _("How do I export my DMP?") %></summary>
-        <p><%= _("Under the Download tab, export your plan as CSV, HTML, PDF, text, DOCX, or JSON. You can customize included components.") %></p>
+        <p><%= _("Under the download tab of any DMP, there are a number of downloadable formats for users to download their plans, including csv, html, pdf, text, docx, and json. Users can select what components of their DMP they wish to include in the download.") %></p>
       </details>
 
       <details>
-        <summary><%= _("What happens if I move institutions?") %></summary>
-        <p><%= _("You can update your organization under ‘Edit profile’. If needed, accounts can be merged by contacting the help desk.") %></p>
+        <summary><%= _("Can I add extra questions or answers to a DMP?") %></summary>
+        <p><%= _("While users themselves cannot make changes to the template, if additional information is required on a DMP, or there is information you want to add to the DMP but not within the platform, users are suggested to download their plan in a workable format (e.g. text or docx), and make the edits outside of the platform.") %></p>
+        <p><%= _("If you need further assistance with a DMP, please reach out to your local RDM support contact.") %></p>
+      </details>
+
+      <details>
+        <summary><%= _("How can I change my email?") %></summary>
+        <p><%= _("Unfortunately an email cannot be changed directly, however you can create a new account with the email address you wish to use. If desired, accounts can be merged, if you wish to do so then contact the help desk and the service team can merge your accounts to ensure you do not lose any of your information.") %></p>
+      </details>
+
+      <details>
+        <summary><%= _("What happens if I move to a different institution?") %></summary>
+        <p><%= _("If you move to another organization or institution, you can still access your account providing you have access to your email.") %></p>
+        <p><%= _("If you do not have access to your email, you may still be able to access your DMP Assistant account, however you can create a new account and contact the help desk, where the service team can merge your accounts, so you don’t lose access to your information.") %></p>
+        <p><%= _("Alternatively, if you don’t wish to create a new account and still have access to your email from the past organization or institution, you can change your profile organization. Go to your name within DMP Assistant and select ‘Edit profile’. From there you can select your new organization and save that information.") %></p>
+      </details>
+
+      <details>
+        <summary><%= _("What is the difference between a contributor and a collaborator?") %></summary>
+        <p><%= _("Contributors can be anyone you work with, and you can enter any name you want. The contributors will be listed in the plan, but cannot edit or modify the plan in any way.") %></p>
+        <p><%= _("Collaborators are anyone you wish to share the plan with, and will require the person to create or sign into DMP Assistant to collaborate with you. Collaborators have the ability to comment and edit on the plan as needed.") %></p>
+        <p><%= _("These functions are different as in many cases not all who are listed as contributors are collaborators, and not all collaborators need to be listed as contributors for all projects depending on their role(s) within the project.") %></p>
       </details>
 
       <details>
         <summary><%= _("I can’t find my DMP?") %></summary>
-        <p><%= _("You may have created multiple accounts. Contact the help desk to merge accounts if necessary.") %></p>
+        <p><%= _("If you have signed into your account using single sign on/institutional credentials and are unable to find/view any of your DMPs, you may have created a separate account.") %></p>
+        <p><%= _("You can either sign in to your account using a different email that may be associated with an account, or you can reach out to the help desk for further assistance. If you unintentionally created an account, we can have the two accounts merged, but this is something that must be done via the service team help desk.") %></p>
+      </details>
+
+      <details>
+        <summary><%= _("I am unable to reset my password, or when I reset my password, an error message saying ‘language must exist’ is displayed?") %></summary>
+        <p><%= _("If you receive this message, you must contact the help desk. This is a known issue and users may receive this message when their language is improperly stored in the database. Once the language has been reset by the service team, you should be able to sign in normally.") %></p>
       </details>
 
     </div>
