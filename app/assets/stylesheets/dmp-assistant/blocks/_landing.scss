@@ -36,22 +36,22 @@
   justify-content: space-between;
   gap: 40px;
   text-align: center;
-}
 
-.feature {
-  flex: 1;
+  .feature {
+    flex: 1;
 
-  .feature-icon {
-    margin-bottom: 15px;
+    .feature-icon {
+      margin-bottom: 15px;
 
-    img {
-      height: 70px;
-      width: auto;
+      img {
+        height: 70px;
+        width: auto;
+      }
     }
-  }
 
-  p {
-    font-weight: 600;
-    color: $color-alliance-digital-grey;
+    p {
+      font-weight: 600;
+      color: $color-alliance-digital-grey;
+    }
   }
 }
