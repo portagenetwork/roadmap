@@ -1,6 +1,10 @@
 # Changelog
 
-## [Unreleased]
+## [4.1.1+portage-4.6.2]
+
+### Added
+
+ - Add rake task to sync UNBC templates with funder (Alliance) templates [#1285](https://github.com/portagenetwork/roadmap/pull/1285)
 
 ### Dependency Updates
 
