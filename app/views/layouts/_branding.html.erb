@@ -121,6 +121,9 @@
               <% end %>
               <% if current_user.can_super_admin? %>
                 <!-- API -->
+                <li class="nav-item <%= 'class=active' if active_page?(oauth_applications_path) %>">
+                  <%= link_to _('OAuth Applications'), oauth_applications_path, class: 'nav-link dropdown-item  px-3' %>
+                </li>
                 <li <%= 'class=active' if active_page?(super_admin_api_clients_path) %>>
                   <%= link_to(_('Api Clients'), super_admin_api_clients_path) %>
                 </li>

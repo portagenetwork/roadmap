@@ -103,5 +103,12 @@ module DMPRoadmap
     # customized templates. For this reason we are specifying in the
     # documentation the funder that
     config.default_funder_id = Rails.application.secrets.default_funder_id.to_i
+
+    # apply application styling to doorkeeper views
+    config.to_prepare do
+      Doorkeeper::ApplicationsController.layout "application"
+      Doorkeeper::AuthorizationsController.layout "application"
+      Doorkeeper::AuthorizedApplicationsController.layout "application"
+    end
   end
 end

@@ -8,7 +8,13 @@
 
  - Implement tiered Rack::Attack throttles [#1254](https://github.com/portagenetwork/roadmap/pull/1254)
 
+ - Add Internal v2 API Access Token Generation for Users [#1279](https://github.com/portagenetwork/roadmap/pull/1279)
+
  - Add `bundle exec rails db:migrate` to entrypoint.sh [#1278](https://github.com/portagenetwork/roadmap/pull/1278)
+
+ - Add copy button next to V2 API Token [#1283](https://github.com/portagenetwork/roadmap/pull/1283)
+
+ - Initial v2 API Implementation & Doorkeeper OAuth Integration [#1276](https://github.com/portagenetwork/roadmap/pull/1276) 
 
 ### Changed
  - Upgrade ROR API From V1 to V2 [#1247](https://github.com/portagenetwork/roadmap/pull/1247)
