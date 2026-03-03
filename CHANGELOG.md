@@ -14,6 +14,8 @@
 
  - Add copy button next to V2 API Token [#1283](https://github.com/portagenetwork/roadmap/pull/1283)
 
+ - Initial v2 API Implementation & Doorkeeper OAuth Integration [#1276](https://github.com/portagenetwork/roadmap/pull/1276) 
+
 ### Changed
  - Upgrade ROR API From V1 to V2 [#1247](https://github.com/portagenetwork/roadmap/pull/1247)
 
