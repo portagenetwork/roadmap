@@ -19,7 +19,7 @@ namespace :templates do
     # - x_unbc_target: The corresponding customizable UNBC template whose title + description are to be updated
     crdcn_funder_source = Template.find_by!(id: 3468, org_id: funder_id, published: true)
     crdcn_unbc_target_title = 'CRDCN Template for Research Data Centres and External Analysis'
-    crdcn_unbc_target = Template.find_by!(id: 3510, org_id: unbc_id, title: crdcn_unbc_target_title, published: true)
+    crdcn_unbc_target = Template.find_by!(id: 4248, org_id: unbc_id, title: crdcn_unbc_target_title, published: true)
 
     portage_funder_source = Template.find_by!(id: 3508, org_id: funder_id, published: true)
     portage_crdcn_target_title = 'Portage CRDCN Template for Accessing Data from Research Data Centres'
