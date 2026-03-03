@@ -41,6 +41,22 @@
 
  - chore(deps): bump nginx from 1.29.4-alpine to 1.29.5-alpine [#1271](https://github.com/portagenetwork/roadmap/pull/1271)
 
+## [4.1.1+portage-4.6.2]
+
+### Added
+
+ - Add rake task to sync UNBC templates with funder (Alliance) templates [#1285](https://github.com/portagenetwork/roadmap/pull/1285)
+
+### Dependency Updates
+
+ - chore(deps): bump httparty from 0.23.1 to 0.24.0 [#1253](https://github.com/portagenetwork/roadmap/pull/1253)
+
+ - chore(deps): bump lodash from 4.17.21 to 4.17.23 [#1264](https://github.com/portagenetwork/roadmap/pull/1264)
+
+ - chore(deps): bump webpack from 5.94.0 to 5.104.1 [#1273](https://github.com/portagenetwork/roadmap/pull/1273)
+
+ - chore(deps): bump minimatch from 3.1.2 to 3.1.4 [#1282](https://github.com/portagenetwork/roadmap/pull/1282)
+
 ## [4.1.1+portage-4.6.1]
 
 ### Added
