@@ -44,6 +44,8 @@
  - `bundle update httparty` [#1291](https://github.com/portagenetwork/roadmap/pull/1291)
    - (See [#1288](https://github.com/portagenetwork/roadmap/pull/1288) for more)
 
+ - chore(deps): bump docker/login-action from 3.7.0 to 4.0.0 [#1290](https://github.com/portagenetwork/roadmap/pull/1290)
+
 ## [4.1.1+portage-4.6.2]
 
 ### Added
