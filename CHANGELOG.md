@@ -41,7 +41,7 @@
 
  - chore(deps): bump nginx from 1.29.4-alpine to 1.29.5-alpine [#1271](https://github.com/portagenetwork/roadmap/pull/1271)
 
- - Revert chore(deps): bump httparty from 0.23.1 to 0.24.0 [#1253](https://github.com/portagenetwork/roadmap/pull/1253)
+ - `bundle update httparty` [#1291](https://github.com/portagenetwork/roadmap/pull/1291)
    - (See [#1288](https://github.com/portagenetwork/roadmap/pull/1288) for more)
 
 ## [4.1.1+portage-4.6.2]
