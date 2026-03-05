@@ -46,6 +46,8 @@
 
  - chore(deps): bump docker/login-action from 3.7.0 to 4.0.0 [#1290](https://github.com/portagenetwork/roadmap/pull/1290)
 
+ - chore(deps): bump docker/setup-buildx-action from 3 to 4 [#1295](https://github.com/portagenetwork/roadmap/pull/1295)
+
 ## [4.1.1+portage-4.6.2]
 
 ### Added
