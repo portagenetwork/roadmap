@@ -54,7 +54,7 @@ module Api
       end
 
       # Fetch all questions and answers from a plan, regardless of theme
-      def fetch_all_q_and_a
+      def fetch_all_q_and_a # rubocop:disable Metrics/AbcSize
         answers = @plan.answers
         return [] unless answers.present?
 
@@ -66,8 +66,8 @@ module Api
             id: q.id,
             title: "Question #{q.number || q.id}",
             section: q.section&.title,
-            question: q.text.to_s,
-            answer: answer.text.to_s
+            question: ActionView::Base.full_sanitizer.sanitize(q.text.to_s),
+            answer: ActionView::Base.full_sanitizer.sanitize(answer.text.to_s)
           }
         end
       end
