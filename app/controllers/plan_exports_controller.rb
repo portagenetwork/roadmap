@@ -114,8 +114,11 @@ class PlanExportsController < ApplicationController
   end
 
   def show_json
-    json = render_to_string(partial: '/api/v1/plans/show', locals: { plan: @plan })
-    render json: "{\"dmp\":#{json}}"
+    @complete = true
+    @plan = Plan.for_api_v2(current_user.id)
+                .find_by(id: @plan.id)
+    @items = [@plan]
+    render '/api/v2/plans/index', formats: :json
   end
 
   def file_name
