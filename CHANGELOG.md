@@ -16,6 +16,8 @@
 
  - Initial v2 API Implementation & Doorkeeper OAuth Integration [#1276](https://github.com/portagenetwork/roadmap/pull/1276) 
 
+ - Add v2 API documentation to API Access page [#1300](https://github.com/portagenetwork/roadmap/pull/1300) 
+
 ### Changed
  - Upgrade ROR API From V1 to V2 [#1247](https://github.com/portagenetwork/roadmap/pull/1247)
 
