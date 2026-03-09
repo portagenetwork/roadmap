@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # locals: plan
+@sanitizer ||= Object.new.extend(Api::V2::SanitizationService)
 
 json.schema 'https://github.com/RDA-DMP-Common/RDA-DMP-Common-Standard/tree/master/examples/JSON/JSON-schema/1.0'
 
@@ -20,7 +21,7 @@ json.created plan.created_at.to_formatted_s(:iso8601)
 json.modified plan.updated_at.to_formatted_s(:iso8601)
 
 json.ethical_issues_exist Api::V2::ConversionService.boolean_to_yes_no_unknown(plan.ethical_issues)
-json.ethical_issues_description plan.ethical_issues_description
+json.ethical_issues_description @sanitizer.rich_text(plan.ethical_issues_description)
 json.ethical_issues_report plan.ethical_issues_report
 
 id = presenter.identifier
@@ -65,7 +66,7 @@ unless @minimal
     json.set! :dmproadmap do
       json.template do
         json.id template.id
-        json.title template.title
+        json.title @sanitizer.plain_text(template.title)
       end
     end
 

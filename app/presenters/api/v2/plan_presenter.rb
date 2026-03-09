@@ -4,6 +4,8 @@ module Api
   module V2
     # Helper class for the API V2 project / DMP
     class PlanPresenter
+      include Api::V2::SanitizationService
+
       attr_reader :data_contact, :contributors, :costs, :complete_plan_data
 
       def initialize(plan:, complete: false)
@@ -48,8 +50,8 @@ module Api
 
         answers.map do |answer|
           # TODO: Investigate whether question level guidance should be the description
-          { title: answer.question.text, description: nil,
-            currency_code: 'usd', value: answer.text }
+          { title: rich_text(answer.question.text), description: nil,
+            currency_code: 'usd', value: rich_text(answer.text) }
         end
       end
 
@@ -65,9 +67,9 @@ module Api
           {
             id: q.id,
             title: "Question #{q.number || q.id}",
-            section: q.section&.title,
-            question: q.text.to_s,
-            answer: answer.text.to_s
+            section: plain_text(q.section&.title),
+            question: rich_text(q.text),
+            answer: rich_text(answer.text)
           }
         end
       end

@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 # locals: contributor, is_contact
-
+@sanitizer ||= Object.new.extend(Api::V2::SanitizationService)
 is_contact ||= false
 
-json.name contributor.is_a?(User) ? contributor.name(false) : contributor.name
+name = contributor.is_a?(User) ? contributor.name(false) : contributor.name
+json.name @sanitizer.plain_text(name)
 json.mbox contributor.email
 
 if !is_contact && contributor.selected_roles.any?
