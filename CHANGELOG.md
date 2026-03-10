@@ -48,6 +48,8 @@
 
  - chore(deps): bump docker/setup-buildx-action from 3 to 4 [#1295](https://github.com/portagenetwork/roadmap/pull/1295)
 
+ - chore(deps): bump docker/metadata-action from 5 to 6 [#1298](https://github.com/portagenetwork/roadmap/pull/1298)
+
 ## [4.1.1+portage-4.6.2]
 
 ### Added
