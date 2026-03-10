@@ -1,31 +1,26 @@
-<% title _('Public DMPs') %>
-<div class="row">
-  <div class="col-md-12">
-    <h1><%= _('Public DMPs') %></h1>
-    <!-- if the user has projects -->
-    <% if @plans.count > 0 %>
-      <p class="left-indent">
-        <%= _('Public DMPs are plans created using the %{application_name} service and shared publicly by their owners. They are not vetted for quality, completeness, or adherence to funder guidelines.') % {application_name: ApplicationService.application_name} %>
-      </p>
-    <% else %>
-      <p class="left-indent">
-        <%= _("There are currently no public DMPs.")%>
-      </p>
-    <% end %>
-  </div>
-</div>
+<% title _('Example DMPs') %>
 
 <div class="row">
   <div class="col-md-12">
-    <% if @plans.count > 0 %>
-      <%= paginable_renderise(
-        partial: '/paginable/plans/publicly_visible',
-        controller: 'paginable/plans',
-        action: 'publicly_visible',
-        remote: false,
-        path_params: @args || {},
-        query_params: query_params,
-        scope: @plans) %>
-    <% end %>
+    <h1><%= _('Example DMPs') %></h1>
+
+    <ul>
+      <li><%= link_to _("University of Alberta Simplified Template (Funding Application Stage) - Mixed Methods Research Example"), _("https://zenodo.org/records/14165852"), target: "_blank", rel: "noopener" %></li>
+      <li><%= link_to _("Mixed Methods DMP Example (2023)"), _("https://zenodo.org/records/8411242"), target: "_blank", rel: "noopener" %></li>
+      <li><%= link_to _("Women’s Advanced Risk-Assessment in Manitoba (WARM) Hearts"), _("https://zenodo.org/records/11074529"), target: "_blank", rel: "noopener" %></li>
+      <li><%= link_to _("Psychosocial Adjustment in Young Millennials"), _("https://zenodo.org/records/8411137"), target: "_blank", rel: "noopener" %></li>
+      <li><%= link_to _("Data Management Plan to Optimize an Industrial Extrusion Process"), _("https://zenodo.org/records/8411182"), target: "_blank", rel: "noopener" %></li>
+      <li><%= link_to _("Data Management plan for the Green SkEye project: Greenhouse Imaging and Analytics for Omics Innovation in Agriculture"), _("https://zenodo.org/records/8411298"), target: "_blank", rel: "noopener" %></li>
+      <li><%= link_to _("Designing Low-Temperature Synthesis Methods for 2-Dimensional Oxide Perovskites"), _("https://zenodo.org/records/8411211"), target: "_blank", rel: "noopener" %></li>
+      <li><%= link_to _("Data Management Plan for Belgians and French in the Prairies (Examplar)"), _("https://zenodo.org/records/4062484"), target: "_blank", rel: "noopener" %></li>
+      <li><%= link_to _("Data Management Plan for Ecohydrology Research Group (Examplar)"), _("https://zenodo.org/records/4062478"), target: "_blank", rel: "noopener" %></li>
+      <li><%= link_to _("Data Management Plan for Computational Reproducibility in High-Performance Computing (HPC) (v. 1.0)"), _("https://zenodo.org/records/4062486"), target: "_blank", rel: "noopener" %></li>
+      <li><%= link_to _("Data Management Plan for Usage of Academic Profile Websites (v. 1.0)"), _("https://zenodo.org/records/4062489"), target: "_blank", rel: "noopener" %></li>
+      <li><%= link_to _("Data Management Plan for People, Places, Policies and Prospects: Affordable Rental Housing for Those in Greatest Need (Exemplar)"), _("https://zenodo.org/records/4062466"), target: "_blank", rel: "noopener" %></li>
+      <li><%= link_to _("Data Management Plan: Soundscape Study (Exemplar)"), _("https://zenodo.org/records/4056785"), target: "_blank", rel: "noopener" %></li>
+      <li><%= link_to _("Data Management Plan Examplar #1: Digital Humanities"), _("https://zenodo.org/records/4064168"), target: "_blank", rel: "noopener" %></li>
+      <li><%= link_to _("Data Management Plan Examplar #2: Digital Humanities and Secondary Data"), _("https://zenodo.org/records/4019309"), target: "_blank", rel: "noopener" %></li>
+      <li><%= link_to _("Data Management Plan Exemplar #3: Mixed Methods Fictional Exemplar"), _("https://zenodo.org/records/4019563"), target: "_blank", rel: "noopener" %></li>
+    </ul>
   </div>
 </div>
