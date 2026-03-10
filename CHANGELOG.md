@@ -54,6 +54,8 @@
 
  - chore(deps): bump docker/metadata-action from 5 to 6 [#1298](https://github.com/portagenetwork/roadmap/pull/1298)
 
+ - chore(deps): bump docker/build-push-action from 6.19.2 to 7.0.0 [#1297](https://github.com/portagenetwork/roadmap/pull/1297)
+
 ## [4.1.1+portage-4.6.2]
 
 ### Added
