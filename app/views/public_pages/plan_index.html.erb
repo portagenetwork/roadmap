@@ -1,17 +1,33 @@
 <% title _('Example DMPs') %>
 
+<%
+example_dmps = [
+  { title: _("University of Alberta Simplified Template (Funding Application Stage) - Mixed Methods Research Example"), url: _("https://zenodo.org/records/14165852") },
+  { title: _("Mixed Methods DMP Example (2023)"), url: _("https://zenodo.org/records/8411242") },
+  { title: _("Women’s Advanced Risk-Assessment in Manitoba (WARM) Hearts"), url: _("https://zenodo.org/records/11074529") },
+  { title: _("Psychosocial Adjustment in Young Millennials"), url: _("https://zenodo.org/records/8411137") },
+  { title: _("Data Management Plan to Optimize an Industrial Extrusion Process"), url: _("https://zenodo.org/records/8411182") },
+  { title: _("Data Management plan for the Green SkEye project: Greenhouse Imaging and Analytics for Omics Innovation in Agriculture"), url: _("https://zenodo.org/records/8411298") },
+  { title: _("Designing Low-Temperature Synthesis Methods for 2-Dimensional Oxide Perovskites"), url: _("https://zenodo.org/records/8411211") },
+  { title: _("Data Management Plan for Belgians and French in the Prairies (Examplar)"), url: _("https://zenodo.org/records/4062484") },
+  { title: _("Data Management Plan for Ecohydrology Research Group (Examplar)"), url: _("https://zenodo.org/records/4062478") },
+  { title: _("Data Management Plan for Computational Reproducibility in High-Performance Computing (HPC) (v. 1.0)"), url: _("https://zenodo.org/records/4062486") },
+  { title: _("Data Management Plan for Usage of Academic Profile Websites (v. 1.0)"), url: _("https://zenodo.org/records/4062489") },
+  { title: _("Data Management Plan for People, Places, Policies and Prospects: Affordable Rental Housing for Those in Greatest Need (Exemplar)"), url: _("https://zenodo.org/records/4062466") },
+  { title: _("Data Management Plan: Soundscape Study (Exemplar)"), url: _("https://zenodo.org/records/4056785") },
+  { title: _("Data Management Plan Examplar #1: Digital Humanities"), url: _("https://zenodo.org/records/4064168") },
+  { title: _("Data Management Plan Examplar #2: Digital Humanities and Secondary Data"), url: _("https://zenodo.org/records/4019309") },
+  { title: _("Data Management Plan Exemplar #3: Mixed Methods Fictional Exemplar"), url: _("https://zenodo.org/records/4019563") }
+]
+%>
+
 <div class="row">
   <div class="col-md-12">
-    <h1><%= _('Example DMPs') %></h1>
-
-    <p class="left-indent">
-      <%= _('Below are publicly available example Data Management Plans that can help guide the development of your own DMP.') %>
-    </p>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-md-12">
+     <h1><%= _('Example DMPs') %></h1>
+      <p class="left-indent">
+        <%= _('Below are publicly available example Data Management Plans that can help guide the development of your own DMP.') %>
+      </p>
+      
     <table class="table table-striped table-hover">
       <thead>
         <tr>
@@ -19,54 +35,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td><%= link_to _("University of Alberta Simplified Template (Funding Application Stage) - Mixed Methods Research Example"), _("https://zenodo.org/records/14165852"), target: "_blank", rel: "noopener" %></td>
-        </tr>
-        <tr>
-          <td><%= link_to _("Mixed Methods DMP Example (2023)"), _("https://zenodo.org/records/8411242"), target: "_blank", rel: "noopener" %></td>
-        </tr>
-        <tr>
-          <td><%= link_to _("Women’s Advanced Risk-Assessment in Manitoba (WARM) Hearts"), _("https://zenodo.org/records/11074529"), target: "_blank", rel: "noopener" %></td>
-        </tr>
-        <tr>
-          <td><%= link_to _("Psychosocial Adjustment in Young Millennials"), _("https://zenodo.org/records/8411137"), target: "_blank", rel: "noopener" %></td>
-        </tr>
-        <tr>
-          <td><%= link_to _("Data Management Plan to Optimize an Industrial Extrusion Process"), _("https://zenodo.org/records/8411182"), target: "_blank", rel: "noopener" %></td>
-        </tr>
-        <tr>
-          <td><%= link_to _("Data Management plan for the Green SkEye project: Greenhouse Imaging and Analytics for Omics Innovation in Agriculture"), _("https://zenodo.org/records/8411298"), target: "_blank", rel: "noopener" %></td>
-        </tr>
-        <tr>
-          <td><%= link_to _("Designing Low-Temperature Synthesis Methods for 2-Dimensional Oxide Perovskites"), _("https://zenodo.org/records/8411211"), target: "_blank", rel: "noopener" %></td>
-        </tr>
-        <tr>
-          <td><%= link_to _("Data Management Plan for Belgians and French in the Prairies (Examplar)"), _("https://zenodo.org/records/4062484"), target: "_blank", rel: "noopener" %></td>
-        </tr>
-        <tr>
-          <td><%= link_to _("Data Management Plan for Ecohydrology Research Group (Examplar)"), _("https://zenodo.org/records/4062478"), target: "_blank", rel: "noopener" %></td>
-        </tr>
-        <tr>
-          <td><%= link_to _("Data Management Plan for Computational Reproducibility in High-Performance Computing (HPC) (v. 1.0)"), _("https://zenodo.org/records/4062486"), target: "_blank", rel: "noopener" %></td>
-        </tr>
-        <tr>
-          <td><%= link_to _("Data Management Plan for Usage of Academic Profile Websites (v. 1.0)"), _("https://zenodo.org/records/4062489"), target: "_blank", rel: "noopener" %></td>
-        </tr>
-        <tr>
-          <td><%= link_to _("Data Management Plan for People, Places, Policies and Prospects: Affordable Rental Housing for Those in Greatest Need (Exemplar)"), _("https://zenodo.org/records/4062466"), target: "_blank", rel: "noopener" %></td>
-        </tr>
-        <tr>
-          <td><%= link_to _("Data Management Plan: Soundscape Study (Exemplar)"), _("https://zenodo.org/records/4056785"), target: "_blank", rel: "noopener" %></td>
-        </tr>
-        <tr>
-          <td><%= link_to _("Data Management Plan Examplar #1: Digital Humanities"), _("https://zenodo.org/records/4064168"), target: "_blank", rel: "noopener" %></td>
-        </tr>
-        <tr>
-          <td><%= link_to _("Data Management Plan Examplar #2: Digital Humanities and Secondary Data"), _("https://zenodo.org/records/4019309"), target: "_blank", rel: "noopener" %></td>
-        </tr>
-        <tr>
-          <td><%= link_to _("Data Management Plan Exemplar #3: Mixed Methods Fictional Exemplar"), _("https://zenodo.org/records/4019563"), target: "_blank", rel: "noopener" %></td>
-        </tr>
+        <% example_dmps.each do |dmp| %>
+          <tr>
+            <td>
+              <%= link_to dmp[:title], dmp[:url], target: "_blank", rel: "noopener" %>
+            </td>
+          </tr>
+        <% end %>
       </tbody>
     </table>
   </div>
