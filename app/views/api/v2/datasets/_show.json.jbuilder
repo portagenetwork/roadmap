@@ -6,8 +6,8 @@ if output.is_a?(ResearchOutput)
   presenter = Api::V2::ResearchOutputPresenter.new(output: output)
 
   json.type output.output_type
-  json.title output.title
-  json.description output.description
+  json.title strip_tags(output.title)
+  json.description sanitize(output.description)
   json.personal_data Api::V2::ApiPresenter.boolean_to_yes_no_unknown(value: output.personal_data)
   json.sensitive_data Api::V2::ApiPresenter.boolean_to_yes_no_unknown(value: output.sensitive_data)
   json.issued output.release_date&.to_formatted_s(:iso8601)

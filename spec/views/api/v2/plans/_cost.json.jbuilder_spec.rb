@@ -10,7 +10,7 @@ describe 'api/v2/plans/_cost.json.jbuilder' do
       title: Faker::Lorem.sentence,
       description: Faker::Lorem.paragraph,
       currency_code: Faker::Currency.code,
-      value: Faker::Number.decimal(l_digits: 2)
+      value: Faker::Number.decimal(l_digits: 2).to_s
     }.with_indifferent_access
 
     render partial: 'api/v2/plans/cost', locals: { cost: @cost }
