@@ -6,8 +6,8 @@ json.items @items do |template|
   presenter = Api::V2::TemplatePresenter.new(template: template)
 
   json.dmp_template do
-    json.title presenter.title
-    json.description template.description
+    json.title strip_tags(presenter.title)
+    json.description sanitize(template.description)
     json.version template.version
     json.created template.created_at.to_formatted_s(:iso8601)
     json.modified template.updated_at.to_formatted_s(:iso8601)

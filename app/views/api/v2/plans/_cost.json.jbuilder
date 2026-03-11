@@ -2,7 +2,7 @@
 
 # locals: cost
 
-json.title cost[:title]
+json.title sanitize(cost[:title])
 json.description cost[:description]
 json.currency_code cost[:currency_code]
-json.value cost[:value]
+json.value sanitize(cost[:value])

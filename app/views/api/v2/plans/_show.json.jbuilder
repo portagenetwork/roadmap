@@ -20,7 +20,7 @@ json.created plan.created_at.to_formatted_s(:iso8601)
 json.modified plan.updated_at.to_formatted_s(:iso8601)
 
 json.ethical_issues_exist Api::V2::ConversionService.boolean_to_yes_no_unknown(plan.ethical_issues)
-json.ethical_issues_description plan.ethical_issues_description
+json.ethical_issues_description sanitize(plan.ethical_issues_description)
 json.ethical_issues_report plan.ethical_issues_report
 
 id = presenter.identifier
@@ -65,7 +65,7 @@ unless @minimal
     json.set! :dmproadmap do
       json.template do
         json.id template.id
-        json.title template.title
+        json.title strip_tags(template.title)
       end
     end
 
@@ -77,9 +77,9 @@ unless @minimal
         json.array! q_and_a do |item|
           json.question_id item[:id]
           json.title item[:title]
-          json.section item[:section]
-          json.question item[:question]
-          json.answer item[:answer]
+          json.section strip_tags(item[:section])
+          json.question sanitize(item[:question])
+          json.answer sanitize(item[:answer])
         end
       end
     end
