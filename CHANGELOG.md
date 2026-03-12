@@ -21,9 +21,12 @@
  - Add v2 API documentation to API Access page [#1300](https://github.com/portagenetwork/roadmap/pull/1300) 
 
 ### Changed
+
  - Upgrade ROR API From V1 to V2 [#1247](https://github.com/portagenetwork/roadmap/pull/1247)
 
  - Update plan json export to use V2 API complete plan endpoint [#1293](https://github.com/portagenetwork/roadmap/pull/1293)
+
+ - Redesign and Edit Welcome, Help, and About pages and Remove Public DMPs Page [#1299](https://github.com/portagenetwork/roadmap/pull/1299)
 
 ### Dependency Updates
 

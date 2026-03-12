@@ -27,7 +27,7 @@ RSpec.describe 'Plans', type: :feature do
   end
 
   it 'User creates a new Plan', :js do
-    click_link 'Create plan'
+    find('#create-plan-link').click
     fill_in :plan_title, with: 'My test plan'
     choose_suggestion('plan_org_org_name', @org)
 
@@ -53,7 +53,7 @@ RSpec.describe 'Plans', type: :feature do
   end
 
   it 'displays template dropdown headers and expands more templates', :js do
-    click_link 'Create plan'
+    find('#create-plan-link').click
     fill_in :plan_title, with: 'My test plan'
     choose_suggestion('plan_org_org_name', @org)
 

@@ -1,0 +1,56 @@
+@use '../variables/colours' as *;
+
+.custom-accordion {
+
+  summary {
+    cursor: pointer;
+    padding: 16px 20px 16px 32px;
+    font-weight: 600;
+    font-size: 18px;
+    color: $color-alliance-digital-grey;
+    position: relative;
+
+    &::before {
+      content: "▸";
+      position: absolute;
+      left: 16px;
+      transition: transform 0.2s ease;
+    }
+  }
+
+  details[open] summary::before {
+    transform: rotate(90deg);
+  }
+
+  details > *:not(summary) {
+    padding: 0 20px 20px 40px;
+    background: $color-white;
+  }
+}
+
+.welcome-features {
+  margin: 30px 0;
+  padding: 30px;
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  text-align: center;
+
+  .feature {
+    flex: 1;
+
+    .feature-icon {
+      margin-bottom: 15px;
+
+      img {
+        height: 70px;
+        width: auto;
+      }
+    }
+
+    p {
+      font-weight: 600;
+      color: $color-alliance-digital-grey;
+    }
+  }
+}
