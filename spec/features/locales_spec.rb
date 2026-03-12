@@ -50,7 +50,7 @@ RSpec.feature 'Locales', type: :feature, js: true do
   context 'when new locale has no region' do
     scenario 'user changes their locale' do
       skip 'We are now expecting locales to have region'
-      create_plan_text = 'Créer des plans'
+      create_plan_text = 'Créer un plan'
       click_link 'Language'
       expect(current_path).to eql(plans_path)
       expect(page).not_to have_text(create_plan_text)
@@ -63,7 +63,7 @@ RSpec.feature 'Locales', type: :feature, js: true do
 
   context 'when new locale has region' do
     scenario 'user changes their locale' do
-      create_plan_text = 'Créer des plans'
+      create_plan_text = 'Créer un plan'
       click_link 'Language'
       expect(current_path).to eql(plans_path)
       expect(page).not_to have_text(create_plan_text)
