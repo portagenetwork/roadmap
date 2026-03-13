@@ -1,10 +1,5 @@
 // Import locally defined variables. Load this before 'bootstrap'
-<<<<<<< HEAD
-
-@use "variables" as *;
-=======
 @use "variables";
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
 
 // Pull in the webpacker managed copy of Bootstrap Stylesheets
 @import "../../../node_modules/bootstrap/scss/bootstrap";
@@ -21,16 +16,6 @@ $fa-font-path: '.';
 @import '@fortawesome/fontawesome-free/scss/regular';
 @import '@fortawesome/fontawesome-free/scss/solid';
 
-<<<<<<< HEAD
-@import "blocks";
-@import "utils";
-
-@import "rebranding";
-@import "rebranding-animation";
-@import "grey-branding";
-
-@import "dmp-assistant/blocks"
-=======
 // Custom.scss
 // Option B: Include parts of Bootstrap
 
@@ -54,4 +39,9 @@ $fa-font-path: '.';
 //Importing customised stylesheets after Bootstrap defaults
 @import "blocks";
 @import "utils";
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
+
+@import "rebranding";
+@import "rebranding-animation";
+@import "grey-branding";
+
+@import "dmp-assistant/blocks"
