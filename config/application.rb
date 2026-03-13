@@ -89,7 +89,7 @@ module DMPRoadmap
 
     # The default visibility setting for new plans
     #   organisationally_visible  - Any member of the user's org can view, export and duplicate the plan
-    #   publicly_visibile         - (NOT advisable because plans will show up in Public DMPs page by default)
+    #   publicly_visibile         - (NOT advisable because anyone with the link has permission to view the the DMP)
     #   is_test                   - (NOT advisable because test plans are excluded from statistics)
     #   privately_visible         - Only the owner and people they invite can access the plan
     config.default_plan_visibility = 'privately_visible'
