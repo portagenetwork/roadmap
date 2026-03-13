@@ -1,13 +1,9 @@
 @use '../variables/colours' as *;
 @use '../variables/bootstrap' as *;
-<<<<<<< HEAD
-@import '../../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables';
-=======
 @import "../../../../node_modules/bootstrap/scss/functions";
 @import "../../../../node_modules/bootstrap/scss/variables";
 @import "../../../../node_modules/bootstrap/scss/mixins";
 
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
 /* For org navbar custom height */
 #org-navbar {
   border-radius: 0px;
@@ -45,11 +41,7 @@
     color: $navbar-org-link-color;
     &:hover,
     &:focus {
-<<<<<<< HEAD
-      color: darken($navbar-org-link-hover-color,10%);
-=======
       color: shade-color($navbar-org-link-hover-color,10%)
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
     }
   }
   #org-navbar .navbar-nav ul .active a {
