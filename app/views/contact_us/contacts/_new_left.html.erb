@@ -35,15 +35,9 @@
             "aria-required": true) %>
     </div>
 <% if !user_signed_in? && Rails.configuration.x.recaptcha.enabled then %>
-<<<<<<< HEAD
-    <div class="form-group">
-        <%= label_tag(nil, _('Security check')) %>
-        <%= recaptcha_tags(hl: @current_locale) %>
-=======
     <div class="form-control mb-3">
         <%= label_tag(nil, _('Security check'), class: "form-label") %>
-        <%= recaptcha_tags %>
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
+        <%= recaptcha_tags(hl: @current_locale) %>
     </div>
 <% end %>
     <%= f.button(_('Submit'), class: "btn btn-secondary", type: "submit") %>
