@@ -5,23 +5,14 @@
         <%= _('Sign in') %>
       </a>
     </li>
-<<<<<<< HEAD
     <% unless FeatureFlagHelper.enabled?(:on_sandbox) %>
-      <% unless active_page?(new_user_registration_path, true)%>
-        <li role="presentation">
-          <a href="#create-account-form" role="tab" aria-controls="create-account-form" data-toggle="tab">
+      <% unless active_page?(new_user_registration_path, true) %>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link" href="#create-account-form" role="tab" aria-controls="create-account-form" data-bs-toggle="tab">
             <%= _('Create account') %>
           </a>
         </li>
       <% end %>
-=======
-    <% unless active_page?(new_user_registration_path, true) %>
-      <li class="nav-item" role="presentation">
-        <a class="nav-link" href="#create-account-form" role="tab" aria-controls="create-account-form" data-bs-toggle="tab">
-          <%= _('Create account') %>
-        </a>
-      </li>
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
     <% end %>
   </ul>
   <div class="tab-content">
