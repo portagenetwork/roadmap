@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Controller for the Public DMPs and Funder Requirements pages
+# Controller for the Example DMPs and Funder Requirements pages
 class PublicPagesController < ApplicationController
   # GET template_index
   # -----------------------------------------------------
@@ -83,17 +83,10 @@ class PublicPagesController < ApplicationController
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
   # GET /plans_index
+  # This is the example DMPs page
   # ------------------------------------------------------------------------------------
   def plan_index
-    @plans = Plan.publicly_visible.includes(:template)
-    render 'plan_index', locals: {
-      query_params: {
-        page: paginable_params.fetch(:page, 1),
-        search: paginable_params.fetch(:search, ''),
-        sort_field: paginable_params.fetch(:sort_field, 'plans.updated_at'),
-        sort_direction: paginable_params.fetch(:sort_direction, 'desc')
-      }
-    }
+    render 'plan_index'
   end
 
   private
