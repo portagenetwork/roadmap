@@ -1,14 +1,6 @@
 @use '../variables/colours' as *;
-<<<<<<< HEAD
-@import '../../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables';
-// This file contains overrides to the core Bootstrap 3.x styling
-.table { border: 1px solid $color-border-default; }
-.table thead > tr > th { border-bottom: none; }
-.table thead > tr > th, .table tbody > tr > th, .table tfoot > tr > th, .table thead > tr > td, .table tbody > tr > td, .table tfoot > tr > td { border: 1px solid $color-border-default; }
-=======
 @import "../../../../node_modules/bootstrap/scss/functions";
 @import "../../../../node_modules/bootstrap/scss/variables";
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
 
 // This file contains overrides to the core Bootstrap 3.x styling
 .table { 

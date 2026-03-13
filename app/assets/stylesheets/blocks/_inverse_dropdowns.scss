@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 @use '../variables/colours' as *;
 @use '../variables/bootstrap' as *;
-=======
- @use '../variables/bootstrap' as *;
- 
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
 /* For dark (inverse) navbars */
 .inverse-dropdown {
   background-color: $dropdown-inverse-bg !important;
