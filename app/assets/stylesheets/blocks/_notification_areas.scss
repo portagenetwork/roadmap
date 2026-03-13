@@ -1,10 +1,6 @@
-<<<<<<< HEAD
-@import '../../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables';
-=======
 @import "../../../../node_modules/bootstrap/scss/functions";
 @import "../../../../node_modules/bootstrap/scss/variables";
 @import "../../../../node_modules/bootstrap/scss/mixins";
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
 
 .notification-area--floating {
   position: fixed;

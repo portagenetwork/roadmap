@@ -1,10 +1,6 @@
-<<<<<<< HEAD
-@import '../../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables';
-=======
 @import "../../../../node_modules/bootstrap/scss/functions";
 @import "../../../../node_modules/bootstrap/scss/variables";
 
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
 // TODO: Refactor this. Instead of writing specific CSS rules for particular objects,
 // we should provide utility classes which can provide the desired style to this object
 .org-logo-controls {
