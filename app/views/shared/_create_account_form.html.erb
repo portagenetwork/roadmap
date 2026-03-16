@@ -23,36 +23,19 @@
                  required: true
                } %>
   </div>
-<<<<<<< HEAD
-  <div class="form-group">
-    <%= f.label(:password, _('Password'), class: "control-label") %>
-    <%= f.password_field(:password, class: "form-control", "aria-required": true, autocomplete: "new-password") %>
-
-    <div class="checkbox">
-      <label>
-        <input type="checkbox" id="passwords_toggle_sign_up" class="passwords_toggle" /><%= _('Show password') %>
-      </label>
-=======
   <div class="form-control mb-3">
     <%= f.label(:password, _('Password'), class: "form-label") %>
-    <%= f.password_field(:password, class: "form-control", "aria-required": true) %>
+    <%= f.password_field(:password, class: "form-control", "aria-required": true, autocomplete: "new-password") %>
   </div>
   <div class="form-control mb-3">
     <div class="form-check">
         <input type="checkbox" id="passwords_toggle_sign_up" class="passwords_toggle" />
         <%= label_tag('passwords_toggle_sign_up', _('Show password'), class: 'form-check-label') %>
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
     </div>
     <%= render 'shared/password_checklist', f: f%>
   </div>
-<<<<<<< HEAD
-
-  <div class="form-group">
-    <div class="checkbox">
-=======
   <div class="form-control mb-3">
     <div class="form-check">
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
       <%= f.label(:accept_terms) do %>
         <%= f.check_box(:accept_terms, "aria-required": true) %>
         <%= _('I accept the') %>
@@ -61,15 +44,9 @@
     </div>
   </div>
   <% if Rails.configuration.x.recaptcha.enabled %>
-<<<<<<< HEAD
-    <div class="form-group">
-      <%= label_tag(nil, _('Security check')) %>
-      <%= recaptcha_tags(hl: @current_locale) %>
-=======
     <div class="form-control mb-3">
       <%= label_tag(nil, _('Security check'), class: "form-label") %>
-      <%= recaptcha_tags %>
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
+      <%= recaptcha_tags(hl: @current_locale)  %>
     </div>
   <% end %>
   <%= f.button(_('Create account'), class: "btn btn-secondary", type: "submit") %>
