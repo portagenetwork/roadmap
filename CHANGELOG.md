@@ -28,6 +28,8 @@
 
  - Redesign and Edit Welcome, Help, and About pages and Remove Public DMPs Page [#1299](https://github.com/portagenetwork/roadmap/pull/1299)
 
+ - Update expiry time of v2 API internal access token [#1308](https://github.com/portagenetwork/roadmap/pull/1308)
+
 ### Dependency Updates
 
  - chore(deps): bump nginx from 1.29.3-alpine to 1.29.4-alpine [#1246](https://github.com/portagenetwork/roadmap/pull/1246)
