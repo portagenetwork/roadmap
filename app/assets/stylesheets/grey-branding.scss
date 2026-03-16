@@ -49,7 +49,7 @@ thead th{
   }
 
 /* link button AND change color of search icon AND all the buttons*/
-.btn-default, .btn-primary, #search-addon {
+.btn-default, .btn-primary, .btn-secondary, .accordion-button, #search-addon {
     color: $color-alliance-darker-yellow !important;
     background-color: $color-alliance-digital-grey !important;
   }
