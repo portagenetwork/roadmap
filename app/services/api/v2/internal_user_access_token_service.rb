@@ -31,7 +31,7 @@ module Api
             application_id: application!.id,
             resource_owner_id: user.id,
             scopes: READ_SCOPE,
-            expires_in: nil # Overrides Doorkeeper's `access_token_expires_in`
+            expires_in: 24.hours # Overrides Doorkeeper's `access_token_expires_in`
           )
           token.plaintext_token
         end

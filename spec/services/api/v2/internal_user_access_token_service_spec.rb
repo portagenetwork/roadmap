@@ -20,7 +20,15 @@ RSpec.describe Api::V2::InternalUserAccessTokenService do
       expect(new_token.resource_owner_id).to eq(user.id)
       expect(new_token.revoked_at).to be_nil
       expect(new_token.scopes.to_s).to include('read')
-      expect(old_token.revoked_at).not_to be_nil if old_token
+      # Verify new_token expires in 24 hours
+      expected_expires_at = new_token.created_at + 24.hours
+      actual_expires_at = new_token.created_at + new_token.expires_in.seconds
+      expect(actual_expires_at).to be_within(1.second).of(expected_expires_at)
+      return unless old_token
+
+      # Verify old_token was revoked shortly before new_token was created
+      expect(old_token.revoked_at).to be <= new_token.created_at
+      expect(old_token.revoked_at).to be_within(1.second).of(new_token.created_at)
     end
 
     shared_examples 'token rotation' do |has_old_token|
