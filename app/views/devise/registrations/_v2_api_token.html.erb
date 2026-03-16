@@ -26,13 +26,15 @@
                 class: 'btn btn-default'
           ) %>
           <div class="alert alert-warning">
-            <%= _( "Please copy this token now and store it somewhere safely." ) %><br>
+            <%= _( "This token will expire after 24 hours." ) %><br>
+            <%= _( "Please copy it now and store it somewhere safely." ) %><br>
             <%= _( "It will disappear after you leave or refresh this page." ) %>
           </div>
         <% else %>
           <%= _( "Click the button below to generate an API token" ) %><br>
           <div class="alert alert-warning">
-            <%= _("If you previously generated and saved a token, please continue using that token.") %>
+            <%= _("Tokens expire after 24 hours.") %><br>
+            <%= _("If you previously generated and saved a valid token, please continue using it.") %>
           </div>
         <% end %>
       </div>
