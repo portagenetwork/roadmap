@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [4.1.1+portage-4.7.0]
 
 ### Added
 
@@ -66,6 +66,8 @@
  - chore(deps): bump nginx from 1.29.5-alpine to 1.29.6-alpine [#1302](https://github.com/portagenetwork/roadmap/pull/1302)
 
  - chore(deps): bump eslint-plugin-import from 2.27.5 to 2.32.0 [#1149](https://github.com/portagenetwork/roadmap/pull/1149)
+
+ - chore(deps): bump flatted from 3.2.7 to 3.4.1 [#1305](https://github.com/portagenetwork/roadmap/pull/1305)
 
 ## [4.1.1+portage-4.6.2]
 
