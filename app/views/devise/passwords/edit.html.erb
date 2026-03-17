@@ -1,46 +1,3 @@
-<<<<<<< HEAD
-<% title _('Change your password') %>
-<div class="row">
-  <div class="col-md-12">
-    <h1><%= _('Change your password') %></h1>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-md-12">
-    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: {method: :put, id: "user_reset_password_form"}) do |f| %>
-      <%= devise_error_messages! %>
-      <%= f.hidden_field :reset_password_token %>
-
-      <div class="form-group">
-        <%= f.label(:password, _('New password'), class: 'control-label') %>
-        <%= f.password_field(:password, class: 'form-control', "aria-required": true, autocomplete: "new-password") %>
-        <%= render 'shared/password_checklist', f: f%>
-      </div>
-      <div class="form-group">
-        <%= f.label(:password_confirmation, _('Password confirmation'), class: 'control-label') %>
-        <%= f.password_field(:password_confirmation, class: 'form-control', "aria-required": true, autocomplete: "new-password") %>
-      </div>
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" id="passwords_toggle" class="passwords_toggle"/><%= _('Show passwords') %>
-        </label>
-      </div>
-      
-      <% if Rails.configuration.x.recaptcha.enabled %>
-        <div class="form-group">
-          <%= label_tag(nil, _('Security check')) %>
-          <%= recaptcha_tags(hl: @current_locale) %>
-        </div>
-      <% end %>
-
-      <%= f.button(_('Save'), class: "btn btn-default", type: "submit") %>
-
-      <%= render "devise/shared/links" %>
-    <% end %>
-  </div>
-</div>
-=======
 <% title _('Change your password') %>
 <div class="row">
   <div class="col-md-12">
@@ -56,11 +13,12 @@
 
       <div class="form-control mb-3">
         <%= f.label(:password, _('New password'), class: 'form-label') %>
-        <%= f.password_field(:password, class: 'form-control', "aria-required": true) %>
+        <%= f.password_field(:password, class: 'form-control', "aria-required": true, autocomplete: "new-password") %>
+        <%= render 'shared/password_checklist', f: f%>
       </div>
       <div class="form-control mb-3">
         <%= f.label(:password_confirmation, _('Password confirmation'), class: 'form-label') %>
-        <%= f.password_field(:password_confirmation, class: 'form-control', "aria-required": true) %>
+        <%= f.password_field(:password_confirmation, class: 'form-control', "aria-required": true, autocomplete: "new-password") %>
       </div>
       <div class="form-check">
         <label class="form-check-label">
@@ -71,7 +29,7 @@
       <% if Rails.configuration.x.recaptcha.enabled %>
         <div class="form-control mb-3">
           <%= label_tag(nil, _('Security check'), class: 'form-label') %>
-          <%= recaptcha_tags %>
+          <%= recaptcha_tags(hl: @current_locale) %>
         </div>
       <% end %>
 
@@ -81,4 +39,3 @@
     <% end %>
   </div>
 </div>
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
