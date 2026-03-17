@@ -11,15 +11,9 @@
 <div class="row">
   <div class="col-md-7">
     <%= form_for(@user, namespace: :superadmin, as: :user, url: super_admin_user_path(@user), html: {method: :put, id: 'super_admin_user_edit' }) do |f| %>
-<<<<<<< HEAD
-      <div class="form-group col-xs-12">
-        <%= f.label(:email, _('Email'), class: 'control-label') %>
-        <%= f.email_field(:email, class: "form-control", "aria-required": true, "disabled": true) %>
-=======
       <div class="form-control mb-3 col-xs-12">
         <%= f.label(:email, _('Email'), class: 'form-label') %>
         <%= f.email_field(:email, class: "form-control", "aria-required": true) %>
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
       </div>
 
       <div class="form-control mb-3 col-xs-12">
@@ -63,15 +57,10 @@
         </div>
       <% end %>
 
-<<<<<<< HEAD
       <%= render 'email_confirmation_status', f: f %>
 
-      <div class="form-group col-xs-12">
-        <%= f.button(_('Save'), class: 'btn btn-default', type: "submit", id: "personal_details_registration_form_submit") %>
-=======
       <div class="form-control mb-3 col-xs-12">
         <%= f.button(_('Save'), class: 'btn btn-secondary', type: "submit", id: "personal_details_registration_form_submit") %>
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
 
         <%= link_to _('Archive'), archive_super_admin_user_path(id: @user.id),
             data: { method: :put, confirm: _("You are about to archive %{user_name}.  This will remove their personal information, but retain their plans, answers, and comments.  They will be unable to sign-in. Are you sure?") % {user_name: @user.name } },
