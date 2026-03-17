@@ -1,5 +1,72 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+ - Add rake task to clean up unmanaged orgs w/ users [#1250](https://github.com/portagenetwork/roadmap/pull/1250)
+
+ - Implement tiered Rack::Attack throttles [#1254](https://github.com/portagenetwork/roadmap/pull/1254)
+
+ - Add Internal v2 API Access Token Generation for Users [#1279](https://github.com/portagenetwork/roadmap/pull/1279)
+
+ - Add `bundle exec rails db:migrate` to entrypoint.sh [#1278](https://github.com/portagenetwork/roadmap/pull/1278)
+
+ - Add copy button next to V2 API Token [#1283](https://github.com/portagenetwork/roadmap/pull/1283)
+
+ - Initial v2 API Implementation & Doorkeeper OAuth Integration [#1276](https://github.com/portagenetwork/roadmap/pull/1276)
+
+ - API v2: Sanitize user-supplied fields in responses [#1303](https://github.com/portagenetwork/roadmap/pull/1303)
+
+ - Add v2 API documentation to API Access page [#1300](https://github.com/portagenetwork/roadmap/pull/1300) 
+
+### Changed
+
+ - Upgrade ROR API From V1 to V2 [#1247](https://github.com/portagenetwork/roadmap/pull/1247)
+
+ - Update plan json export to use V2 API complete plan endpoint [#1293](https://github.com/portagenetwork/roadmap/pull/1293)
+
+ - Redesign and Edit Welcome, Help, and About pages and Remove Public DMPs Page [#1299](https://github.com/portagenetwork/roadmap/pull/1299)
+
+ - Update expiry time of v2 API internal access token [#1308](https://github.com/portagenetwork/roadmap/pull/1308)
+
+### Dependency Updates
+
+ - chore(deps): bump nginx from 1.29.3-alpine to 1.29.4-alpine [#1246](https://github.com/portagenetwork/roadmap/pull/1246)
+
+ - chore(deps): bump actions/checkout from 5 to 6 [#1236](https://github.com/portagenetwork/roadmap/pull/1236)
+
+ - chore(deps): bump omniauth from 2.1.2 to 2.1.4 [#1201](https://github.com/portagenetwork/roadmap/pull/1201)
+
+ - chore(deps): bump browser-actions/setup-chrome from 1 to 2 [#1138](https://github.com/portagenetwork/roadmap/pull/1138)
+
+ - chore(deps): bump webpack from 5.94.0 to 5.102.1 [#1206](https://github.com/portagenetwork/roadmap/pull/1206)
+
+ - chore(deps): bump actions/setup-node from 5 to 6 [#1211](https://github.com/portagenetwork/roadmap/pull/1211)
+
+ - chore(deps): bump surnet/alpine-wkhtmltopdf from 3.22.0-0.12.6-small to 3.23.2-0.12.6-small [#1258](https://github.com/portagenetwork/roadmap/pull/1258)
+
+ - chore(deps): bump docker/login-action from 3.6.0 to 3.7.0 [#1268](https://github.com/portagenetwork/roadmap/pull/1268)
+
+ - chore(deps): bump docker/build-push-action from 6.18.0 to 6.19.2 [#1277](https://github.com/portagenetwork/roadmap/pull/1277)
+
+ - chore(deps): bump nginx from 1.29.4-alpine to 1.29.5-alpine [#1271](https://github.com/portagenetwork/roadmap/pull/1271)
+
+ - `bundle update httparty` [#1291](https://github.com/portagenetwork/roadmap/pull/1291)
+   - (See [#1288](https://github.com/portagenetwork/roadmap/pull/1288) for more)
+
+ - chore(deps): bump docker/login-action from 3.7.0 to 4.0.0 [#1290](https://github.com/portagenetwork/roadmap/pull/1290)
+
+ - chore(deps): bump docker/setup-buildx-action from 3 to 4 [#1295](https://github.com/portagenetwork/roadmap/pull/1295)
+
+ - chore(deps): bump docker/metadata-action from 5 to 6 [#1298](https://github.com/portagenetwork/roadmap/pull/1298)
+
+ - chore(deps): bump docker/build-push-action from 6.19.2 to 7.0.0 [#1297](https://github.com/portagenetwork/roadmap/pull/1297)
+
+ - chore(deps): bump nginx from 1.29.5-alpine to 1.29.6-alpine [#1302](https://github.com/portagenetwork/roadmap/pull/1302)
+
+ - chore(deps): bump eslint-plugin-import from 2.27.5 to 2.32.0 [#1149](https://github.com/portagenetwork/roadmap/pull/1149)
+
 ## [4.1.1+portage-4.6.2]
 
 ### Added

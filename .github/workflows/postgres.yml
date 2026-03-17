@@ -30,7 +30,7 @@ jobs:
 
     steps:
     # Checkout the repo
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
 
     # Install Ruby and run bundler
     - uses: ruby/setup-ruby@v1
@@ -42,7 +42,7 @@ jobs:
     ## /home/runner/runners/2.301.1/externals/node12/bin/node: --openssl-legacy-provider is not allowed in NODE_OPTIONS
 
     # Install Node
-    - uses: actions/setup-node@v5
+    - uses: actions/setup-node@v6
       with:
         node-version: '20.15.1'
         cache: 'yarn'
@@ -82,7 +82,7 @@ jobs:
     - name: Remove image-bundled Chrome
       run: sudo apt-get purge google-chrome-stable
     - name: Setup stable Chrome
-      uses: browser-actions/setup-chrome@v1
+      uses: browser-actions/setup-chrome@v2
       with:
         chrome-version: 128
         install-chromedriver: true

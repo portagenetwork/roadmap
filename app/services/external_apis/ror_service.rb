@@ -77,7 +77,7 @@ module ExternalApis
 
       private
 
-      # Queries the ROR API for the sepcified name and page
+      # Queries the ROR API for the specified name and page
       def query_ror(term:, page: 1, filters: [])
         return [] unless term.present?
 
@@ -142,69 +142,126 @@ module ExternalApis
         return results unless json.present? && json.fetch('items', []).any?
 
         json['items'].each do |item|
-          next unless item['id'].present? && item['name'].present?
-
           results << {
             ror: item['id'].gsub(/^#{landing_page_url}/, ''),
             name: org_name(item: item),
-            sort_name: item['name'],
-            url: item.fetch('links', []).first,
+            sort_name: sort_name(item: item),
+            url: org_url(item: item),
             language: org_language(item: item),
             fundref: fundref_id(item: item),
-            abbreviation: item.fetch('acronyms', []).first
+            abbreviation: org_abbreviation(item: item)
           }
+        rescue KeyError, NoMethodError => e
+          Rails.logger.error(
+            "Invalid ROR record: #{e.class} - #{e.message}, item: #{item.inspect}"
+          )
         end
         results
       end
       # rubocop:enable Metrics/AbcSize
+
+      def ror_display_entry(item:)
+        item['names'].find { |n| n['types'].include?('ror_display') }
+      end
+
+      # Extracts the org's display name from `names` to be used as sort_name
+      # "names": [
+      #     {"lang": "en", "types": ["ror_display","label"], "value": "Harvard University"},
+      #     {"lang": "es","types": ["label"], "value": "Universidad de Harvard"}
+      # ]
+      def sort_name(item:)
+        ror_display_entry(item: item).fetch('value')
+      end
+
+      # Returns the website link value
+      # "links": [
+      #   { "type": "website", "value": "https://example.edu" },
+      #   { "type": "Wikipedia", "value": "https://en.wikipedia.org/wiki/Example_University" }
+      # ]
+      def org_url(item:)
+        item['links']&.find { |l| l['type'] == 'website' }&.fetch('value')
+      end
+
+      # Returns the country name from locations
+      # "locations" : [ { "geonames_details" : { "country_name" : "Germany",}, "geonames_id" : 2928810 } ]
+      def org_country(item:)
+        location = item['locations']&.find { |l| l['geonames_details'].present? }
+        location&.dig('geonames_details', 'country_name').to_s
+      end
+
+      # Extract acronym/abbreviation from names
+      # "names" : [ { "value" : "UC", "types": ["acronym"], "lang" : "en" } ]
+      def org_abbreviation(item:)
+        item['names'].find { |n| n['types'].include?('acronym') }&.fetch('value')
+      end
 
       # Org names are not unique, so include the Org URL if available or
       # the country. For example:
       #    "Example College (example.edu)"
       #    "Example College (Brazil)"
       def org_name(item:)
-        return '' unless item.present? && item['name'].present?
+        name = sort_name(item: item)
 
-        country = item.fetch('country', {}).fetch('country_name', '')
+        country = org_country(item: item)
         website = org_website(item: item)
+
         # If no website or country then just return the name
-        return item['name'] unless website.present? || country.present?
+        return name unless website.present? || country.present?
 
         # Otherwise return the contextualized name
-        "#{item['name']} (#{website || country})"
+        "#{name} (#{website || country})"
       end
 
-      # Extracts the org's ISO639 if available
+      # Extracts the org's language
+      # {
+      #   "id": "https://ror.org/012345678",
+      #   "names": [
+      #     { "value": "Université de Montréal", "types": ["ror_display"], "lang": "fr" },
+      #     { "value": "University of Montreal", "types": ["alias"], "lang": "en" }
+      #   ]
+      # }
       def org_language(item:)
-        dflt = I18n.default_locale || 'en'
-        return dflt unless item.present?
-
-        labels = item.fetch('labels', [{ iso639: dflt }])
-        labels.first&.fetch('iso639', I18n.default_locale) || dflt
+        ror_display_entry(item: item)['lang'] || I18n.default_locale.to_s
       end
 
       # Extracts the website domain from the item
+      # "links": [
+      #   { "type": "website", "value": "https://example.edu" },
+      #   { "type": "Wikipedia", "value": "https://en.wikipedia.org/wiki/Example_University" }
+      # ]
       def org_website(item:)
-        return nil unless item.present? && item.fetch('links', [])&.any?
-        return nil if item['links'].first.blank?
+        link = org_url(item: item)
+        return nil unless link.present?
 
         # A website was found, so extract just the domain without the www
         domain_regex = %r{^(?:http://|www\.|https://)([^/]+)}
-        website = item['links'].first.scan(domain_regex).last.first
+        matches = link.scan(domain_regex)
+        return nil if matches.empty?
+
+        website = matches.last.first
         website.gsub('www.', '')
       end
 
-      # Extracts the FundRef Id if available
+      # Extracts the FundRef Id from external ids if available
+      # "external_ids": [
+      #   {"type": "fundref", "preferred": "12345", "all": ["12345", "67890"]},
+      #   {"type": "SomeOtherID", "preferred": "501100000000", "all": ["501100000000"]}
+      # ]
       def fundref_id(item:)
-        return '' unless item.present? && item['external_ids'].present?
-        return '' unless item['external_ids'].fetch('FundRef', {}).any?
+        external_ids = item['external_ids']
+
+        fundref = external_ids.find { |id| id['type'] == 'fundref' }
+        return '' unless fundref.present?
 
         # If a preferred Id was specified then use it
-        ret = item['external_ids'].fetch('FundRef', {}).fetch('preferred', '')
-        return ret if ret.present?
+        preferred = fundref['preferred']
+        return preferred if preferred.present?
 
         # Otherwise take the first one listed
-        item['external_ids'].fetch('FundRef', {}).fetch('all', []).first
+        all = fundref['all']
+        return all.first if all.present?
+
+        ''
       end
     end
   end

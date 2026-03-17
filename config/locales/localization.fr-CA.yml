@@ -90,10 +90,3 @@ fr-CA:
   spree:
     date_picker:
       first_day: 0
-  devise:
-    registrations:
-      signed_up: Bienvenue ! Vous vous êtes enregistré(e) avec succès.
-    sessions:
-      already_signed_out: Déconnecté(e).
-      signed_in: Connecté(e) avec succès.
-      signed_out: Déconnecté(e) avec succès.
