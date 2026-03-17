@@ -16,19 +16,10 @@
           <a href="#password-details" role="tab" class="nav-link"
              aria-controls="password-details" data-bs-toggle="tab"><%= _('Password') %></a>
         </li>
-<<<<<<< HEAD
         <li role="api-details" class="nav-item">
           <a href="#api-details" role="tab" class="nav-link"
-              aria-controls="api-details" data-toggle="tab"><%= _('API Access') %></a>
+              aria-controls="api-details" data-bs-toggle="tab"><%= _('API Access') %></a>
         </li>
-=======
-        <% if @user.can_use_api? %>
-          <li role="api-details" class="nav-item">
-            <a href="#api-details" role="tab" class="nav-link"
-               aria-controls="api-details" data-bs-toggle="tab"><%= _('API Access') %></a>
-          </li>
-        <% end %>
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
         <li role="notification-preferences" class="nav-item">
           <a href="#notification-preferences" role="tab" class="nav-link"
              aria-controls="notification-preferences" data-bs-toggle="tab"><%= _('Notification Preferences') %></a>
@@ -50,19 +41,10 @@
             </div>
           </div>
         </div>
-<<<<<<< HEAD
         <div id="api-details" role="tabpanel" class="tab-pane">
-          <div class="panel panel-default">
-            <div class="panel-body">
+          <div class="card card-default">
+            <div class="card-body">
               <%= render partial: 'devise/registrations/api_token', locals: { user: @user } %>
-=======
-        <% if @user.can_use_api? %>
-          <div id="api-details" role="tabpanel" class="tab-pane">
-            <div class="card card-default">
-              <div class="card-body">
-                <%= render partial: 'devise/registrations/api_token', locals: { user: @user } %>
-              </div>
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
             </div>
           </div>
         </div>
