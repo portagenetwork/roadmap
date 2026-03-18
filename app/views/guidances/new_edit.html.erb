@@ -22,11 +22,7 @@ end
     <%= form_for(@guidance, url: url, html: { method: method , id: 'new_edit_guidance'}) do |f| %>
       <div class="form-control mb-3" data-toggle="tooltip" title="<%= guidance_text_tooltip %>">
         <em class="sr-only"><%= guidance_text_tooltip %></em>
-<<<<<<< HEAD
-        <%= f.label(:text, _('Text'), class: "control-label") %>
-=======
-        <%= f.label :text, class: 'form-label' %>
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
+        <%= f.label(:text, _('Text'), class: "form-label") %>
         <%= f.text_area :text, rows: 10, class: "form-control", spellcheck: true,
                         aria: { required: true } %>
       </div>
