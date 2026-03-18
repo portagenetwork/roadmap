@@ -65,10 +65,13 @@
     "webpack-cli": "^5.0.1"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@eslint/js": "^9",
     "eslint": "^9.26.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.32.0",
     "eslint-webpack-plugin": "^2.6.0",
+    "globals": "^17.4.0",
     "jasmine": "^4.2.1",
     "jasmine-core": "^4.2.0",
     "karma": "^6.3.14",
