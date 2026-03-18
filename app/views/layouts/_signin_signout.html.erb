@@ -16,7 +16,7 @@
       <%= _('Language') %>
       <span class="caret"></span>
     </a>
-    <ul class="dropdown-menu dropdown-menu-end" 
+    <ul class="dropdown-menu inverse-dropdown dropdown-menu-end" 
         data-bs-popper="static" aria-labelledby="language-menu">
       <% languages.each do |l| %>
         <li>
@@ -39,7 +39,7 @@
       <%= current_user.name(false) %>
       <span class="caret"></span>
     </a>
-    <ul class="dropdown-menu dropdown-menu-end" 
+    <ul class="dropdown-menu inverse-dropdown dropdown-menu-end" 
         data-bs-popper="static" aria-labelledby="user-menu">
       <li>
         <%= link_to '<i class="fas fa-square-pen" aria-hidden="true">&nbsp;</i>&nbsp;'.html_safe + _('Edit profile'), edit_user_registration_path, class: 'dropdown-item' %>
