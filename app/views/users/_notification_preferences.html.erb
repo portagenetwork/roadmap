@@ -7,18 +7,10 @@
       <%= link_to _('Deselect all'), '#', id: 'deselect_all' %>
     </p>
 
-<<<<<<< HEAD
-    <p class="form-control-static"><%= _('All Users') %></p>
-    <div class="checkbox">
-      <label>
-        <%= check_box_tag 'user[prefs][users][new_comment]', true, @prefs[:users][:new_comment] %><%= _('A new comment has been added to my DMP')  %>
-      </label>
-=======
-    <p class="form-control-static"><strong>All Users</strong></p>
+    <p class="form-control-static"><strong><%= _('All Users') %></strong></p>
     <div class="form-check">
       <%= check_box_tag 'user[prefs][users][new_comment]', true, @prefs[:users][:new_comment] %>
       <%= label_tag('user[prefs][users][new_comment]', _('A new comment has been added to my DMP'), class: 'form-check-label') %>
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
     </div>
     <div class="form-check">
       <%= check_box_tag 'user[prefs][users][added_as_coowner]', true, @prefs[:users][:added_as_coowner] %>
