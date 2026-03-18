@@ -26,30 +26,14 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="org-navbar-menu">
       <!-- Organisational links -->
-<<<<<<< HEAD
       <% if user_signed_in? and !current_user.org.links.nil? and !current_user.org.links['org'].blank? %>
-        <ul class="nav navbar-nav">
+        <ul class="navbar-nav me-auto">
           <% i=1; current_user.org.links['org'].each do |link| %>
             <% if !link.blank? && i <= max_number_links %>
-              <li class="">
+              <li class="org-links nav-item">
 
-              <%= link_to link['link'], :target=>'_blank', :class => ' has-new-window-popup-info' do %>
-                <i class="fa fa-globe" aria-hidden="true">&nbsp;</i>
-=======
-      <%
-      links = current_user.org.links.present? ? current_user.org.links.fetch('org', []) : []
-      i = 1
-      %>
-      <% if user_signed_in? && (links.any? || current_user.org.contact_email.present?) %>
-        <ul class="navbar-nav me-auto">
-          <% links.each do |link| %>
-            <% if link.present? && i <= max_number_links %>
-              <% if i.odd? %>
-                </li><li class="org-links nav-item">
-              <% end %>
               <%= link_to link['link'], :target=>'_blank', :class => 'org-a has-new-window-popup-info nav-link' do %>
                 <i class="fas fa-globe" aria-hidden="true">&nbsp;</i>
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
                 <%= link['text'].blank? ? link['link'] : link['text'] %>
                 <em class="sr-only"> (new window)</em>
                 <span class="new-window-popup-info"><%= _('Opens in new window') %></span>
@@ -58,23 +42,13 @@
               <% end; i+=1 %>
             <% end %>
           <% end %>
-<<<<<<< HEAD
 
           <% if !current_user.org.contact_email.blank? %>
           <li>
-            <%= mail_to current_user.org.contact_email, :class => '' do %>
-            
-              <i class="fa fa-envelope" aria-hidden="true">&nbsp;</i>
-              <%= current_user.org.contact_name ? current_user.org.contact_name : current_user.org.contact_email %>             
-=======
-          <% if i.odd? %>
-            </li><li class="org-links nav-item">
-          <% end %>
-          <% if !current_user.org.contact_email.blank? %>
             <%= mail_to current_user.org.contact_email, :class => 'org-a nav-link' do %>
+            
               <i class="fas fa-envelope" aria-hidden="true">&nbsp;</i>
-              <%= current_user.org.contact_name ? current_user.org.contact_name : current_user.org.contact_email %>
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
+              <%= current_user.org.contact_name ? current_user.org.contact_name : current_user.org.contact_email %>             
             <% end %>
            </li>
           <% end %>
@@ -92,30 +66,9 @@
               <%= _('Admin') %>
               <span class="caret"></span>
             </a>
-<<<<<<< HEAD
-            <ul class="dropdown-menu" aria-labelledby="admin-menu">
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="admin-menu">
               
               <!-- ORGANISATION -->
-=======
-            <ul class="dropdown-menu dropdown-menu-end" 
-                data-bs-popper="static" aria-labelledby="admin-menu">
-              <% if current_user.can_org_admin? %>
-                <li class="nav-item <%= 'class=active' if active_page?(org_admin_plans_path) %>">
-                  <%= link_to _('Plans'), org_admin_plans_path, class: 'nav-link dropdown-item  px-3' %>
-                </li>
-              <% end %>
-              <% if current_user.can_modify_templates? %>
-                <% template_path = current_user.can_super_admin? ? org_admin_templates_path : organisational_org_admin_templates_path %>
-                  <li class="nav-item <%= 'class=active' if active_page?(template_path) %>">
-                    <%= link_to _('Templates'), template_path, class: 'nav-link dropdown-item  px-3' %>
-                  </li>
-              <% end %>
-              <% if current_user.can_modify_guidance? %>
-                  <li class="nav-item <%= 'class=active' if active_page?(admin_index_guidance_path(current_user.org_id)) %>">
-                    <%= link_to _('Guidance'), admin_index_guidance_path(current_user.org_id), class: 'nav-link dropdown-item  px-3' %>
-                  </li>
-              <% end %>
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
               <% if current_user.can_super_admin? %>
                   <li class="nav-item <%= 'class=active' if active_page?(admin_edit_org_path(current_user.org_id)) %>">
                     <%= link_to _('Organisations'), super_admin_orgs_path, class: 'nav-link dropdown-item  px-3' %>
@@ -131,22 +84,22 @@
               <!-- TEMPLATES -->
               <% if current_user.can_modify_templates? %>
                 <% template_path = current_user.can_super_admin? ? org_admin_templates_path : organisational_org_admin_templates_path %>
-                  <li <%= 'class=active' if active_page?(template_path) %>>
-                    <%= link_to _('Templates'), template_path %>
+                  <li class="nav-item <%= 'class=active' if active_page?(template_path) %>">
+                    <%= link_to _('Templates'), template_path, class: 'nav-link dropdown-item  px-3' %>
                   </li>
               <% end %>
 
               <!-- GUIDANCE -->
               <% if current_user.can_modify_guidance? %>
-                  <li <%= 'class=active' if active_page?(admin_index_guidance_path(current_user.org_id)) %>>
-                    <%= link_to _('Guidance'), admin_index_guidance_path(current_user.org_id) %>
+                  <li class="nav-item <%= 'class=active' if active_page?(admin_index_guidance_path(current_user.org_id)) %>">
+                    <%= link_to _('Guidance'), admin_index_guidance_path(current_user.org_id), class: 'nav-link dropdown-item  px-3' %>
                   </li>
               <% end %>
               
               <!-- PLANS -->
               <% if current_user.can_org_admin? %>
-                <li <%= 'class=active' if active_page?(org_admin_plans_path) %>>
-                  <%= link_to _('Plans'), org_admin_plans_path %>
+                <li class="nav-item <%= 'class=active' if active_page?(org_admin_plans_path) %>">
+                  <%= link_to _('Plans'), org_admin_plans_path, class: 'nav-link dropdown-item  px-3' %>
                 </li>
               <% end %>
 
@@ -166,9 +119,8 @@
               
               <!-- USAGE STATISTICS-->
               <% if current_user.can_org_admin? || current_user.can_super_admin? %>
-<<<<<<< HEAD
-                <li <%= 'class=active' if active_page?(usage_index_path) %>>
-                  <%= link_to(_('Usage statistics'), usage_index_path) %>
+                <li class="nav-item <%= 'class=active' if active_page?(usage_index_path) %>">
+                  <%= link_to _('Usage statistics'), usage_index_path, class: 'nav-link dropdown-item  px-3' %>
                 </li>
               <% end %>
               <% if current_user.can_super_admin? %>
@@ -176,25 +128,12 @@
                 <li class="nav-item <%= 'class=active' if active_page?(oauth_applications_path) %>">
                   <%= link_to _('OAuth Applications'), oauth_applications_path, class: 'nav-link dropdown-item  px-3' %>
                 </li>
-                <li <%= 'class=active' if active_page?(super_admin_api_clients_path) %>>
-                  <%= link_to(_('Api Clients'), super_admin_api_clients_path) %>
-                </li>
-
-                <!-- NOTIFICATIONS -->
-                <li <%= 'class=active' if active_page?(super_admin_notifications_path) %>>
-                  <%= link_to _('Notifications'), super_admin_notifications_path %>
-=======
-                <li class="nav-item <%= 'class=active' if active_page?(usage_index_path) %>">
-                  <%= link_to _('Usage'), usage_index_path, class: 'nav-link dropdown-item  px-3' %>
-                </li>
-              <% end %>
-              <% if current_user.can_super_admin? %>
                 <li class="nav-item <%= 'class=active' if active_page?(super_admin_api_clients_path) %>">
                   <%= link_to _('Api Clients'), super_admin_api_clients_path, class: 'nav-link dropdown-item  px-3' %>
                 </li>
-               <li class="nav-item <%= 'class=active' if active_page?(super_admin_notifications_path) %>">
+                <!-- NOTIFICATIONS -->
+                <li class="nav-item <%= 'class=active' if active_page?(super_admin_notifications_path) %>">
                   <%= link_to _('Notifications'), super_admin_notifications_path, class: 'nav-link dropdown-item  px-3' %>
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
                 </li>
               <% end %>
 
