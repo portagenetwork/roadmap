@@ -12,15 +12,10 @@
     <%= form_for user, url: admin_update_permissions_user_path(user), html: { method: :put, remote: true, class: 'admin_update_permissions' } do |f| %>
       <div class="modal-body" style="text-align: left">
         <ul class="list-group">
-<<<<<<< HEAD
-         <input type="checkbox" name="org_admin_privileges" id="org_admin_privileges" />
-          <%= label_tag :organisational_admin_privileges, _('Organisational admin privileges') %>
-=======
           <div class="col-md-8">
             <input type="checkbox" name="org_admin_privileges" id="org_admin_privileges" />
               <%= label_tag :organisational_admin_privileges, _('Organisational Admin Privileges'), class: 'form-check-label' %>
           </div>
->>>>>>> da4033b2b (Issue #3144 - Upgrade to Bootstrap 5)
           <% perms.each do |perm| %>
             <% case perm.name when 'grant_permissions' %>
               <li class="list-group-item" style="border: none" title="<%= _('Allows the user to assign permissions to other users within the same organisation. Users can only assign permissions they own themselves') %>">
