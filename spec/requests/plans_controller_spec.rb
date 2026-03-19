@@ -71,7 +71,7 @@ RSpec.describe 'PlansController', type: :request do
       # 'Create plan' and 'Cancel' buttons checks
       submit_button = html.at_css('button[type="submit"]')
       expect(submit_button.text).to eq('Create plan')
-      cancel_button = html.at_css('a.btn.btn-default[href="/plans"]')
+      cancel_button = html.at_css('a.btn.btn-secondary[href="/plans"]')
       expect(cancel_button.text).to eq('Cancel')
       # NOTE: `cancel_button` is really a link
       expect(cancel_button['href']).to eq('/plans')
