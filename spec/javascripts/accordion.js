@@ -16,7 +16,7 @@ describe('accordion test suite', () => {
     // Collapse all of the sections
     //    - click on 'collapse all' should have no effect
     //    - click on 'expand all' should expand all sections
-    $('#accordion div.panel-collapse').collapse('hide');
+    $('#accordion div.card-collapse').collapse('hide');
     expect($('.in').length === 0);
     $('a[data-toggle-direction="hide"]').click();
     expect($('.in').length === 0);
@@ -26,7 +26,7 @@ describe('accordion test suite', () => {
     // Expand all of the sections
     //    - click on 'expand all' should have no effect
     //    - click on 'collapse all' should collapse all sections
-    $('#accordion div.panel-collapse').collapse('show');
+    $('#accordion div.card-collapse').collapse('show');
     expect($('.in').length === 3);
     $('a[data-toggle-direction="show"]').click();
     expect($('.in').length === 3);
