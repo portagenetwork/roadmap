@@ -6,6 +6,8 @@
 
  - chore(deps): bump eslint from 8.38.0 to 9.26.0 [#1270](https://github.com/portagenetwork/roadmap/pull/1270)
 
+ - chore(deps): bump immutable from 4.3.0 to 4.3.8 [#1294](https://github.com/portagenetwork/roadmap/pull/1294)
+
 ## [4.1.1+portage-4.7.0]
 
 ### Added
