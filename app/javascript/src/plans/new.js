@@ -81,7 +81,7 @@ $(() => {
   const appendGroup = (menu, header, templates) => {
     if (templates.length === 0) return;
 
-    menu.append(`<h6 class="dropdown-header text-muted">${header}</h6>`);
+    menu.append(`<h6 class="dropdown-header">${header}</h6>`);
     templates.forEach((t) => menu.append(createTemplateItem(t)));
     menu.append('<div class="dropdown-divider"></div>');
   };
@@ -107,7 +107,7 @@ $(() => {
       e.stopPropagation(); // prevent closing dropdown
 
       hiddenContainer.empty(); // clear before adding
-      hiddenContainer.append(`<h6 class="dropdown-header text-muted">${getConstant('OTHER_TEMPLATES')}</h6>`);
+      hiddenContainer.append(`<h6 class="dropdown-header">${getConstant('OTHER_TEMPLATES')}</h6>`);
       otherTemplates.forEach((t) => hiddenContainer.append(createTemplateItem(t)));
 
       hiddenContainer.slideDown(10);
