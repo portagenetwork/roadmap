@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Dependency Updates
+
+ - chore(deps): bump eslint from 8.38.0 to 9.26.0 [#1270](https://github.com/portagenetwork/roadmap/pull/1270)
+
 ## [4.1.1+portage-4.7.0]
 
 ### Added
