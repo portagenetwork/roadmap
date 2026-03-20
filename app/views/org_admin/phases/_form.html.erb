@@ -4,7 +4,7 @@
 <div class="form-control mb-3 col-md-10">
   <%= f.label(:title, _('Title') ,class: "form-label") %>
   <em class="sr-only"><%= title_tooltip %></em>
-  <%= f.text_field(:title, class: "form-control", spellcheck: true, 'aria-required': true, 'data-toggle': 'tooltip', title: title_tooltip ) %>
+  <%= f.text_field(:title, class: "form-control", spellcheck: true, 'aria-required': true, 'data-bs-toggle': 'tooltip', title: title_tooltip ) %>
 </div>
 
 <div class="form-control mb-3">
@@ -12,11 +12,11 @@
     <%= f.label(:number, _('Order of display'), class: "form-label") %>
   </div>
   <div class="col-md-4">
-    <%= f.number_field(:number, in: 1..5, class: "form-control", 'aria-required': true, 'data-toggle': 'tooltip', title: _('This allows you to order the phases of your template.')) %>
+    <%= f.number_field(:number, in: 1..5, class: "form-control", 'aria-required': true, 'data-bs-toggle': 'tooltip', title: _('This allows you to order the phases of your template.')) %>
   </div>
 </div>
 
-<div class="form-control mb-3 col-md-10" data-toggle="tooltip" title="<%= _("Enter a basic description. This will be presented to users on the 'Admin Plan' tab, above the summary of the sections and questions which they will be asked to answer.") %>">
+<div class="form-control mb-3 col-md-10" data-bs-toggle="tooltip" title="<%= _("Enter a basic description. This will be presented to users on the 'Admin Plan' tab, above the summary of the sections and questions which they will be asked to answer.") %>">
   <%= f.label(:description, _('Description'), class: "form-label") %>
   <%= f.text_area(:description, class: "phase", spellcheck: true) %>
 </div>

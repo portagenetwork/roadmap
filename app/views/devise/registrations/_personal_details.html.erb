@@ -23,7 +23,7 @@
   </div>
 
   <% org_admin = (current_user.can_org_admin? && !current_user.can_super_admin?) %>
-  <div class="form-control mb-3 col-sm-8" id="profile-org-controls" <%= "data-toggle=\"tooltip\" title=\"#{_('Changing your organisation will result in the loss of your administrative privileges.')}\"" if org_admin %>>
+  <div class="form-control mb-3 col-sm-8" id="profile-org-controls" <%= "data-bs-toggle=\"tooltip\" title=\"#{_('Changing your organisation will result in the loss of your administrative privileges.')}\"" if org_admin %>>
     <%= render partial: org_partial,
                locals: {
                  form: f,

@@ -33,7 +33,7 @@
           question.question_format_id),
           {},
           class: "form-select question_format",
-          'data-toggle': 'tooltip',
+          'data-bs-toggle': 'tooltip',
           'data-html': true,
           title: _("You can choose from:<ul><li>- text area (large box for paragraphs);</li> <li>- text field (for a short answer);</li> <li>- checkboxes where options are presented in a list and multiple values can be selected;</li> <li>- radio buttons where options are presented in a list but only one can be selected;</li> <li>- dropdown like this box - only one option can be selected;</li> <li>- multiple select box allows users to select several options from a scrollable list, using the CTRL key;</li></ul>")
         %>
@@ -53,7 +53,7 @@
           </p>
         </div>
       <% else %>
-        <div class="form-control mb-3" data-toggle="tooltip", title="<%= _('Save this question before adding conditions.') %>" >
+        <div class="form-control mb-3" data-bs-toggle="tooltip", title="<%= _('Save this question before adding conditions.') %>" >
           <%= link_to _('Add Conditions'), '#', class: "add-logic btn btn-secondary disabled" %>
         </div>
       <% end %>
@@ -69,7 +69,7 @@
   <!--Question default_value -->
     <div class="form-control mb-3 col-md-10" data-attribute="default_value" style="<%= current_format.textfield? || current_format.textarea? ? '' : 'display: none;' %>">
       <%= f.label(:default_value, _('Default answer'), class: "form-label") %>
-      <div class="" data-toggle="tooltip" title="<%= question_default_value_tooltip %>">
+      <div class="" data-bs-toggle="tooltip" title="<%= question_default_value_tooltip %>">
         <em class="sr-only"><%= question_default_value_tooltip %></em>
         <span data-attribute="textfield" style="<%= current_format.textfield? ? '' : 'display:none;' %>">
           <%= f.text_field(:default_value, class: 'form-control', spellcheck: true) %>

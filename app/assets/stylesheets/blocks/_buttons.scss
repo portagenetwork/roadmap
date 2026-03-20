@@ -38,12 +38,12 @@
 }
 
 /* Popover button */
-.btn-secondary[data-toggle=tooltip],
-.btn-secondary:hover[data-toggle=tooltip],
-.btn-secondary:focus[data-toggle=tooltip],
-.btn-secondary:active[data-toggle=tooltip],
-.btn-secondary:visited[data-toggle=tooltip],
-.btn-secondary:active:hover[data-toggle=tooltip] {
+.btn-secondary[data-bs-toggle=tooltip],
+.btn-secondary:hover[data-bs-toggle=tooltip],
+.btn-secondary:focus[data-bs-toggle=tooltip],
+.btn-secondary:active[data-bs-toggle=tooltip],
+.btn-secondary:visited[data-bs-toggle=tooltip],
+.btn-secondary:active:hover[data-bs-toggle=tooltip] {
   color: $color-secondary-text;
   background-color: $color-secondary-background;
   border: none;
