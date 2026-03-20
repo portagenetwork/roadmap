@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Dependency Updates
+
+ - chore(deps): bump eslint from 8.38.0 to 9.26.0 [#1270](https://github.com/portagenetwork/roadmap/pull/1270)
+
+ - chore(deps): bump immutable from 4.3.0 to 4.3.8 [#1294](https://github.com/portagenetwork/roadmap/pull/1294)
+
+## [4.1.1+portage-4.7.0]
+
 ### Added
 
  - Add rake task to clean up unmanaged orgs w/ users [#1250](https://github.com/portagenetwork/roadmap/pull/1250)
@@ -66,6 +74,8 @@
  - chore(deps): bump nginx from 1.29.5-alpine to 1.29.6-alpine [#1302](https://github.com/portagenetwork/roadmap/pull/1302)
 
  - chore(deps): bump eslint-plugin-import from 2.27.5 to 2.32.0 [#1149](https://github.com/portagenetwork/roadmap/pull/1149)
+
+ - chore(deps): bump flatted from 3.2.7 to 3.4.1 [#1305](https://github.com/portagenetwork/roadmap/pull/1305)
 
 ## [4.1.1+portage-4.6.2]
 
