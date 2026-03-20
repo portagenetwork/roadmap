@@ -1,3 +1,5 @@
+@import "../../../../node_modules/bootstrap/scss/functions";
+
 /*
   Colors
   - to be used as utilities within this file to define text+bg colors
@@ -15,9 +17,9 @@ $color-blue: #337ab7;
 $color-blue-alice-darkest: #107896;
 $color-muted: #CCC;
 $color-portage-blue: #1f3d7d;
-$color-portage-blue-darker: darken($color-portage-blue, 10%);
+$color-portage-blue-darker: shade-color($color-portage-blue, 10%);
 $color-portage-orange: #FB9C26;
-$color-portage-orange-darker: darken($color-portage-orange, 10%);
+$color-portage-orange-darker: shade-color($color-portage-orange, 10%);
 $color-alliance-digital-grey: #32322F;
 
 
@@ -25,7 +27,7 @@ $color-alliance-digital-grey: #32322F;
 Rebranding: not change the name, just color code
 *****/
 $color-portage-blue: #D6AB00; //Digital Grey to replace portage network blue
-$color-portage-blue-darker: darken($color-portage-blue, 10%);
+$color-portage-blue-darker: shade-color($color-portage-blue, 10%);
 $color-alliance-yellow: #D6AB00;
 $color-alliance-white: #FBFAFA;
 $color-alliance-teal: #00DBA7;
@@ -34,7 +36,7 @@ $color-alliance-grey: #B7B6B3;
 $color-grey-darkest: $color-portage-blue;
 $color-grey-light: $color-alliance-grey;
 $color-portage-orange: $color-alliance-yellow;
-$color-portage-orange-darker: darken($color-portage-orange, 10%);
+$color-portage-orange-darker: shade-color($color-portage-orange, 10%);
 
 /*
   Variables to define look and feel
@@ -74,7 +76,7 @@ $color-text-black: $color-black;
 $color-border-default: $color-alliance-yellow;
 $color-border-light: #ddd;
 $color-dropdown-inverse-border: $color-portage-blue;
-$color-navbar-border: darken($color-navbar-background, 10%);
+$color-navbar-border: shade-color($color-navbar-background, 10%);
 $navbar-branding-toggle-hover-bg: #ddd;
 
 // Shadow colors
