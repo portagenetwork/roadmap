@@ -20,10 +20,10 @@ $(() => {
     // If a template has been selected and it is a string
     if (tmplt && isString(tmplt)) {
       // remove the disabled attribute and make the button clickable
-      submitButton.removeAttr('disabled').removeAttr('data-toggle').removeAttr('title');
+      submitButton.removeAttr('disabled').removeAttr('data-bs-toggle').removeAttr('title');
     } else {
       // otherwise keep it disabled
-      submitButton.attr('disabled', true).attr('data-toggle', 'tooltip')
+      submitButton.attr('disabled', true).attr('data-bs-toggle', 'tooltip')
       .attr('title', getConstant('NEW_PLAN_DISABLED_TOOLTIP'));
     }
   };

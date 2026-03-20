@@ -5,7 +5,7 @@
         <%= link_to _('Link your institutional credentials'),
                     Rails.application.routes.url_helpers.send("user_openid_connect_omniauth_authorize_path"),
                     title: _("Link your institutional credentials to access your account with them."),
-                    'data-toggle': "tooltip", method: :post %>
+                    'data-bs-toggle': "tooltip", method: :post %>
 <% else %>
 <%# If We do have and id we need to present the option to unlink %>
 <% unlinktext = _("Unlink your account from %{scheme_description}. You can link again at any time.") % { scheme_description: scheme.description} %>
@@ -17,5 +17,5 @@
                 title: unlinktext,
                 data: {confirm: unlinkconf},
                 'aria-label': unlinktext,
-                'data-toggle': "tooltip" %>
+                'data-bs-toggle': "tooltip" %>
 <% end %>

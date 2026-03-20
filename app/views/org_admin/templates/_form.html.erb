@@ -5,7 +5,7 @@
   <%= f.text_field(:title, class: "form-control", spellcheck: true, "aria-required": true) %>
 </div>
 
-<div class="form-control mb-3 col-xs-8" data-toggle="tooltip" title="<%=  description_tooltip %>">
+<div class="form-control mb-3 col-xs-8" data-bs-toggle="tooltip" title="<%=  description_tooltip %>">
   <em class="sr-only"><%= description_tooltip %></em>
   <%= f.label(:description, _('Description'), class: "form-label") %>
   <%= f.text_area(:description, class: "template", spellcheck: true) %>

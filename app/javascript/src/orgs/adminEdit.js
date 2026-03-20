@@ -52,7 +52,7 @@ $(() => {
     });
   });
 
-  $('.links [data-toggle="tooltip"]').on('click', (e) => {
+  $('.links [data-bs-toggle="tooltip"]').on('click', (e) => {
     e.preventDefault();
     $(e.target).parent('a').tooltip('toggle');
   });

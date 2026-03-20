@@ -1,10 +1,10 @@
 /*
  * This method expects an expand/collapse all link to be contained within a div with
- * the '.accordion-controls' class. The div container should have a 'data-parent' that
+ * the '.accordion-controls' class. The div container should have a 'data-bs-parent' that
  * corresponds with the id of your accordion container. The links should have a
  * 'data-toggle-direction' attribute that contains either 'show' or 'hide'.
  * ------------------------------------------------------------
- *    <div class="accordion-controls" data-parent="accordion">
+ *    <div class="accordion-controls" data-bs-parent="accordion">
  *      <a href="#" data-toggle-direction="show"><%= _('expand all') %></a>
  *      <a href="#" data-toggle-direction="hide"><%= _('collapse all') %></a>
  *    </div>
@@ -104,11 +104,11 @@ $(() => $('body').on('click', '.accordion-controls a[data-toggle-direction]', (e
   const currentTarget = $(e.currentTarget);
   const target = $(e.target);
   const direction = target.attr('data-toggle-direction');
-  const parentTargetName = currentTarget.parent().attr('data-parent');
+  const parentTargetName = currentTarget.parent().attr('data-bs-parent');
 
   if (direction) {
     // Selects all .accordion-item elements where the parent is
-    // currentTarget.attr('data-parent') and
+    // currentTarget.attr('data-bs-parent') and
     // after gets the immediate children whose class selector is accordion-item
     const parentTarget = $(`#${parentTargetName}`).length ? $(`#${parentTargetName}`) : $(`.${parentTargetName}`);
     parentTarget.children('.accordion-item').each((i, el) => {

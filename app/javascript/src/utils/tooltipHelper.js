@@ -5,13 +5,13 @@ $(() => {
   //
   // If the content of the tooltip contains HTML, then add `data-html="true"` to the element
   // Default behaviour for all tootips, when attribute data-placement not set
-  $('[data-toggle="tooltip"]:not([data-placement])').tooltip({
+  $('[data-bs-toggle="tooltip"]:not([data-placement])').tooltip({
     animated: 'fade',
     placement: 'right',
   });
 
   // Don't set placement property if data-placement present
-  $('[data-toggle="tooltip"][data-placement]').tooltip({
+  $('[data-bs-toggle="tooltip"][data-placement]').tooltip({
     animated: 'fade',
   });
 });
