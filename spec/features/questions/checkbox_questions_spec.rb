@@ -29,7 +29,7 @@ RSpec.describe 'Questions::Check box questions', type: :feature do
     expect(page).to have_text('(0 / 1)')
 
     # Action
-    find("#section-panel-#{@section.id}").click
+    find("#section-card-#{@section.id}").click
     # Fill in the answer form...
     within("#answer-form-#{@question.id}") do
       check @question.question_options.first.text

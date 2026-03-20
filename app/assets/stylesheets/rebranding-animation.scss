@@ -33,8 +33,8 @@ a.btn,
 }
 
   /* This is added to the header of the Write Plan section in the Plans*/
-  .heading-button > .panel-heading,
-  .panel-default > .panel-heading {
+  .heading-button > .card-heading,
+  .card-default > .card-heading {
   color: $color-alliance-digital-grey;
   background-color: $color-alliance-lighter-grey;
   border-top: 3px solid $color-alliance-yellow;
@@ -52,7 +52,7 @@ a.btn,
 }
 
 /* Guidance collapse bar in Templates section icon color issues fix on-hover OR on focus*/
-.panel-heading {
+.card-heading {
   &:hover,
   &:focus {
     i.fas.pull-left.fa-minus,
