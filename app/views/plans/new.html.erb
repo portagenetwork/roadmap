@@ -30,8 +30,8 @@
                 title: project_title_tooltip ) %>
         </div>
         <div class="form-control mb-3 col-md-6">
-          <div class="checkbox">
-            <%= label_tag(:is_test) do %>
+          <div class="form-check">
+            <%= label_tag(:is_test, class: 'form-check-label') do %>
               <%= check_box_tag(:is_test, "1", false) %>
               <%= _('mock project for testing, practice, or educational purposes') %>
             <% end %>
@@ -110,7 +110,7 @@
         <h2 id="template-selection"><%= _('Which DMP template would you like to use?') %></h2>
         <div class="form-control mb-3 row">
           <div class="col-md-6">
-            <div class="form-group">
+            <div class="form-control mb-3">
               <div class="dropdown" id="template-dropdown-container">
                 <button
                   class="form-select text-start"
