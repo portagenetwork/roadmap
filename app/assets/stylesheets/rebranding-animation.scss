@@ -19,14 +19,6 @@ a.btn.btn-link, input.btn-link, // "Edit" & "Destroy" buttons for /oauth/applica
 }
 
 /* Exceptions to general link visibility/accessibility styling */
-#app-navbar-menu .nav > li > a,
-#org-navbar-menu > .nav.navbar-nav.navbar-right > li > a,
-#app-navbar-menu .nav > .dropdown > .dropdown-menu > li > a,
-#org-navbar-menu .nav > .dropdown > .dropdown-menu > li > a {
-  text-decoration: none;
-  color: $color-alliance-digital-grey;
-}
-
 a.btn,
 .nav > li > a:not(#org-navbar-menu .nav > li > a) {
   text-decoration: none;

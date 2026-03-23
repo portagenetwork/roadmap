@@ -19,10 +19,6 @@ Individual Changes
 defined by the original reference in each scss sheet (see comments) for easier move around
 ************************/
 
-/*****
-navigation
-*****/
-
 //logo style apply for all screen size
 //_logos.scss
 .app-logo{
@@ -31,15 +27,9 @@ navigation
     // padding: 0;
 }
 
-
 //overriding the row margins to the zero. needs to addressed while refractoring css
 .row.no-row-margin{
     margin: 0px !important;
-}
-
-
-.navbar-nav{
-    margin-left: 2.5em;
 }
 
 .sign-in{
@@ -53,70 +43,14 @@ navigation
         margin-bottom: 125px !important;
     }
 
-    #app-navbar{
-        margin-bottom: 0;
-        font-size: 12px;
-
-        .navbar-nav > li > a
-        {
-
-            //color: #FBFAFA;
-
-            //_template_filter.scss
-            font-size: 1.2rem;
-            margin: 0.5em 0em 3.2em 0.5em; //fit the internal padding of the new logo, and make the font align with the horizontal center of the logo
-            &:focus,
-            &:hover{
-                color: $color-alliance-darker-yellow;
-                background-color: $color-alliance-digital-grey;
-            }
-        }
-
-    }
-
-
-      // Dropdowns
-    .navbar-nav {
-        > .open > a {
-      &,
-      &:hover,
-      &:focus {
-        background-color: $color-alliance-lighter-grey;
-        color: $color-alliance-darker-yellow;
-            }
-        }
-    }
-
-    #org-navbar{ //_navbars.scss
-        margin: auto;
-    }
-
     #main{
         margin-top: 1em;
     }
-
-    #app-navbar .navbar-nav > li.active > a {
-        color: $color-alliance-darker-yellow;
-        background-color: $color-alliance-digital-grey;
-    }
-
-    .navbar-header{
-        height: 50px;
-    }
-
-}
-
-#app-navbar{
-    font-weight: 700;
 }
 
 /*****
 Forms & Tables
 *****/
-.nav-tabs, .nav-pills{ //_navs.scss
-    background-color: $color-alliance-darker-yellow;
-}
-
 //_table.scss
 thead th{
     background-color: $color-alliance-darker-yellow;
@@ -143,28 +77,5 @@ Mobile Only
     }
     #footer-navbar {
         position: relative; //prevent footer overlap with main content in mobile device
-    }
-
-    .navbar-header{
-        margin: 0;
-        padding: 0;
-        width: 100%;
-    }
-    .navbar-collapse{
-        &.collapse{
-            z-index:1;
-            &.in{
-                position: absolute;
-                z-index: 100;
-                width: 100%;
-                background-color: $color-alliance-darker-yellow;
-            }
-        }
-    }
-    .navbar-toggle{ //show the other breadcrumb icon on right top
-        border-color: $color-alliance-lighter-grey;
-        .icon-bar{
-            background-color: $color-alliance-lightest-grey;
-        }
     }
 }
