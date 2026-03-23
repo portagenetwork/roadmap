@@ -1,0 +1,102 @@
+@use '../variables/colours' as *;
+
+.navbar-nav{
+    margin-left: 2.5em;
+}
+
+@media (min-width: 768px) {
+	#app-navbar {
+		margin-bottom: 0;
+		font-size: 12px;
+
+		.navbar-nav > li > a {
+            // _template_filter.scss
+			font-size: 1.2rem;
+			margin: 0.5em 0em 3.2em 0.5em; // fit the internal padding of the new logo, and make the font align with the horizontal center of the logo
+
+			&:focus,
+			&:hover {
+				color: $color-alliance-darker-yellow;
+				background-color: $color-alliance-digital-grey;
+			}
+		}
+	}
+
+    // Dropdowns
+	.navbar-nav {
+		> .open > a {
+			&,
+			&:hover,
+			&:focus {
+				background-color: $color-alliance-lighter-grey;
+				color: $color-alliance-darker-yellow;
+			}
+		}
+	}
+
+	#org-navbar { // _navbars.scss
+		margin: auto;
+	}
+
+	#app-navbar .navbar-nav > li.active > a {
+		color: $color-alliance-darker-yellow;
+		background-color: $color-alliance-digital-grey;
+	}
+
+	.navbar-header {
+		height: 50px;
+	}
+}
+
+#app-navbar {
+	font-weight: 700;
+}
+
+@media (max-width: 767px) {
+	.navbar-header {
+		margin: 0;
+		padding: 0;
+		width: 100%;
+	}
+
+	.navbar-collapse {
+		&.collapse {
+			z-index: 1;
+
+			&.in {
+				position: absolute;
+				z-index: 100;
+				width: 100%;
+				background-color: $color-alliance-darker-yellow;
+			}
+		}
+	}
+
+	.navbar-toggle { // show the other breadcrumb icon on right top
+		border-color: $color-alliance-lighter-grey;
+
+		.icon-bar {
+			background-color: $color-alliance-lightest-grey;
+		}
+	}
+}
+
+/* Exceptions to general link visibility/accessibility styling (see rebranding-animation.scss) */
+#app-navbar-menu .nav > li > a,
+#org-navbar-menu > .nav.navbar-nav.navbar-right > li > a,
+#app-navbar-menu .nav > .dropdown > .dropdown-menu > li > a,
+#org-navbar-menu .nav > .dropdown > .dropdown-menu > li > a {
+	text-decoration: none;
+	color: $color-alliance-digital-grey;
+}
+
+/* For org navbar custom background color */
+@media (min-width: 768px) {
+    #admin-dropdown ul li a, #super-admin-dropdown ul li a {
+		&:hover,
+		&:focus {
+			color: $color-alliance-darker-yellow !important;
+			background-color: $color-alliance-digital-grey;
+		}
+	}
+}
