@@ -36,7 +36,7 @@
   </div>
   <div class="form-control mb-3">
     <div class="form-check">
-      <%= f.label(:accept_terms) do %>
+      <%= f.label(:accept_terms, class: 'form-check-label') do %>
         <%= f.check_box(:accept_terms, "aria-required": true) %>
         <%= _('I accept the') %>
         <%= link_to _('terms and conditions'), terms_path %>
