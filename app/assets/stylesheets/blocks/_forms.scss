@@ -5,11 +5,12 @@
 }
 
 .form-control input, .form-control textarea, .form-control select{
-    border: 2px solid $color-border-light;
+    border: 1px solid $color-muted;
 }
 
 .form-check {
     padding-left: 0rem;
+    font-weight: normal;
 }
 
 .form-inline{
@@ -18,4 +19,5 @@
 
 .form-check-label {
     padding-left: 5px;
+    font-weight: normal;
 }
