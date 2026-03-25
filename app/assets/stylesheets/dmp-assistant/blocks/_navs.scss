@@ -14,22 +14,20 @@
 }
 
 /* Make the Sign in & Create account .nav-tabs evenly spaced */
-.sign-in .nav-tabs > li {
+.sign-in .nav-tabs .nav-item {
 	flex: 1;
 }
 
 /* General styling for the clickable Sign in & Create account tabs */
-.sign-in .nav-tabs > li > a {
+.sign-in .nav-tabs .nav-link {
 	color: $color-alliance-digital-grey;
 	text-align: center;
 	width: 100%; /* ensures the <a> fills the <li> */
 }
 
 /* Styling for the selected .sign-in tab */
-.sign-in .nav-tabs > li > a.active,
-.sign-in .nav-tabs > li > a.active:hover,
-.sign-in .nav-tabs > li.active > a,
-.sign-in .nav-tabs > li.active:hover > a {
+.sign-in .nav-tabs .nav-link.active,
+.sign-in .nav-tabs .nav-link.active:hover {
 	color: $color-alliance-darker-yellow !important;
 	background: $color-alliance-digital-grey !important;
 	font-weight: bold;
@@ -37,15 +35,10 @@
 }
 
 /* nav-tabs overiding on active */
-.nav-tabs > li > a:hover,
-.nav-tabs > li > a:focus,
-.nav-tabs > li > a.active,
-.nav-tabs > li > a.active:hover,
-.nav-tabs > li > a.active:focus,
-.nav-tabs > li.active > a,
-.nav-tabs > li:hover > a,
-.nav-tabs > li:focus > a,
-.nav-tabs > li.active:hover > a,
-.nav-tabs > li.active:focus > a {
+.nav-tabs .nav-link:hover,
+.nav-tabs .nav-link:focus,
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-link.active:hover,
+.nav-tabs .nav-link.active:focus {
 	color: $color-alliance-digital-grey !important;
 }
