@@ -9,7 +9,7 @@
 		margin-bottom: 0;
 		font-size: 12px;
 
-		.navbar-nav > li > a {
+		.navbar-nav .nav-link {
             // _template_filter.scss
 			font-size: 1.2rem;
 			margin: 0.5em 0em 3.2em 0.5em; // fit the internal padding of the new logo, and make the font align with the horizontal center of the logo
@@ -24,7 +24,11 @@
 
     // Dropdowns
 	.navbar-nav {
-		> .open > a {
+		// Fallback: `.open` is a legacy Bootstrap 3 state; keep during migration.
+		// TODO(bs-5-cleanup): remove `.open` fallback after legacy Bootstrap 3 dropdown JS/classes are fully removed.
+		> .open > .nav-link,
+		// Bootstrap 5 state for expanded dropdown toggles.
+		> .show > .nav-link {
 			&,
 			&:hover,
 			&:focus {
@@ -38,7 +42,8 @@
 		margin: auto;
 	}
 
-	#app-navbar .navbar-nav > li.active > a {
+    #app-navbar .navbar-nav .nav-link.active,
+	#app-navbar .navbar-nav .nav-item.active .nav-link {
 		color: $color-alliance-darker-yellow;
 		background-color: $color-alliance-digital-grey;
 	}
@@ -63,6 +68,10 @@
 		&.collapse {
 			z-index: 1;
 
+			// Bootstrap 5 expanded mobile navbar state.
+			&.show,
+			// Fallback: `.in` is the legacy Bootstrap 3 expanded state.
+			// TODO(bs-5-cleanup): remove `.in` fallback after all collapses are driven only by Bootstrap 5 classes.
 			&.in {
 				position: absolute;
 				z-index: 100;
@@ -82,17 +91,18 @@
 }
 
 /* Exceptions to general link visibility/accessibility styling (see rebranding-animation.scss) */
-#app-navbar-menu .nav > li > a,
-#org-navbar-menu > .nav.navbar-nav.navbar-right > li > a,
-#app-navbar-menu .nav > .dropdown > .dropdown-menu > li > a,
-#org-navbar-menu .nav > .dropdown > .dropdown-menu > li > a {
+#app-navbar-menu .nav .nav-link,
+#org-navbar-menu .navbar-nav .nav-link,
+#app-navbar-menu .dropdown-menu .dropdown-item,
+#org-navbar-menu .dropdown-menu .dropdown-item {
 	text-decoration: none;
 	color: $color-alliance-digital-grey;
 }
 
 /* For org navbar custom background color */
 @media (min-width: 768px) {
-    #admin-dropdown ul li a, #super-admin-dropdown ul li a {
+    #admin-dropdown .dropdown-item,
+    #super-admin-dropdown .dropdown-item {
 		&:hover,
 		&:focus {
 			color: $color-alliance-darker-yellow !important;
