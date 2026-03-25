@@ -30,6 +30,7 @@ Doorkeeper.configure do
 
   # scopes enabled
   default_scopes :read
+  optional_scopes :write
 
   # ensure client apps cannot ask for scopes outwith those specified here
   enforce_configured_scopes
