@@ -1,7 +1,7 @@
 <nav id="app-navbar" class="navbar navbar-expand-md navbar-branding">
   <div class="container-fluid" >
     <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header d-sm-flex justify-content-sm-between">
+    <div class="d-sm-flex justify-content-sm-between">
       <%= link_to(image_tag(current_locale_logo,
                             alt: "#{ApplicationService.application_name} #{_('logo')}",
                             class: "app-logo me-sm-auto",
@@ -20,7 +20,7 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
   
     <div class="collapse navbar-collapse" id="app-navbar-menu">
-      <ul class="navbar-nav">
+      <ul class="navbar-nav w-100">
         <% if user_signed_in? %>
           <li class="nav-item <%= ' active' if active_page?(plans_path, true) %>">
             <%= link_to _('My Dashboard'), plans_path, class: 'nav-link' %>
@@ -28,13 +28,13 @@
           <li class="nav-item <%= ' active' if active_page?(new_plan_path, true) %>">
             <%= link_to _('Create plan'), new_plan_path, class: 'nav-link', id: "create-plan-link" %>
           </li>
-          <li class="dropdown <%= ' active' if active_page?(public_plans_path, true) || active_page?(public_templates_path, true) %>" id="reference-dropdown">
+          <li class="dropdown nav-item <%= ' active' if active_page?(public_plans_path, true) || active_page?(public_templates_path, true) %>" id="reference-dropdown">
             <a href="#" class="dropdown-toggle nav-link" role="button" id="reference-menu" data-bs-toggle="dropdown" data-bs-display="static" aria-haspopup="true" aria-expanded="false">
               <i class="fas fa-book" aria-hidden="true">&nbsp;</i>
               <%= _("Reference") %>
             </a>
             <ul class="dropdown-menu inverse-dropdown dropdown-menu-end"
-                data-bs-popper="static" aria-labelledby="reference-menu">
+                aria-labelledby="reference-menu">
               <li class="nav-item <%= ' active' if active_page?(public_plans_path) %>">
                 <%= link_to _('Example DMPs'), public_plans_path, class: 'dropdown-item  px-3' %>
               </li>
@@ -58,12 +58,9 @@
         <li class="nav-item <%= ' active' if active_page?(help_path, true) %>">
           <%= link_to _('Help'), help_path, class: 'nav-link' %>
         </li>
-       <li class="nav-item <%= ' active' if active_page?(about_us_path, true) %>">
+        <li class="nav-item <%= ' active' if active_page?(about_us_path, true) %>">
           <%= link_to _('About'), about_us_path, class: 'nav-link' %>
         </li>
-      </ul>
-
-      <ul class="navbar-nav ms-auto">
         <%= render "layouts/signin_signout" %>
       </ul>
       
