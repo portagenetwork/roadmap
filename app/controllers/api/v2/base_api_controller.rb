@@ -35,6 +35,13 @@ module Api
         )
       end
 
+      protected
+
+      def render_error(errors:, status:)
+        @payload = { errors: errors }
+        render '/api/v2/error', status: status
+      end
+
       private
 
       # define instance variable json and associated getter and setter methods
