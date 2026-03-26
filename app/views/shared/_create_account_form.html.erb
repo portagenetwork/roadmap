@@ -23,21 +23,21 @@
                  required: true
                } %>
   </div>
-  <div class="form-control mb-3">
+  <div class="form-control mb-1">
     <%= f.label(:password, _('Password'), class: "form-label") %>
     <%= f.password_field(:password, class: "form-control", "aria-required": true, autocomplete: "new-password") %>
   </div>
-  <div class="form-control mb-3">
-    <div class="form-check">
-        <input type="checkbox" id="passwords_toggle_sign_up" class="passwords_toggle" />
-        <%= label_tag('passwords_toggle_sign_up', _('Show password'), class: 'form-check-label') %>
-    </div>
+  <div class="mb-3">
+    <div class="form-check ms-5">
+      <%= check_box_tag :passwords_toggle_sign_up, nil, false, class: 'form-check-input passwords_toggle' %>
+      <%= label_tag('passwords_toggle_sign_up', _('Show password'), class: 'form-check-label') %>
+  </div>
     <%= render 'shared/password_checklist', f: f%>
   </div>
-  <div class="form-control mb-3">
-    <div class="form-check">
+  <div class="mb-3">
+    <div class="form-check ms-5">
+      <%= f.check_box(:accept_terms, "aria-required": true, class: "form-check-input") %>
       <%= f.label(:accept_terms, class: 'form-check-label') do %>
-        <%= f.check_box(:accept_terms, "aria-required": true) %>
         <%= _('I accept the') %>
         <%= link_to _('terms and conditions'), terms_path %>
       <% end %>
