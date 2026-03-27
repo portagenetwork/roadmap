@@ -8,6 +8,8 @@
 
  - chore(deps): bump immutable from 4.3.0 to 4.3.8 [#1294](https://github.com/portagenetwork/roadmap/pull/1294)
 
+ - chore(deps): bump nginx from 1.29.6-alpine to 1.29.7-alpine [#1314](https://github.com/portagenetwork/roadmap/pull/1314)
+
 ## [4.1.1+portage-4.7.0]
 
 ### Added
