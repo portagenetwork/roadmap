@@ -32,14 +32,14 @@
             <% if !link.blank? && i <= max_number_links %>
               <li class="org-links nav-item">
 
-              <%= link_to link['link'], :target=>'_blank', :class => 'org-a has-new-window-popup-info nav-link' do %>
-                <i class="fas fa-globe" aria-hidden="true">&nbsp;</i>
-                <%= link['text'].blank? ? link['link'] : link['text'] %>
-                <em class="sr-only"> (new window)</em>
-                <span class="new-window-popup-info"><%= _('Opens in new window') %></span>
-
-                </li>
-              <% end; i+=1 %>
+                <%= link_to link['link'], :target=>'_blank', :class => 'org-a has-new-window-popup-info nav-link' do %>
+                  <i class="fas fa-globe" aria-hidden="true">&nbsp;</i>
+                  <%= link['text'].blank? ? link['link'] : link['text'] %>
+                  <em class="sr-only"> (new window)</em>
+                  <span class="new-window-popup-info"><%= _('Opens in new window') %></span>
+                <% end %>
+              </li>
+              <% i+=1 %>
             <% end %>
           <% end %>
 
