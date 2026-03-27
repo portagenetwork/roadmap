@@ -8,8 +8,8 @@ module Api
 
       # If the Resource Owner (aka User) is in the Doorkeeper AccessToken then it is an authorization_code
       # token and we need to ensure that the ApiClient is authorized for the relevant Scope
-      before_action -> { doorkeeper_authorize! :write }, only: %i[create]
-      before_action -> { doorkeeper_authorize! :public }, only: %i[index show]
+      before_action -> { doorkeeper_authorize! :write }, only: %i[create update]
+      before_action -> { doorkeeper_authorize! :read }, only: %i[index show]
 
       # GET /api/v2/plans/:id
       def show
@@ -30,7 +30,7 @@ module Api
       end
 
       # POST /api/v2/plans
-      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength,Lint/MissingCopEnableDirective
       # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       def create # rubocop:disable Metrics/AbcSize
         json = parsed_json
@@ -85,6 +85,49 @@ module Api
         end
       rescue JSON::ParserError
         render_error(errors: [_('Invalid JSON')], status: :bad_request)
+      end
+
+      # PUT api/v2/plans/:id
+      def update
+        json = parsed_json
+        return render_error(errors: ['Invalid JSON'], status: :bad_request) unless json
+
+        plan = Plan.find_by(id: params[:id])
+        return render_error(errors: ['Plan not found'], status: :not_found) unless plan
+
+        plans_policy = PlansPolicy.new(@resource_owner, plan)
+        raise Pundit::NotAuthorizedError unless plans_policy.update?
+
+        answers_payload = json.with_indifferent_access[:answers]
+        unless answers_payload.is_a?(Array)
+          return render_error(errors: ['Missing answers payload'],
+                              status: :bad_request)
+        end
+
+        errors = []
+
+        answers_payload.each do |ans|
+          question_id = ans[:question_id]
+          text = ans[:text]
+
+          question = Question.find_by(id: question_id)
+
+          unless question && plan.template.questions.exists?(id: question_id)
+            errors << "Question #{question_id} does not belong to this plan"
+            next
+          end
+
+          answer = Answer.find_by(plan_id: plan.id, question_id: question_id)
+
+          answer.text = text
+
+          errors.concat(answer.errors.full_messages) unless answer.save
+        end
+
+        return render_error(errors: errors, status: :bad_request) if errors.any?
+
+        @items = paginate_response(results: Plan.where(id: plan.id))
+        render '/api/v2/plans/index', status: :ok
       end
 
       private
