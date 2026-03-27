@@ -44,7 +44,7 @@
           <% end %>
 
           <% if !current_user.org.contact_email.blank? %>
-          <li>
+          <li class="org-links nav-item">
             <%= mail_to current_user.org.contact_email, :class => 'org-a nav-link' do %>
             
               <i class="fas fa-envelope" aria-hidden="true">&nbsp;</i>
