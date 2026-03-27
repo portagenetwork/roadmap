@@ -8,6 +8,8 @@
 
  - chore(deps): bump immutable from 4.3.0 to 4.3.8 [#1294](https://github.com/portagenetwork/roadmap/pull/1294)
 
+ - chore(deps): bump picomatch from 2.3.1 to 2.3.2 [#1317](https://github.com/portagenetwork/roadmap/pull/1317)
+
 ## [4.1.1+portage-4.7.0]
 
 ### Added
