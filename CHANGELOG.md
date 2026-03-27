@@ -10,6 +10,8 @@
 
  - chore(deps): bump picomatch from 2.3.1 to 2.3.2 [#1317](https://github.com/portagenetwork/roadmap/pull/1317)
 
+ - chore(deps): bump yaml from 1.10.2 to 1.10.3 [#1316](https://github.com/portagenetwork/roadmap/pull/1316)
+
 ## [4.1.1+portage-4.7.0]
 
 ### Added
