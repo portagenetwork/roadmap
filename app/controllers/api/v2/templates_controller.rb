@@ -9,6 +9,7 @@ module Api
       # GET /api/v2/templates
       def index
         templates = Api::V2::TemplatesPolicy::Scope.new(@resource_owner).resolve
+        templates = templates.includes(phases: { sections: :questions })
         @items = paginate_response(results: templates)
         render '/api/v2/templates/index', status: :ok
       end

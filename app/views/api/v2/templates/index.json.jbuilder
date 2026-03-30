@@ -21,5 +21,14 @@ json.items @items do |template|
                                                             value: template.id)
       json.partial! 'api/v2/identifiers/show', identifier: identifier
     end
+
+    questions = template.phases.flat_map do |phase|
+      phase.sections.flat_map(&:questions)
+    end
+
+    json.questions questions do |question|
+      json.question_id question.id
+      json.text sanitize(question.text)
+    end
   end
 end
