@@ -392,6 +392,12 @@ class User < ApplicationRecord
     perms.include? Perm.review_plans
   end
 
+  def can_manage_oauth_apps?
+    # TODO: `perms.exists?(id: ...)` is a bit more efficient than `perms.include?()`
+    # Update all of the above perm checks to optimise querying
+    perms.exists?(id: Perm.manage_oauth_apps.id)
+  end
+
   # Removes the api_token from the user
   #
   # Returns nil
