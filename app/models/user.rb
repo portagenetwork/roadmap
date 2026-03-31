@@ -392,6 +392,10 @@ class User < ApplicationRecord
     perms.include? Perm.review_plans
   end
 
+  def can_manage_oauth_apps?
+    perms.include? Perm.manage_oauth_apps
+  end
+
   # Removes the api_token from the user
   #
   # Returns nil
