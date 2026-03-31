@@ -6,6 +6,18 @@ module Api
     class TemplatesController < BaseApiController
       respond_to :json
 
+      # GET /api/v2/templates/:id
+      def show
+        templates = Api::V2::TemplatesPolicy::Scope.new(@resource_owner).resolve
+        template = templates.includes(phases: { sections: :questions })
+                            .find_by(id: params[:id])
+
+        return render_error(errors: ['Template not found'], status: :not_found) unless template
+
+        @items = [template]
+        render '/api/v2/templates/index', status: :ok
+      end
+
       # GET /api/v2/templates
       def index
         templates = Api::V2::TemplatesPolicy::Scope.new(@resource_owner).resolve
