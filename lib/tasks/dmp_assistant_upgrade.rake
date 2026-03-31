@@ -46,9 +46,7 @@ namespace :dmp_assistant_upgrade do
   # Sets `confirmed_at` to `Time.now.utc` for all superusers
   def confirm_superusers
     confirmed_at = Time.now.utc
-    count = User.joins(:perms).where(perms: { id: super_admin_perm_ids })
-                .distinct
-                .update_all(confirmed_at: confirmed_at)
+    count = User.super_admins.update_all(confirmed_at: confirmed_at)
     p "Updated confirmed_at = #{confirmed_at} for #{count} superuser(s)"
   end
 
