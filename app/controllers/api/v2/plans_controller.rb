@@ -7,7 +7,7 @@ module Api
       before_action :set_complete_param, only: %i[show index]
 
       # If the Resource Owner (aka User) is in the Doorkeeper AccessToken then it is an authorization_code
-      # token and we need to ensure that the ApiClient is authorized for the relevant Scope
+      # token and we need to ensure that the OAuth application is authorized for the relevant Scope
       before_action -> { doorkeeper_authorize! :write }, only: %i[create update]
       before_action :require_read_scope, only: %i[index show]
 
