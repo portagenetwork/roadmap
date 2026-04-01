@@ -8,16 +8,19 @@ Doorkeeper.configure do
   resource_owner_authenticator do
     if request.path == native_oauth_authorization_path
       # Deactivate native_oauth_authorization_path (intended for mobile devices)
-      redirect_to root_path, alert: "You are not authorized to perform this action."
+      redirect_to root_path, alert: _('You are not authorized to perform this action.')
     else
       # https://doorkeeper.gitbook.io/guides/ruby-on-rails/configuration
       current_user || warden.authenticate!(scope: :user)
     end
   end
 
-  # ensure only super-admins can manage oauth applications
+  # ensure only users with required perms can manage oauth applications
   admin_authenticator do |_routes|
-    redirect_to root_path, alert: "You are not authorized to perform this action." unless current_user&.can_super_admin?
+    unless current_user&.can_manage_oauth_apps?
+      redirect_to root_path,
+                  alert: _('You are not authorized to perform this action.')
+    end
   end
 
   # grant flows enabled

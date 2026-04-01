@@ -2,7 +2,9 @@
 
 # rubocop:disable Metrics/BlockLength
 Rails.application.routes.draw do
-  use_doorkeeper
+  use_doorkeeper do
+    controllers applications: 'oauth_applications'
+  end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   devise_for(:users, controllers: {
