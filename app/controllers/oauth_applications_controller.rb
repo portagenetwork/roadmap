@@ -28,10 +28,11 @@ class OauthApplicationsController < Doorkeeper::ApplicationsController
     end
   end
 
-  # Merges `user_id` with the default permitted fields (:name, :redirect_uri, etc.)
-  # (application_params is used by the default controller's create and update actions)
   def application_params
-    super.merge(user_id: current_user.id)
+    # Merge our custom `oauth_applications.user_id` column with the default permitted fields
+    super.merge(user_id: current_user.id,
+                # Grant default_scopes to the added OAuth application
+                scopes: Doorkeeper.config.default_scopes.to_s)
   end
 
   def user_is_app_owner?

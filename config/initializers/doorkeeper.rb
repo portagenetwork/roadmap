@@ -32,7 +32,7 @@ Doorkeeper.configure do
   allow_blank_redirect_uri true
 
   # scopes enabled
-  default_scopes :read
+  default_scopes :read, :write
 
   # ensure client apps cannot ask for scopes outwith those specified here
   enforce_configured_scopes
