@@ -8,9 +8,7 @@ module Api
 
       # GET /api/v2/templates/:id
       def show
-        templates = Api::V2::TemplatesPolicy::Scope.new(@resource_owner).resolve
-        template = templates.includes(phases: { sections: :questions })
-                            .find_by(id: params[:id])
+        template = templates_scope.find_by(id: params[:id])
 
         return render_error(errors: ['Template not found'], status: :not_found) unless template
 
@@ -20,10 +18,15 @@ module Api
 
       # GET /api/v2/templates
       def index
-        templates = Api::V2::TemplatesPolicy::Scope.new(@resource_owner).resolve
-        templates = templates.includes(phases: { sections: :questions })
+        templates = templates_scope
         @items = paginate_response(results: templates)
         render '/api/v2/templates/index', status: :ok
+      end
+
+      private
+
+      def templates_scope
+        Api::V2::TemplatesPolicy::Scope.new(@resource_owner).resolve.includes(phases: { sections: :questions })
       end
     end
   end
