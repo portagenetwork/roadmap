@@ -58,5 +58,10 @@ FactoryBot.define do
       name { 'review_org_plans' }
       initialize_with { Perm.find_or_create_by(name: name) }
     end
+
+    trait :manage_oauth_apps do
+      name { 'manage_oauth_apps' }
+      initialize_with { Perm.find_or_create_by(name: name) }
+    end
   end
 end
