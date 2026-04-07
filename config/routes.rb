@@ -5,6 +5,9 @@ Rails.application.routes.draw do
   use_doorkeeper do
     controllers applications: 'oauth_applications'
   end
+  post 'oauth/applications/:id/regenerate_secret',
+       to: 'oauth_applications#regenerate_secret',
+       as: :regenerate_oauth_secret
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   devise_for(:users, controllers: {
