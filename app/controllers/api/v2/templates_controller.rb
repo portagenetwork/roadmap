@@ -26,7 +26,7 @@ module Api
       private
 
       def templates_scope
-        Api::V2::TemplatesPolicy::Scope.new(@resource_owner).resolve.includes(phases: { sections: :questions })
+        Api::V2::TemplatesPolicy::Scope.new(@resource_owner).resolve
       end
     end
   end
