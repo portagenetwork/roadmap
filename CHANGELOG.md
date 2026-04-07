@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+ - chore(doorkeeper): delete unneeded doorkeeper views
+
 ### Dependency Updates
 
  - chore(deps): bump eslint from 8.38.0 to 9.26.0 [#1270](https://github.com/portagenetwork/roadmap/pull/1270)
