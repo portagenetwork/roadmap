@@ -7,6 +7,7 @@
 
 /* General styling for link visibility/accessibility */
 a,
+a.btn.btn-link, input.btn-link, // "Edit" & "Destroy" buttons for /oauth/applications
 .btn.btn-link.dropdown-toggle, // "Actions" dropdown buttons
 .dropdown-menu > li > a {
   text-decoration: underline;
@@ -25,7 +26,7 @@ a,
   text-decoration: none;
   color: $color-alliance-digital-grey;
 }
-  
+
 a.btn,
 .nav > li > a:not(#org-navbar-menu .nav > li > a) {
   text-decoration: none;
