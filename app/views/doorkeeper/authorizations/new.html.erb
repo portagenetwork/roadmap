@@ -13,7 +13,7 @@
 
       <ul class="text-info">
         <% @pre_auth.scopes.each do |scope| %>
-          <li><%= t(scope, scope: [:doorkeeper, :scopes]) + " your plans" %></li>
+          <li><%= t scope, scope: [:doorkeeper, :scopes] %></li>
         <% end %>
       </ul>
     </div>
@@ -29,7 +29,7 @@
       <%= hidden_field_tag :scope, @pre_auth.scope, id: nil %>
       <%= hidden_field_tag :code_challenge, @pre_auth.code_challenge, id: nil %>
       <%= hidden_field_tag :code_challenge_method, @pre_auth.code_challenge_method, id: nil %>
-      <%= submit_tag t('doorkeeper.authorizations.buttons.authorize'), class: "btn btn-success mt-3 mb-3", style: "border-radius: 0;" %>
+      <%= submit_tag t('doorkeeper.authorizations.buttons.authorize'), class: "btn btn-success btn-lg btn-block" %>
     <% end %>
     <%= form_tag oauth_authorization_path, method: :delete do %>
       <%= hidden_field_tag :client_id, @pre_auth.client.uid, id: nil %>
@@ -40,7 +40,7 @@
       <%= hidden_field_tag :scope, @pre_auth.scope, id: nil %>
       <%= hidden_field_tag :code_challenge, @pre_auth.code_challenge, id: nil %>
       <%= hidden_field_tag :code_challenge_method, @pre_auth.code_challenge_method, id: nil %>
-      <%= submit_tag t('doorkeeper.authorizations.buttons.deny'), class: "btn btn-danger", style: "border-radius: 0;" %>
+      <%= submit_tag t('doorkeeper.authorizations.buttons.deny'), class: "btn btn-danger btn-lg btn-block" %>
     <% end %>
   </div>
 </main>
