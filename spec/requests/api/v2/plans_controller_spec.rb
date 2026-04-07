@@ -123,4 +123,59 @@ RSpec.describe Api::V2::PlansController do
       end
     end
   end
+
+  describe 'POST /api/v2/plans (create)' do
+    let(:user) { create(:user) }
+    let(:client) { create(:oauth_application) }
+    let(:template) { create(:template) }
+    let(:token) { mock_authorization_code_token(oauth_application: client, user: user).plaintext_token }
+
+    let(:headers) do
+      {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: "Bearer #{token}"
+      }
+    end
+
+    let(:valid_payload) do
+      {
+        total_items: 1,
+        items: [{
+          dmp: {
+            title: 'Test Plan Creation',
+            contact: {
+              name: user.name,
+              mbox: user.email,
+              affiliation: { name: user.org.name }
+            },
+            extension: [{ dmproadmap: { template: { id: template.id } } }]
+          }
+        }]
+      }
+    end
+
+    context 'when the payload is valid' do
+      it 'returns a 201 and creates the plan' do
+        expect do
+          post api_v2_plans_path, params: valid_payload.to_json, headers: headers
+        end.to change(Plan, :count).by(1)
+
+        expect(response.code).to eql('201')
+        json = JSON.parse(response.body).with_indifferent_access
+        expect(json[:items].first[:dmp][:title]).to eq('Test Plan Creation')
+      end
+    end
+
+    context 'when the payload is invalid' do
+      it 'returns a 400 if the payload has a missing title' do
+        invalid_payload = valid_payload.deep_dup
+        invalid_payload[:items].first[:dmp].delete(:title)
+
+        post api_v2_plans_path, params: invalid_payload.to_json, headers: headers
+
+        expect(response.code).to eql('400')
+      end
+    end
+  end
 end
