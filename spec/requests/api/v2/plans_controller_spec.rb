@@ -128,7 +128,10 @@ RSpec.describe Api::V2::PlansController do
     let(:user) { create(:user) }
     let(:client) { create(:oauth_application) }
     let(:template) { create(:template) }
-    let(:token) { mock_authorization_code_token(oauth_application: client, user: user).plaintext_token }
+    let(:token) do
+      mock_authorization_code_token(oauth_application: client, user: user,
+                                    scopes: 'read write').plaintext_token
+    end
 
     let(:headers) do
       {
