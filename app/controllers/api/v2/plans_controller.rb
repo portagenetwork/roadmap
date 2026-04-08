@@ -49,11 +49,11 @@ module Api
       end
 
       # PUT api/v2/plans/:id
-      def update # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
+      def update # rubocop:disable Metrics/AbcSize, Metrics/MethodLength,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
         json = parsed_json
         return render_error(errors: ['Invalid JSON'], status: :bad_request) unless json
 
-        plan = Plan.find_by(id: params[:id])
+        plan = plans_scope.find_by(id: params[:id])
         return render_error(errors: ['Plan not found'], status: :not_found) unless plan
 
         plans_policy = PlansPolicy.new(@resource_owner, plan)
@@ -65,22 +65,29 @@ module Api
                               status: :bad_request)
         end
 
+        # Gather all IDs from the payload
+        question_ids = answers_payload.map { |ans| ans[:question_id].to_i }.uniq
+
+        # Fetch only questions and answers that belong to the plan's template
+        valid_question_ids = plan.template.questions.where(id: question_ids).index_by(&:id)
+        existing_answers = plan.answers.where(question_id: question_ids).index_by(&:question_id)
+
         errors = []
 
         answers_payload.each do |ans|
-          question_id = ans[:question_id]
-          text = ans[:text]
+          question_id = ans[:question_id].to_i
 
-          question = Question.find_by(id: question_id)
-
-          unless question && plan.template.questions.exists?(id: question_id)
+          # Validation: Does the question belong to this template?
+          unless valid_question_ids.key?(question_id)
             errors << "Question #{question_id} does not belong to this plan"
             next
           end
 
-          answer = Answer.find_by(plan_id: plan.id, question_id: question_id)
-
-          answer.text = text
+          # Find existing answer from pre-fetched hash or initialize a new one
+          answer = existing_answers[question_id] || Answer.new(plan_id: plan.id, question_id: question_id)
+          # This ensures "User must exist" validation passes
+          answer.user_id = @resource_owner.id
+          answer.text = ans[:text]
 
           errors.concat(answer.errors.full_messages) unless answer.save
         end
