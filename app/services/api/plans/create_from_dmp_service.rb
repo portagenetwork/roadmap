@@ -1,0 +1,55 @@
+# frozen_string_literal: true
+
+module Api
+  module Plans
+    class CreateFromDmpService # rubocop:disable Style/Documentation
+      attr_reader :plan, :errors
+      private
+
+      def determine_owner(client:, plan:)
+        contact = plan.contributors.find(&:data_curation?)
+        # Use the contact if it was sent in and has an affiliation defined
+        return contact if contact.present? && contact.org.present?
+
+        # If the contact has no affiliation defined, see if they are already a User
+        user = lookup_user(contributor: contact)
+        return user if user.present?
+
+        # Otherwise just return the client
+        client
+      end
+
+      def lookup_user(contributor:)
+        return nil unless contributor
+
+        identifiers = contributor.identifiers.map do |id|
+          { name: id.identifier_scheme&.name, value: id.value }
+        end
+
+        user = User.from_identifiers(array: identifiers) if identifiers.any?
+        user ||= User.find_by(email: contributor.email)
+        user
+      end
+
+      def invite_contributor(contributor:) # rubocop:disable Metrics/AbcSize
+        return nil unless contributor.present?
+
+        # If the user was not found, invite them and attach any know identifiers
+        names = contributor.name&.split || ['']
+        firstname = names.length > 1 ? names.first : nil
+        surname = names.length > 1 ? names.last : names.first
+        user = User.invite!({ email: contributor.email,
+                              firstname: firstname,
+                              surname: surname,
+                              org: contributor.org }, @resource_owner)
+
+        contributor.identifiers.each do |id|
+          user.identifiers << Identifier.new(
+            identifier_scheme: id.identifier_scheme, value: id.value
+          )
+        end
+        user
+      end
+    end
+  end
+end
