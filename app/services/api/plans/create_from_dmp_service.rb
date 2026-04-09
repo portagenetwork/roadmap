@@ -14,6 +14,30 @@ module Api
 
       private
 
+      def valid_json_structure?
+        if @json.blank?
+          @errors << 'Invalid JSON'
+          return false
+        end
+        true
+      end
+
+      def save_and_finalize(owner)
+        @plan = Api::V1::PersistenceService.safe_save(plan: @plan)
+        if @plan.new_record?
+          @errors << 'Unable to create your DMP'
+          return false
+        end
+
+        # Associate with resource owner if applicable
+        @plan.update(api_client_id: @resource_owner.id) if @resource_owner.is_a?(ApiClient)
+
+        # Invite the owner if they are a new Contributor
+        actual_owner = owner.is_a?(Contributor) ? invite_contributor(contributor: owner) : owner
+        @plan.add_user!(actual_owner.id, :creator)
+        true
+      end
+
       def determine_owner(client:, plan:)
         contact = plan.contributors.find(&:data_curation?)
         # Use the contact if it was sent in and has an affiliation defined
