@@ -4,6 +4,14 @@ module Api
   module Plans
     class CreateFromDmpService # rubocop:disable Style/Documentation
       attr_reader :plan, :errors
+
+      def initialize(json:, resource_owner:)
+        @json = json.with_indifferent_access.fetch(:items, []).first.fetch(:dmp, {})
+        @resource_owner = resource_owner
+        @errors = []
+        @plan = nil
+      end
+
       private
 
       def determine_owner(client:, plan:)
