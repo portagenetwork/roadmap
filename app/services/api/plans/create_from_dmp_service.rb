@@ -12,6 +12,40 @@ module Api
         @plan = nil
       end
 
+      def call # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
+        return false unless valid_json_structure?
+
+        # 1. Validate against JSON schema
+        @errors = Api::V1::JsonValidationService.validation_errors(json: @json)
+        return false if @errors.any?
+
+        # 2. Deserialize JSON into a Plan object
+        @plan = Api::V1::Deserialization::Plan.deserialize(json: @json)
+        return false unless @plan.present?
+
+        # 3. Handle Ownership and Org
+        owner = determine_owner(client: @resource_owner, plan: @plan)
+        @plan.org = owner.org if owner.present? && @plan.org.blank?
+
+        if @plan.org.blank?
+          @errors << 'Could not determine ownership of the DMP. Please add an :affiliation to the :contact'
+          return false
+        end
+
+        # 4. Contextual Validation (e.g. check if associations are valid)
+        @errors = Api::V1::ContextualErrorService.process_plan_errors(plan: @plan)
+        return false if @errors.any?
+
+        # 5. Check if it already exists
+        unless @plan.new_record?
+          @errors << 'Plan already exists. Send an update instead.'
+          return false
+        end
+
+        # 6. Save and Post-Processing
+        save_and_finalize(owner)
+      end
+
       private
 
       def valid_json_structure?
