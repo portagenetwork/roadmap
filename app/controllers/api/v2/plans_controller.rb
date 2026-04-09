@@ -65,31 +65,29 @@ module Api
                               status: :bad_request)
         end
 
-        # Gather all IDs from the payload
-        question_ids = answers_payload.map { |ans| ans[:question_id].to_i }.uniq
+        payload_q_ids = answers_payload.map { |ans| ans[:question_id].to_i }.uniq
 
-        # Fetch only questions and answers that belong to the plan's template
-        valid_question_ids = plan.template.questions.where(id: question_ids).index_by(&:id)
-        existing_answers = plan.answers.where(question_id: question_ids).index_by(&:question_id)
+        # Check if there are any invalid questions first
+        invalid_ids_msg = validate_questions(plan, payload_q_ids)
+        return render_error(errors: [invalid_ids_msg], status: :bad_request) if invalid_ids_msg
+
+        existing_answers = plan.answers.where(question_id: payload_q_ids).index_by(&:question_id)
 
         errors = []
 
-        answers_payload.each do |ans|
-          question_id = ans[:question_id].to_i
+        ActiveRecord::Base.transaction do
+          answers_payload.each do |ans|
+            question_id = ans[:question_id].to_i
 
-          # Validation: Does the question belong to this template?
-          unless valid_question_ids.key?(question_id)
-            errors << "Question #{question_id} does not belong to this plan"
-            next
+            # Find existing answer from pre-fetched hash or initialize a new one
+            answer = existing_answers[question_id] || Answer.new(plan_id: plan.id, question_id: question_id)
+            # This ensures "User must exist" validation passes
+            answer.user_id = @resource_owner.id
+            answer.text = ans[:text]
+
+            errors.concat(answer.errors.full_messages) unless answer.save
           end
-
-          # Find existing answer from pre-fetched hash or initialize a new one
-          answer = existing_answers[question_id] || Answer.new(plan_id: plan.id, question_id: question_id)
-          # This ensures "User must exist" validation passes
-          answer.user_id = @resource_owner.id
-          answer.text = ans[:text]
-
-          errors.concat(answer.errors.full_messages) unless answer.save
+          raise ActiveRecord::Rollback if errors.any?
         end
 
         return render_error(errors: errors, status: :bad_request) if errors.any?
@@ -114,6 +112,16 @@ module Api
         @parsed_json ||= JSON.parse(request.body.read)
       rescue JSON::ParserError
         nil
+      end
+
+      def validate_questions(plan, question_ids)
+        # DB query to see which of the payload_ids belong to this plan's template
+        valid_ids = plan.template.questions.where(id: question_ids).pluck(:id)
+
+        invalid_ids = question_ids - valid_ids
+        return nil if invalid_ids.empty?
+
+        "Question(s) #{invalid_ids.join(', ')} do not belong to this plan's template"
       end
     end
   end
