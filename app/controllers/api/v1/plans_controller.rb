@@ -31,7 +31,7 @@ module Api
         if service.call
           # Use the plan returned by the service for the response
           @items = paginate_response(results: Plan.where(id: service.plan.id))
-          render '/api/v2/plans/index', status: :created
+          render '/api/v1/plans/index', status: :created
         else
           render_error(errors: service.errors, status: :bad_request)
         end
