@@ -29,7 +29,7 @@ module Api
       end
 
       # POST /api/v2/plans
-      def create
+      def create # rubocop:disable Metrics/AbcSize
         return render_error(errors: [_('Invalid JSON')], status: :bad_request) if parsed_json.blank?
 
         service = Api::Plans::CreateFromDmpService.new(
@@ -39,7 +39,7 @@ module Api
 
         if service.call
           # Use the plan returned by the service for the response
-          @items = paginate_response(results: Plan.where(id: service.plan.id))
+          @items = paginate_response(results: plans_scope.where(id: service.plan.id))
           render '/api/v2/plans/index', status: :created
         else
           render_error(errors: service.errors, status: :bad_request)
