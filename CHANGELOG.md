@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+ - fix(api-v1): Address breaking tests and dropped `api_client_id` column [#1327](https://github.com/portagenetwork/roadmap/pull/1327)
+
 ### Changed
 
  - chore(doorkeeper): delete unneeded doorkeeper views
