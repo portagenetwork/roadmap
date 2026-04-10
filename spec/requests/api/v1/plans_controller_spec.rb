@@ -162,13 +162,19 @@ RSpec.describe Api::V1::PlansController, type: :request do
           end
 
           it 'set the Plan description' do
-            expect(@plan.title).to eql(@original[:title])
+            expect(@plan.description).to eql(@original[:description])
           end
           it 'set the Plan start_date' do
-            expect(@plan.title).to eql(@original[:title])
+            expected = Api::V1::DeserializationService.safe_date(
+              value: @original[:project].first[:start]
+            )
+            expect(@plan.start_date).to eql(expected)
           end
           it 'set the Plan end_date' do
-            expect(@plan.title).to eql(@original[:title])
+            expected = Api::V1::DeserializationService.safe_date(
+              value: @original[:project].first[:end]
+            )
+            expect(@plan.end_date).to eql(expected)
           end
           it 'Plan identifiers includes the grant id' do
             expect(@plan.identifiers.length).to eql(1)
