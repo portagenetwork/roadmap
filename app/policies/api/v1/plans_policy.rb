@@ -11,8 +11,7 @@ module Api
       class Scope
         ## return the visible plans (via the API) to a given client
         # ALL can view: public
-        # ApiClient can view: anything from the API client
-        #                     anything belonging to their Org (if applicable)
+        # ApiClient can view anything belonging to their Org (if applicable)
         # User (non-admin) can view: any personal or organisationally_visible
         # User (admin) can view: all from users of their organisation
         def resolve
@@ -25,7 +24,7 @@ module Api
         def plans_for_client
           return [] unless @user.present?
 
-          ids = @user.plans.pluck(:id)
+          ids = []
           ids += @user.org.plans.pluck(:id) if @user.org.present?
           ids.uniq
         end

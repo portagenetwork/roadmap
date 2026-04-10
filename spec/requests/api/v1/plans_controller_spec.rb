@@ -15,14 +15,23 @@ RSpec.describe Api::V1::PlansController, type: :request do
 
     describe 'GET /api/v1/plan/:id - show' do
       it 'returns the plan' do
-        plan = create(:plan, api_client_id: ApiClient.first&.id)
+        client = ApiClient.first
+        client.update(org: create(:org)) if client.org.blank?
+        mock_authorization_for_api_client
+
+        plan = create(:plan, org: client.org)
         get api_v1_plan_path(plan)
         expect(response.code).to eql('200')
         expect(response).to render_template('api/v1/plans/index')
         expect(assigns(:items).length).to eql(1)
       end
-      it 'returns a 404 if the ApiClient did not create the plan' do
-        plan = create(:plan, api_client_id: create(:api_client))
+      it 'returns a 404 if the ApiClient does not have access to the plan' do
+        client = ApiClient.first
+        client.update(org: create(:org)) if client.org.blank?
+        mock_authorization_for_api_client
+
+        other_org = create(:org)
+        plan = create(:plan, org: other_org)
         get api_v1_plan_path(plan)
         expect(response.code).to eql('404')
         expect(response).to render_template('api/v1/error')
@@ -55,15 +64,14 @@ RSpec.describe Api::V1::PlansController, type: :request do
           expect(response).to render_template('api/v1/error')
         end
         it 'returns a 400 if the incoming DMP is invalid' do
-          create(:plan, api_client_id: ApiClient.first.id)
+          create(:plan)
           @json[:items].first[:dmp][:title] = ''
           post api_v1_plans_path, params: @json.to_json
           expect(response.code).to eql('400')
           expect(response).to render_template('api/v1/error')
         end
         it 'returns a 400 if the plan already exists' do
-          plan = create(:plan, created_at: (Time.now - 3.days),
-                               api_client_id: ApiClient.first.id)
+          plan = create(:plan, created_at: (Time.now - 3.days))
           @json[:items].first[:dmp][:dmp_id] = {
             type: 'url',
             identifier: Rails.application.routes.url_helpers.api_v1_plan_url(plan)
@@ -156,13 +164,19 @@ RSpec.describe Api::V1::PlansController, type: :request do
           end
 
           it 'set the Plan description' do
-            expect(@plan.title).to eql(@original[:title])
+            expect(@plan.description).to eql(@original[:description])
           end
           it 'set the Plan start_date' do
-            expect(@plan.title).to eql(@original[:title])
+            expected = Api::V1::DeserializationService.safe_date(
+              value: @original[:project].first[:start]
+            )
+            expect(@plan.start_date).to eql(expected)
           end
           it 'set the Plan end_date' do
-            expect(@plan.title).to eql(@original[:title])
+            expected = Api::V1::DeserializationService.safe_date(
+              value: @original[:project].first[:end]
+            )
+            expect(@plan.end_date).to eql(expected)
           end
           it 'Plan identifiers includes the grant id' do
             expect(@plan.identifiers.length).to eql(1)
@@ -260,9 +274,12 @@ RSpec.describe Api::V1::PlansController, type: :request do
             end
             it 'set the Contributor roles' do
               expected = @original[:role].map do |role|
-                role.gsub("#{Contributor::ONTOLOGY_BASE_URL}/", '')
+                Api::V1::DeserializationService.translate_role(role: role)
               end
-              expect(@subject.send(:"#{expected.first.downcase}?")).to eql(true)
+              expected.each do |role|
+                expect(@subject.send(:"#{role}?"))
+                  .to eql(true)
+              end
             end
             it 'Contributor identifiers includes the orcid' do
               expect(@subject.identifiers.length).to eql(1)
@@ -344,9 +361,11 @@ RSpec.describe Api::V1::PlansController, type: :request do
         expect(response).to render_template('api/v1/plans/index')
         expect(assigns(:items).length).to eql(1)
       end
-      it 'returns the plan if its :organisationally_visible' do
-        plan = create(:plan, :creator, :organisationally_visible)
-        other_user = create(:user, org: plan.owner.org)
+      it 'returns the plan if its :organisationally_visible and user.org matches plan.org' do
+        owner = create(:user, org: create(:org))
+        plan = create(:plan, :creator, :organisationally_visible,
+                      org: owner.org, creator: owner)
+        other_user = create(:user, org: plan.org)
         mock_authorization_for_user(user: other_user)
         get api_v1_plan_path(plan)
         expect(response.code).to eql('200')
@@ -354,8 +373,9 @@ RSpec.describe Api::V1::PlansController, type: :request do
         expect(assigns(:items).length).to eql(1)
       end
       it 'returns the plan if the user is an Org Admin and it belongs to their Org' do
-        plan = create(:plan, :creator)
-        org_admin = create(:user, :org_admin, org: plan.owner.org)
+        owner = create(:user, org: create(:org))
+        plan = create(:plan, :creator, org: owner.org, creator: owner)
+        org_admin = create(:user, :org_admin, org: plan.org)
         mock_authorization_for_user(user: org_admin)
         get api_v1_plan_path(plan)
         expect(response.code).to eql('200')
