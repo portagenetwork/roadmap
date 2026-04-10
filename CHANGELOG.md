@@ -8,7 +8,9 @@
 
 ### Changed
 
- - chore(doorkeeper): delete unneeded doorkeeper views
+ - chore(doorkeeper): delete unneeded doorkeeper views [#1319](https://github.com/portagenetwork/roadmap/pull/1319)
+
+ - refactor(api-v1): Extract plan `create` logic into `CreateFromDmpService` [#1328](https://github.com/portagenetwork/roadmap/pull/1328)
 
 ### Dependency Updates
 
