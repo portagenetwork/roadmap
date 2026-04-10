@@ -17,6 +17,7 @@ RSpec.describe Api::V1::PlansController, type: :request do
       it 'returns the plan' do
         client = ApiClient.first
         client.update(org: create(:org)) if client.org.blank?
+        mock_authorization_for_api_client
 
         plan = create(:plan, org: client.org)
         get api_v1_plan_path(plan)
@@ -27,6 +28,7 @@ RSpec.describe Api::V1::PlansController, type: :request do
       it 'returns a 404 if the ApiClient does not have access to the plan' do
         client = ApiClient.first
         client.update(org: create(:org)) if client.org.blank?
+        mock_authorization_for_api_client
 
         other_org = create(:org)
         plan = create(:plan, org: other_org)
@@ -272,9 +274,12 @@ RSpec.describe Api::V1::PlansController, type: :request do
             end
             it 'set the Contributor roles' do
               expected = @original[:role].map do |role|
-                role.gsub("#{Contributor::ONTOLOGY_BASE_URL}/", '')
+                Api::V1::DeserializationService.translate_role(role: role)
               end
-              expect(@subject.send(:"#{expected.first.downcase}?")).to eql(true)
+              expected.each do |role|
+                expect(@subject.send(:"#{role}?"))
+                  .to eql(true)
+              end
             end
             it 'Contributor identifiers includes the orcid' do
               expect(@subject.identifiers.length).to eql(1)
@@ -356,9 +361,11 @@ RSpec.describe Api::V1::PlansController, type: :request do
         expect(response).to render_template('api/v1/plans/index')
         expect(assigns(:items).length).to eql(1)
       end
-      it 'returns the plan if its :organisationally_visible' do
-        plan = create(:plan, :creator, :organisationally_visible)
-        other_user = create(:user, org: plan.owner.org)
+      it 'returns the plan if its :organisationally_visible and user.org matches plan.org' do
+        owner = create(:user, org: create(:org))
+        plan = create(:plan, :creator, :organisationally_visible,
+                      org: owner.org, creator: owner)
+        other_user = create(:user, org: plan.org)
         mock_authorization_for_user(user: other_user)
         get api_v1_plan_path(plan)
         expect(response.code).to eql('200')
@@ -366,8 +373,9 @@ RSpec.describe Api::V1::PlansController, type: :request do
         expect(assigns(:items).length).to eql(1)
       end
       it 'returns the plan if the user is an Org Admin and it belongs to their Org' do
-        plan = create(:plan, :creator)
-        org_admin = create(:user, :org_admin, org: plan.owner.org)
+        owner = create(:user, org: create(:org))
+        plan = create(:plan, :creator, org: owner.org, creator: owner)
+        org_admin = create(:user, :org_admin, org: plan.org)
         mock_authorization_for_user(user: org_admin)
         get api_v1_plan_path(plan)
         expect(response.code).to eql('200')
