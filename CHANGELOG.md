@@ -16,6 +16,8 @@
 
  - chore(deps): bump lodash from 4.17.23 to 4.18.1 [#1325](https://github.com/portagenetwork/roadmap/pull/1325)
 
+ - chore(deps): bump @hono/node-server from 1.19.11 to 1.19.13 [#1321](https://github.com/portagenetwork/roadmap/pull/1321)
+
 ## [4.1.1+portage-4.7.0]
 
 ### Added
