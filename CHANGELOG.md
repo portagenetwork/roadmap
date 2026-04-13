@@ -14,6 +14,8 @@
 
  - chore(deps): bump hono from 4.12.8 to 4.12.12 [#1322](https://github.com/portagenetwork/roadmap/pull/1322)
 
+ - chore(deps): bump lodash from 4.17.23 to 4.18.1 [#1325](https://github.com/portagenetwork/roadmap/pull/1325)
+
 ## [4.1.1+portage-4.7.0]
 
 ### Added
