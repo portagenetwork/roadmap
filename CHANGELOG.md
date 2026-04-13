@@ -12,6 +12,8 @@
 
  - chore(deps): bump yaml from 1.10.2 to 1.10.3 [#1316](https://github.com/portagenetwork/roadmap/pull/1316)
 
+ - chore(deps): bump hono from 4.12.8 to 4.12.12 [#1322](https://github.com/portagenetwork/roadmap/pull/1322)
+
 ## [4.1.1+portage-4.7.0]
 
 ### Added
