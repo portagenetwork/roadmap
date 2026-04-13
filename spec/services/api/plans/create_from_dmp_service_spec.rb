@@ -3,21 +3,22 @@
 require 'rails_helper'
 
 RSpec.describe Api::Plans::CreateFromDmpService do
-  include ApiHelper
   include Webmocks
   include Mocks::ApiJsonSamples
 
   before(:each) do
-    mock_authorization_for_api_client
-
     # Org model requires a language so make sure the default is set
-    create(:language, abbreviation: 'v1-plans', default_language: true) unless Language.default.present?
+    create(:language, abbreviation: 'test-lang', default_language: true) unless Language.default.present?
 
     stub_ror_service
     mock_identifier_schemes
     create(:template, :publicly_visible, is_default: true, published: true)
 
-    @client = ApiClient.first
+    # Service-level spec: provide a client context directly.
+    # Auth is enforced by controllers
+    # - v1 passes an ApiClient
+    # - v2 derives client context from Doorkeeper
+    @client = create(:api_client)
   end
 
   describe '#call' do
@@ -40,7 +41,8 @@ RSpec.describe Api::Plans::CreateFromDmpService do
         plan = create(:plan, created_at: (Time.now - 3.days))
         @json[:items].first[:dmp][:dmp_id] = {
           type: 'url',
-          identifier: Rails.application.routes.url_helpers.api_v1_plan_url(plan)
+          # Keep this URL generic so this shared service spec is not tied to a specific API version.
+          identifier: Rails.application.routes.url_helpers.plan_url(plan)
         }
 
         result = described_class.new(json: @json, client: @client).call
