@@ -6,6 +6,16 @@ RSpec.describe Api::Plans::CreateFromDmpService do
   include Webmocks
   include Mocks::ApiJsonSamples
 
+  shared_examples 'returns a persisted plan' do
+    it 'returns a plan if the incoming JSON is valid' do
+      result = described_class.new(json: @json, client: @client).call
+
+      expect(result[:status]).to eql(nil)
+      expect(result[:plan].present?).to eql(true)
+      expect(result[:plan].persisted?).to eql(true)
+    end
+  end
+
   before(:each) do
     # Org model requires a language so make sure the default is set
     create(:language, abbreviation: 'test-lang', default_language: true) unless Language.default.present?
@@ -26,6 +36,8 @@ RSpec.describe Api::Plans::CreateFromDmpService do
       before(:each) do
         @json = JSON.parse(minimal_create_json).with_indifferent_access
       end
+
+      it_behaves_like 'returns a persisted plan'
 
       it 'returns a 400 if the incoming DMP is invalid' do
         create(:plan)
@@ -109,6 +121,8 @@ RSpec.describe Api::Plans::CreateFromDmpService do
       before(:each) do
         @json = JSON.parse(complete_create_json).with_indifferent_access
       end
+
+      it_behaves_like 'returns a persisted plan'
 
       context 'plan inspection' do
         before(:each) do
