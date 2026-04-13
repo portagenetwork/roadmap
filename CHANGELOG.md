@@ -18,6 +18,8 @@
 
  - chore(deps): bump nginx from 1.29.7-alpine to 1.29.8-alpine [#1323](https://github.com/portagenetwork/roadmap/pull/1323)
 
+ - chore(deps): bump docker/build-push-action from 7.0.0 to 7.1.0 [#1326](https://github.com/portagenetwork/roadmap/pull/1326)
+
 ## [4.1.1+portage-4.7.0]
 
 ### Added
