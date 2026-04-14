@@ -28,6 +28,22 @@ module Api
         render '/api/v2/plans/index', status: :ok
       end
 
+      # POST /api/v2/plans
+      def create # rubocop:disable Metrics/AbcSize
+        json = parsed_json
+        return render_error(errors: [_('Invalid JSON')], status: :bad_request) if json.blank?
+
+        result = Api::Plans::CreateFromDmpService.new(json: json, client: @resource_owner).call
+
+        if result[:plan].present?
+          # Kaminari Pagination requires an ActiveRecord result set :/
+          @items = paginate_response(results: plans_scope.where(id: result[:plan].id))
+          render '/api/v2/plans/index', status: :created
+        else
+          render_error(errors: result[:errors], status: result[:status])
+        end
+      end
+
       private
 
       # GET /api/v2/plans?complete=true and  /api/v2/plans/:id?complete=true
@@ -38,6 +54,12 @@ module Api
       def plans_scope
         scope = PlansPolicy::Scope.new(@resource_owner).resolve
         @complete ? scope.includes(answers: { question: :section }) : scope
+      end
+
+      def parsed_json
+        @parsed_json ||= JSON.parse(request.body.read)
+      rescue JSON::ParserError
+        nil
       end
     end
   end
