@@ -220,7 +220,7 @@ Rails.application.routes.draw do
       get :me, controller: :base_api
 
       resources :plans, only: %i[index show create update]
-      resources :templates, only: :index
+      resources :templates, only: %i[index show]
       resource :internal_user_access_token, only: :create, defaults: { format: :js }
     end
   end
