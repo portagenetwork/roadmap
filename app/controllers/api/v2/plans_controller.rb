@@ -6,6 +6,10 @@ module Api
       respond_to :json
       before_action :set_complete_param, only: %i[show index]
 
+      # If the Resource Owner (aka User) is in the Doorkeeper AccessToken then it is an authorization_code
+      # token and we need to ensure that the OAuth application is authorized for the relevant Scope
+      before_action -> { doorkeeper_authorize! :write }, only: %i[create update]
+
       # GET /api/v2/plans/:id
       def show
         @plan = plans_scope.find_by(id: params[:id])
