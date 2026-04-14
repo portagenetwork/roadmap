@@ -86,6 +86,12 @@ RSpec.describe Api::V2::TemplatesController do
 
         public_template = create(:template, :publicly_visible, published: true)
 
+        # Build the hierarchy: Template -> Phase -> Section -> Question
+        # This allows adding a question to the template
+        phase = create(:phase, template: public_template)
+        section = create(:section, phase: phase)
+        create(:question, section: section, text: 'What is your data plan?')
+
         included_templates = [
           public_template,
           create(:template, :organisationally_visible, published: true, org: @user.org)
@@ -104,6 +110,17 @@ RSpec.describe Api::V2::TemplatesController do
         expect(json[:items].length).to be(2)
         template_ids = json[:items].map { |item| item[:dmp_template][:template_id][:identifier] }
         expect(template_ids).to match_array(included_templates.map { |t| t.id.to_s })
+
+        # Find the specific template in the response that matches the public_template ID
+        target_item = json[:items].find do |item|
+          item[:dmp_template][:template_id][:identifier] == public_template.id.to_s
+        end
+
+        # Extract the questions from that specific item
+        questions = target_item[:dmp_template][:questions]
+
+        expect(questions).not_to be_empty
+        expect(questions.first[:text]).to eq('What is your data plan?')
       end
 
       it 'allows for paging' do
