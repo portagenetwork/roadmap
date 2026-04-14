@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'cgi'
 require 'rails_helper'
 
 RSpec.describe Api::Plans::CreateFromDmpService do
@@ -102,7 +103,7 @@ RSpec.describe Api::Plans::CreateFromDmpService do
           expect(expected).to eql(@original[:contact][:mbox])
         end
         it "attached the plan to the Contact's Org" do
-          expect(@plan.org.name).to eql(@original[:contact][:affiliation][:name])
+          expect(CGI.unescapeHTML(@plan.org.name)).to eql(@original[:contact][:affiliation][:name])
         end
         it 'set the Contact roles' do
           expected = @plan.contributors.first
@@ -205,7 +206,7 @@ RSpec.describe Api::Plans::CreateFromDmpService do
               expect(@contact.org.present?).to eql(true)
             end
             it 'sets the name' do
-              expect(@contact.org.name).to eql(@original[:name])
+              expect(CGI.unescapeHTML(@contact.org.name)).to eql(@original[:name])
             end
             it 'sets the abbreviation' do
               expect(@contact.org.abbreviation).to eql(@original[:abbreviation])
@@ -272,7 +273,7 @@ RSpec.describe Api::Plans::CreateFromDmpService do
               expect(@subject.org.present?).to eql(true)
             end
             it 'sets the name' do
-              expect(@subject.org.name).to eql(@original[:name])
+              expect(CGI.unescapeHTML(@subject.org.name)).to eql(@original[:name])
             end
             it 'sets the abbreviation' do
               expect(@subject.org.abbreviation).to eql(@original[:abbreviation])
