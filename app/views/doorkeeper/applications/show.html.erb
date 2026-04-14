@@ -43,7 +43,9 @@
               <code class="bg-light"><%= uri %></code>
             </td>
             <td>
-              <%= link_to t('doorkeeper.applications.buttons.authorize'), oauth_authorization_path(client_id: @application.uid, redirect_uri: uri, response_type: 'code', scope: @application.scopes), class: 'btn btn-success', target: '_blank' %>
+              <% if @application.user_id == current_user.id %>
+                <%= link_to t('doorkeeper.applications.buttons.authorize'), oauth_authorization_path(client_id: @application.uid, redirect_uri: uri, response_type: 'code', scope: @application.scopes), class: 'btn btn-success', target: '_blank' %>
+              <% end %>
             </td>
           </tr>
         <% end %>
@@ -53,19 +55,21 @@
     <% end %>
   </div>
 
-  <div class="col-md-4">
-    <h3><%= t('.actions') %></h3>
+  <% if @application.user_id == current_user.id %>
+    <div class="col-md-4">
+      <h3><%= t('.actions') %></h3>
 
-    <p><%= link_to t('doorkeeper.applications.buttons.edit'), edit_oauth_application_path(@application), class: 'btn btn-primary' %></p>
+      <p><%= link_to t('doorkeeper.applications.buttons.edit'), edit_oauth_application_path(@application), class: 'btn btn-primary' %></p>
 
-    <p>
-      <%= button_to t('doorkeeper.applications.buttons.regenerate_secret'),
-          regenerate_oauth_secret_path(@application),
-          method: :post,
-          class: 'btn btn-warning',
-          data: { confirm: t('doorkeeper.applications.buttons.regenerate_secret_confirm') } %>
-    </p>
+      <p>
+        <%= button_to t('doorkeeper.applications.buttons.regenerate_secret'),
+            regenerate_oauth_secret_path(@application),
+            method: :post,
+            class: 'btn btn-warning',
+            data: { confirm: t('doorkeeper.applications.buttons.regenerate_secret_confirm') } %>
+      </p>
 
-    <p><%= render 'delete_form', application: @application, submit_btn_css: 'btn btn-danger' %></p>
-  </div>
+      <p><%= render 'delete_form', application: @application, submit_btn_css: 'btn btn-danger' %></p>
+    </div>
+  <% end %>
 </div>
