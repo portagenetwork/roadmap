@@ -61,6 +61,16 @@ module Api
       rescue JSON::ParserError
         nil
       end
+
+      def validate_questions(plan, question_ids)
+        # DB query to see which of the payload_ids belong to this plan's template
+        valid_ids = plan.template.questions.where(id: question_ids).pluck(:id)
+
+        invalid_ids = question_ids - valid_ids
+        return nil if invalid_ids.empty?
+
+        _("Question(s) #{invalid_ids.join(', ')} do not belong to this plan's template")
+      end
     end
   end
 end
