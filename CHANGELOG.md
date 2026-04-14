@@ -18,6 +18,8 @@
 
  - chore(deps): bump @hono/node-server from 1.19.11 to 1.19.13 [#1321](https://github.com/portagenetwork/roadmap/pull/1321)
 
+ - chore(deps): bump follow-redirects from 1.15.6 to 1.16.0 [#1330](https://github.com/portagenetwork/roadmap/pull/1330)
+
 ## [4.1.1+portage-4.7.0]
 
 ### Added
