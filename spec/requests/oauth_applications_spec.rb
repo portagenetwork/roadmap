@@ -77,6 +77,24 @@ RSpec.describe 'OauthApplications', type: :request do
     end
   end
 
+  shared_examples 'owner-only oauth application controls on index' do |super_admin:|
+    it 'renders edit and delete controls only for owned applications' do
+      get oauth_applications_path
+
+      html = Nokogiri::HTML(response.body)
+
+      expect(html.at_css("#application_#{owned_application.id} a.btn-link")).to_not be_nil
+      expect(html.at_css("#application_#{owned_application.id} " \
+                         "form[action='#{oauth_application_path(owned_application)}']")).to_not be_nil
+
+      if super_admin
+        expect(html.at_css("#application_#{non_owned_application.id} a.btn-link")).to be_nil
+      else
+        expect(html.at_css("#application_#{non_owned_application.id}")).to be_nil
+      end
+    end
+  end
+
   describe 'GET /oauth/applications' do
     context 'when signed in without manage_oauth_apps permission' do
       let(:request_path) { oauth_applications_path }
@@ -85,8 +103,8 @@ RSpec.describe 'OauthApplications', type: :request do
     end
 
     context 'when signed in as a super user (with manage_oauth_apps permission)' do
-      let!(:application_one) { create(:oauth_application, user_id: create(:user).id, name: 'OAuth App 1') }
-      let!(:application_two) { create(:oauth_application, user_id: create(:user).id, name: 'OAuth App 2') }
+      let!(:owned_application) { create(:oauth_application, user_id: super_admin.id, name: 'Owned App') }
+      let!(:non_owned_application) { create(:oauth_application, user_id: create(:user).id, name: 'Other User App') }
 
       before do
         sign_in(super_admin)
@@ -98,15 +116,16 @@ RSpec.describe 'OauthApplications', type: :request do
         expect(response).to have_http_status(:ok)
         html = Nokogiri::HTML(response.body)
 
-        expect(html.at_css("#application_#{application_one.id}")).to_not be_nil
-        expect(html.at_css("#application_#{application_two.id}")).to_not be_nil
+        expect(html.at_css("#application_#{owned_application.id}")).to_not be_nil
+        expect(html.at_css("#application_#{non_owned_application.id}")).to_not be_nil
       end
+
+      include_examples 'owner-only oauth application controls on index', super_admin: true
     end
 
     context 'when signed in as non-super user with manage_oauth_apps permission' do
-      let(:other_user) { create(:user) }
       let!(:owned_application) { create(:oauth_application, user_id: authorized_user.id, name: 'Owned App') }
-      let!(:other_user_application) { create(:oauth_application, user_id: other_user.id, name: 'Other User App') }
+      let!(:non_owned_application) { create(:oauth_application, user_id: create(:user).id, name: 'Other User App') }
 
       before do
         sign_in(authorized_user)
@@ -119,8 +138,10 @@ RSpec.describe 'OauthApplications', type: :request do
         html = Nokogiri::HTML(response.body)
 
         expect(html.at_css("#application_#{owned_application.id}")).to_not be_nil
-        expect(html.at_css("#application_#{other_user_application.id}")).to be_nil
+        expect(html.at_css("#application_#{non_owned_application.id}")).to be_nil
       end
+
+      include_examples 'owner-only oauth application controls on index', super_admin: false
     end
   end
 
@@ -185,6 +206,7 @@ RSpec.describe 'OauthApplications', type: :request do
 
     context 'when signed in as a non-super user with manage_oauth_apps permission' do
       let(:other_authorized_user) { create(:user) }
+      let(:viewed_application) { create(:oauth_application, user_id: authorized_user.id) }
 
       before do
         sign_in_with_manage_oauth_apps(other_authorized_user)
@@ -207,6 +229,32 @@ RSpec.describe 'OauthApplications', type: :request do
         expect(response).to redirect_to(root_path)
         follow_redirect!
         expect(flash[:alert]).to include('not authorized')
+      end
+
+      it 'renders owner-only actions and authorize controls' do
+        get oauth_application_path(viewed_application)
+
+        html = Nokogiri::HTML(response.body)
+
+        expect(html.at_css('div.col-md-4')).to_not be_nil
+        expect(html.at_css('a.btn-success')).to_not be_nil
+      end
+    end
+
+    context 'when signed in as a super admin viewing another user\'s application' do
+      let(:viewed_application) { create(:oauth_application, user_id: application_owner.id) }
+
+      before do
+        sign_in(super_admin)
+      end
+
+      it 'does not render owner-only actions and authorize controls' do
+        get oauth_application_path(viewed_application)
+
+        html = Nokogiri::HTML(response.body)
+
+        expect(html.at_css('div.col-md-4')).to be_nil
+        expect(html.at_css('a.btn-success')).to be_nil
       end
     end
   end
