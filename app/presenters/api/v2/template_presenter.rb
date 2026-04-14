@@ -15,6 +15,12 @@ module Api
 
         "#{@template.title} - with additional questions for #{@template.org.name}"
       end
+
+      def questions
+        @template.phases.flat_map do |phase|
+          phase.sections.flat_map(&:questions)
+        end
+      end
     end
   end
 end
