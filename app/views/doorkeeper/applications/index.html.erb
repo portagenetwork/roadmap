@@ -23,12 +23,12 @@
         <%= simple_format(application.redirect_uri) %>
       </td>
       <td class="align-middle">
-        <% if application.user_id == current_user.id %>
+        <% if application_owned_by_current_user?(application) %>
           <%= link_to t('doorkeeper.applications.buttons.edit'), edit_oauth_application_path(application), class: 'btn btn-link' %>
         <% end %>
       </td>
       <td class="align-middle">
-        <% if application.user_id == current_user.id %>
+        <% if application_owned_by_current_user?(application) %>
           <%= render 'delete_form', application: application %>
         <% end %>
       </td>

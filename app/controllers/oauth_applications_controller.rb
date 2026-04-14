@@ -6,6 +6,9 @@ class OauthApplicationsController < Doorkeeper::ApplicationsController
   REGEN_SECRET_SUCCESS_MSG = _('Application secret has been regenerated. ' \
                                'Please copy it now and store it somewhere safely. ' \
                                'It will disappear after you leave or refresh this page.')
+  # Defining this small helper in this controller allows the views to share it,
+  # but without having to introduce a Doorkeeper::Application class to the codebase.
+  helper_method :application_owned_by_current_user?
 
   # NOTE: Doorkeeper config's `admin_authenticator` controls access to the admin
   # interface at a higher level
@@ -46,7 +49,7 @@ class OauthApplicationsController < Doorkeeper::ApplicationsController
     return if action_name == 'show' && current_user.can_super_admin?
 
     # Otherwise, current_user must own the app they are accessing
-    handle_unauthorized_user unless user_is_app_owner?
+    handle_unauthorized_user unless application_owned_by_current_user?(@application)
   end
 
   # Merges `user_id` with the default permitted fields (:name, :redirect_uri, etc.)
@@ -55,8 +58,8 @@ class OauthApplicationsController < Doorkeeper::ApplicationsController
     super.merge(user_id: current_user.id)
   end
 
-  def user_is_app_owner?
-    @application.user_id == current_user.id
+  def application_owned_by_current_user?(application)
+    application.user_id == current_user.id
   end
 
   def handle_unauthorized_user
