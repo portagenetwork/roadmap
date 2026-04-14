@@ -17,6 +17,10 @@ module Api
         @plan.present?
       end
 
+      def update?
+        @plan&.editable_by?(@resource_owner.id)
+      end
+
       class Scope < Scope # rubocop:todo Style/Documentation
         def initialize(resource_owner) # rubocop:todo Lint/MissingSuper
           @resource_owner = resource_owner
