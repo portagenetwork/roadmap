@@ -4,6 +4,9 @@ Doorkeeper.configure do
   # set the object-relational-model (ORM)
   orm :active_record
 
+  # https://doorkeeper.gitbook.io/guides/configuration/other-configurations
+  base_controller 'ApplicationController'
+
   # ensure resource owner is authenticated
   resource_owner_authenticator do
     if request.path == native_oauth_authorization_path
