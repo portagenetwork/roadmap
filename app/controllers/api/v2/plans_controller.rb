@@ -5,6 +5,7 @@ module Api
     class PlansController < BaseApiController # rubocop:todo Style/Documentation
       respond_to :json
       before_action :set_complete_param, only: %i[show index]
+      before_action :set_json_body!, only: %i[create update]
 
       # If the Resource Owner (aka User) is in the Doorkeeper AccessToken then it is an authorization_code
       # token and we need to ensure that the OAuth application is authorized for the relevant Scope
@@ -29,11 +30,8 @@ module Api
       end
 
       # POST /api/v2/plans
-      def create # rubocop:disable Metrics/AbcSize
-        json = parsed_json
-        return render_error(errors: [_('Invalid JSON')], status: :bad_request) if json.blank?
-
-        result = Api::Plans::CreateFromDmpService.new(json: json, client: @resource_owner).call
+      def create
+        result = Api::Plans::CreateFromDmpService.new(json: @json, client: @resource_owner).call
 
         if result[:plan].present?
           # Kaminari Pagination requires an ActiveRecord result set :/
@@ -46,9 +44,6 @@ module Api
 
       # PUT api/v2/plans/:id
       def update # rubocop:disable Metrics/AbcSize, Metrics/MethodLength,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
-        json = parsed_json
-        return render_error(errors: [_('Invalid JSON')], status: :bad_request) unless json
-
         plan = Plan.joins(:roles)
                    .where(roles: { user_id: @resource_owner.id, active: true })
                    .distinct
@@ -59,7 +54,7 @@ module Api
         plans_policy = PlansPolicy.new(@resource_owner, plan)
         raise Pundit::NotAuthorizedError unless plans_policy.update?
 
-        answers_payload = json.with_indifferent_access[:answers]
+        answers_payload = @json.with_indifferent_access[:answers]
         unless answers_payload.is_a?(Array)
           return render_error(errors: [_('Missing answers payload')], status: :bad_request)
         end
@@ -107,10 +102,11 @@ module Api
         @complete ? scope.includes(answers: { question: :section }) : scope
       end
 
-      def parsed_json
-        @parsed_json ||= JSON.parse(request.body.read)
+      def set_json_body!
+        @json = JSON.parse(request.body.read)
+        raise JSON::ParserError unless @json.is_a?(Hash) && @json.present?
       rescue JSON::ParserError
-        nil
+        render_error(errors: [_('Invalid JSON')], status: :bad_request)
       end
 
       def validate_questions(plan, question_ids)

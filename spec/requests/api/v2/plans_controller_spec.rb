@@ -140,6 +140,7 @@ RSpec.describe Api::V2::PlansController do
           post api_v2_plans_path, params: Faker::Lorem.word.to_json, headers: @headers
           expect(response.code).to eql('400')
           expect(response).to render_template('api/v2/error')
+          expect(JSON.parse(response.body)['errors']).to include('Invalid JSON')
         end
         it 'returns a 201 if the incoming JSON is valid' do
           post api_v2_plans_path, params: @json.to_json, headers: @headers
