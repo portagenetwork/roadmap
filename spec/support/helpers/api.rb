@@ -20,8 +20,8 @@ module ApiHelper
   end
 
   # API V2+ - Oauth authorization_code grant flow (on behalf of a user)
-  def mock_authorization_code_token(oauth_application: create(:oauth_application), user: create(:user),
-                                    scopes: 'read')
+  def mock_authorization_code_token(oauth_application: create(:oauth_application), user: create(:user))
+    scopes = oauth_application.scopes
     create(:oauth_access_grant, application_id: oauth_application.id, resource_owner_id: user.id, scopes: scopes)
     create(:oauth_access_token, application: oauth_application, resource_owner_id: user.id, scopes: scopes)
   end
