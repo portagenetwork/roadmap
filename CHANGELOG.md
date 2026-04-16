@@ -20,6 +20,8 @@
 
  - chore(deps): bump follow-redirects from 1.15.6 to 1.16.0 [#1330](https://github.com/portagenetwork/roadmap/pull/1330)
 
+ - chore(deps): bump hono from 4.12.12 to 4.12.14 [#1333](https://github.com/portagenetwork/roadmap/pull/1333)
+
 ## [4.1.1+portage-4.7.0]
 
 ### Added
