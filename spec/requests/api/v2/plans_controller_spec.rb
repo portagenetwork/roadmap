@@ -4,7 +4,8 @@ require 'rails_helper'
 
 RSpec.describe Api::V2::PlansController do
   include ApiHelper
-  include Mocks::ApiV2JsonSamples
+  include Mocks::ApiJsonSamples
+  # include Mocks::ApiV2JsonSamples
   include Webmocks
   include IdentifierHelper
 
@@ -119,6 +120,43 @@ RSpec.describe Api::V2::PlansController do
           test_paging(json: json, headers: @headers)
 
           Rails.configuration.x.application.api_max_page_size = original_page_size
+        end
+      end
+    end
+    describe 'POST /api/v2/plans - create' do
+      before(:each) do
+        stub_ror_service
+        mock_identifier_schemes
+        create(:template, :publicly_visible, is_default: true, published: true)
+        @json = JSON.parse(complete_create_json).with_indifferent_access
+      end
+
+      context 'minimal JSON' do
+        before(:each) do
+          @json = JSON.parse(minimal_create_json).with_indifferent_access
+        end
+
+        it 'returns a 400 if the incoming JSON is invalid' do
+          post api_v2_plans_path, params: Faker::Lorem.word.to_json, headers: @headers
+          expect(response.code).to eql('400')
+          expect(response).to render_template('api/v2/error')
+        end
+        it 'returns a 201 if the incoming JSON is valid' do
+          post api_v2_plans_path, params: @json.to_json, headers: @headers
+          expect(response.code).to eql('201')
+          expect(response).to render_template('api/v2/plans/index')
+        end
+      end
+
+      context 'complete JSON' do
+        before(:each) do
+          @json = JSON.parse(complete_create_json).with_indifferent_access
+        end
+
+        it 'returns a 201 if the incoming JSON is valid' do
+          post api_v2_plans_path, params: @json.to_json, headers: @headers
+          expect(response.code).to eql('201')
+          expect(response).to render_template('api/v2/plans/index')
         end
       end
     end

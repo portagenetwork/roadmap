@@ -20,6 +20,6 @@ FactoryBot.define do
     uid { SecureRandom.uuid }
     secret { SecureRandom.uuid }
     redirect_uri { "https://#{Faker::Internet.unique.domain_name}/callback" }
-    scopes { 'read' }
+    scopes { 'read write' }
   end
 end
