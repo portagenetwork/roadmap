@@ -4,8 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::V2::PlansController do
   include ApiHelper
-  include Mocks::ApiJsonSamples
-  # include Mocks::ApiV2JsonSamples
+  include Mocks::ApiV2JsonSamples
   include Webmocks
   include IdentifierHelper
 
