@@ -5,9 +5,9 @@ module Api
     # Service for creating a Plan from a DMP JSON payload (API v1 format).
     # Extracted to support reuse by future API versions.
     class CreateFromDmpService
-      def initialize(json:, client:)
-        @json = json
+      def initialize(json:, client:, api_version: :v1)
         @client = client
+        @api_version = api_version
       end
 
       # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
