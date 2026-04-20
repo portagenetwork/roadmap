@@ -29,20 +29,21 @@ RSpec.describe Api::V2::PlansController do
       JSON.parse(response.body).with_indifferent_access
     end
 
+    def expect_invalid_token_response # rubocop:disable Metrics/AbcSize
+      headers = @headers.merge('Authorization' => "Bearer #{SecureRandom.uuid}")
+      yield(headers)
+
+      expect(response.code).to eql('401')
+      expect(response.body).to be_empty
+      expect(response.headers['WWW-Authenticate']).to match(
+        /Bearer realm="Doorkeeper", error="invalid_token", error_description="The access token is invalid"/
+      )
+    end
+
     describe 'GET /api/v2/plans (index)' do
       context 'an invalid API token is included' do
         it 'returns a 401 and the expected Oauth 2.0 headers' do
-          # Swap actual token with a random string
-          @headers['Authorization'] = "Bearer #{SecureRandom.uuid}"
-          get(api_v2_plans_path, headers: @headers)
-
-          expect(response.code).to eql('401')
-          expect(response.body).to be_empty
-
-          # Expect Doorkeeper to return the standard OAuth 2.0 WWW-Authenticate header for invalid tokens
-          expect(response.headers['WWW-Authenticate']).to match(
-            /Bearer realm="Doorkeeper", error="invalid_token", error_description="The access token is invalid"/
-          )
+          expect_invalid_token_response { |headers| get(api_v2_plans_path, headers: headers) }
         end
       end
 
@@ -129,6 +130,21 @@ RSpec.describe Api::V2::PlansController do
         mock_identifier_schemes
         create(:template, :publicly_visible, is_default: true, published: true)
         @json = JSON.parse(complete_create_json).with_indifferent_access
+      end
+
+      context 'an invalid API token is included' do
+        it 'returns a 401 and the expected Oauth 2.0 headers' do
+          expect_invalid_token_response { |headers| post(api_v2_plans_path, params: @json, headers: headers) }
+        end
+
+        it 'returns 403 if the OAuth app does not have the `write` scope' do
+          read_only_client = create(:oauth_application, scopes: 'read')
+          token = mock_authorization_code_token(oauth_application: read_only_client, user: @user).plaintext_token
+          headers = @headers.merge('Authorization' => "Bearer #{token}")
+          post(api_v2_plans_path, params: @json.to_json, headers: headers)
+
+          expect(response.code).to eql('403')
+        end
       end
 
       context 'minimal JSON' do
