@@ -8,20 +8,19 @@ module Api
       def initialize(json:, client:, api_version: :v1)
         @client = client
         @api_version = api_version
+        @dmp = extract_dmp(json)
       end
 
       # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       def call
-        dmp = @json.with_indifferent_access.fetch(:items, []).first.fetch(:dmp, {})
-
         # Do a pass through the raw JSON and check to make sure all required fields
         # were present. If not, return the specific errors
-        errs = Api::V1::JsonValidationService.validation_errors(json: dmp)
+        errs = Api::V1::JsonValidationService.validation_errors(json: @dmp)
         return { errors: errs, status: :bad_request } if errs.any?
 
         # Convert the JSON into a Plan and it's associations
-        plan = Api::V1::Deserialization::Plan.deserialize(json: dmp)
+        plan = Api::V1::Deserialization::Plan.deserialize(json: @dmp)
         if plan.present?
           save_err = _('Unable to create your DMP')
           exists_err = _('Plan already exists. Send an update instead.')
@@ -61,6 +60,14 @@ module Api
       # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
       private
+
+      # Returns `dmp` based on the API version's JSON request body structure
+      def extract_dmp(json)
+        indifferent = json.with_indifferent_access
+        return indifferent.fetch(:dmp, {}) if v2_api?
+
+        indifferent.fetch(:items, []).first.fetch(:dmp, {})
+      end
 
       # Get the Plan's owner
       def determine_owner(plan:)
@@ -108,6 +115,10 @@ module Api
         user
       end
       # rubocop:enable Metrics/AbcSize
+
+      def v2_api?
+        @api_version == :v2
+      end
     end
   end
 end
