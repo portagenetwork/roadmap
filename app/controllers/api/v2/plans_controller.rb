@@ -30,7 +30,7 @@ module Api
 
       # POST /api/v2/plans
       def create
-        result = Api::Plans::CreateFromDmpService.new(json: @json, client: @resource_owner).call
+        result = Api::Plans::CreateFromDmpService.new(json: @json, client: @resource_owner, api_version: :v2).call
 
         if result[:plan].present?
           # Kaminari Pagination requires an ActiveRecord result set :/
