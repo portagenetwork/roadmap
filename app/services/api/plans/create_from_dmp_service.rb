@@ -17,7 +17,7 @@ module Api
       def call
         # Do a pass through the raw JSON and check to make sure all required fields
         # were present. If not, return the specific errors
-        errs = Api::V1::JsonValidationService.validation_errors(json: @dmp)
+        errs = handle_json_validation_errors
         return { errors: errs, status: :bad_request } if errs.any?
 
         # Convert the JSON into a Plan and it's associations
@@ -35,7 +35,7 @@ module Api
 
           # Validate the plan and it's associations and return errors with context
           # e.g. 'Contact affiliation name can't be blank' instead of 'name can't be blank'
-          errs = Api::V1::ContextualErrorService.process_plan_errors(plan: plan)
+          errs = handle_contextualized_errors(plan)
 
           # The resulting plan (our its associations were invalid)
           return { errors: errs, status: :bad_request } if errs.any?
@@ -43,7 +43,7 @@ module Api
           return { errors: exists_err, status: :bad_request } unless plan.new_record?
 
           # If we cannot save for some reason then return an error
-          plan = Api::V1::PersistenceService.safe_save(plan: plan)
+          plan = handle_safe_save(plan)
           return { errors: save_err, status: :internal_server_error } if plan.new_record?
 
           # Invite the Owner if they are a Contributor then attach the Owner to the Plan
@@ -68,6 +68,22 @@ module Api
         return indifferent.fetch(:dmp, {}) if v2_api?
 
         indifferent.fetch(:items, []).first.fetch(:dmp, {})
+      end
+
+      def handle_json_validation_errors
+        service = v2_api? ? Api::V2::JsonValidationService : Api::V1::JsonValidationService
+        service.validation_errors(json: @dmp)
+      end
+
+      def handle_contextualized_errors(plan)
+        return Api::V2::ContextualErrorService.contextualize_errors(plan: plan) if v2_api?
+
+        Api::V1::ContextualErrorService.process_plan_errors(plan: plan)
+      end
+
+      def handle_safe_save(plan)
+        service = v2_api? ? Api::V2::PersistenceService : Api::V1::PersistenceService
+        service.safe_save(plan: plan)
       end
 
       # Get the Plan's owner
