@@ -21,11 +21,6 @@ module Api
             errs << c_errs if c_errs.present?
           end
 
-          plan.related_identifiers.each do |related_identifier|
-            rid_errs = find_related_identifier_errors(related_identifier: related_identifier)
-            errs << rid_errs if rid_errs.present?
-          end
-
           p_errs = find_project_errors(plan: plan)
           errs << p_errs if p_errs.present?
 
@@ -101,16 +96,6 @@ module Api
           errs.any? ? ["Contributor/Contact: '#{contributor&.name}' : #{errs}"] : []
         end
         # rubocop:enable Metrics/AbcSize
-
-        # Contextualize errors with the RelatedIdentifiers
-        def find_related_identifier_errors(related_identifier:)
-          errs = []
-          return errs unless related_identifier.present? && !related_identifier.valid?
-
-          errs << related_identifier.errors.full_messages
-          errs = errs.flatten.uniq
-          errs.any? ? ["Related Identifier : #{errs}"] : []
-        end
       end
     end
   end
