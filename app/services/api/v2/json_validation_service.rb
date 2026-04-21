@@ -4,7 +4,6 @@ module Api
   module V2
     # Service used to validate incoming JSON
     class JsonValidationService
-      # rubocop:disable Layout/LineLength
       BAD_PLAN_MSG = _(":title and the contact's :mbox are both required fields").freeze
       BAD_ID_MSG = _(':type and :identifier are required for all ids').freeze
       BAD_ORG_MSG = _(':name is required for every :affiliation and :funding').freeze
@@ -12,9 +11,6 @@ module Api
       BAD_FUNDING_MSG = _(':name, :funder_id or :grant_id are required for each funding').freeze
       BAD_DATASET_MSSG = _(':title is required for each :dataset').freeze
       BAD_HOST_MSG = _(':host must include either a :url or :dmproadmap_host_id').freeze
-      BAD_RELATED_IDENTIFIER_MSG = _(':descriptor, :type and :identifier are required for all dmproadmap_related_identifiers').freeze
-      # rubocop:enable Layout/LineLength
-
       class << self
         def plan_valid?(json:)
           json.present? && json[:title].present? && json[:contact].present? &&
@@ -56,11 +52,6 @@ module Api
 
           host_id = json.fetch(:dmproadmap_host_id, {})[:identifier]
           json[:url].present? || host_id.present?
-        end
-
-        def related_identifier_valid?(json:)
-          json.present? && json[:descriptor].present? && json[:type].present? &&
-            json[:identifier].present?
         end
 
         # Scans the entire JSON document for invalid metadata and returns
@@ -137,18 +128,6 @@ module Api
           errs << BAD_ORG_MSG unless org_valid?(json: json)
           id = json.fetch(:affiliation_id, json[:funder_id])
           errs << BAD_ID_MSG if id.present? && !identifier_valid?(json: id)
-          errs
-        end
-
-        def related_identifiers_errors(json:)
-          errs = []
-          return errs if json.blank?
-
-          json.each do |related_identifier|
-            next if related_identifier_valid?(json: related_identifier)
-
-            errs << BAD_RELATED_IDENTIFIER_MSG
-          end
           errs
         end
       end
