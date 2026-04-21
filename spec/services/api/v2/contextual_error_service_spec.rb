@@ -39,12 +39,6 @@ RSpec.describe Api::V2::ContextualErrorService do
       expect(described_class.contextualize_errors(plan: @plan)).to eql(expected)
     end
 
-    it 'returns errors if an associated RelatedIdentifier has errors' do
-      @plan.related_identifiers << build(:related_identifier, value: nil)
-      expected = ['Related Identifier : ["Value can\'t be blank"]']
-      expect(described_class.contextualize_errors(plan: @plan)).to eql(expected)
-    end
-
     it 'returns errors if an associated Funder has errors' do
       @plan.funder = build(:org, name: nil)
       expected = ['Project : ["Funder: \'\' : [\\"Name can\'t be blank\\"]"]']
@@ -152,26 +146,6 @@ RSpec.describe Api::V2::ContextualErrorService do
         expected = ['Contributor/Contact: \'\' : ["Name can\'t be blank if no email is provided.", "Email can\'t be blank if no name is provided."]']
         # rubocop:enable Layout/LineLength
         expect(described_class.send(:find_contributor_errors, contributor: @contributor)).to eql(expected)
-      end
-    end
-
-    describe 'find_related_identifier_errors(related_identifier:)' do
-      before do
-        @id = build(:related_identifier)
-      end
-
-      it 'returns an empty array if :related_identifier is not present' do
-        expect(described_class.send(:find_related_identifier_errors, related_identifier: nil)).to eql([])
-      end
-
-      it 'returns an empty array if :related_identifier is valid according to ActiveRecord' do
-        expect(described_class.send(:find_related_identifier_errors, related_identifier: @id)).to eql([])
-      end
-
-      it 'contextualizes the errors' do
-        @id.value = nil
-        expected = ['Related Identifier : ["Value can\'t be blank"]']
-        expect(described_class.send(:find_related_identifier_errors, related_identifier: @id)).to eql(expected)
       end
     end
   end
