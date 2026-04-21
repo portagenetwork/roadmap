@@ -63,8 +63,6 @@ module Api
             json = json.with_indifferent_access
             # Try to find the Dataset or initialize a new one
             research_output = find_by_identifier(plan: plan, json: json[:dataset_id])
-            # TODO: remove this once we support versioning and are not storing these as RelatedIdentifiers
-            return research_output if research_output.is_a?(RelatedIdentifier)
 
             research_output = find_or_initialize(plan: plan, json: json) if research_output.blank?
             return nil unless research_output.present? && research_output.title.present?
@@ -87,27 +85,7 @@ module Api
 
             # Find by identifier if its available
             id = json[:identifier]
-            if id.present?
-              if Api::V2::DeserializationService.dmp_id?(value: id)
-                # Find by the DOI or ARK
-                # TODO: Swap this out once we support versioning which will allow us to update
-                #       the actual ResearchOutput metadata. For now we will record it as a RelatedIdentifier
-                #
-                # research_output = Api::V2::DeserializationService.object_from_identifier(
-                #   class_name: "ResearchOutput", json: json
-                # )
-                id = "http://doi.org/#{id.gsub('doi:', '')}" unless id.start_with?('http')
-                research_output = ::RelatedIdentifier.find_or_initialize_by(
-                  identifiable: plan,
-                  identifier_type: 'doi',
-                  relation_type: 'is_referenced_by',
-                  value: id
-                )
-              else
-                research_output = ::ResearchOutput.find_by(plan: plan, id: id)
-              end
-            end
-            research_output
+            ::ResearchOutput.find_by(plan: plan, id: id) if id.present?
           end
 
           # Find the dateset by ID or title + plan

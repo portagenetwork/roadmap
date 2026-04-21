@@ -121,7 +121,6 @@ module Api
           # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
           # Deserialize the datasets and attach to plan
-          # rubocop:disable Metrics/CyclomaticComplexity
           def deserialize_datasets(plan:, json: {})
             return plan unless json.present? && json[:dataset].present? && json[:dataset].is_a?(Array)
 
@@ -129,15 +128,11 @@ module Api
               Api::V2::Deserialization::Dataset.deserialize(plan: plan, json: dataset)
             end
 
-            # TODO: remove this once we support versioning and are not storing outputs with DOIs as
-            #       RelatedIdentifiers. Once versioning is in place we can update the existing ResearchOutputs
             research_outputs.each do |output|
               plan.research_outputs << output if output.is_a?(::ResearchOutput)
-              plan.related_identifiers << output if output.is_a?(::RelatedIdentifier)
             end
             plan
           end
-          # rubocop:enable Metrics/CyclomaticComplexity
 
           # Deserialize the project information and attach to Plan
           # rubocop:disable Metrics/AbcSize
