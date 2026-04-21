@@ -100,9 +100,8 @@ module Api
           # The format must match a DOI or ARK and a DOI IdentifierScheme
           # must also be present!
           identifier = ::Identifier.new(value: value)
-          scheme = DmpIdService.identifier_scheme
-          scheme.present? &&
-            (identifier.identifier_format.include?('ark') || identifier.identifier_format.include?('doi'))
+          scheme = ::IdentifierScheme.find_by(name: 'doi')
+          %w[ark doi].include?(identifier.identifier_format) && scheme.present?
         end
 
         # Converts the string into a UTC Time string
