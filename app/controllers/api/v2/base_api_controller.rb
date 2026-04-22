@@ -20,6 +20,9 @@ module Api
       # set up pages in response
       before_action :pagination_params, except: %i[heartbeat]
 
+      # Parse the incoming JSON
+      before_action :parse_request, only: %i[create update]
+
       rescue_from StandardError, with: :handle_exception
 
       # GET /api/v2/heartbeat
@@ -105,6 +108,22 @@ module Api
 
       def require_read_scope
         raise Pundit::NotAuthorizedError unless doorkeeper_token.scopes.include?('read')
+      end
+
+      # Parse the body of the incoming request
+      # rubocop:disable Metrics/AbcSize,Lint/MissingCopEnableDirective
+      def parse_request
+        return false unless request.present? && request.body.present?
+
+        begin
+          body = request.body.read
+          @json = JSON.parse(body).with_indifferent_access
+        rescue JSON::ParserError => e
+          Rails.logger.error "JSON Parser: #{e.message}"
+          Rails.logger.error request.body
+          render_error(errors: _('Invalid JSON format'), status: :bad_request)
+          false
+        end
       end
     end
   end

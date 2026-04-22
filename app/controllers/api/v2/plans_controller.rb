@@ -29,11 +29,8 @@ module Api
       end
 
       # POST /api/v2/plans
-      def create # rubocop:disable Metrics/AbcSize
-        json = parsed_json
-        return render_error(errors: [_('Invalid JSON')], status: :bad_request) if json.blank?
-
-        result = Api::Plans::CreateFromDmpService.new(json: json, client: @resource_owner).call
+      def create
+        result = Api::Plans::CreateFromDmpService.new(json: @json, client: @resource_owner).call
 
         if result[:plan].present?
           # Kaminari Pagination requires an ActiveRecord result set :/
@@ -45,10 +42,7 @@ module Api
       end
 
       # PUT api/v2/plans/:id
-      def update # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity
-        json = parsed_json
-        return render_error(errors: [_('Invalid JSON')], status: :bad_request) unless json
-
+      def update # rubocop:disable Metrics/AbcSize
         plan = Plan.joins(:roles)
                    .where(roles: { user_id: @resource_owner.id, active: true })
                    .distinct
@@ -59,7 +53,7 @@ module Api
         plans_policy = PlansPolicy.new(@resource_owner, plan)
         raise Pundit::NotAuthorizedError unless plans_policy.update?
 
-        answers_payload = extract_answers_payload(json)
+        answers_payload = extract_answers_payload(@json)
         return render_error(errors: [_('Missing answers payload')], status: :bad_request) if answers_payload.nil?
 
         payload_q_ids = answers_payload.map { |ans| ans[:question_id].to_i }.uniq
@@ -87,12 +81,6 @@ module Api
       def plans_scope
         scope = PlansPolicy::Scope.new(@resource_owner).resolve
         @complete ? scope.includes(answers: { question: :section }) : scope
-      end
-
-      def parsed_json
-        @parsed_json ||= JSON.parse(request.body.read)
-      rescue JSON::ParserError
-        nil
       end
 
       def validate_questions(plan, question_ids)
