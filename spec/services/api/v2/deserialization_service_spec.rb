@@ -3,8 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe Api::V2::DeserializationService do
-  include Helpers::IdentifierHelper
-
   describe 'plan_from_dmp_id(dmp_id:)' do
     before do
       @plan = create(:plan)
@@ -28,7 +26,10 @@ RSpec.describe Api::V2::DeserializationService do
     end
 
     it "returns the Plan based on it's DMP ID" do
-      dmp_id = create_dmp_id(plan: @plan, val: SecureRandom.uuid)
+      scheme = create(:identifier_scheme, name: 'doi',
+                                          identifier_prefix: Faker::Internet.url)
+      dmp_id = create(:identifier, identifiable: @plan,
+                                   identifier_scheme: scheme, value: SecureRandom.uuid)
       json = { type: 'doi', identifier: dmp_id.value }
       expect(described_class.plan_from_dmp_id(dmp_id: json)).to eql(@plan)
     end
@@ -225,7 +226,8 @@ RSpec.describe Api::V2::DeserializationService do
 
   describe 'dmp_id?(value:)' do
     before do
-      @scheme = dmp_id_scheme
+      @scheme = create(:identifier_scheme, name: 'doi',
+                                           identifier_prefix: Faker::Internet.url)
     end
 
     it 'returns false if value is not present' do
