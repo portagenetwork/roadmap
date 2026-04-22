@@ -93,7 +93,6 @@ module Api
             return nil if json.blank?
 
             research_output = ::ResearchOutput.find_or_initialize_by(title: json[:title], plan: plan)
-            research_output.research_output_type = json[:type] || 'dataset' if research_output.new_record?
 
             Api::V2::DeserializationService.attach_identifier(object: research_output, json: json[:dataset_id])
           end
