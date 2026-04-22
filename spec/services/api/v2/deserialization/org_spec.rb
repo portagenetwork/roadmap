@@ -3,10 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::V2::Deserialization::Org do
-  include Helpers::IdentifierHelper
-
   before do
-    @original_restrict = Rails.configuration.x.application.restrict_orgs
     # Org requires a language, so make sure a default is available!
     create(:language, default_language: true) unless Language.default
 
@@ -19,10 +16,6 @@ RSpec.describe Api::V2::Deserialization::Org do
                                       value: SecureRandom.uuid)
     @org.reload
     @json = { name: @name, abbreviation: @abbrev }
-  end
-
-  after do
-    Rails.configuration.x.application.restrict_orgs = @original_restrict
   end
 
   describe '#deserialize(json: {})' do
@@ -67,69 +60,30 @@ RSpec.describe Api::V2::Deserialization::Org do
   end
 
   context 'private methods' do
-    describe ':find_by_name(json: {})' do
-      it 'returns nil unless :json is present' do
-        expect(described_class.send(:find_by_name, json: nil)).to be_nil
+    describe '#find_by_name(json:)' do
+      it 'returns nil if json is not present' do
+        expect(described_class.send(:find_by_name, json: nil)).to eql(nil)
       end
-
-      it 'returns nil unless json[:name] is present' do
-        expect(described_class.send(:find_by_name, json: { title: 'foo' })).to be_nil
+      it 'returns nil if :name is not present' do
+        json = { abbreviation: @abbrev }
+        expect(described_class.send(:find_by_name, json: json)).to eql(nil)
       end
-
       it 'finds the matching Org by name' do
-        org = create(:org)
-        expect(described_class.send(:find_by_name, json: { name: org.name })).to eql(org)
+        expect(described_class.send(:find_by_name, json: @json)).to eql(@org)
       end
-
-      it 'does not attempt to find the RegistryOrg by name if the :restrict_orgs is true' do
-        Rails.configuration.x.application.restrict_orgs = true
-        registry_org = create(:registry_org)
-        expect(described_class.send(:find_by_name, json: { name: registry_org.name })).to be_nil
+      it 'finds the Org from the OrgSelection::SearchService' do
+        json = { name: Faker::Company.unique.name }
+        array = [{ name: @org.name, weight: 0 }]
+        OrgSelection::SearchService.stubs(:search_externally).returns(array)
+        OrgSelection::HashToOrgService.stubs(:to_org).returns(@org)
+        expect(described_class.send(:find_by_name, json: json)).to eql(@org)
       end
-
-      it 'finds the matching RegistryOrg by name' do
-        Rails.configuration.x.application.restrict_orgs = false
-        registry_org = create(:registry_org)
-        result = described_class.send(:find_by_name, json: { name: registry_org.name })
-        expect(result.name).to eql(registry_org.name)
-      end
-
-      it 'returns nil if no Org or RegistryOrg could be found' do
-        Rails.configuration.x.application.restrict_orgs = false
-        name = Faker::Company.name
-        create(:org, name: name)
-        create(:registry_org, name: name)
-        expect(described_class.send(:find_by_name, json: { name: 'foo-bar' })).to be_nil
-      end
-    end
-
-    describe ':org_from_registry_org!(registry_org:)' do
-      before do
-        @registry_org = create(:registry_org)
-        ror_scheme
-        fundref_scheme
-      end
-
-      it 'returns nil unless :registry_org is a RegistryOrg' do
-        expect(described_class.send(:org_from_registry_org!, registry_org: build(:org))).to be_nil
-      end
-
-      it 'returns the :registry_org associated Org if present' do
-        org = create(:org)
-        @registry_org.org = org
-        @registry_org.expects(:to_org).never
-        expect(described_class.send(:org_from_registry_org!, registry_org: @registry_org)).to eql(org)
-      end
-
-      it 'creates and returns a new Org record if the :registry_org does not have one assocciated' do
-        Rails.configuration.x.application.restrict_orgs = false
-        result = described_class.send(:org_from_registry_org!, registry_org: @registry_org)
-        expect(Org.all.last).to eql(result)
-        expect(@registry_org.reload.org_id).to eql(result.id)
-        ror = result.identifier_for_scheme(scheme: 'ror')
-        fundref = result.identifier_for_scheme(scheme: 'fundref')
-        expect(ror&.value).to eql(@registry_org.ror_id)
-        expect(fundref&.value).to eql(@registry_org.fundref_id)
+      it 'initializes the Org if there were no viable matches' do
+        json = { name: Faker::Company.unique.name }
+        OrgSelection::SearchService.stubs(:search_externally).returns([])
+        org = build(:org, name: json[:name])
+        OrgSelection::HashToOrgService.stubs(:to_org).returns(org)
+        expect(described_class.send(:find_by_name, json: json)).to eql(org)
       end
     end
   end
