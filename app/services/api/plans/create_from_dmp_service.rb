@@ -20,7 +20,7 @@ module Api
         return { errors: errs, status: :bad_request } if errs.any?
 
         # Convert the JSON into a Plan and it's associations
-        plan = Api::V1::Deserialization::Plan.deserialize(json: @dmp)
+        plan = handle_deserialization
         if plan.present?
           save_err = _('Unable to create your DMP')
           exists_err = _('Plan already exists. Send an update instead.')
@@ -67,6 +67,11 @@ module Api
         return indifferent.fetch(:dmp, {}) if v2_api?
 
         indifferent.fetch(:items, []).first.fetch(:dmp, {})
+      end
+
+      def handle_deserialization
+        service = v2_api? ? Api::V2::Deserialization::Plan : Api::V1::Deserialization::Plan
+        service.deserialize(json: @dmp)
       end
 
       def handle_json_validation_errors
