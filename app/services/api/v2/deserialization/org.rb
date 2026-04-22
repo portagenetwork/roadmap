@@ -51,63 +51,29 @@ module Api
           private
 
           # Search for an Org locally and then externally if not found
-          # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
           def find_by_name(json: {})
             return nil unless json.present? && json[:name].present?
 
             name = json[:name]
-            # If the name includes context (e.g. '(UCOP)' or '(example.edu)') then do an exact match
-            # otherwise strip off any context from the names in the DB when comparing
-            #
-            # Postgres and MySQL handle index_of differently, so check the DB type
-            postgres = ::ApplicationRecord.postgres_db?
-            where = 'name' if name.include?('(')
-            where = 'substring(name, 0, strpos(name, \' (\'))' if postgres && where.nil?
-            where = 'SUBSTRING_INDEX(name,\'(\',1)' if where.blank?
-            where = "LOWER(#{where}) = ?"
 
             # Search the DB
-            org = ::Org.where(where, name.downcase.strip).first if org.blank?
+            org = ::Org.where('LOWER(name) = ?', name.downcase).first
             return org if org.present?
 
-            # Skip if restrict_orgs is set to true!
-            unless Rails.configuration.x.application.restrict_orgs
-              # fetch from the ror table
-              registry_org = ::RegistryOrg.where(where, name.downcase.strip).first
+            # External ROR search
+            results = OrgSelection::SearchService.search_externally(
+              search_term: name
+            )
 
-              # If managed_only make sure the org is managed!
-              org = org_from_registry_org!(registry_org: registry_org) if registry_org.present?
-            end
-            org
+            # Grab the closest match - only caring about results that 'contain'
+            # the name with preference to those that start with the name
+            match_weights = %i[0 1]
+            result = results.find { |r| match_weights.include?(r[:weight]) }
+
+            # If no good result was found just use the specified name
+            result ||= { name: name }
+            OrgSelection::HashToOrgService.to_org(hash: result)
           end
-          # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-
-          # Create a new Org from the RegistryOrg entry
-          # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
-          def org_from_registry_org!(registry_org:)
-            return nil unless registry_org.is_a?(::RegistryOrg)
-            return registry_org.org if registry_org.org_id.present?
-
-            org = registry_org.to_org
-            return nil if org.blank?
-            return nil unless org.save
-
-            # Attach the identifiers
-            %w[fundref ror].each do |scheme_name|
-              value = registry_org.send(:"#{scheme_name}_id")
-              next if value.blank?
-
-              scheme = ::IdentifierScheme.by_name(scheme_name).first
-              next if scheme.blank?
-
-              ::Identifier.find_or_create_by(identifier_scheme: scheme, identifiable: org, value: value)
-            end
-
-            # Update the original RegistryOrg with the new org's association
-            registry_org.update(org_id: org.id)
-            org.reload
-          end
-          # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
         end
       end
     end
