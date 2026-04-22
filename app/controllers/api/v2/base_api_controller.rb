@@ -111,19 +111,15 @@ module Api
       end
 
       # Parse the body of the incoming request
-      # rubocop:disable Metrics/AbcSize,Lint/MissingCopEnableDirective
-      def parse_request
-        return false unless request.present? && request.body.present?
+      def parse_request # rubocop:disable Metrics/AbcSize
+        @json = JSON.parse(request.body.read)
+        raise JSON::ParserError unless @json.is_a?(Hash) && @json.present?
 
-        begin
-          body = request.body.read
-          @json = JSON.parse(body).with_indifferent_access
-        rescue JSON::ParserError => e
-          Rails.logger.error "JSON Parser: #{e.message}"
-          Rails.logger.error request.body
-          render_error(errors: _('Invalid JSON format'), status: :bad_request)
-          false
-        end
+        @json = @json.with_indifferent_access
+      rescue JSON::ParserError => e
+        Rails.logger.error "JSON Parser: #{e.message}"
+        Rails.logger.error request.body
+        render_error(errors: _('Invalid JSON format'), status: :bad_request)
       end
     end
   end
