@@ -45,7 +45,7 @@ module Api
       end
 
       # PUT api/v2/plans/:id
-      def update # rubocop:disable Metrics/AbcSize, Metrics/MethodLength,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
+      def update # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity
         json = parsed_json
         return render_error(errors: [_('Invalid JSON')], status: :bad_request) unless json
 
@@ -59,10 +59,8 @@ module Api
         plans_policy = PlansPolicy.new(@resource_owner, plan)
         raise Pundit::NotAuthorizedError unless plans_policy.update?
 
-        answers_payload = json.with_indifferent_access[:answers]
-        unless answers_payload.is_a?(Array)
-          return render_error(errors: [_('Missing answers payload')], status: :bad_request)
-        end
+        answers_payload = extract_answers_payload(json)
+        return render_error(errors: [_('Missing answers payload')], status: :bad_request) if answers_payload.nil?
 
         payload_q_ids = answers_payload.map { |ans| ans[:question_id].to_i }.uniq
 
@@ -70,29 +68,13 @@ module Api
         invalid_ids_msg = validate_questions(plan, payload_q_ids)
         return render_error(errors: [invalid_ids_msg], status: :bad_request) if invalid_ids_msg
 
-        # Pre-fetch existing answers to avoid N+1 queries during the update loop
-        existing_answers = plan.answers.where(question_id: payload_q_ids).index_by(&:question_id)
-
-        begin
-          ActiveRecord::Base.transaction do
-            answers_payload.each do |ans|
-              question_id = ans[:question_id].to_i
-
-              # Find existing answer or initialize a new one
-              answer = existing_answers[question_id] || Answer.new(plan_id: plan.id, question_id: question_id)
-
-              # update! will raise ActiveRecord::RecordInvalid if it fails, triggering a rollback
-              answer.update!(user_id: @resource_owner.id, text: ans[:text])
-            end
-          end
-        rescue ActiveRecord::RecordInvalid => e
-          # Catch the validation error, extract the messages, and return the 400
-          return render_error(errors: e.record.errors.full_messages, status: :bad_request)
-        end
+        save_answers!(plan: plan, answers_payload: answers_payload, payload_q_ids: payload_q_ids)
 
         # Successful response
         @items = paginate_response(results: Plan.where(id: plan.id))
         render '/api/v2/plans/index', status: :ok
+      rescue ActiveRecord::RecordInvalid => e
+        render_error(errors: e.record.errors.full_messages, status: :bad_request)
       end
 
       private
@@ -121,6 +103,23 @@ module Api
         return nil if invalid_ids.empty?
 
         _("Question(s) #{invalid_ids.join(', ')} do not belong to this plan's template")
+      end
+
+      def extract_answers_payload(json)
+        payload = json.with_indifferent_access[:answers]
+        payload.is_a?(Array) ? payload : nil
+      end
+
+      def save_answers!(plan:, answers_payload:, payload_q_ids:)
+        existing_answers = plan.answers.where(question_id: payload_q_ids).index_by(&:question_id)
+
+        ActiveRecord::Base.transaction do
+          answers_payload.each do |ans|
+            question_id = ans[:question_id].to_i
+            answer = existing_answers[question_id] || Answer.new(plan_id: plan.id, question_id: question_id)
+            answer.update!(user_id: @resource_owner.id, text: ans[:text])
+          end
+        end
       end
     end
   end
