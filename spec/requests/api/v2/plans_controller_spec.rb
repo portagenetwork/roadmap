@@ -216,7 +216,7 @@ RSpec.describe Api::V2::PlansController do
           json = JSON.parse(response.body).with_indifferent_access
           expect(json[:items].empty?).to be(true)
           expect(json[:errors].length).to be(1)
-          expect(json[:errors].first).to eql('Invalid JSON format!')
+          expect(json[:errors].first).to eql('Invalid JSON')
         end
 
         it 'returns contextualized errors' do
@@ -230,7 +230,7 @@ RSpec.describe Api::V2::PlansController do
           json = JSON.parse(response.body).with_indifferent_access
           expect(json[:items].empty?).to be(true)
           expect(json[:errors].length).to be(1)
-          expect(json[:errors].first).to eql([":title and the contact's :mbox are both required fields"])
+          expect(json[:errors].first).to eql(":title and the contact's :mbox are both required fields")
         end
 
         it 'creates the Plan' do
