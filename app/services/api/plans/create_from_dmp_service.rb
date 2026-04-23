@@ -35,6 +35,16 @@ module Api
         plan.org = owner.org if owner.present? && plan.org.blank?
         return { errors: NO_ORG_ERR, status: :bad_request } unless plan.org.present?
 
+        # # Try to determine the Plan's org
+        # plan.org_id = owner&.org&.present? ? owner.org_id : client.owner&.org_id
+        # if plan.org_id.blank?
+        #   matches = find_matching_orgs(
+        #     plan: plan, json: dmp.fetch(:contact, {}).fetch(:affiliation, {})
+        #   )
+        #   no_org_err = format(no_org_err, list_of_names: matches.map { |m| "'#{m}'" }.join(', '))
+        #   render_error(errors: no_org_err, status: :bad_request) and return if plan.org_id.blank?
+        # end
+
         # Validate the plan and it's associations and return errors with context
         # e.g. 'Contact affiliation name can't be blank' instead of 'name can't be blank'
         errs = handle_contextualized_errors(plan)
@@ -139,6 +149,77 @@ module Api
 
       def v2_api?
         @api_version == :v2
+      end
+
+      # Get the Plan's owner
+      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      def determine_v2_owner(plan:, json:)
+        return nil unless plan.present? && json.is_a?(Hash) && json[:mbox].present?
+
+        user = User.find_by(email: json[:mbox])
+        return user if user.present?
+
+        id_json = json.fetch(:contact_id, {})
+        orcid = id_json[:identifier] if id_json[:type]&.downcase == 'orcid'
+        identifier = Identifier.by_scheme_name('orcid', 'User').where(value: orcid) if orcid.present?
+        return identifier.identifiable if identifier.present?
+
+        names = json[:name]&.split || ['']
+        firstname = names.length > 1 ? names.first : nil
+        surname = names.length > 1 ? names.last : names.first
+
+        # Try to deserialize the Org. If no Org exists, try to find it by the user's email domain
+        org = Api::V2::Deserialization::Org.deserialize(json: json[:affiliation])
+        org = Org.from_email_domain(email_domain: json[:mbox].split('@')&.last) if org.blank?
+        org.save if org&.new_record?
+
+        user = User.new(firstname: firstname, surname: surname, email: json[:mbox], org: org,
+                        password: SecureRandom.uuid)
+        return user if orcid.blank?
+
+        scheme = IdentifierScheme.find_by(name: 'orcid')
+        user.identifiers << Identifier.new(identifier_scheme: scheme, value: orcid)
+        user
+      end
+      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+
+      # If the contact's org could not be determined, then fetch the matches to return to the
+      # caller
+      # rubocop:disable Metrics/AbcSize
+      def find_matching_orgs(plan:, json:)
+        return [] unless plan.present? && json.is_a?(Hash) && json[:name].present?
+
+        name = json[:name].downcase.split('(').first
+        matches = Org.where(managed: true).search(name)
+        matches += RegistryOrg.search(name) unless Rails.configuration.x.application.restrict_orgs
+        matches.any? ? matches.map(&:name) : []
+      end
+      # rubocop:enable Metrics/AbcSize
+
+      # Send the owner an email to let them know about the new Plan
+      def notify_owner(client:, owner:, plan:)
+        if owner.new_record?
+          # This essentially drops the initializer User (aka owner) and creates a new one
+          # via the Devise invitation methods
+          User.invite!(
+            inviter: client,
+            plan: plan,
+            context: 'api',
+            params: {
+              email: owner.email,
+              firstname: owner.firstname,
+              surname: owner.surname,
+              org_id: owner.org_id
+            }
+          )
+        else
+          UserMailer.new_plan_via_api(
+            recipient: owner, plan: plan, api_client: client
+          ).deliver_now
+          owner
+        end
       end
     end
   end
