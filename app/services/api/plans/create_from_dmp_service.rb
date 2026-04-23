@@ -31,19 +31,11 @@ module Api
         return { errors: [INVALID_JSON_ERR], status: :bad_request } unless plan.present?
 
         # Try to determine the Plan's owner
-        owner = determine_owner(plan: plan)
-        plan.org = owner.org if owner.present? && plan.org.blank?
-        return { errors: NO_ORG_ERR, status: :bad_request } unless plan.org.present?
+        owner = handle_owner(plan: plan, json: @dmp.fetch(:contact, {}))
 
-        # # Try to determine the Plan's org
-        # plan.org_id = owner&.org&.present? ? owner.org_id : client.owner&.org_id
-        # if plan.org_id.blank?
-        #   matches = find_matching_orgs(
-        #     plan: plan, json: dmp.fetch(:contact, {}).fetch(:affiliation, {})
-        #   )
-        #   no_org_err = format(no_org_err, list_of_names: matches.map { |m| "'#{m}'" }.join(', '))
-        #   render_error(errors: no_org_err, status: :bad_request) and return if plan.org_id.blank?
-        # end
+        # Try to determine the Plan's org
+        errs = handle_plan_org(plan: plan, owner: owner)
+        return errs if errs.present?
 
         # Validate the plan and it's associations and return errors with context
         # e.g. 'Contact affiliation name can't be blank' instead of 'name can't be blank'
@@ -58,8 +50,12 @@ module Api
         plan = handle_safe_save(plan)
         return { errors: SAVE_ERR, status: :internal_server_error } if plan.new_record?
 
-        # Invite the Owner if they are a Contributor then attach the Owner to the Plan
-        owner = invite_contributor(contributor: owner) if owner.is_a?(Contributor)
+        # Attach the Owner to the Plan and notify/invite as appropriate
+        if v2_api?
+          owner = notify_owner(owner: owner, plan: plan)
+        elsif owner.is_a?(Contributor)
+          owner = invite_contributor(contributor: owner)
+        end
         plan.add_user!(owner.id, :creator)
 
         { plan: plan }
@@ -98,6 +94,26 @@ module Api
       def handle_safe_save(plan)
         service = v2_api? ? Api::V2::PersistenceService : Api::V1::PersistenceService
         service.safe_save(plan: plan)
+      end
+
+      def handle_owner(plan:, json:)
+        v2_api? ? determine_v2_owner(plan: plan, json: json) : determine_owner(plan: plan)
+      end
+
+      def handle_plan_org(plan:, owner:)
+        if v2_api?
+          plan.org_id = owner&.org&.present? ? owner.org_id : @client&.org_id
+          if plan.org_id.blank?
+            matches = find_matching_orgs(
+              plan: plan, json: @dmp.fetch(:contact, {}).fetch(:affiliation, {})
+            )
+            no_org_err = format(no_org_err, list_of_names: matches.map { |m| "'#{m}'" }.join(', '))
+            { errors: no_org_err, status: :bad_request }
+          end
+        else
+          plan.org = owner.org if owner.present? && plan.org.blank?
+          { errors: NO_ORG_ERR, status: :bad_request } unless plan.org.present?
+        end
       end
 
       # Get the Plan's owner
@@ -187,7 +203,6 @@ module Api
 
       # If the contact's org could not be determined, then fetch the matches to return to the
       # caller
-      # rubocop:disable Metrics/AbcSize
       def find_matching_orgs(plan:, json:)
         return [] unless plan.present? && json.is_a?(Hash) && json[:name].present?
 
@@ -196,15 +211,14 @@ module Api
         matches += RegistryOrg.search(name) unless Rails.configuration.x.application.restrict_orgs
         matches.any? ? matches.map(&:name) : []
       end
-      # rubocop:enable Metrics/AbcSize
 
       # Send the owner an email to let them know about the new Plan
-      def notify_owner(client:, owner:, plan:)
+      def notify_owner(owner:, plan:)
         if owner.new_record?
           # This essentially drops the initializer User (aka owner) and creates a new one
           # via the Devise invitation methods
           User.invite!(
-            inviter: client,
+            inviter: @client,
             plan: plan,
             context: 'api',
             params: {
@@ -216,7 +230,7 @@ module Api
           )
         else
           UserMailer.new_plan_via_api(
-            recipient: owner, plan: plan, api_client: client
+            recipient: owner, plan: plan, api_client: @client
           ).deliver_now
           owner
         end
