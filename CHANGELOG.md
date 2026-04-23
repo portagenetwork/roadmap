@@ -14,6 +14,8 @@
 
  - refactor(api-v1 specs): create spec file for `Api::Plans::CreateFromDmpService` & move `Api::V1::PlansController` specs [#1329](https://github.com/portagenetwork/roadmap/pull/1329)
 
+ - chore(doorkeeper): set `base_controller 'ApplicationController'` [#1332](https://github.com/portagenetwork/roadmap/pull/1332)
+
 ### Dependency Updates
 
  - chore(deps): bump eslint from 8.38.0 to 9.26.0 [#1270](https://github.com/portagenetwork/roadmap/pull/1270)
