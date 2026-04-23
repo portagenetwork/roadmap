@@ -5,6 +5,12 @@ module Api
     # Service for creating a Plan from a DMP JSON payload (API v1 format).
     # Extracted to support reuse by future API versions.
     class CreateFromDmpService
+      SAVE_ERR = _('Unable to create your DMP')
+      EXISTS_ERR = _('Plan already exists. Send an update instead.')
+      NO_ORG_ERR = _("Could not determine ownership of the DMP. Please add an
+                          :affiliation to the :contact")
+      INVALID_JSON_ERR = _('Invalid JSON')
+
       def initialize(json:, client:, api_version: :v1)
         @json = json
         @client = client
@@ -12,7 +18,7 @@ module Api
         @dmp = extract_dmp(json)
       end
 
-      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+      # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       def call
         # Do a pass through the raw JSON and check to make sure all required fields
@@ -22,42 +28,35 @@ module Api
 
         # Convert the JSON into a Plan and it's associations
         plan = handle_deserialization
-        if plan.present?
-          save_err = _('Unable to create your DMP')
-          exists_err = _('Plan already exists. Send an update instead.')
-          no_org_err = _("Could not determine ownership of the DMP. Please add an
-                          :affiliation to the :contact")
+        return { errors: [INVALID_JSON_ERR], status: :bad_request } unless plan.present?
 
-          # Try to determine the Plan's owner
-          owner = determine_owner(plan: plan)
-          plan.org = owner.org if owner.present? && plan.org.blank?
-          return { errors: no_org_err, status: :bad_request } unless plan.org.present?
+        # Try to determine the Plan's owner
+        owner = determine_owner(plan: plan)
+        plan.org = owner.org if owner.present? && plan.org.blank?
+        return { errors: NO_ORG_ERR, status: :bad_request } unless plan.org.present?
 
-          # Validate the plan and it's associations and return errors with context
-          # e.g. 'Contact affiliation name can't be blank' instead of 'name can't be blank'
-          errs = handle_contextualized_errors(plan)
+        # Validate the plan and it's associations and return errors with context
+        # e.g. 'Contact affiliation name can't be blank' instead of 'name can't be blank'
+        errs = handle_contextualized_errors(plan)
 
-          # The resulting plan (our its associations were invalid)
-          return { errors: errs, status: :bad_request } if errs.any?
-          # Skip if this is an existing DMP
-          return { errors: exists_err, status: :bad_request } unless plan.new_record?
+        # The resulting plan (our its associations were invalid)
+        return { errors: errs, status: :bad_request } if errs.any?
+        # Skip if this is an existing DMP
+        return { errors: EXISTS_ERR, status: :bad_request } unless plan.new_record?
 
-          # If we cannot save for some reason then return an error
-          plan = handle_safe_save(plan)
-          return { errors: save_err, status: :internal_server_error } if plan.new_record?
+        # If we cannot save for some reason then return an error
+        plan = handle_safe_save(plan)
+        return { errors: SAVE_ERR, status: :internal_server_error } if plan.new_record?
 
-          # Invite the Owner if they are a Contributor then attach the Owner to the Plan
-          owner = invite_contributor(contributor: owner) if owner.is_a?(Contributor)
-          plan.add_user!(owner.id, :creator)
+        # Invite the Owner if they are a Contributor then attach the Owner to the Plan
+        owner = invite_contributor(contributor: owner) if owner.is_a?(Contributor)
+        plan.add_user!(owner.id, :creator)
 
-          { plan: plan }
-        else
-          { errors: [_('Invalid JSON!')], status: :bad_request }
-        end
+        { plan: plan }
       rescue JSON::ParserError
-        { errors: [_('Invalid JSON')], status: :bad_request }
+        { errors: [INVALID_JSON_ERR], status: :bad_request }
       end
-      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+      # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
       private
