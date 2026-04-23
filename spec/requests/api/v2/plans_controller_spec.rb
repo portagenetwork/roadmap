@@ -338,7 +338,7 @@ RSpec.describe Api::V2::PlansController do
 
           expect(response.code).to eql('201'), "Unable to create Plan: #{response.body.inspect}"
           expect(ActionMailer::Base.deliveries).to have_exactly(1).item
-          expect(response).to render_template('user_mailer/new_plan_via_api')
+          expect(response).to render_template('devise/mailer/invitation_instructions')
 
           owner = Plan.find_by(title: @json[:dmp][:title]).owner
           expect(owner.firstname.present?).to be(true)

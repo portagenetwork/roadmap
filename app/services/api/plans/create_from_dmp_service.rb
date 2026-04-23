@@ -185,9 +185,8 @@ module Api
         firstname = names.length > 1 ? names.first : nil
         surname = names.length > 1 ? names.last : names.first
 
-        # Try to deserialize the Org. If no Org exists, try to find it by the user's email domain
+        # Try to deserialize the Org.
         org = Api::V2::Deserialization::Org.deserialize(json: json[:affiliation])
-        org = Org.from_email_domain(email_domain: json[:mbox].split('@')&.last) if org.blank?
         org.save if org&.new_record?
 
         user = User.new(firstname: firstname, surname: surname, email: json[:mbox], org: org,
@@ -208,32 +207,27 @@ module Api
 
         name = json[:name].downcase.split('(').first
         matches = Org.where(managed: true).search(name)
-        matches += RegistryOrg.search(name) unless Rails.configuration.x.application.restrict_orgs
         matches.any? ? matches.map(&:name) : []
       end
 
       # Send the owner an email to let them know about the new Plan
       def notify_owner(owner:, plan:)
-        if owner.new_record?
-          # This essentially drops the initializer User (aka owner) and creates a new one
-          # via the Devise invitation methods
-          User.invite!(
-            inviter: @client,
-            plan: plan,
-            context: 'api',
-            params: {
-              email: owner.email,
-              firstname: owner.firstname,
-              surname: owner.surname,
-              org_id: owner.org_id
-            }
-          )
-        else
-          UserMailer.new_plan_via_api(
-            recipient: owner, plan: plan, api_client: @client
-          ).deliver_now
-          owner
-        end
+        return unless owner.new_record?
+
+        # This essentially drops the initializer User (aka owner) and creates a new one
+        # via the Devise invitation methods
+        User.invite!({ email: owner.email,
+                       firstname: owner.firstname,
+                       surname: owner.surname,
+                       org: owner.org }, @client)
+
+        # TODO: How to notify an existing user?
+        # - DMP Assistant does not yet have UserMailer.new_plan_via_api()
+        # else
+        #   UserMailer.new_plan_via_api(
+        #     recipient: owner, plan: plan, api_client: @client
+        #   ).deliver_now
+        #   owner
       end
     end
   end
