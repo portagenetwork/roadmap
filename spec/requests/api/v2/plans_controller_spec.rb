@@ -317,8 +317,8 @@ RSpec.describe Api::V2::PlansController do
           # the same as the Plan's
           expect(created[:title]).to eql(project[:title])
           expect(created[:description]).to eql(project[:description])
-          expect(Time.zone.local(project[:start])).to eql(Time.zone.local(original.fetch(:project, [{}]).first[:start]))
-          expect(Time.zone.local(project[:end])).to eql(Time.zone.local(original.fetch(:project, [{}]).first[:end]))
+          expect(Time.zone.parse(project[:start])).to eql(Time.zone.parse(original.fetch(:project, [{}]).first[:start]))
+          expect(Time.zone.parse(project[:end])).to eql(Time.zone.parse(original.fetch(:project, [{}]).first[:end]))
           expect(project[:start]).to eql(dmp.start_date.to_formatted_s(:iso8601))
           expect(project[:end]).to eql(dmp.end_date.to_formatted_s(:iso8601))
 
