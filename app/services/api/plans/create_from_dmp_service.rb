@@ -18,8 +18,7 @@ module Api
         @dmp = extract_dmp(json)
       end
 
-      # rubocop:disable Metrics/AbcSize
-      # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      # rubocop:disable Metrics/CyclomaticComplexity
       def call
         # Do a pass through the raw JSON and check to make sure all required fields
         # were present. If not, return the specific errors
@@ -51,21 +50,33 @@ module Api
         return { errors: SAVE_ERR, status: :internal_server_error } if plan.new_record?
 
         # Attach the Owner to the Plan and notify/invite as appropriate
-        if v2_api?
-          owner = notify_owner(owner: owner, plan: plan)
-        elsif owner.is_a?(Contributor)
-          owner = invite_contributor(contributor: owner)
-        end
-        plan.add_user!(owner.id, :creator)
-
+        attach_and_notify_owner(plan: plan, owner: owner)
         { plan: plan }
       rescue JSON::ParserError
         { errors: [INVALID_JSON_ERR], status: :bad_request }
       end
-      # rubocop:enable Metrics/AbcSize
-      # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      # rubocop:enable Metrics/CyclomaticComplexity
 
       private
+
+      # Attach the owner to the plan and send notification if v2
+      def attach_and_notify_owner(plan:, owner:)
+        if v2_api?
+          if owner.new_record?
+            owner = User.invite!({ email: owner.email,
+                                   firstname: owner.firstname,
+                                   surname: owner.surname,
+                                   org: owner.org }, @client)
+          end
+        elsif owner.is_a?(Contributor)
+          owner = invite_contributor(contributor: owner)
+        end
+        plan.add_user!(owner.id, :creator)
+        return unless v2_api?
+
+        role = Role.creator.find_by(user_id: owner.id, active: true)
+        UserMailer.sharing_notification(role, owner, inviter: @client).deliver_now if role && owner.persisted?
+      end
 
       # Returns `dmp` based on the API version's JSON request body structure
       def extract_dmp(json)
@@ -208,26 +219,6 @@ module Api
         name = json[:name].downcase.split('(').first
         matches = Org.where(managed: true).search(name)
         matches.any? ? matches.map(&:name) : []
-      end
-
-      # Send the owner an email to let them know about the new Plan
-      def notify_owner(owner:, plan:)
-        return unless owner.new_record?
-
-        # This essentially drops the initializer User (aka owner) and creates a new one
-        # via the Devise invitation methods
-        User.invite!({ email: owner.email,
-                       firstname: owner.firstname,
-                       surname: owner.surname,
-                       org: owner.org }, @client)
-
-        # TODO: How to notify an existing user?
-        # - DMP Assistant does not yet have UserMailer.new_plan_via_api()
-        # else
-        #   UserMailer.new_plan_via_api(
-        #     recipient: owner, plan: plan, api_client: @client
-        #   ).deliver_now
-        #   owner
       end
     end
   end
