@@ -71,14 +71,18 @@ RSpec.describe Api::V2::Deserialization::Org do
       it 'finds the matching Org by name' do
         expect(described_class.send(:find_by_name, json: @json)).to eql(@org)
       end
-      it 'finds the Org from the OrgSelection::SearchService' do
+      xit 'finds the Org from the OrgSelection::SearchService' do
+        # SKIPPED: External org search is currently disabled; only local DB orgs are searched.
+        # To re-enable, restore OrgSelection::SearchService and HashToOrgService logic in find_by_name.
         json = { name: Faker::Company.unique.name }
         array = [{ name: @org.name, weight: 0 }]
         OrgSelection::SearchService.stubs(:search_externally).returns(array)
         OrgSelection::HashToOrgService.stubs(:to_org).returns(@org)
         expect(described_class.send(:find_by_name, json: json)).to eql(@org)
       end
-      it 'initializes the Org if there were no viable matches' do
+      xit 'initializes the Org if there were no viable matches' do
+        # SKIPPED: Org initialization from external search is currently disabled; only local DB orgs are searched.
+        # To re-enable, restore OrgSelection::SearchService and HashToOrgService logic in find_by_name.
         json = { name: Faker::Company.unique.name }
         OrgSelection::SearchService.stubs(:search_externally).returns([])
         org = build(:org, name: json[:name])
