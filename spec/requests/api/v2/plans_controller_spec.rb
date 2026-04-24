@@ -332,13 +332,14 @@ RSpec.describe Api::V2::PlansController do
           expect(opp_id).to eql(orig_funding[:dmproadmap_funding_opportunity_id][:identifier])
         end
 
-        it 'sends an invitation email if the :contact is not already a User' do
+        it 'sends both a `invite` and a `sharing_notification` email if the :contact is not already a User' do
           ActionMailer::Base.deliveries = []
           post(api_v2_plans_path, params: @json.to_json, headers: @headers)
 
           expect(response.code).to eql('201'), "Unable to create Plan: #{response.body.inspect}"
-          expect(ActionMailer::Base.deliveries).to have_exactly(1).item
+          expect(ActionMailer::Base.deliveries).to have_exactly(2).item
           expect(response).to render_template('devise/mailer/invitation_instructions')
+          expect(response).to render_template('user_mailer/sharing_notification')
 
           owner = Plan.find_by(title: @json[:dmp][:title]).owner
           expect(owner.firstname.present?).to be(true)
@@ -361,7 +362,7 @@ RSpec.describe Api::V2::PlansController do
 
           expect(response.code).to eql('201'), "Unable to create Plan: #{response.body.inspect}"
           expect(ActionMailer::Base.deliveries).to have_exactly(1).item
-          expect(response).to render_template('user_mailer/new_plan_via_api')
+          expect(response).to render_template('user_mailer/sharing_notification')
 
           owner = Plan.find_by(title: @json[:dmp][:title]).owner
           expect(owner.firstname.present?).to be(true)
