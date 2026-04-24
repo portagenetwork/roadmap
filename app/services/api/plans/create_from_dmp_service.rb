@@ -11,9 +11,11 @@ module Api
                           :affiliation to the :contact")
       INVALID_JSON_ERR = _('Invalid JSON')
 
-      def initialize(json:, client:, api_version: :v1)
+      def initialize(json:, caller:, api_version: :v1)
         @json = json
-        @client = client
+        # NOTE: For v2, @caller is currently always a User.
+        # - Revist this logic when v2 client credentials flow is implemented
+        @caller = caller
         @api_version = api_version
         @dmp = extract_dmp(json)
       end
@@ -66,7 +68,7 @@ module Api
             owner = User.invite!({ email: owner.email,
                                    firstname: owner.firstname,
                                    surname: owner.surname,
-                                   org: owner.org }, @client)
+                                   org: owner.org }, @caller)
           end
         elsif owner.is_a?(Contributor)
           owner = invite_contributor(contributor: owner)
@@ -75,7 +77,7 @@ module Api
         return unless v2_api?
 
         role = Role.creator.find_by(user_id: owner.id, active: true)
-        UserMailer.sharing_notification(role, owner, inviter: @client).deliver_now if role && owner.persisted?
+        UserMailer.sharing_notification(role, owner, inviter: @caller).deliver_now if role && owner.persisted?
       end
 
       # Returns `dmp` based on the API version's JSON request body structure
@@ -113,7 +115,7 @@ module Api
 
       def handle_plan_org(plan:, owner:)
         if v2_api?
-          plan.org_id = owner&.org&.present? ? owner.org_id : @client&.org_id
+          plan.org_id = owner&.org&.present? ? owner.org_id : @caller&.org_id
           if plan.org_id.blank?
             matches = find_matching_orgs(
               plan: plan, json: @dmp.fetch(:contact, {}).fetch(:affiliation, {})
@@ -138,7 +140,7 @@ module Api
         return user if user.present?
 
         # Otherwise just return the client
-        @client
+        @caller
       end
 
       def lookup_user(contributor:)
@@ -163,7 +165,7 @@ module Api
         user = User.invite!({ email: contributor.email,
                               firstname: firstname,
                               surname: surname,
-                              org: contributor.org }, @client)
+                              org: contributor.org }, @caller)
 
         contributor.identifiers.each do |id|
           user.identifiers << Identifier.new(
