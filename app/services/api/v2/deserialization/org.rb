@@ -55,24 +55,26 @@ module Api
             return nil unless json.present? && json[:name].present?
 
             name = json[:name]
-
             # Search the DB
-            org = ::Org.where('LOWER(name) = ?', name.downcase).first
-            return org if org.present?
+            ::Org.where('LOWER(name) = ?', name.downcase).first
 
-            # External ROR search
-            results = OrgSelection::SearchService.search_externally(
-              search_term: name
-            )
+            # Uncomment the following code if org search should be performed beyond local DB
 
-            # Grab the closest match - only caring about results that 'contain'
-            # the name with preference to those that start with the name
-            match_weights = %i[0 1]
-            result = results.find { |r| match_weights.include?(r[:weight]) }
+            # return org if org.present?
 
-            # If no good result was found just use the specified name
-            result ||= { name: name }
-            OrgSelection::HashToOrgService.to_org(hash: result)
+            # # External ROR search
+            # results = OrgSelection::SearchService.search_externally(
+            #   search_term: name
+            # )
+
+            # # Grab the closest match - only caring about results that 'contain'
+            # # the name with preference to those that start with the name
+            # match_weights = %i[0 1]
+            # result = results.find { |r| match_weights.include?(r[:weight]) }
+
+            # # If no good result was found just use the specified name
+            # result ||= { name: name }
+            # OrgSelection::HashToOrgService.to_org(hash: result)
           end
         end
       end
