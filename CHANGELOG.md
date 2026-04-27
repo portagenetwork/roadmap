@@ -30,6 +30,20 @@
 
  - chore(deps): bump docker/build-push-action from 7.0.0 to 7.1.0 [#1326](https://github.com/portagenetwork/roadmap/pull/1326)
 
+ - chore(deps): bump picomatch from 2.3.1 to 2.3.2 [#1317](https://github.com/portagenetwork/roadmap/pull/1317)
+
+ - chore(deps): bump yaml from 1.10.2 to 1.10.3 [#1316](https://github.com/portagenetwork/roadmap/pull/1316)
+
+ - chore(deps): bump hono from 4.12.8 to 4.12.12 [#1322](https://github.com/portagenetwork/roadmap/pull/1322)
+
+ - chore(deps): bump lodash from 4.17.23 to 4.18.1 [#1325](https://github.com/portagenetwork/roadmap/pull/1325)
+
+ - chore(deps): bump @hono/node-server from 1.19.11 to 1.19.13 [#1321](https://github.com/portagenetwork/roadmap/pull/1321)
+
+ - chore(deps): bump follow-redirects from 1.15.6 to 1.16.0 [#1330](https://github.com/portagenetwork/roadmap/pull/1330)
+
+ - chore(deps): bump hono from 4.12.12 to 4.12.14 [#1333](https://github.com/portagenetwork/roadmap/pull/1333)
+
 ## [4.1.1+portage-4.7.0]
 
 ### Added
