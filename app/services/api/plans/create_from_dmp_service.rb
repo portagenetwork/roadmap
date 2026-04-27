@@ -18,17 +18,18 @@ module Api
         @caller = caller
         @api_version = api_version
         @dmp = extract_dmp(json)
+        assign_services
       end
 
       # rubocop:disable Metrics/CyclomaticComplexity
       def call
         # Do a pass through the raw JSON and check to make sure all required fields
         # were present. If not, return the specific errors
-        errs = handle_json_validation_errors
+        errs = @json_validation_service.validation_errors(json: @dmp)
         return { errors: errs, status: :bad_request } if errs.any?
 
-        # Convert the JSON into a Plan and it's associations
-        plan = handle_deserialization
+        # Convert the JSON into a Plan and its associations
+        plan = @deserialize_plan_service.deserialize(json: @dmp)
         return { errors: [INVALID_JSON_ERR], status: :bad_request } unless plan.present?
 
         # Try to determine the Plan's owner
@@ -38,17 +39,17 @@ module Api
         errs = handle_plan_org(plan: plan, owner: owner)
         return errs if errs.present?
 
-        # Validate the plan and it's associations and return errors with context
+        # Validate the plan and its associations and return errors with context
         # e.g. 'Contact affiliation name can't be blank' instead of 'name can't be blank'
         errs = handle_contextualized_errors(plan)
 
-        # The resulting plan (our its associations were invalid)
+        # The resulting plan (or its associations) were invalid
         return { errors: errs, status: :bad_request } if errs.any?
         # Skip if this is an existing DMP
         return { errors: EXISTS_ERR, status: :bad_request } unless plan.new_record?
 
         # If we cannot save for some reason then return an error
-        plan = handle_safe_save(plan)
+        plan = @persistence_service.safe_save(plan: plan)
         return { errors: SAVE_ERR, status: :internal_server_error } if plan.new_record?
 
         # Attach the Owner to the Plan and notify/invite as appropriate
@@ -73,14 +74,12 @@ module Api
         indifferent.fetch(:items, []).first.fetch(:dmp, {})
       end
 
-      def handle_json_validation_errors
-        service = v2_api? ? Api::V2::JsonValidationService : Api::V1::JsonValidationService
-        service.validation_errors(json: @dmp)
-      end
-
-      def handle_deserialization
-        service = v2_api? ? Api::V2::Deserialization::Plan : Api::V1::Deserialization::Plan
-        service.deserialize(json: @dmp)
+      def assign_services
+        api_module = v2_api? ? Api::V2 : Api::V1
+        @json_validation_service   = api_module::JsonValidationService
+        @deserialize_plan_service  = api_module::Deserialization::Plan
+        @persistence_service       = api_module::PersistenceService
+        @contextual_error_service  = api_module::ContextualErrorService
       end
 
       def handle_owner(plan:, json:)
@@ -178,14 +177,9 @@ module Api
       end
 
       def handle_contextualized_errors(plan)
-        return Api::V2::ContextualErrorService.contextualize_errors(plan: plan) if v2_api?
+        return @contextual_error_service.contextualize_errors(plan: plan) if v2_api?
 
-        Api::V1::ContextualErrorService.process_plan_errors(plan: plan)
-      end
-
-      def handle_safe_save(plan)
-        service = v2_api? ? Api::V2::PersistenceService : Api::V1::PersistenceService
-        service.safe_save(plan: plan)
+        @contextual_error_service.process_plan_errors(plan: plan)
       end
 
       # Attach the owner to the plan and send notification if v2
