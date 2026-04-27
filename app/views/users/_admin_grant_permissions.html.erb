@@ -62,7 +62,15 @@
               <% end %>
             <% end %>
           <% end %>
-        </ul>
+
+        <!-- Developer / OAuth Apps Section -->
+        <% perm = Perm.find_by(name: 'manage_oauth_apps') %>
+        <%= label_tag :developer_privileges %>
+        <li class="list-group-item" style="border: none"
+            title="<%= _('Allows the user to create and manage OAuth applications for third-party integrations') %>">
+            <%= check_box_tag "perm_ids[]", perm.id, user.perms.include?(perm), class: 'developer_privileges' %>
+            <%= _('Manage OAuth apps') %>
+        </li>
       </div>
       <div class="modal-footer">
         <%= submit_tag _('Save'), class: "btn btn-primary" %>

@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+ - feat(oauth): allow users with `manage_oauth_apps` to manage Doorkeeper OAuth applications [#1320](https://github.com/portagenetwork/roadmap/pull/1320)
+
 ### Fixed
 
  - fix(api-v1): Address breaking tests and dropped `api_client_id` column [#1327](https://github.com/portagenetwork/roadmap/pull/1327)

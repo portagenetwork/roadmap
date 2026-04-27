@@ -77,4 +77,8 @@ class Perm < ApplicationRecord
   def self.review_plans
     lazy_load('review_org_plans')
   end
+
+  def self.manage_oauth_apps
+    lazy_load('manage_oauth_apps')
+  end
 end

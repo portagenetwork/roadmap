@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_02_19_200258) do
+ActiveRecord::Schema.define(version: 2026_03_30_204346) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -354,7 +354,9 @@ ActiveRecord::Schema.define(version: 2026_02_19_200258) do
     t.boolean "confidential", default: true, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "user_id", null: false
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
+    t.index ["user_id"], name: "index_oauth_applications_on_user_id"
   end
 
   create_table "option_warnings", id: :serial, force: :cascade do |t|
@@ -925,6 +927,7 @@ ActiveRecord::Schema.define(version: 2026_02_19_200258) do
   add_foreign_key "oauth_access_grants", "users", column: "resource_owner_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "users", column: "resource_owner_id"
+  add_foreign_key "oauth_applications", "users"
   add_foreign_key "org_token_permissions", "orgs"
   add_foreign_key "org_token_permissions", "token_permission_types"
   add_foreign_key "orgs", "languages"

@@ -391,6 +391,8 @@ fr-CA:
         submit: Envoyer
         cancel: Annuler
         authorize: Autoriser
+        regenerate_secret: Régénérer le secret
+        regenerate_secret_confirm: Êtes-vous sûr ? Cela invalidera le secret actuel.
       form:
         error: Oups! Vérifier votre formulaire pour des erreurs possibles
       help:
@@ -509,7 +511,9 @@ fr-CA:
     flash:
       applications:
         create:
-          notice: Application créée.
+          notice: |-
+            Application créée.<br>
+            Veuillez copier le code secret de l'application et le conserver en lieu sûr. Il disparaîtra lorsque vous quitterez ou actualiserez cette page.
         destroy:
           notice: Application supprimée.
         update:
