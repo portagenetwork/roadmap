@@ -61,23 +61,8 @@ module Api
 
       private
 
-      # Attach the owner to the plan and send notification if v2
-      def attach_and_notify_owner(plan:, owner:)
-        if v2_api?
-          if owner.new_record?
-            owner = User.invite!({ email: owner.email,
-                                   firstname: owner.firstname,
-                                   surname: owner.surname,
-                                   org: owner.org }, @caller)
-          end
-        elsif owner.is_a?(Contributor)
-          owner = invite_contributor(contributor: owner)
-        end
-        plan.add_user!(owner.id, :creator)
-        return unless v2_api?
-
-        role = Role.creator.find_by(user_id: owner.id, active: true)
-        UserMailer.sharing_notification(role, owner, inviter: @caller).deliver_now if role && owner.persisted?
+      def v2_api?
+        @api_version == :v2
       end
 
       # Returns `dmp` based on the API version's JSON request body structure
@@ -88,45 +73,18 @@ module Api
         indifferent.fetch(:items, []).first.fetch(:dmp, {})
       end
 
-      def handle_deserialization
-        service = v2_api? ? Api::V2::Deserialization::Plan : Api::V1::Deserialization::Plan
-        service.deserialize(json: @dmp)
-      end
-
       def handle_json_validation_errors
         service = v2_api? ? Api::V2::JsonValidationService : Api::V1::JsonValidationService
         service.validation_errors(json: @dmp)
       end
 
-      def handle_contextualized_errors(plan)
-        return Api::V2::ContextualErrorService.contextualize_errors(plan: plan) if v2_api?
-
-        Api::V1::ContextualErrorService.process_plan_errors(plan: plan)
-      end
-
-      def handle_safe_save(plan)
-        service = v2_api? ? Api::V2::PersistenceService : Api::V1::PersistenceService
-        service.safe_save(plan: plan)
+      def handle_deserialization
+        service = v2_api? ? Api::V2::Deserialization::Plan : Api::V1::Deserialization::Plan
+        service.deserialize(json: @dmp)
       end
 
       def handle_owner(plan:, json:)
         v2_api? ? determine_v2_owner(plan: plan, json: json) : determine_owner(plan: plan)
-      end
-
-      def handle_plan_org(plan:, owner:)
-        if v2_api?
-          plan.org_id = owner&.org&.present? ? owner.org_id : @caller&.org_id
-          if plan.org_id.blank?
-            matches = find_matching_orgs(
-              plan: plan, json: @dmp.fetch(:contact, {}).fetch(:affiliation, {})
-            )
-            no_org_err = format(no_org_err, list_of_names: matches.map { |m| "'#{m}'" }.join(', '))
-            { errors: no_org_err, status: :bad_request }
-          end
-        else
-          plan.org = owner.org if owner.present? && plan.org.blank?
-          { errors: NO_ORG_ERR, status: :bad_request } unless plan.org.present?
-        end
       end
 
       # Get the Plan's owner
@@ -152,32 +110,6 @@ module Api
         user = User.from_identifiers(array: identifiers) if identifiers.any?
         user = User.find_by(email: contributor.email) unless user.present?
         user
-      end
-
-      # rubocop:disable Metrics/AbcSize
-      def invite_contributor(contributor:)
-        return nil unless contributor.present?
-
-        # If the user was not found, invite them and attach any know identifiers
-        names = contributor.name&.split || ['']
-        firstname = names.length > 1 ? names.first : nil
-        surname = names.length > 1 ? names.last : names.first
-        user = User.invite!({ email: contributor.email,
-                              firstname: firstname,
-                              surname: surname,
-                              org: contributor.org }, @caller)
-
-        contributor.identifiers.each do |id|
-          user.identifiers << Identifier.new(
-            identifier_scheme: id.identifier_scheme, value: id.value
-          )
-        end
-        user
-      end
-      # rubocop:enable Metrics/AbcSize
-
-      def v2_api?
-        @api_version == :v2
       end
 
       # Get the Plan's owner
@@ -213,6 +145,20 @@ module Api
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
+      def handle_plan_org(plan:, owner:)
+        set_plan_org(plan: plan, owner: owner)
+
+        if v2_api? && plan.org_id.blank?
+          matches = find_matching_orgs(
+            plan: plan, json: @dmp.fetch(:contact, {}).fetch(:affiliation, {})
+          )
+          no_org_err = format(no_org_err, list_of_names: matches.map { |m| "'#{m}'" }.join(', '))
+          { errors: no_org_err, status: :bad_request }
+        else
+          { errors: NO_ORG_ERR, status: :bad_request } unless plan.org.present?
+        end
+      end
+
       # If the contact's org could not be determined, then fetch the matches to return to the
       # caller
       def find_matching_orgs(plan:, json:)
@@ -222,6 +168,72 @@ module Api
         matches = Org.where(managed: true).search(name)
         matches.any? ? matches.map(&:name) : []
       end
+
+      def set_plan_org(plan:, owner:) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+        if v2_api?
+          plan.org_id = owner&.org&.present? ? owner.org_id : @caller&.org_id
+        elsif owner.present? && plan.org.blank?
+          plan.org = owner.org
+        end
+      end
+
+      def handle_contextualized_errors(plan)
+        return Api::V2::ContextualErrorService.contextualize_errors(plan: plan) if v2_api?
+
+        Api::V1::ContextualErrorService.process_plan_errors(plan: plan)
+      end
+
+      def handle_safe_save(plan)
+        service = v2_api? ? Api::V2::PersistenceService : Api::V1::PersistenceService
+        service.safe_save(plan: plan)
+      end
+
+      # Attach the owner to the plan and send notification if v2
+      def attach_and_notify_owner(plan:, owner:)
+        owner = invite_owner(owner)
+
+        plan.add_user!(owner.id, :creator)
+        return unless v2_api?
+
+        role = Role.creator.find_by(user_id: owner.id, active: true)
+        UserMailer.sharing_notification(role, owner, inviter: @caller).deliver_now if role && owner.persisted?
+      end
+
+      def invite_owner(owner)
+        if v2_api?
+          if owner.new_record?
+            owner = User.invite!({ email: owner.email,
+                                   firstname: owner.firstname,
+                                   surname: owner.surname,
+                                   org: owner.org }, @caller)
+          end
+        elsif owner.is_a?(Contributor)
+          owner = invite_contributor(contributor: owner)
+        end
+        owner
+      end
+
+      # rubocop:disable Metrics/AbcSize
+      def invite_contributor(contributor:)
+        return nil unless contributor.present?
+
+        # If the user was not found, invite them and attach any know identifiers
+        names = contributor.name&.split || ['']
+        firstname = names.length > 1 ? names.first : nil
+        surname = names.length > 1 ? names.last : names.first
+        user = User.invite!({ email: contributor.email,
+                              firstname: firstname,
+                              surname: surname,
+                              org: contributor.org }, @caller)
+
+        contributor.identifiers.each do |id|
+          user.identifiers << Identifier.new(
+            identifier_scheme: id.identifier_scheme, value: id.value
+          )
+        end
+        user
+      end
+      # rubocop:enable Metrics/AbcSize
     end
   end
 end

@@ -272,7 +272,7 @@ class Plan < ApplicationRecord
   # rubocop:enable Metrics/AbcSize
 
   # Eager loads all associations needed for API v2 serialization,
-  def self.with_api_v2_associations
+  def self.with_api_v2_associations # rubocop:disable Metrics/MethodLength
     Plan.includes(
       :research_outputs,
       :template,
