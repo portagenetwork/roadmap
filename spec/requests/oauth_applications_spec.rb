@@ -17,10 +17,10 @@ RSpec.describe 'OauthApplications', type: :request do
     sign_in_with_manage_oauth_apps(authorized_user)
   end
 
-  shared_examples 'denies access without manage_oauth_apps permission' do
+  shared_examples 'denies access without manage_oauth_apps permission' do |http_method = :get|
     before do
       sign_in(unauthorized_user)
-      get request_path
+      public_send(http_method, request_path)
     end
 
     it 'redirects to root with an authorization alert' do
@@ -252,6 +252,39 @@ RSpec.describe 'OauthApplications', type: :request do
       end
 
       include_examples 'owner-only oauth application destroy'
+    end
+  end
+
+  describe 'POST /oauth/applications/:id/regenerate_secret' do
+    let!(:user) { create(:user) }
+    let!(:application) { create(:oauth_application, user_id: user.id, name: 'OAuth App') }
+
+    before do
+      sign_in_with_manage_oauth_apps(user)
+    end
+
+    it 'regenerates the secret and redirects with a flash message' do
+      old_secret = application.secret
+      post regenerate_oauth_secret_path(application)
+      expect(response).to redirect_to(oauth_application_path(application))
+      follow_redirect!
+      expect(response.body).to include('Application secret has been regenerated')
+      application.reload
+      expect(application.secret).not_to eq(old_secret)
+    end
+
+    context 'when user is not authorized' do
+      let(:request_path) { regenerate_oauth_secret_path(application) }
+      include_examples 'denies access without manage_oauth_apps permission', :post
+    end
+
+    it 'does not allow a user with manage_oauth_apps to regenerate secret for an app they do not own' do
+      other_user = create(:user)
+      sign_in_with_manage_oauth_apps(other_user)
+      post regenerate_oauth_secret_path(application)
+      expect(response).to redirect_to(root_path)
+      follow_redirect!
+      expect(flash[:alert]).to eq('You are not authorized to perform this action.')
     end
   end
 end

@@ -12,7 +12,7 @@ RSpec.describe OauthApplicationsController, type: :controller do
   end
 
   describe '#application_params' do
-    it 'merges user_id and default scopes into the parent params' do
+    it 'merges user_id into the parent params' do
       Doorkeeper::ApplicationsController.any_instance
                                         # Ensure parent controller has application_params implemented
                                         .expects(:application_params)
