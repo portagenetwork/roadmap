@@ -379,5 +379,98 @@ RSpec.describe Api::V2::PlansController do
         end
       end
     end
+
+    describe 'PUT /api/v2/plans/:id - update' do
+      before(:each) do
+        # Setup a template with questions and a plan for the user
+        @template = create(:template, :publicly_visible, published: true)
+        @question1 = create(:question, section: create(:section, template: @template))
+        @question2 = create(:question, section: create(:section, template: @template))
+
+        @plan = create(:plan, template: @template)
+        @plan.add_user!(@user.id, :creator)
+      end
+
+      context 'validating question ownership' do
+        it 'returns a 400 if a question does not belong to the plan template' do
+          other_question = create(:question) # Belongs to a different template
+          payload = {
+            answers: [{ question_id: other_question.id, text: 'This should fail' }]
+          }
+
+          put api_v2_plan_path(@plan), params: payload.to_json, headers: @headers
+
+          expect(response.code).to eql('400')
+          json = JSON.parse(response.body).with_indifferent_access
+          expect(json[:errors].first).to include("do not belong to this plan's template")
+        end
+      end
+
+      context 'updating answers' do
+        it 'creates a new answer if one does not exist' do
+          payload = {
+            answers: [{ question_id: @question1.id, text: 'New answer text' }]
+          }
+
+          expect do
+            put api_v2_plan_path(@plan), params: payload.to_json, headers: @headers
+          end.to change(Answer, :count).by(1)
+
+          expect(response.code).to eql('200')
+          expect(@plan.answers.find_by(question_id: @question1.id).text).to eq('New answer text')
+        end
+
+        it 'updates an existing answer if it already exists' do
+          existing_answer = create(:answer, plan: @plan, question: @question1, user: @user, text: 'Old text')
+
+          payload = {
+            answers: [{ question_id: @question1.id, text: 'Updated text' }]
+          }
+
+          expect do
+            put api_v2_plan_path(@plan), params: payload.to_json, headers: @headers
+          end.not_to change(Answer, :count)
+
+          expect(response.code).to eql('200')
+          expect(existing_answer.reload.text).to eq('Updated text')
+        end
+
+        it 'can update multiple answers at once (existing and new)' do
+          # One existing, one new
+          create(:answer, plan: @plan, question: @question1, user: @user, text: 'Old text')
+
+          payload = {
+            answers: [
+              { question_id: @question1.id, text: 'Updated text' },
+              { question_id: @question2.id, text: 'Brand new answer' }
+            ]
+          }
+
+          expect do
+            put api_v2_plan_path(@plan), params: payload.to_json, headers: @headers
+          end.to change(Answer, :count).by(1)
+
+          expect(response.code).to eql('200')
+          expect(@plan.answers.find_by(question_id: @question2.id).text).to eq('Brand new answer')
+        end
+      end
+
+      context 'detects an invalid request' do
+        it 'returns a 400 if the answers payload is missing or not an array' do
+          payload = { answers: 'not an array' }
+          put api_v2_plan_path(@plan), params: payload.to_json, headers: @headers
+
+          expect(response.code).to eql('400')
+          expect(JSON.parse(response.body)['errors']).to include('Missing answers payload')
+        end
+
+        it 'returns a 404 if the plan belongs to a different user' do
+          other_plan = create(:plan) # No role for @user
+          put api_v2_plan_path(other_plan), params: { answers: [] }.to_json, headers: @headers
+
+          expect(response.code).to eql('404')
+        end
+      end
+    end
   end
 end
