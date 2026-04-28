@@ -384,8 +384,8 @@ RSpec.describe Api::V2::PlansController do
       before(:each) do
         # Setup a template with questions and a plan for the user
         @template = create(:template, :publicly_visible, published: true)
-        @question1 = create(:question, section: create(:section, template: @template))
-        @question2 = create(:question, section: create(:section, template: @template))
+        @question1 = create(:question, :textarea, section: create(:section, template: @template))
+        @question2 = create(:question, :textarea, section: create(:section, template: @template))
 
         @plan = create(:plan, template: @template)
         @plan.add_user!(@user.id, :creator)
@@ -393,7 +393,7 @@ RSpec.describe Api::V2::PlansController do
 
       context 'validating question ownership' do
         it 'returns a 400 if a question does not belong to the plan template' do
-          other_question = create(:question) # Belongs to a different template
+          other_question = create(:question, :textarea) # Belongs to a different template
           payload = {
             answers: [{ question_id: other_question.id, text: 'This should fail' }]
           }
@@ -469,6 +469,25 @@ RSpec.describe Api::V2::PlansController do
           put api_v2_plan_path(other_plan), params: { answers: [] }.to_json, headers: @headers
 
           expect(response.code).to eql('404')
+        end
+
+        it 'returns a 400 if the question format is not a text field' do
+          # Do not specify textarea or textfield
+          @bad_question = create(:question, section: create(:section, template: @template))
+          create(:answer, plan: @plan, question: @bad_question, user: @user, text: 'Old text')
+
+          payload = {
+            answers: [
+              { question_id: @bad_question.id, text: 'Updated text' }
+            ]
+          }
+
+          put api_v2_plan_path(@plan), params: payload.to_json, headers: @headers
+          expect(response.code).to eql('400')
+          expect(JSON.parse(response.body)['errors']).to include(
+            'Only plain text answers are currently allowed. ' \
+            "Question(s) #{@bad_question.id} do not support that format."
+          )
         end
       end
     end
