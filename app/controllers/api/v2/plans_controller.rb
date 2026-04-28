@@ -84,13 +84,25 @@ module Api
       end
 
       def validate_questions(plan, question_ids)
-        # DB query to see which of the payload_ids belong to this plan's template
-        valid_ids = plan.template.questions.where(id: question_ids).pluck(:id)
+        # First check if questions belong to this plan's template
+        questions = plan.template.questions.where(id: question_ids)
+        missing_ids = question_ids - questions.pluck(:id)
 
-        invalid_ids = question_ids - valid_ids
-        return nil if invalid_ids.empty?
+        return _("Question(s) #{missing_ids.join(', ')} do not belong to this plan's template.") if missing_ids.any?
 
-        _("Question(s) #{invalid_ids.join(', ')} do not belong to this plan's template")
+        # Now check if those (valid) questions have the correct format
+        allowed_titles = ['Text area', 'Text field']
+        allowed_format_ids = QuestionFormat.where(title: allowed_titles).pluck(:id)
+
+        invalid_format_question_ids = questions.where.not(question_format_id: allowed_format_ids).pluck(:id)
+
+        if invalid_format_question_ids.any?
+          return _('Only plain text answers are currently allowed. Question(s) ' \
+                   "#{invalid_format_question_ids.join(', ')} do not support that format.")
+        end
+
+        # Everything is valid
+        nil
       end
 
       def extract_answers_payload(json)
