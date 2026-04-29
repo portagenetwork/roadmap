@@ -34,7 +34,7 @@ module Api
             json = json.with_indifferent_access
 
             # Try to find the Contributor or initialize a new one
-            id_json = json.fetch(:contributor_id, json.fetch(:contact_id, {}))
+            id_json = json[:contributor_id]
             contrib = find_or_initialize(id_json: id_json, json: json)
             return nil if contrib.blank?
 

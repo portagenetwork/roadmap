@@ -32,8 +32,7 @@ module Api
         plan = @deserialize_plan_service.deserialize(json: @dmp)
         return { errors: [INVALID_JSON_ERR], status: :bad_request } unless plan.present?
 
-        # Try to determine the Plan's owner
-        owner = handle_owner(plan: plan, json: @dmp.fetch(:contact, {}))
+        owner = determine_owner(plan: plan)
 
         # Try to determine the Plan's org
         errs = handle_plan_org(plan: plan, owner: owner)
@@ -82,12 +81,10 @@ module Api
         @contextual_error_service  = api_module::ContextualErrorService
       end
 
-      def handle_owner(plan:, json:)
-        v2_api? ? determine_v2_owner(plan: plan, json: json) : determine_owner(plan: plan)
-      end
-
       # Get the Plan's owner
       def determine_owner(plan:)
+        return @caller if v2_api?
+
         contact = plan.contributors.find(&:data_curation?)
         # Use the contact if it was sent in and has an affiliation defined
         return contact if contact.present? && contact.org.present?
@@ -111,51 +108,12 @@ module Api
         user
       end
 
-      # Get the Plan's owner
-      # rubocop:disable Metrics/AbcSize
-      # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-      def determine_v2_owner(plan:, json:)
-        return nil unless plan.present? && json.is_a?(Hash) && json[:mbox].present?
-
-        user = User.find_by(email: json[:mbox])
-        return user if user.present?
-
-        id_json = json.fetch(:contact_id, {})
-        orcid = id_json[:identifier] if id_json[:type]&.downcase == 'orcid'
-        identifier = Identifier.by_scheme_name('orcid', 'User').where(value: orcid) if orcid.present?
-        return identifier.identifiable if identifier.present?
-
-        names = json[:name]&.split || ['']
-        firstname = names.length > 1 ? names.first : nil
-        surname = names.length > 1 ? names.last : names.first
-
-        # Try to deserialize the Org.
-        org = Api::V2::Deserialization::Org.deserialize(json: json[:affiliation])
-        org.save if org&.new_record?
-
-        user = User.new(firstname: firstname, surname: surname, email: json[:mbox], org: org,
-                        password: SecureRandom.uuid)
-        return user if orcid.blank?
-
-        scheme = IdentifierScheme.find_by(name: 'orcid')
-        user.identifiers << Identifier.new(identifier_scheme: scheme, value: orcid)
-        user
-      end
-      # rubocop:enable Metrics/AbcSize
-      # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-
       def handle_plan_org(plan:, owner:)
         set_plan_org(plan: plan, owner: owner)
+        # For v2, org is always @caller.org; for v1, check as before
+        return if v2_api?
 
-        if v2_api? && plan.org_id.blank?
-          matches = find_matching_orgs(
-            plan: plan, json: @dmp.fetch(:contact, {}).fetch(:affiliation, {})
-          )
-          no_org_err = format(no_org_err, list_of_names: matches.map { |m| "'#{m}'" }.join(', '))
-          { errors: no_org_err, status: :bad_request }
-        else
-          { errors: NO_ORG_ERR, status: :bad_request } unless plan.org.present?
-        end
+        { errors: NO_ORG_ERR, status: :bad_request } unless plan.org.present?
       end
 
       # If the contact's org could not be determined, then fetch the matches to return to the
@@ -168,9 +126,10 @@ module Api
         matches.any? ? matches.map(&:name) : []
       end
 
-      def set_plan_org(plan:, owner:) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      def set_plan_org(plan:, owner:)
         if v2_api?
-          plan.org_id = owner&.org&.present? ? owner.org_id : @caller&.org_id
+          # For v2, owner is always @caller, so use @caller.org_id
+          plan.org_id = @caller&.org_id
         elsif owner.present? && plan.org.blank?
           plan.org = owner.org
         end
@@ -184,27 +143,9 @@ module Api
 
       # Attach the owner to the plan and send notification if v2
       def attach_and_notify_owner(plan:, owner:)
-        owner = invite_owner(owner)
-
+        # For v2, @caller is always the owner and already a User
+        owner = invite_contributor(contributor: owner) if !v2_api? && owner.is_a?(Contributor)
         plan.add_user!(owner.id, :creator)
-        return unless v2_api?
-
-        role = Role.creator.find_by(user_id: owner.id, active: true)
-        UserMailer.sharing_notification(role, owner, inviter: @caller).deliver_now if role && owner.persisted?
-      end
-
-      def invite_owner(owner)
-        if v2_api?
-          if owner.new_record?
-            owner = User.invite!({ email: owner.email,
-                                   firstname: owner.firstname,
-                                   surname: owner.surname,
-                                   org: owner.org }, @caller)
-          end
-        elsif owner.is_a?(Contributor)
-          owner = invite_contributor(contributor: owner)
-        end
-        owner
       end
 
       # rubocop:disable Metrics/AbcSize
