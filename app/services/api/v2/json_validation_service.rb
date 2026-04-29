@@ -13,8 +13,7 @@ module Api
       BAD_HOST_MSG = _(':host must include either a :url or :dmproadmap_host_id').freeze
       class << self
         def plan_valid?(json:)
-          json.present? && json[:title].present? && json[:contact].present? &&
-            json[:contact][:mbox].present?
+          json.present? && json[:title].present?
         end
 
         def identifier_valid?(json:)
@@ -64,9 +63,6 @@ module Api
           errs << BAD_PLAN_MSG unless plan_valid?(json: json)
           errs << BAD_ID_MSG if json[:dmp_id].present? && !identifier_valid?(json: json[:dmp_id])
 
-          # Handle Contact
-          errs << contributor_validation_errors(json: json[:contact])
-
           # Handle Contributors
           errs << json.fetch(:contributor, []).map do |contributor|
             contributor_validation_errors(json: contributor)
@@ -91,10 +87,9 @@ module Api
         def contributor_validation_errors(json:)
           errs = []
           if json.present?
-            errs << BAD_CONTRIB_MSG unless contributor_valid?(json: json,
-                                                              is_contact: true)
+            errs << BAD_CONTRIB_MSG unless contributor_valid?(json: json)
             errs << org_validation_errors(json: json[:affiliation]) if json[:affiliation].present?
-            id = json.fetch(:contributor_id, json[:contact_id])
+            id = json[:contributor_id]
             errs << BAD_ID_MSG if id.present? && !identifier_valid?(json: id)
           end
           errs
