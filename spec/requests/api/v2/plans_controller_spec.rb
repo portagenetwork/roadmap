@@ -296,13 +296,10 @@ RSpec.describe Api::V2::PlansController do
             expect(contributor[:name]).to eql(orig_contrib.first[:name])
             expect(contributor[:mbox]).to eql(orig_contrib.first[:mbox])
 
-            if contrib.email == created[:contact][:mbox]
-              expect(contributor[:affiliation].present?).to be(true)
-              expect(contributor[:affiliation][:name]).to eql(contrib.org.name)
-            else
-              # Unknown Orgs should not be created!
-              expect(contributor[:affiliation].present?).to be(false)
-            end
+            # If the request body affiliation was an existing org,
+            # make sure that affiliation is included in the response body.
+            org = Org.find_by(name: orig_contrib.first.dig(:affiliation, :name))
+            expect(contributor[:affiliation].present?).to eq(org.present?)
 
             expect(contributor[:name]).to eql(contrib.name)
             expect(contributor[:mbox]).to eql(contrib.email)
