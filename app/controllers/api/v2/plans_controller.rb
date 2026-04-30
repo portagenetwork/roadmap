@@ -65,7 +65,8 @@ module Api
         save_answers!(plan: plan, answers_payload: answers_payload, payload_q_ids: payload_q_ids)
 
         # Successful response
-        @items = paginate_response(results: Plan.where(id: plan.id))
+        @complete = true # enables response body to include updated answers
+        @items = paginate_response(results: plans_scope.where(id: plan.id))
         render '/api/v2/plans/index', status: :ok
       rescue ActiveRecord::RecordInvalid => e
         render_error(errors: e.record.errors.full_messages, status: :bad_request)
