@@ -330,6 +330,10 @@ RSpec.describe Api::V2::PlansController do
           expect(funding[:grant_id][:identifier]).to eql(orig_funding[:grant_id][:identifier])
           opp_id = funding[:dmproadmap_funding_opportunity_id][:identifier]
           expect(opp_id).to eql(orig_funding[:dmproadmap_funding_opportunity_id][:identifier])
+
+          # Template verification
+          expected_template = Api::V2::Deserialization::Plan.send(:find_template, json: original)
+          expect(dmp.template).to eql(expected_template)
         end
 
         # Skipping this test because plan.owner is now always the User that made the POST request
