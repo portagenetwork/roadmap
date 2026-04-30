@@ -94,7 +94,7 @@ RSpec.describe Api::V2::Deserialization::Plan do
         }
       ],
       dmp_id: { type: 'doi', identifier: @identifier.value },
-      dmproadmap_template: { id: @template.family_id }
+      dmproadmap_template: { id: @template.id }
     }
 
     # We need to ensure that the deserializer on Funding is called, but

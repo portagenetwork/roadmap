@@ -68,6 +68,9 @@ module Mocks
     # rubocop:disable Metrics/AbcSize
     def complete_create_json(client: nil)
       template = create(:template, :published, :publicly_visible)
+      # Create a newer version of the template with the same family_id
+      create(:template, :published, :publicly_visible, family_id: template.family_id,
+                                                       version: template.version + 1)
       lang = Language.all.pluck(:abbreviation).sample || 'en-UK'
       ror_scheme = IdentifierScheme.find_or_create_by(name: 'ror')
       fundref_scheme = IdentifierScheme.find_or_create_by(name: 'fundref')
@@ -205,7 +208,8 @@ module Mocks
               ]
             }]
           }],
-          dmproadmap_template: { id: template.family_id, title: template.title }
+          # Pass the original template's id, but expect the latest published version to be used
+          dmproadmap_template: { id: template.id, title: template.title }
         }
       }.to_json
     end

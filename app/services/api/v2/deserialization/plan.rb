@@ -162,13 +162,20 @@ module Api
             plan
           end
 
-          # Lookup the Template
+          # If a user passed a valid template id, return the most recent published template with the same family id.
+          # Otherwise, return the default template.
           def find_template(json: {})
             default = ::Template.find_by(is_default: true)
             return default unless json.present? && json.fetch(:dmproadmap_template, {})[:id].present?
 
-            template = ::Template.published(json.fetch(:dmproadmap_template, {})[:id].to_i).last
-            (template.presence || default)
+            template_id = json.fetch(:dmproadmap_template, {})[:id].to_i
+            template = ::Template.find_by(id: template_id)
+            if template.present?
+              published_template = ::Template.published(template.family_id).last
+              return published_template.presence || default
+            end
+
+            default
           end
         end
       end
