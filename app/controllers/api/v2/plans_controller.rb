@@ -34,7 +34,7 @@ module Api
 
         if result[:plan].present?
           # Kaminari Pagination requires an ActiveRecord result set :/
-          @items = paginate_response(results: Plan.with_api_v2_associations.where(id: result[:plan].id))
+          @items = paginate_response(results: plans_scope.where(id: result[:plan].id))
           render '/api/v2/plans/index', status: :created
         else
           render_error(errors: result[:errors], status: result[:status])
