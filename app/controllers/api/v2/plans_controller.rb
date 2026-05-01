@@ -56,7 +56,7 @@ module Api
         answers_payload = extract_answers_payload(@json)
         return render_error(errors: [_('Missing answers payload')], status: :bad_request) if answers_payload.nil?
 
-        payload_q_ids = answers_payload.map { |ans| ans[:question_id].to_i }.uniq
+        payload_q_ids = answers_payload.map { |ans| ans[:question_id].to_i }
 
         # Check if there are any invalid questions first (Business logic validation)
         invalid_ids_msg = validate_questions(plan, payload_q_ids)
@@ -84,8 +84,11 @@ module Api
         @complete ? scope.includes(answers: { question: :section }) : scope
       end
 
-      def validate_questions(plan, question_ids)
-        # First check if questions belong to this plan's template
+      def validate_questions(plan, question_ids) # rubocop:disable Metrics/AbcSize
+        # First check if there are any duplicate question IDs from the payload
+        return _('Duplicate question ids found in payload') if question_ids.length != question_ids.uniq.length
+
+        # Now check if questions belong to this plan's template
         questions = plan.template.questions.where(id: question_ids)
         missing_ids = question_ids - questions.pluck(:id)
 

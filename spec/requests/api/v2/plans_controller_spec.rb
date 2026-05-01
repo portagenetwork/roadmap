@@ -494,6 +494,21 @@ RSpec.describe Api::V2::PlansController do
             "Question(s) #{@bad_question.id} do not support that format."
           )
         end
+
+        it 'returns a 400 if the payload has duplicate question IDs' do
+          create(:answer, plan: @plan, question: @question1, user: @user, text: 'Old text')
+
+          payload = {
+            answers: [
+              { question_id: @question1.id, text: 'Updated text' },
+              { question_id: @question1.id, text: 'Second updated text' }
+            ]
+          }
+
+          put api_v2_plan_path(@plan), params: payload.to_json, headers: @headers
+          expect(response.code).to eql('400')
+          expect(JSON.parse(response.body)['errors']).to include('Duplicate question ids found in payload')
+        end
       end
     end
   end
