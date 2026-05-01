@@ -13,9 +13,10 @@ RSpec.describe Api::V2::JsonValidationService do
       expect(described_class.plan_valid?(json: json)).to be(false)
     end
 
-    it 'returns `false` when json[:contact][:mbox] is not present' do
+    # DMP Assistant uses `@caller` instead of json[:contact]
+    it 'returns `true` when json[:contact][:mbox] is not present' do
       json = { title: Faker::Lorem.sentence }
-      expect(described_class.plan_valid?(json: json)).to be(false)
+      expect(described_class.plan_valid?(json: json)).to be(true)
     end
 
     it 'returns `true` when json[:title] and json[:contact][:mbox] are present' do
@@ -168,7 +169,7 @@ RSpec.describe Api::V2::JsonValidationService do
       @json = {
         title: Faker::Lorem.sentence,
         contact: { mbox: Faker::Internet.email },
-        contributor: [{ mbox: Faker::Internet.email }],
+        contributor: [{ mbox: Faker::Internet.email, role: Faker::Lorem.word }],
         project: [
           {
             funding: [
@@ -190,7 +191,9 @@ RSpec.describe Api::V2::JsonValidationService do
     end
 
     it 'calls the contributor_validation_errors' do
-      described_class.expects(:contributor_validation_errors).at_least(2)
+      # TODO: This should be `.at_least(2)` if validation_errors starts
+      # validating `json[:contact]` via contributor_validation_errors again.
+      described_class.expects(:contributor_validation_errors).at_least_once
       described_class.validation_errors(json: @json)
     end
 
@@ -260,12 +263,14 @@ RSpec.describe Api::V2::JsonValidationService do
       expect(results.include?(described_class::BAD_CONTRIB_MSG)).to be(true)
     end
 
-    it 'returns the BAD_ID_MSG if the contact_id is not valid' do
+    it 'does not validate contact_id in contributor_validation_errors' do
+      # json[:contact] is no longer validated via contributor_validation_errors;
+      # caller identity now comes from @caller, so only contributor_id is checked here.
       @json.delete(:contributor_id)
       @json[:contact_id] = { type: 'URL', identifier: Faker::Internet.url }
       described_class.stubs(:identifier_valid?).returns(false)
       results = described_class.contributor_validation_errors(json: @json)
-      expect(results.include?(described_class::BAD_ID_MSG)).to be(true)
+      expect(results.include?(described_class::BAD_ID_MSG)).to be(false)
     end
 
     it 'returns the BAD_ID_MSG if the contributor_id is not valid' do

@@ -223,7 +223,7 @@ RSpec.describe Api::V2::PlansController do
         end
 
         it 'returns contextualized errors' do
-          @json[:dmp][:contact] = {}
+          @json[:dmp][:title] = {}
           post(api_v2_plans_path, params: @json.to_json, headers: @headers)
 
           expect(response.code).to eql('400')
@@ -278,9 +278,9 @@ RSpec.describe Api::V2::PlansController do
           expect(created[:dmp_id][:identifier].end_with?(api_v2_plan_path(dmp))).to be(true)
 
           # Contact verification
-          expect(created[:contact][:mbox]).to eql(original[:contact][:mbox])
-          expect(created[:contact][:name]).to eql(original[:contact][:name])
-          expect(created[:contact][:affiliation][:name]).to eql(original[:contact][:affiliation][:name])
+          expect(created[:contact][:mbox]).to eql(@user.email)
+          expect(created[:contact][:name]).to eql(@user.name(false))
+          expect(created[:contact][:affiliation][:name]).to eql(@user.org.name)
           expect(created[:contact][:mbox]).to eql(dmp.owner.email)
           expect(created[:contact][:name]).to eql(dmp.owner.name(false))
           expect(created[:contact][:affiliation][:name]).to eql(dmp.owner.org.name)
@@ -335,7 +335,9 @@ RSpec.describe Api::V2::PlansController do
           expect(opp_id).to eql(orig_funding[:dmproadmap_funding_opportunity_id][:identifier])
         end
 
-        it 'sends both a `invite` and a `sharing_notification` email if the :contact is not already a User' do
+        # Skipping this test because plan.owner is now always the User that made the POST request
+        # Re-enable this test when plan.owner is again derived from dmp[:contact]
+        xit 'sends both a `invite` and a `sharing_notification` email if the :contact is not already a User' do
           ActionMailer::Base.deliveries = []
           post(api_v2_plans_path, params: @json.to_json, headers: @headers)
 
@@ -355,7 +357,9 @@ RSpec.describe Api::V2::PlansController do
           expect(owner.plans.length).to be(1)
         end
 
-        it 'sends an email notification of the new plan if the :contact is already a User' do
+        # Skipping this test because plan.owner is now always the User that made the POST request
+        # Re-enable this test when plan.owner is again derived from dmp[:contact]
+        xit 'sends an email notification of the new plan if the :contact is already a User' do
           contact = @json[:dmp][:contact]
           name_parts = contact[:name].split
           create(:user, firstname: name_parts.first, surname: name_parts.last, email: contact[:mbox])
