@@ -45,7 +45,7 @@ module Api
       def update # rubocop:disable Metrics/AbcSize
         plan = Plan.joins(:roles)
                    .where(roles: { user_id: @resource_owner.id, active: true })
-                   .distinct
+                   .preload(:roles)
                    .find_by(id: params[:id])
 
         return render_error(errors: [_('Plan not found')], status: :not_found) unless plan
