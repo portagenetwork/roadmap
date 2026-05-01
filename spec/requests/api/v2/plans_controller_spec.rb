@@ -155,8 +155,28 @@ RSpec.describe Api::V2::PlansController do
           post api_v2_plans_path, params: Faker::Lorem.word.to_json, headers: @headers
           expect(response.code).to eql('400')
           expect(response).to render_template('api/v2/error')
-          expect(JSON.parse(response.body)['errors']).to include('Invalid JSON')
+
+          json = JSON.parse(response.body).with_indifferent_access
+          expect(json[:errors]).to eql('Invalid JSON format')
+          expect(json[:details]).to be_nil
         end
+
+        it 'returns a 400 if the incoming JSON contains unescaped quotes' do
+          malformed_json = '{"dmp": {"title": "hel"lo"}}'
+
+          post api_v2_plans_path, params: malformed_json, headers: @headers
+
+          expect(response.code).to eql('400')
+          expect(response).to render_template('api/v2/error')
+
+          json = JSON.parse(response.body).with_indifferent_access
+          expect(json[:errors]).to eql('Invalid JSON format')
+          expect(json.dig(:details, :error_code)).to eql('invalid_json')
+          expect(json.dig(:details, :hint)).to eql(
+            'Check for malformed JSON (for example, unescaped quotes inside string values).'
+          )
+        end
+
         it 'returns a 201 if the incoming JSON is valid' do
           post api_v2_plans_path, params: @json.to_json, headers: @headers
           expect(response.code).to eql('201')

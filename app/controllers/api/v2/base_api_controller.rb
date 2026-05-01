@@ -40,8 +40,8 @@ module Api
 
       protected
 
-      def render_error(errors:, status:)
-        @payload = { errors: errors }
+      def render_error(errors:, status:, details: nil)
+        @payload = { errors: errors, details: details }
         render '/api/v2/error', status: status
       end
 
@@ -70,6 +70,8 @@ module Api
       def handle_exception(exception)
         if exception.is_a?(Pundit::NotAuthorizedError)
           handle_client_not_authorized
+        elsif exception.is_a?(ActionDispatch::Http::Parameters::ParseError) || exception.is_a?(JSON::ParserError)
+          handle_json_parse_error(exception)
         else
           handle_internal_server_error(exception)
         end
@@ -89,6 +91,19 @@ module Api
         message = _('The client is not authorized to perform this action.')
         @payload = { message: [message] }
         render '/api/v2/error', status: :forbidden
+      end
+
+      def handle_json_parse_error(exception)
+        Rails.logger.error "Request parsing error: #{exception.message}"
+        details = if exception.message.include?('unexpected token')
+                    {
+                      error_code: 'invalid_json',
+                      hint: _('Check for malformed JSON (for example, unescaped quotes inside string values).')
+                    }
+                  end
+        render_error(errors: _('Invalid JSON format'),
+                     status: :bad_request,
+                     details: details)
       end
 
       # retrieve the requested pagination params or use defaults
@@ -111,15 +126,13 @@ module Api
       end
 
       # Parse the body of the incoming request
-      def parse_request # rubocop:disable Metrics/AbcSize
+      def parse_request
         @json = JSON.parse(request.body.read)
         raise JSON::ParserError unless @json.is_a?(Hash) && @json.present?
 
         @json = @json.with_indifferent_access
       rescue JSON::ParserError => e
-        Rails.logger.error "JSON Parser: #{e.message}"
-        Rails.logger.error request.body
-        render_error(errors: _('Invalid JSON format'), status: :bad_request)
+        handle_json_parse_error(e)
       end
     end
   end
