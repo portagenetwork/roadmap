@@ -121,7 +121,7 @@ module Api
           answers_payload.each do |ans|
             question_id = ans[:question_id].to_i
             answer = existing_answers[question_id] || Answer.new(plan_id: plan.id, question_id: question_id)
-            answer.update!(user_id: @resource_owner.id, text: ans[:text])
+            answer.update!(user_id: @resource_owner.id, text: ans[:value])
           end
         end
       end

@@ -400,7 +400,7 @@ RSpec.describe Api::V2::PlansController do
         it 'returns a 400 if a question does not belong to the plan template' do
           other_question = create(:question, :textarea) # Belongs to a different template
           payload = {
-            answers: [{ question_id: other_question.id, text: 'This should fail' }]
+            answers: [{ question_id: other_question.id, value: 'This should fail' }]
           }
 
           put api_v2_plan_path(@plan), params: payload.to_json, headers: @headers
@@ -414,7 +414,7 @@ RSpec.describe Api::V2::PlansController do
       context 'updating answers' do
         it 'creates a new answer if one does not exist' do
           payload = {
-            answers: [{ question_id: @question1.id, text: 'New answer text' }]
+            answers: [{ question_id: @question1.id, value: 'New answer text' }]
           }
 
           expect do
@@ -429,7 +429,7 @@ RSpec.describe Api::V2::PlansController do
           existing_answer = create(:answer, plan: @plan, question: @question1, user: @user, text: 'Old text')
 
           payload = {
-            answers: [{ question_id: @question1.id, text: 'Updated text' }]
+            answers: [{ question_id: @question1.id, value: 'Updated text' }]
           }
 
           expect do
@@ -446,8 +446,8 @@ RSpec.describe Api::V2::PlansController do
 
           payload = {
             answers: [
-              { question_id: @question1.id, text: 'Updated text' },
-              { question_id: @question2.id, text: 'Brand new answer' }
+              { question_id: @question1.id, value: 'Updated text' },
+              { question_id: @question2.id, value: 'Brand new answer' }
             ]
           }
 
@@ -483,7 +483,7 @@ RSpec.describe Api::V2::PlansController do
 
           payload = {
             answers: [
-              { question_id: @bad_question.id, text: 'Updated text' }
+              { question_id: @bad_question.id, value: 'Updated text' }
             ]
           }
 
@@ -500,8 +500,8 @@ RSpec.describe Api::V2::PlansController do
 
           payload = {
             answers: [
-              { question_id: @question1.id, text: 'Updated text' },
-              { question_id: @question1.id, text: 'Second updated text' }
+              { question_id: @question1.id, value: 'Updated text' },
+              { question_id: @question1.id, value: 'Second updated text' }
             ]
           }
 
