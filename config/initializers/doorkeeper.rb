@@ -42,10 +42,10 @@ Doorkeeper.configure do
   enforce_configured_scopes
 
   # set the token endpoint configurations
-  access_token_expires_in 2.hours
+  access_token_expires_in 5.minutes
 
-  # enable refresh tokens of duration 90 days
-  use_refresh_token expiry: 90.days
+  # NOTE: Doorkeeper refresh tokens are rotation/revocation based (not a time-based expiry)
+  use_refresh_token
 
   # enable ssl requirement for redirect url
   # - Allow HTTP in test and development environments
