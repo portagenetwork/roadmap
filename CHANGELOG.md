@@ -1,10 +1,12 @@
 # Changelog
 
-## [Unreleased]
+## [4.1.1+portage-4.8.0]
 
 ### Added
 
  - feat(oauth): allow users with `manage_oauth_apps` to manage Doorkeeper OAuth applications [#1320](https://github.com/portagenetwork/roadmap/pull/1320)
+
+ - Improve Plans and Templates V2 API Endpoints [#1331](https://github.com/portagenetwork/roadmap/pull/1331)
 
 ### Fixed
 
