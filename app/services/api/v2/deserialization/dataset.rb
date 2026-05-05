@@ -144,11 +144,17 @@ module Api
           end
           # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
-          # rubocop:disable Metrics/AbcSize
           def attach_licenses(research_output:, json:)
             return research_output unless research_output.present? && json.is_a?(Array)
 
             # Attempt to grab the current license
+            license = find_license(json)
+
+            research_output.license = license if license.present?
+            research_output
+          end
+
+          def find_license(json) # rubocop:disable Metrics/AbcSize
             licenses = json.sort_by do |license|
               date = Api::V2::DeserializationService.safe_date(value: license[:start_date])
               # Sort with dated licenses first (ascending), nil start_date last.
@@ -162,12 +168,8 @@ module Api
 
             # If there are no current licenses then just grab the first one
             license = prior_licenses.any? ? prior_licenses.last : json.first
-            license = License.find_by(uri: license[:license_ref])
-
-            research_output.license = license if license.present?
-            research_output
+            License.find_by(uri: license[:license_ref])
           end
-          # rubocop:enable Metrics/AbcSize
         end
       end
     end
