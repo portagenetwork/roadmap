@@ -15,7 +15,7 @@ module Api
         @plan = plans_scope.find_by(id: params[:id])
 
         plans_policy = PlansPolicy.new(@resource_owner, @plan)
-        raise Pundit::NotAuthorizedError unless plans_policy.show?
+        return render_error(errors: [_('Plan not found')], status: :not_found) unless plans_policy.show?
 
         @items = [@plan]
         @total_items = 1

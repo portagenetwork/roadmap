@@ -140,14 +140,14 @@ RSpec.describe Api::V2::PlansController do
       end
 
       context 'a valid API token is included' do
-        shared_examples 'returns a 403 unauthorized for show' do
+        shared_examples 'returns a 404 Plan not found for show' do
           it do
-            expect(response.code).to eql('403')
+            expect(response.code).to eql('404')
             expect(response).to render_template('api/v2/error')
 
             json = JSON.parse(response.body).with_indifferent_access
             expect(json[:items]).to eq([])
-            expect(json[:message]).to include('The client is not authorized to perform this action.')
+            expect(json[:errors]).to eq(['Plan not found'])
           end
         end
 
@@ -178,13 +178,13 @@ RSpec.describe Api::V2::PlansController do
             get(api_v2_plan_path(other_plan), headers: @headers)
           end
 
-          it_behaves_like 'returns a 403 unauthorized for show'
+          it_behaves_like 'returns a 404 Plan not found for show'
         end
 
         context 'when the plan does not exist' do
           before { get(api_v2_plan_path(id: 0), headers: @headers) }
 
-          it_behaves_like 'returns a 403 unauthorized for show'
+          it_behaves_like 'returns a 404 Plan not found for show'
         end
       end
     end

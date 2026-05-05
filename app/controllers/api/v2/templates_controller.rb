@@ -10,7 +10,7 @@ module Api
       def show
         template = templates_scope.find_by(id: params[:id])
 
-        return render_error(errors: ['Template not found'], status: :not_found) unless template
+        return render_error(errors: [_('Template not found')], status: :not_found) unless template
 
         @items = [template]
         @total_items = 1
