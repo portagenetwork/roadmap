@@ -552,7 +552,11 @@ RSpec.describe Api::V2::PlansController do
           put api_v2_plan_path(@plan), params: payload.to_json, headers: @headers
 
           expect(response.code).to eql('400')
-          expect(JSON.parse(response.body)['errors']).to include('Missing answers payload')
+          expected_error = _('Invalid or missing answers payload. Each answer must be an object with an ' \
+                             'integer question_id and value. Example: ' \
+                             '{"answers":[{"question_id":999,"value":"Updated answer."}]}')
+
+          expect(JSON.parse(response.body)['errors']).to include(expected_error)
         end
 
         it 'returns a 404 if the plan belongs to a different user' do

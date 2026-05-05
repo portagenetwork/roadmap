@@ -54,8 +54,8 @@ module Api
         plans_policy = PlansPolicy.new(@resource_owner, plan)
         raise Pundit::NotAuthorizedError unless plans_policy.update?
 
-        answers_payload = extract_answers_payload(@json)
-        return render_error(errors: [_('Missing answers payload')], status: :bad_request) if answers_payload.nil?
+        answers_payload = validate_answers_payload
+        return if performed? # Halts execution if render_error was called
 
         payload_q_ids = answers_payload.map { |ans| ans[:question_id].to_i }
 
@@ -110,9 +110,30 @@ module Api
         nil
       end
 
+      def validate_answers_payload
+        payload = extract_answers_payload(@json)
+        return payload if payload.present?
+
+        render_error(
+          errors: [
+            _('Invalid or missing answers payload. Each answer must be an object with an integer question_id and ' \
+              'value. Example: {"answers":[{"question_id":999,"value":"Updated answer."}]}')
+          ],
+          status: :bad_request
+        )
+      end
+
       def extract_answers_payload(json)
         payload = json.with_indifferent_access[:answers]
-        payload.is_a?(Array) ? payload : nil
+        return nil unless payload.is_a?(Array)
+
+        is_valid = payload.all? do |ans|
+          ans.is_a?(Hash) && ans.key?(:question_id) &&
+            ans[:question_id].is_a?(Integer) &&
+            ans.key?(:value)
+        end
+
+        is_valid ? payload : nil
       end
 
       def save_answers!(plan:, answers_payload:, payload_q_ids:)
