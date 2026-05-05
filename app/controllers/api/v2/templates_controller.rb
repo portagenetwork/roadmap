@@ -13,6 +13,7 @@ module Api
         return render_error(errors: ['Template not found'], status: :not_found) unless template
 
         @items = [template]
+        @total_items = 1
         render '/api/v2/templates/index', status: :ok
       end
 

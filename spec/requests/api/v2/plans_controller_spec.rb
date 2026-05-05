@@ -159,7 +159,7 @@ RSpec.describe Api::V2::PlansController do
 
           expect(response.code).to eql('200')
           expect(json[:items].length).to eq(1)
-          expect(json[:total_items]).to eq(0)
+          expect(json[:total_items]).to eq(1)
           expect(json[:code]).to eq(200)
           expect(json[:message]).to eq('OK')
           expect(json[:application]).to eq(ApplicationService.application_name)

@@ -18,6 +18,7 @@ module Api
         raise Pundit::NotAuthorizedError unless plans_policy.show?
 
         @items = [@plan]
+        @total_items = 1
         render '/api/v2/plans/index', status: :ok
       end
 
