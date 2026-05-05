@@ -28,6 +28,13 @@ RSpec.describe Api::V2::PlansController do
       JSON.parse(response.body).with_indifferent_access
     end
 
+    def fetch_plan_json_response(plan)
+      get(api_v2_plan_path(plan), headers: @headers)
+      expect(response).to render_template('api/v2/_standard_response')
+      expect(response).to render_template('api/v2/plans/index')
+      JSON.parse(response.body).with_indifferent_access
+    end
+
     def expect_invalid_token_response # rubocop:disable Metrics/AbcSize
       headers = @headers.merge('Authorization' => "Bearer #{SecureRandom.uuid}")
       yield(headers)
@@ -123,6 +130,65 @@ RSpec.describe Api::V2::PlansController do
         end
       end
     end
+
+    describe 'GET /api/v2/plans/:id (show)' do
+      context 'an invalid API token is included' do
+        it 'returns a 401 and the expected Oauth 2.0 headers' do
+          plan = create(:plan)
+          expect_invalid_token_response { |headers| get(api_v2_plan_path(plan), headers: headers) }
+        end
+      end
+
+      context 'a valid API token is included' do
+        shared_examples 'returns a 403 unauthorized for show' do
+          it do
+            expect(response.code).to eql('403')
+            expect(response).to render_template('api/v2/error')
+
+            json = JSON.parse(response.body).with_indifferent_access
+            expect(json[:items]).to eq([])
+            expect(json[:message]).to include('The client is not authorized to perform this action.')
+          end
+        end
+
+        it 'returns a 200 and the requested plan' do
+          plan = create(:plan, org: @user.org)
+          plan.add_user!(@user.id, :creator)
+
+          json = fetch_plan_json_response(plan)
+
+          expect(response.code).to eql('200')
+          expect(json[:items].length).to eq(1)
+          expect(json[:total_items]).to eq(0)
+          expect(json[:code]).to eq(200)
+          expect(json[:message]).to eq('OK')
+          expect(json[:application]).to eq(ApplicationService.application_name)
+          expect(json[:source]).to eq("GET /api/v2/plans/#{plan.id}")
+          expect { Time.iso8601(json[:time]) }.not_to raise_error
+          expect(json[:caller]).to eq(@client.name)
+
+          identifier = json.dig(:items, 0, :dmp, :dmp_id, :identifier)
+          expect(identifier).to be_present
+          expect(URI(identifier).path).to eq(api_v2_plan_path(plan))
+        end
+
+        context 'when the user does not have an active role on the plan' do
+          before do
+            other_plan = create(:plan)
+            get(api_v2_plan_path(other_plan), headers: @headers)
+          end
+
+          it_behaves_like 'returns a 403 unauthorized for show'
+        end
+
+        context 'when the plan does not exist' do
+          before { get(api_v2_plan_path(id: 0), headers: @headers) }
+
+          it_behaves_like 'returns a 403 unauthorized for show'
+        end
+      end
+    end
+
     describe 'POST /api/v2/plans - create' do
       before(:each) do
         stub_ror_service

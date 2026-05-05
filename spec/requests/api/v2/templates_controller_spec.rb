@@ -24,19 +24,28 @@ RSpec.describe Api::V2::TemplatesController do
     JSON.parse(response.body).with_indifferent_access
   end
 
+  def fetch_template_json_response(template)
+    get(api_v2_template_path(template), headers: @headers)
+    expect(response).to render_template('api/v2/_standard_response')
+    expect(response).to render_template('api/v2/templates/index')
+    JSON.parse(response.body).with_indifferent_access
+  end
+
+  def expect_invalid_token_response # rubocop:disable Metrics/AbcSize
+    headers = @headers.merge('Authorization' => "Bearer #{SecureRandom.uuid}")
+    yield(headers)
+
+    expect(response.code).to eql('401')
+    expect(response.body).to be_empty
+    expect(response.headers['WWW-Authenticate']).to match(
+      /Bearer realm="Doorkeeper", error="invalid_token", error_description="The access token is invalid"/
+    )
+  end
+
   describe 'GET /api/v2/templates (index)' do
     context 'an invalid API token is included' do
       it 'returns 401 if the token is invalid' do
-        @headers['Authorization'] = "Bearer #{SecureRandom.uuid}"
-        get(api_v2_templates_path, headers: @headers)
-
-        expect(response.code).to eql('401')
-        expect(response.body).to be_empty
-
-        # Expect Doorkeeper to return the standard OAuth 2.0 WWW-Authenticate header for invalid tokens
-        expect(response.headers['WWW-Authenticate']).to match(
-          /Bearer realm="Doorkeeper", error="invalid_token", error_description="The access token is invalid"/
-        )
+        expect_invalid_token_response { |headers| get(api_v2_templates_path, headers: headers) }
       end
     end
 
@@ -131,6 +140,64 @@ RSpec.describe Api::V2::TemplatesController do
 
         test_paging(json: JSON.parse(response.body), headers: @headers)
         Rails.configuration.x.application.api_max_page_size = original_page_size
+      end
+    end
+  end
+
+  describe 'GET /api/v2/templates/:id (show)' do
+    shared_examples 'returns a 404 Template not found' do
+      it do
+        expect(response.code).to eql('404')
+        expect(response).to render_template('api/v2/error')
+
+        json = JSON.parse(response.body).with_indifferent_access
+        expect(json[:items]).to eq([])
+        expect(json[:errors]).to eq(['Template not found'])
+      end
+    end
+
+    context 'an invalid API token is included' do
+      it 'returns 401 if the token is invalid' do
+        template = create(:template, :publicly_visible, published: true)
+
+        expect_invalid_token_response { |headers| get(api_v2_template_path(template), headers: headers) }
+      end
+    end
+
+    context 'a valid API token is included' do
+      it 'returns a 200 and the requested template' do
+        template = create(:template, :publicly_visible, published: true)
+        phase = create(:phase, template: template)
+        section = create(:section, phase: phase)
+        create(:question, section: section, text: 'How will data be documented?')
+
+        json = fetch_template_json_response(template)
+
+        expect(response.code).to eql('200')
+        expect(json[:items].length).to eq(1)
+        expect(json[:total_items]).to eq(0)
+        expect(json[:code]).to eq(200)
+        expect(json[:message]).to eq('OK')
+        expect(json[:application]).to eq(ApplicationService.application_name)
+        expect(json[:source]).to eq("GET /api/v2/templates/#{template.id}")
+        expect { Time.iso8601(json[:time]) }.not_to raise_error
+        expect(json[:caller]).to eq(@client.name)
+
+        identifier = json.dig(:items, 0, :dmp_template, :template_id, :identifier)
+        expect(identifier).to eq(template.id.to_s)
+      end
+
+      context 'when the template does not exist' do
+        before { get(api_v2_template_path(id: 0), headers: @headers) }
+        it_behaves_like 'returns a 404 Template not found'
+      end
+
+      context 'when the template exists but is not in templates_scope' do
+        before do
+          template = create(:template, :organisationally_visible, published: true)
+          get(api_v2_template_path(template), headers: @headers)
+        end
+        it_behaves_like 'returns a 404 Template not found'
       end
     end
   end
