@@ -277,6 +277,17 @@ RSpec.describe Api::V2::Deserialization::Dataset do
         result = described_class.send(:attach_licenses, research_output: @research_output, json: json)
         expect(result.license).to eql(@license)
       end
+
+      it 'does not raise if a license is missing :start_date' do
+        json = [
+          { license_ref: @license.uri },
+          { license_ref: Faker::Internet.url, start_date: 2.months.ago.to_formatted_s(:iso8601) }
+        ]
+
+        expect do
+          described_class.send(:attach_licenses, research_output: @research_output, json: json)
+        end.not_to raise_error
+      end
     end
   end
 end
