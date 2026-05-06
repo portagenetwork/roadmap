@@ -46,6 +46,15 @@ RSpec.describe Api::V2::PlansController do
       )
     end
 
+    def expect_insufficient_scope_response
+      read_only_client = create(:oauth_application, scopes: 'read')
+      token = mock_authorization_code_token(oauth_application: read_only_client, user: @user).plaintext_token
+      headers = @headers.merge('Authorization' => "Bearer #{token}")
+      yield(headers)
+
+      expect(response.code).to eql('403')
+    end
+
     describe 'GET /api/v2/plans (index)' do
       context 'an invalid API token is included' do
         it 'returns a 401 and the expected Oauth 2.0 headers' do
@@ -203,12 +212,9 @@ RSpec.describe Api::V2::PlansController do
         end
 
         it 'returns 403 if the OAuth app does not have the `write` scope' do
-          read_only_client = create(:oauth_application, scopes: 'read')
-          token = mock_authorization_code_token(oauth_application: read_only_client, user: @user).plaintext_token
-          headers = @headers.merge('Authorization' => "Bearer #{token}")
-          post(api_v2_plans_path, params: @json.to_json, headers: headers)
-
-          expect(response.code).to eql('403')
+          expect_insufficient_scope_response do |headers|
+            post(api_v2_plans_path, params: @json.to_json, headers: headers)
+          end
         end
       end
 
@@ -480,6 +486,19 @@ RSpec.describe Api::V2::PlansController do
 
         @plan = create(:plan, template: @template)
         @plan.add_user!(@user.id, :creator)
+      end
+
+      context 'an invalid API token is included' do
+        it 'returns a 401 and the expected Oauth 2.0 headers' do
+          expect_invalid_token_response { |headers| put(api_v2_plan_path(@plan), headers: headers) }
+        end
+
+        it 'returns 403 if the OAuth app does not have the `write` scope' do
+          payload = { answers: [] }
+          expect_insufficient_scope_response do |headers|
+            put(api_v2_plan_path(@plan), params: payload.to_json, headers: headers)
+          end
+        end
       end
 
       context 'validating question ownership' do
