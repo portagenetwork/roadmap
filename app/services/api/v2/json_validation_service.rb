@@ -4,7 +4,7 @@ module Api
   module V2
     # Service used to validate incoming JSON
     class JsonValidationService
-      BAD_PLAN_MSG = _(":title and the contact's :mbox are both required fields").freeze
+      BAD_PLAN_MSG = _(':title is a required field').freeze
       BAD_ID_MSG = _(':type and :identifier are required for all ids').freeze
       BAD_ORG_MSG = _(':name is required for every :affiliation and :funding').freeze
       BAD_CONTRIB_MSG = _(':role and either the :name or :email are required for each :contributor').freeze
