@@ -9,7 +9,7 @@ RSpec.describe Api::Plans::CreateFromDmpService do
 
   shared_examples 'returns a persisted plan' do
     it 'returns a plan if the incoming JSON is valid' do
-      result = described_class.new(json: @json, client: @client).call
+      result = described_class.new(json: @json, caller: @client).call
 
       expect(result[:status]).to eql(nil)
       expect(result[:plan].present?).to eql(true)
@@ -44,7 +44,7 @@ RSpec.describe Api::Plans::CreateFromDmpService do
         create(:plan)
         @json[:items].first[:dmp][:title] = ''
 
-        result = described_class.new(json: @json, client: @client).call
+        result = described_class.new(json: @json, caller: @client).call
 
         expect(result[:plan]).to eql(nil)
         expect(result[:status]).to eql(:bad_request)
@@ -58,7 +58,7 @@ RSpec.describe Api::Plans::CreateFromDmpService do
           identifier: Rails.application.routes.url_helpers.plan_url(plan)
         }
 
-        result = described_class.new(json: @json, client: @client).call
+        result = described_class.new(json: @json, caller: @client).call
 
         expect(result[:plan]).to eql(nil)
         expect(result[:status]).to eql(:bad_request)
@@ -68,7 +68,7 @@ RSpec.describe Api::Plans::CreateFromDmpService do
       it 'returns a 400 if the owner could not be determined' do
         @json[:items].first[:dmp][:contact].delete(:affiliation)
 
-        result = described_class.new(json: @json, client: @client).call
+        result = described_class.new(json: @json, caller: @client).call
 
         expect(result[:plan]).to eql(nil)
         expect(result[:status]).to eql(:bad_request)
@@ -79,7 +79,7 @@ RSpec.describe Api::Plans::CreateFromDmpService do
         @client.update(org: create(:org))
         @json[:items].first[:dmp][:contact].delete(:affiliation)
 
-        result = described_class.new(json: @json, client: @client).call
+        result = described_class.new(json: @json, caller: @client).call
 
         expect(result[:plan].present?).to eql(true)
         expect(result[:plan].org).to eql(@client.org)
@@ -87,7 +87,7 @@ RSpec.describe Api::Plans::CreateFromDmpService do
 
       context 'plan inspection' do
         before(:each) do
-          result = described_class.new(json: @json, client: @client).call
+          result = described_class.new(json: @json, caller: @client).call
           @original = @json.with_indifferent_access[:items].first[:dmp]
           @plan = result[:plan]
         end
@@ -127,7 +127,7 @@ RSpec.describe Api::Plans::CreateFromDmpService do
 
       context 'plan inspection' do
         before(:each) do
-          result = described_class.new(json: @json, client: @client).call
+          result = described_class.new(json: @json, caller: @client).call
           @original = @json.with_indifferent_access[:items].first[:dmp]
           @plan = result[:plan]
         end
