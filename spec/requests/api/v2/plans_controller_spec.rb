@@ -578,11 +578,41 @@ RSpec.describe Api::V2::PlansController do
           expect(JSON.parse(response.body)['errors']).to include(expected_error)
         end
 
-        it 'returns a 404 if the plan belongs to a different user' do
+        it 'returns a 404 if the plan does not exist' do
+          put api_v2_plan_path(id: 0), params: { answers: [] }.to_json, headers: @headers
+
+          expect(response.code).to eql('404')
+          json = JSON.parse(response.body).with_indifferent_access
+          expect(json[:errors]).to eq(['Plan not found'])
+        end
+
+        it 'returns a 404 if the user has no role on the plan' do
           other_plan = create(:plan) # No role for @user
           put api_v2_plan_path(other_plan), params: { answers: [] }.to_json, headers: @headers
 
           expect(response.code).to eql('404')
+          json = JSON.parse(response.body).with_indifferent_access
+          expect(json[:errors]).to eq(['Plan not found'])
+        end
+
+        it 'returns a 403 if the user has a role but insufficient permissions to update' do
+          # Create a plan where @user has commenter role (read-only)
+          commenter_plan = create(:plan)
+          commenter_plan.add_user!(@user.id, :commenter)
+
+          # (Double-check @user has a commenter role on the plan)
+          role = commenter_plan.roles.find_by(user_id: @user.id, active: true)
+          expect(role).to be_present
+          expect(role.commenter).to be(true)
+          # Ensure commenter role doesn't allow @user to edit/update the plan
+          expect(commenter_plan.editable_by?(@user.id)).to be(false)
+          expect(Api::V2::PlansPolicy.new(@user, commenter_plan).update?).to be(false)
+
+          put api_v2_plan_path(commenter_plan), params: { answers: [] }.to_json, headers: @headers
+
+          expect(response.code).to eql('403')
+          json = JSON.parse(response.body).with_indifferent_access
+          expect(json[:message]).to eq(['The client is not authorized to perform this action.'])
         end
 
         it 'returns a 400 if the question format is not a text field' do
