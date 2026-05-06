@@ -165,7 +165,7 @@ module Api
           # If a user passed a valid template id, return the most recent published template with the same family id.
           # Otherwise, return the default template.
           def find_template(json: {})
-            default = ::Template.find_by(is_default: true)
+            default = ::Template.default
             return default unless json.present? && json.fetch(:dmproadmap_template, {})[:id].present?
 
             template_id = json.fetch(:dmproadmap_template, {})[:id].to_i
