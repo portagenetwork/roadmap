@@ -1,12 +1,40 @@
 # Changelog
 
-## [Unreleased]
+## [4.1.1+portage-4.8.0]
+
+### Added
+
+ - feat(oauth): allow users with `manage_oauth_apps` to manage Doorkeeper OAuth applications [#1320](https://github.com/portagenetwork/roadmap/pull/1320)
+
+ - Improve Plans and Templates V2 API Endpoints [#1331](https://github.com/portagenetwork/roadmap/pull/1331)
+
+### Fixed
+
+ - fix(api-v1): Address breaking tests and dropped `api_client_id` column [#1327](https://github.com/portagenetwork/roadmap/pull/1327)
+
+### Changed
+
+ - chore(doorkeeper): delete unneeded doorkeeper views [#1319](https://github.com/portagenetwork/roadmap/pull/1319)
+
+ - refactor(api-v1): Extract plan `create` logic into `CreateFromDmpService` [#1328](https://github.com/portagenetwork/roadmap/pull/1328)
+
+ - refactor(api-v1 specs): create spec file for `Api::Plans::CreateFromDmpService` & move `Api::V1::PlansController` specs [#1329](https://github.com/portagenetwork/roadmap/pull/1329)
+
+ - chore(doorkeeper): set `base_controller 'ApplicationController'` [#1332](https://github.com/portagenetwork/roadmap/pull/1332)
 
 ### Dependency Updates
 
  - chore(deps): bump eslint from 8.38.0 to 9.26.0 [#1270](https://github.com/portagenetwork/roadmap/pull/1270)
 
  - chore(deps): bump immutable from 4.3.0 to 4.3.8 [#1294](https://github.com/portagenetwork/roadmap/pull/1294)
+
+ - chore(deps): bump nginx from 1.29.6-alpine to 1.29.7-alpine [#1314](https://github.com/portagenetwork/roadmap/pull/1314)
+
+ - chore(deps): bump docker/login-action from 4.0.0 to 4.1.0 [#1318](https://github.com/portagenetwork/roadmap/pull/1318)
+
+ - chore(deps): bump nginx from 1.29.7-alpine to 1.29.8-alpine [#1323](https://github.com/portagenetwork/roadmap/pull/1323)
+
+ - chore(deps): bump docker/build-push-action from 7.0.0 to 7.1.0 [#1326](https://github.com/portagenetwork/roadmap/pull/1326)
 
  - chore(deps): bump picomatch from 2.3.1 to 2.3.2 [#1317](https://github.com/portagenetwork/roadmap/pull/1317)
 

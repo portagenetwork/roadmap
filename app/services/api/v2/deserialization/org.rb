@@ -1,0 +1,83 @@
+# frozen_string_literal: true
+
+module Api
+  module V2
+    module Deserialization
+      # Deserialization of RDA Common Standard for affiliations to Orgs
+      class Org
+        class << self
+          # Convert the incoming JSON into an Org
+          #     {
+          #       "name": "University of Somewhere",
+          #       "abbreviation": "UofS",
+          #       "affiliation_id": {
+          #         "type": "ror",
+          #         "identifier": "https://ror.org/43y4g4"
+          #       }
+          #     }
+          # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+          def deserialize(json: {})
+            return nil unless Api::V2::JsonValidationService.org_valid?(json: json)
+
+            json = json.with_indifferent_access
+
+            # Try to find the Org by the identifier
+            id_json = json.fetch(:affiliation_id, json.fetch(:funder_id, {}))
+            org = Api::V2::DeserializationService.object_from_identifier(
+              class_name: 'Org', json: id_json
+            )
+            return org if org.present?
+
+            # Try to find the Org by name
+            org = find_by_name(json: json)
+            return org if org.present? && !org.new_record?
+            return nil if org.blank?
+
+            # Org model requires a language so just use the default for now
+            org.language = ::Language.default
+            org.abbreviation = json[:abbreviation] if json[:abbreviation].present?
+            return nil unless org.valid?
+            return org if id_json[:identifier].blank?
+
+            # Attach the identifier
+            Api::V2::DeserializationService.attach_identifier(object: org, json: id_json)
+          end
+          # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+
+          # ===================
+          # = PRIVATE METHODS =
+          # ===================
+
+          private
+
+          # Search for an Org locally and then externally if not found
+          def find_by_name(json: {})
+            return nil unless json.present? && json[:name].present?
+
+            name = json[:name]
+            # Search the DB
+            ::Org.where('LOWER(name) = ?', name.downcase).first
+
+            # Uncomment the following code if org search should be performed beyond local DB
+
+            # return org if org.present?
+
+            # # External ROR search
+            # results = OrgSelection::SearchService.search_externally(
+            #   search_term: name
+            # )
+
+            # # Grab the closest match - only caring about results that 'contain'
+            # # the name with preference to those that start with the name
+            # match_weights = %i[0 1]
+            # result = results.find { |r| match_weights.include?(r[:weight]) }
+
+            # # If no good result was found just use the specified name
+            # result ||= { name: name }
+            # OrgSelection::HashToOrgService.to_org(hash: result)
+          end
+        end
+      end
+    end
+  end
+end

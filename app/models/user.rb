@@ -141,6 +141,17 @@ class User < ApplicationRecord
   # needs rethought
   # default_scope { includes(:org, :perms) }
 
+  scope :super_admins, lambda {
+    joins(:perms)
+      # Reuses the `can_super_admin?` definition
+      .where(perms: { name: %w[
+               add_organisations
+               grant_api_to_orgs
+               change_org_affiliation
+             ] })
+      .distinct
+  }
+
   # Retrieves all of the org_admins for the specified org
   scope :org_admins, lambda { |org_id|
     joins(:perms).where('users.org_id = ? AND perms.name IN (?) AND ' \
@@ -379,6 +390,10 @@ class User < ApplicationRecord
   # Returns Boolean
   def can_review_plans?
     perms.include? Perm.review_plans
+  end
+
+  def can_manage_oauth_apps?
+    perms.include? Perm.manage_oauth_apps
   end
 
   # Removes the api_token from the user

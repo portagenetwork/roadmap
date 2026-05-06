@@ -4,20 +4,26 @@ Doorkeeper.configure do
   # set the object-relational-model (ORM)
   orm :active_record
 
+  # https://doorkeeper.gitbook.io/guides/configuration/other-configurations
+  base_controller 'ApplicationController'
+
   # ensure resource owner is authenticated
   resource_owner_authenticator do
     if request.path == native_oauth_authorization_path
       # Deactivate native_oauth_authorization_path (intended for mobile devices)
-      redirect_to root_path, alert: "You are not authorized to perform this action."
+      redirect_to root_path, alert: _('You are not authorized to perform this action.')
     else
       # https://doorkeeper.gitbook.io/guides/ruby-on-rails/configuration
       current_user || warden.authenticate!(scope: :user)
     end
   end
 
-  # ensure only super-admins can manage oauth applications
+  # ensure only users with required perms can manage oauth applications
   admin_authenticator do |_routes|
-    redirect_to root_path, alert: "You are not authorized to perform this action." unless current_user&.can_super_admin?
+    unless current_user&.can_manage_oauth_apps?
+      redirect_to root_path,
+                  alert: _('You are not authorized to perform this action.')
+    end
   end
 
   # grant flows enabled
@@ -30,15 +36,16 @@ Doorkeeper.configure do
 
   # scopes enabled
   default_scopes :read
+  optional_scopes :write
 
   # ensure client apps cannot ask for scopes outwith those specified here
   enforce_configured_scopes
 
   # set the token endpoint configurations
-  access_token_expires_in 2.hours
+  access_token_expires_in 5.minutes
 
-  # enable refresh tokens of duration 90 days
-  use_refresh_token expiry: 90.days
+  # NOTE: Doorkeeper refresh tokens are rotation/revocation based (not a time-based expiry)
+  use_refresh_token
 
   # enable ssl requirement for redirect url
   # - Allow HTTP in test and development environments

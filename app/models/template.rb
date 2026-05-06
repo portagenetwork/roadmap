@@ -218,7 +218,7 @@ class Template < ApplicationRecord
   scope :for_api_v2, lambda { |org_id|
     org_templates = organisationally_visible.where(org_id: org_id)
     public_templates = publicly_visible.where(customization_of: nil)
-    includes(org: { identifiers: :identifier_scheme })
+    includes(org: { identifiers: :identifier_scheme }, phases: { sections: :questions })
       .joins(:org)
       .published
       .merge(org_templates.or(public_templates))

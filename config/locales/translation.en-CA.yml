@@ -369,6 +369,9 @@ en-CA:
         submit: Submit
         cancel: Cancel
         authorize: Authorize
+        regenerate_secret: Regenerate Secret
+        regenerate_secret_confirm: Are you sure? This will invalidate the current
+          secret.
       form:
         error: Whoops! Check your form for possible errors
       help:
@@ -479,7 +482,9 @@ en-CA:
     flash:
       applications:
         create:
-          notice: Application created.
+          notice: |-
+            Application created.<br>
+            Please copy the application secret now and store it somewhere safely. It will disappear after you leave or refresh this page.
         destroy:
           notice: Application deleted.
         update:

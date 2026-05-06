@@ -20,6 +20,9 @@ module Api
       # set up pages in response
       before_action :pagination_params, except: %i[heartbeat]
 
+      # Parse the incoming JSON
+      before_action :parse_request, only: %i[create update]
+
       rescue_from StandardError, with: :handle_exception
 
       # GET /api/v2/heartbeat
@@ -33,6 +36,13 @@ module Api
           organisation: @resource_owner.org.name,
           language: @resource_owner.language&.name
         )
+      end
+
+      protected
+
+      def render_error(errors:, status:, details: nil)
+        @payload = { errors: errors, details: details }
+        render '/api/v2/error', status: status
       end
 
       private
@@ -60,6 +70,8 @@ module Api
       def handle_exception(exception)
         if exception.is_a?(Pundit::NotAuthorizedError)
           handle_client_not_authorized
+        elsif exception.is_a?(ActionDispatch::Http::Parameters::ParseError) || exception.is_a?(JSON::ParserError)
+          handle_json_parse_error(exception)
         else
           handle_internal_server_error(exception)
         end
@@ -81,6 +93,19 @@ module Api
         render '/api/v2/error', status: :forbidden
       end
 
+      def handle_json_parse_error(exception)
+        Rails.logger.error "Request parsing error: #{exception.message}"
+        details = if exception.message.include?('unexpected token')
+                    {
+                      error_code: 'invalid_json',
+                      hint: _('Check for malformed JSON (for example, unescaped quotes inside string values).')
+                    }
+                  end
+        render_error(errors: _('Invalid JSON format'),
+                     status: :bad_request,
+                     details: details)
+      end
+
       # retrieve the requested pagination params or use defaults
       # only allow 100 per page as the max
       def pagination_params
@@ -98,6 +123,16 @@ module Api
 
       def require_read_scope
         raise Pundit::NotAuthorizedError unless doorkeeper_token.scopes.include?('read')
+      end
+
+      # Parse the body of the incoming request
+      def parse_request
+        @json = JSON.parse(request.body.read)
+        raise JSON::ParserError unless @json.is_a?(Hash) && @json.present?
+
+        @json = @json.with_indifferent_access
+      rescue JSON::ParserError => e
+        handle_json_parse_error(e)
       end
     end
   end

@@ -18,6 +18,9 @@
       <%= doorkeeper_errors_for application, :scopes %>
       <span class="form-text text-secondary">
         <%= "Separate multiple scopes with spaces." %>
+        <br>
+        <%= _('Available scopes are') %> 
+        [<%= safe_join(Doorkeeper.configuration.scopes.to_a.map { |s| content_tag(:strong, s) }, ' ') %>]
       </span>
     </div>
   </div>

@@ -36,8 +36,6 @@ class ApiClient < ApplicationRecord
 
   belongs_to :org, optional: true
 
-  has_many :plans
-
   # If the Client_id or client_secret are nil generate them
   attribute :client_id, :string, default: -> { unique_random(field_name: 'client_id') }
   attribute :client_secret, :string,

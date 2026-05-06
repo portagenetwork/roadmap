@@ -13,9 +13,15 @@ module Api
 
           Plan.transaction do
             plan.funder = safe_save_org(org: plan.funder)
+            # This can be redundant for API v1 create:
+            # - The controller deserializes the plan before PersistenceService.safe_save
+            # - Funding.deserialize calls plan.grant=, which can persist the grant Identifier
             plan.grant = safe_save_identifier(identifier: plan.grant)
 
             plan.save
+
+            # If the grant was persisted before plan.save, back-link it to this plan now
+            plan.grant.update(identifiable: plan) if plan.grant.present? && plan.grant.identifiable_id.nil?
 
             plan.identifiers.each do |id|
               id.identifiable = plan.reload
