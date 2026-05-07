@@ -4,10 +4,10 @@
 #
 # Table name: research_outputs
 #
-#  id                      :bigint           not null, primary key
+#  id                      :bigint(8)        not null, primary key
 #  abbreviation            :string
 #  access                  :integer          default("open"), not null
-#  byte_size               :bigint
+#  byte_size               :bigint(8)
 #  description             :text
 #  display_order           :integer
 #  is_default              :boolean
@@ -19,16 +19,17 @@
 #  title                   :string           not null
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  license_id              :bigint
+#  license_id              :bigint(8)
 #  plan_id                 :integer
 #
 # Indexes
 #
+#  index_research_outputs_on_license_id   (license_id)
 #  index_research_outputs_on_output_type  (output_type)
+#  index_research_outputs_on_plan_id      (plan_id)
 #
 # Foreign Keys
 #
-#  fk_rails_...  (plan_id => plans.id)
 #  fk_rails_...  (license_id => licenses.id)
 #
 
