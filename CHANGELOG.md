@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+ - chore(annotate): regen schema info for models & factories [#1340](https://github.com/portagenetwork/roadmap/pull/1340)
+
 ## [4.1.1+portage-4.8.0]
 
 ### Added
