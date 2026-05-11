@@ -6,7 +6,6 @@
       <span><%= sanitize a.body %></span>
       <% if a.dismissable? %>
         <button class="btn-close" data-bs-dismiss="alert" data-url="<%= user_acknowledge_notification_path(a) %>" data-remote="true" data-method="post" data-params="notification_id=<%= a.id %>" aria-label="Close">
-          <span class="fas fa-circle-xmark" aria-hidden="true"></span>
         </button>
       <% end %>
     </div>
