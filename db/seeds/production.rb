@@ -3,27 +3,32 @@
 # frozen_string_literal: true
 # warn_indent: true
 
-########## For sandbox only
+########## For sandbox overlay only
 # Steps:
-# 1) change default database to production database, then run `rails export:build_sandbox_data` to generate production-related data
-# 2) switch database to the sandbox database
-# 3) run rake db:seed or created alongside the db with db:setup to seed data
+# 1) Using a db in a desired state, run `rails export_production_data:build_sandbox_data`
+#    - This will generate new seed data in db/seeds/production/
+#    - (Note: This step can be completeled locally via a db dump and committing the seed files to git)
+# 2) Execute `bin/rails db:setup` against the sandbox overlay (creates the DB and seeds it)
+#    - Note: the "sandbox" overlay runs with `RAILS_ENV=production`;
+#      DO NOT execute `bin/rails db:setup` against any non-sandbox overlays!!!
+#    - Note: This file is only used during step 2
 ##########
 # Forcing load seed file in sequence by last number
 # seeds_1 to seeds_3 are rake-generated. Other seeds file are manually edited
 ########## Uncomment following if we need to redo sandbox data injection
-# puts 'run seeds.rb file now...'
-# Dir[File.join(Rails.root, 'db', 'seeds', 'sandbox', '*.rb')].sort.each_with_index do |seed, index|
-#     if seed.include? index.to_s
-#         load seed
-#     end
-# end
 
-
-######## For 3.1.0 Migration only
-Rake::Task['before_seeds:copy_data'].invoke
-Dir[File.join(Rails.root, 'db', 'seeds', 'staging', '*.rb')].sort.each_with_index do |seed, index|
-    puts 'run staging/seeds_' + index.to_s + '.rb now..'
-    load seed
+unless FeatureFlagHelper.enabled?(:on_sandbox)
+  raise <<~ERROR
+    ERROR: These seeds are for the sandbox overlay only!
+    The ON_SANDBOX flag is not enabled.
+    Please verify you are on the sandbox overlay and ON_SANDBOX='true' is set.
+    Do NOT run db:setup against any non-sandbox overlays!
+  ERROR
 end
-Rake::Task['rewrite_postgres:retrieve_data'].invoke
+
+puts 'run seeds.rb file now...'
+Dir[File.join(Rails.root, 'db', 'seeds', 'production', '*.rb')].sort.each_with_index do |seed, index|
+    if seed.include? index.to_s
+        load seed
+    end
+end

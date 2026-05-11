@@ -35,8 +35,8 @@
   <% end %>
 
 
-  <% if Rails.configuration.x.openid_connect.enabled %>
-    <% if session['devise.openid_connect_data'].nil? %>
+  <% unless FeatureFlagHelper.enabled?(:on_sandbox) %>
+    <% if Rails.configuration.x.openid_connect.enabled && session['devise.openid_connect_data'].nil? %>
       <p class="text-center fontsize-h4">- <%= _('or') %> -</p>
       <div class="form-group">
         <span class="center-block btn-group-justified">
@@ -44,7 +44,7 @@
         </span>
       </div>
     <% else %>
-    <% end %>
+  <% end %>
 <% end %>
 
 <% end %>

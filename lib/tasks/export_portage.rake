@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
+ALLIANCE_TEMPLATE_TITLE = 'Alliance Template'
+TEST_ORG_NAMES = { english: 'Test Organization', french: 'Organisation de test' }.freeze
+
 namespace :export_production_data do
+  def sandbox_orgs
+    # NOTE: This helper should only be called after build_sandbox_orgs (seeds_1) has run.
+    Org.where(id: Rails.application.config.default_funder_id)
+       .or(Org.where(name: TEST_ORG_NAMES.values))
+  end
   desc 'Generate seed files'
   # The procedure can be adjusted depending on whether the task will be run in a different server first
   task build_sandbox_data: :environment do
@@ -26,58 +34,57 @@ namespace :export_production_data do
   ## Following tasks needs to be run in sequence
   #####################################################
 
-  # rubocop:disable Layout/LineLength
   # seed_1: org & question format must be created before templates and template-related components
   desc 'Export org and question format from 3.0.2 database to seeds_1.rb'
+
+  # rubocop:disable Metrics/MethodLength
+  def build_sandbox_orgs
+    # Add one English and one French sandbox org
+    updates = [
+      {
+        name: TEST_ORG_NAMES[:english],
+        abbreviation: 'IEO',
+        contact_name: 'Test User',
+        contact_email: 'dmp.test.user.admin@engagedri.ca',
+        language_id: 1, # English
+        feedback_msg: <<~HTML
+          <p>Hello %{user_name}.</p>
+          <br><p>
+          Your plan "%{plan_name}" has been submitted for feedback from an administrator at your organisation.
+          <br>If you have questions pertaining to this action, please contact us at %{organisation_email}.
+          </p>
+        HTML
+      },
+      { name: TEST_ORG_NAMES[:french],
+        abbreviation: 'OEO',
+        contact_name: 'Utilisateur test',
+        contact_email: 'dmp.utilisateur.test.admin@engagedri.ca',
+        language_id: 2, # French
+        feedback_msg: <<~HTML
+          <p>Bonjour %{user_name}.</p>
+          <br><p>Votre plan "%{plan_name}" a été soumis pour commentaires d’un administrateur de votre organisation.
+          <br>Si vous avez des questions concernant cette action, veuillez communiquer avec nous à %{organisation_email}.
+          </p>
+        HTML
+      }
+    ]
+
+    updates.map do |attrs|
+      # Use `.find_or_initialize_by` to avoid "Name must be unique" validation error
+      org = Org.find_or_initialize_by(name: attrs[:name])
+      org.update!(attrs.except(:name))
+    end
+  end
+  # rubocop:enable Metrics/MethodLength
+
   task seed_1_export: :environment do
-    file_name = 'db/seeds/sandbox/seeds_1.rb'
+    file_name = 'db/seeds/production/seeds_1.rb'
     FileUtils.rm_f(file_name)
     Faker::Config.random = Random.new(Org.count)
     File.open(file_name, 'a') do |f|
       excluded_keys = %w[created_at updated_at]
-      created = 6.years.ago # hard-code org creation date because it must be created before all templates/plans created
-      Org.all.each do |org|
-        # feedback message must fit the default language
-        if org.language_id == 2 || org.id == Rails.application.secrets.french_org_id.to_i
-          org.feedback_msg = '<p>Bonjour %{user_name}.</p>
-                              <br><p>Votre plan "%{plan_name}" a été soumis pour commentaires d’un administrateur de votre organisation.
-                              <br>Si vous avez des questions concernant cette action, veuillez communiquer avec nous à %{organisation_email}.
-                              </p>'
-        else
-          org.feedback_msg = '<p>Hello %{user_name}.</p>
-                              <br><p>
-                              Your plan "%{plan_name}" has been submitted for feedback from an administrator at your organisation.
-                              <br>If you have questions pertaining to this action, please contact us at %{organisation_email}.
-                              </p>'
-        end
-        # Only FUNDER_ORG(Portage) keep its original information
-        # Only Portage keep its original name and all other information
-        if org.id.to_i != Rails.application.secrets.funder_org_id.to_i
-          org.created_at = created
-          org.target_url = Org.column_defaults['target_url']
-          org.logo_uid = Org.column_defaults['logo_uid']
-          org.logo_name = Org.column_defaults['logo_name']
-          org.banner_name = Org.column_defaults['banner_name']
-          org.contact_email = Faker::Internet.email
-          org.links = Org.column_defaults['links']
-          org.contact_name = Faker::Name.name
-          if org.id == Rails.application.secrets.english_org_id.to_i
-            org.name = 'Test Organization'
-            org.contact_email = 'dmp.test.user.admin@engagedri.ca'
-            org.contact_name = 'Test User'
-            org.abbreviation = 'IEO'
-            org.language_id = 1 # English Default
-          elsif org.id == Rails.application.secrets.french_org_id.to_i
-            org.name = 'Organisation de test'
-            org.contact_email = 'dmp.utilisateur.test.admin@engagedri.ca'
-            org.contact_name = 'Utilisateur test'
-            org.abbreviation = 'OEO'
-            org.language_id = 2 # French Default
-          else
-            org.name = Faker::University.name
-            org.abbreviation = "#{org.name}_abbreviation"
-          end
-        end
+      build_sandbox_orgs
+      sandbox_orgs.each do |org|
         serialized = org.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
         f.puts "Org.create!(#{serialized})"
       end
@@ -89,16 +96,18 @@ namespace :export_production_data do
       end
     end
   end
-  # rubocop:enable Layout/LineLength
 
   # seed2: guidance group and theme must be created before guidance and questions (using theme)
   desc 'Export guidance group and theme format from 3.0.2 database to seeds_2.rb'
+  def sandbox_guidance_groups
+    GuidanceGroup.where(org_id: sandbox_orgs.pluck(:id))
+  end
   task seed_2_export: :environment do
-    file_name = 'db/seeds/sandbox/seeds_2.rb'
+    file_name = 'db/seeds/production/seeds_2.rb'
     FileUtils.rm_f(file_name)
     excluded_keys = %w[created_at updated_at]
     File.open(file_name, 'a') do |f|
-      GuidanceGroup.all.each do |guidance_group|
+      sandbox_guidance_groups.each do |guidance_group|
         serialized = guidance_group.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
         f.puts "GuidanceGroup.create!(#{serialized})"
       end
@@ -111,21 +120,43 @@ namespace :export_production_data do
 
   # seed3: guidance and template related components runs lastly
   desc 'Export guidance and template_related content from 3.0.2 database to seeds_3.rb'
+
+  def update_test_templates(test_templates)
+    english_test_org = Org.find_by(name: TEST_ORG_NAMES[:english])
+    french_test_org = Org.find_by(name: TEST_ORG_NAMES[:french])
+    # Assign the templates to the two test organisations
+    test_templates.first.update!(org_id: english_test_org.id, title: "#{ALLIANCE_TEMPLATE_TITLE}-Test1")
+    test_templates.last.update!(org_id: french_test_org.id, title: "#{ALLIANCE_TEMPLATE_TITLE}-Test2")
+    test_templates
+  end
+
+  def sandbox_templates
+    funder_templates = Template.where(org_id: Rails.application.config.default_funder_id, published: true)
+    # test_org_templates are needed for db/seeds/production/seeds_4.rb
+    test_templates = Template.where(title: ALLIANCE_TEMPLATE_TITLE)
+                             .where.not(org_id: Rails.application.config.default_funder_id)
+                             .limit(2)
+                             .to_a
+    test_templates = update_test_templates(test_templates)
+    funder_templates + test_templates
+  end
+
+  def sandbox_guidances
+    guidance_groups = GuidanceGroup.where(org_id: sandbox_orgs.pluck(:id))
+    Guidance.where(guidance_group_id: guidance_groups.pluck(:id))
+  end
+
   task seed_3_export: :environment do
-    file_name = 'db/seeds/sandbox/seeds_3.rb'
+    file_name = 'db/seeds/production/seeds_3.rb'
     FileUtils.rm_f(file_name)
     excluded_keys = %w[created_at updated_at]
     File.open(file_name, 'a') do |f|
-      GuidanceGroup.all.each do |guidance_group|
-        guidances = Guidance.where(guidance_group_id: guidance_group.id)
-        guidances.all.each do |guidance|
-          guidance.theme_ids = [Theme.all.sample.id]
-          serialized = guidance.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
-          f.puts "Guidance.create(#{serialized})"
-        end
+      sandbox_guidances.each do |guidance|
+        guidance.theme_ids = [Theme.all.sample.id]
+        serialized = guidance.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
+        f.puts "Guidance.create(#{serialized})"
       end
-      # only use portage network template
-      Template.where('title LIKE ?', '%Portage%').where(published: true).all.each do |template|
+      sandbox_templates.each do |template|
         # Too many version of template crashes rake, just get the published version
         serialized = template.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
         f.puts "Template.create!(#{serialized})"
@@ -172,31 +203,35 @@ namespace :export_production_data do
   # seed5: export all plan which org belongs to testers, this task generate the seed file that runs lastly
   desc 'Export plan content from 3.0.2 database to seeds_5.rb'
   task seed_5_export: :environment do
-    file_name = 'db/seeds/sandbox/seeds_5.rb'
+    file_name = 'db/seeds/production/seeds_5.rb'
     FileUtils.rm_f(file_name)
     excluded_keys = %w[created_at updated_at start_date end_date]
-    org_list = [Rails.application.secrets.funder_org_id.to_i, Rails.application.secrets.english_org_id.to_i,
-                Rails.application.secrets.french_org_id.to_i]
+    orgs = sandbox_orgs
+    english_org_id = orgs.find_by(name: TEST_ORG_NAMES[:english]).id
+    default_template = Template.latest_customizable
+                               .where(org_id: Rails.application.config.default_funder_id,
+                                      title: 'Alliance Simplified Template (Funding Application Stage)')
+                               .first
+    test1_template = Template.find_by(title: "#{ALLIANCE_TEMPLATE_TITLE}-Test1")
+    test2_template = Template.find_by(title: "#{ALLIANCE_TEMPLATE_TITLE}-Test2")
     File.open(file_name, 'a') do |f|
-      Plan.where(org_id: org_list).all.each_with_index do |plan, index|
+      Plan.where(org_id: orgs.pluck(:id)).limit(15).each_with_index do |plan, index|
         plan.title = "Test Plan #{index}"
         plan.description = Faker::Lorem.sentence
         # force a few plan to use modified template from the two test organizations for statistics
-        if [20..50].include?(index) # rubocop:disable Performance/CollectionLiteralInLoop
-          plan.template = Template.find(title: 'Portage Template-Test1')
-        elsif [60..90].include?(index) # rubocop:disable Performance/CollectionLiteralInLoop
-          plan.template = Template.find(title: 'Portage Template-Test2')
-        end
+        plan.template = case index
+                        when 0..4 then default_template
+                        when 5..9 then test1_template
+                        else test2_template
+                        end
         serialized = plan.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
         f.puts "Plan.create(#{serialized})"
         # import related roles
         Role.where(plan_id: plan.id).all.each do |role|
-          role.user_id = if plan.org_id == Rails.application.secrets.funder_org_id.to_i # change all user id to 1
-                           1
-                         elsif plan.org_id == Rails.application.secrets.english_org_id.to_i # change all user id to 2
-                           2
-                         else # change all user id to 3
-                           3
+          role.user_id = case plan.org_id
+                         when Rails.application.config.default_funder_id then 1
+                         when english_org_id then 2
+                         else 3
                          end
           serialized = role.serializable_hash.delete_if { |key, _value| excluded_keys.include?(key) }
           f.puts "Role.create(#{serialized})"
