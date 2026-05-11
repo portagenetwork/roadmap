@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Dependency Updates
+
+ - chore(deps): bump @babel/plugin-transform-modules-systemjs from 7.20.11 to 7.29.4 [#1345](https://github.com/portagenetwork/roadmap/pull/1345)
+
 ## [4.1.1+portage-4.8.0]
 
 ### Added
