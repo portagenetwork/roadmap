@@ -1,6 +1,6 @@
-// update details in section progress card
+// update details in section progress panel
 export const updateSectionProgress = (id, numSecAnswers, numSecQuestions) => {
-  const progressDiv = $(`#section-card-${id}`).find('.section-status');
+  const progressDiv = $(`#section-panel-${id}`).find('.section-status');
   progressDiv.html(`(${numSecAnswers} /  ${numSecQuestions})`);
 
   /**
