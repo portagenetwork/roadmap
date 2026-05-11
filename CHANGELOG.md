@@ -8,6 +8,8 @@
 
  - chore(deps): bump fast-uri from 3.1.0 to 3.1.2 [#1344](https://github.com/portagenetwork/roadmap/pull/1344)
 
+ - chore(deps): bump hono from 4.12.14 to 4.12.18 [#1342](https://github.com/portagenetwork/roadmap/pull/1342)
+
 ## [4.1.1+portage-4.8.0]
 
 ### Added
