@@ -1,7 +1,7 @@
 @use '../variables/colours' as *;
 
-@import "../../../../node_modules/bootstrap/scss/functions";
-@import "../../../../node_modules/bootstrap/scss/variables";
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
 
 
 // An explanation of how we change the Bootstrap arrow icon for the accordion to use the fontawesome icons.
