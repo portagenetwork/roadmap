@@ -1,6 +1,6 @@
 @use '../variables/colours' as *;
-@import "../../../../node_modules/bootstrap/scss/functions";
-@import "../../../../node_modules/bootstrap/scss/variables";
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
 
 // This file contains overrides to the core Bootstrap 3.x styling
 .table { 
