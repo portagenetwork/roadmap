@@ -10,13 +10,12 @@
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
       data-bs-target="#app-navbar-menu" aria-controls="app-navbar-menu" 
       aria-expanded="false" aria-label="Toggle navigation">
-      <span class="sr-only">Toggle navigation</span>
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="app-navbar-menu">
-      <ul class="navbar-nav me-auto">
+      <ul class="navbar-nav me-auto gap-lg-3">
         <% if user_signed_in? %>
           <li class="nav-item <%= ' active' if active_page?(plans_path, true) %>">
             <%= link_to _('My Dashboard'), plans_path, class: 'nav-link' %>
@@ -58,7 +57,7 @@
         </li>
       </ul>
 
-      <ul class="navbar-nav ms-auto">
+      <ul class="navbar-nav ms-auto gap-lg-3">
         <%= render "layouts/signin_signout" %>
       </ul>
 
