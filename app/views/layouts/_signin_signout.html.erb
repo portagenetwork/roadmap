@@ -1,6 +1,6 @@
 <% if current_user&.can_manage_oauth_apps? %>
-  <li class="<%= ' active' if active_page?(oauth_applications_path) %>">
-    <%= link_to oauth_applications_path do %>
+  <li class="nav-item <%= ' active' if active_page?(oauth_applications_path, true) %>">
+    <%= link_to oauth_applications_path, class: 'nav-link' do %>
       <i class="fas fa-screwdriver-wrench" aria-hidden="true">&nbsp;</i>
       <%= _('Developer Tools') %>
     <% end %>
