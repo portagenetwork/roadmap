@@ -1,6 +1,6 @@
 @use '../variables/colours' as *;
 
-.navbar-nav{
+.navbar-nav {
     margin-left: 2.5em;
 }
 
@@ -87,6 +87,30 @@
 			background-color: $color-alliance-lightest-grey;
 		}
 	}
+}
+
+// dropdown-menu positioning and sizing for navbar dropdowns
+#app-navbar-menu,
+#org-navbar-menu {
+	.dropdown-menu {
+		min-width: 100%;    // match trigger button width
+		margin-top: 0;      // align flush with trigger
+
+		@media (min-width: 768px) {
+			width: max-content;
+			max-width: calc(100vw - 1rem);
+		}
+	}
+}
+
+@media (min-width: 768px) {
+  #app-navbar-menu .dropdown-menu {
+    left: 50%;
+    transform: translateX(-50%); // center dropdown under trigger to prevent horizontal shift
+  }
+  a#user-menu {
+    min-width: 12rem; // guard against short user names
+  }
 }
 
 /* Exceptions to general link visibility/accessibility styling (see rebranding-animation.scss) */
