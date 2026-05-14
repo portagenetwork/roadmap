@@ -21,8 +21,10 @@ defined by the original reference in each scss sheet (see comments) for easier m
 
 //logo style apply for all screen size
 //_logos.scss
-.app-logo{
-    height: 200px;
+.app-logo {
+    width: 150px !important;
+    height: 86px !important;
+    padding: 0%;
 }
 
 //overriding the row margins to the zero. needs to addressed while refractoring css
@@ -50,8 +52,8 @@ defined by the original reference in each scss sheet (see comments) for easier m
 Forms & Tables
 *****/
 //_table.scss
-thead th{
-    background-color: $color-alliance-darker-yellow;
+thead th {
+    background-color: $color-alliance-digital-grey;
 }
 
 //for the on focus and hover change the border left
