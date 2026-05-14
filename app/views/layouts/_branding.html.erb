@@ -3,7 +3,7 @@
     <!-- Brand and toggle get grouped for better mobile display -->
     <% if user_signed_in? && !current_user.org.nil? %>
       <% if current_user.org.logo.present? %>
-        <div class="navbar-header d-sm-flex justify-content-sm-between">
+        <div class="navbar-header d-sm-flex justify-content-sm-between align-items-center">
           <%= image_tag(logo_url_for_org(current_user.org),
                         alt: current_user.org.name,
                         class: "org-logo me-sm-auto",
@@ -17,7 +17,7 @@
                 <span class="navbar-toggler-icon"></span>
         </button>
         <% else %>
-         <div class="navbar-header d-sm-flex justify-content-sm-between">
+         <div class="navbar-header d-sm-flex justify-content-sm-between align-items-center">
           <p id="banner-org-name" class="fontsize-h4"><%= current_user.org.name %></p>
          </div>
         <% end %>
