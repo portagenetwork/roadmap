@@ -8,11 +8,11 @@
     <%= f.password_field(:password, class: 'form-control', "aria-required": true, autocomplete: "current-password") %>
   </div>
   <% unless FeatureFlagHelper.enabled?(:on_sandbox) %>
-    <div>
+    <div class="text-center mb-2">
       <%= link_to _('Forgot password?'), new_password_path('user') %>
     </div>
   <% end %>
-  <div class="form-check mb-3">
+  <div class="form-check mb-3 d-flex justify-content-center align-items-center">
     <%= label_tag 'remember_email', class: 'form-check-label' do %>
       <%= check_box_tag 'remember_email' %>
       <%= _('Remember email') %>
