@@ -47,10 +47,6 @@
 		color: $color-alliance-darker-yellow;
 		background-color: $color-alliance-digital-grey;
 	}
-
-	.navbar-header {
-		height: 50px;
-	}
 }
 
 #app-navbar {
@@ -133,4 +129,8 @@
 			background-color: $color-alliance-digital-grey;
 		}
 	}
+}
+
+#org-navbar .org-links {
+  padding-top: 0 !important;
 }
