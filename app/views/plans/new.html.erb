@@ -115,29 +115,27 @@
       <div id="available-templates" style="display: none;">
         <%= hidden_field_tag 'template-option-target', template_options_path %>
         <h2 id="template-selection"><%= _('Which DMP template would you like to use?') %></h2>
-        <div class="form-control mb-3 row">
+        <div class="mb-3 row">
           <div class="col-md-6">
-            <div class="form-control mb-3">
-              <div class="dropdown" id="template-dropdown-container">
-                <button
-                  class="form-select text-start"
-                  type="button"
-                  id="template-dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                  data-bs-toggle="dropdown"
-                >
-                  <%= _('Please select a template') %>
-                </button>
-                <div
-                  class="dropdown-menu w-100"
-                  aria-labelledby="template-dropdown"
-                  id="template-dropdown-menu"
-                >
-                  <!-- JS will populate this with <a class="dropdown-item"> -->
+            <div class="dropdown" id="template-dropdown-container">
+              <button
+                class="form-select text-start"
+                type="button"
+                id="template-dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                data-bs-toggle="dropdown"
+              >
+                <%= _('Please select a template') %>
+              </button>
+              <div
+                class="dropdown-menu w-100"
+                aria-labelledby="template-dropdown"
+                id="template-dropdown-menu"
+              >
+                <!-- JS will populate this with <a class="dropdown-item"> -->
                 </div>
-                <%= hidden_field_tag 'plan[template_id]', '', id: 'plan_template_id' %>
-              </div>
+              <%= hidden_field_tag 'plan[template_id]', '', id: 'plan_template_id' %>
             </div>
           </div>
           <div class="col-md-1 text-center"></div>
