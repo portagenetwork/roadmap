@@ -32,6 +32,7 @@
 	color: $color-alliance-digital-grey;
 	text-align: center;
 	width: 100%; /* ensures the <a> fills the <li> */
+	white-space: nowrap;
 }
 
 /* Styling for the selected .sign-in tab */
