@@ -241,9 +241,6 @@ class User < ApplicationRecord
   end
   # rubocop:enable Metrics/AbcSize
 
-  def self.to_csv(users)
-    User::AtCsv.new(users).to_csv
-  end
   # ===========================
   # = Public instance methods =
   # ===========================

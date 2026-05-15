@@ -11,7 +11,6 @@ class UsersController < ApplicationController
   ##
   # GET - List of all users for an organisation
   # Displays number of roles[was project_group], name, email, and last sign in
-  # rubocop:disable Metrics/AbcSize
   def admin_index
     authorize User
 
@@ -28,14 +27,8 @@ class UsersController < ApplicationController
                                .page(1)
                  end
       end
-
-      format.csv do
-        send_data User.to_csv(current_user.org.users.order(:surname)),
-                  filename: "users-accounts-#{Date.today}.csv"
-      end
     end
   end
-  # rubocop:enable Metrics/AbcSize
 
   ##
   # GET - Displays the permissions available to the selected user
