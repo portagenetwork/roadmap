@@ -1,6 +1,6 @@
 FROM surnet/alpine-wkhtmltopdf:3.23.2-0.12.6-small AS wkhtmltopdf
 
-FROM ruby:3.1.4-alpine AS builder
+FROM ruby:4.0.4-alpine AS builder
 
 ENV INSTALL_PATH=/usr/src/app \
     RAILS_ENV=production \
@@ -56,7 +56,7 @@ USER root
 RUN rm -rf ${INSTALL_PATH}/node_modules ${INSTALL_PATH}/tmp/*
 USER dmpuser
 
-FROM ruby:3.1.4-alpine AS app
+FROM ruby:4.0.4-alpine AS app
 
 ENV INSTALL_PATH=/usr/src/app
 
