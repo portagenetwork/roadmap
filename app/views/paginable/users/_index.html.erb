@@ -1,5 +1,7 @@
 <% is_super_admin = current_user.can_super_admin? %>
 <% is_org_admin = current_user.can_org_admin? %>
+<% super_admin_perm_names = %w[add_organisations grant_api_to_orgs change_org_affiliation] %>
+<% org_admin_perm_names = %w[grant_permissions modify_templates modify_guidance change_org_details] %>
 <% if @clicked_through %>
   <p><%= _(<<-TEXT
     The data on the usage dashboard is historical in nature. This means that the number of records below may not
@@ -72,12 +74,18 @@
                   </td>
                   <%# The content of this column get updated through AJAX whenever the permission for an user are updated %>
                   <td class="text-center" data-descriptor="current_privileges">
+                    <% user_perm_names = user.perms.map(&:name) %>
+                    <% is_user_super_admin = (super_admin_perm_names & user_perm_names).any? %>
                     <span class="privilege-description">
-                      <%= render partial: 'users/current_privileges', locals: { user: user } %>
+                      <% if is_user_super_admin %>
+                        <%= _('Super Admin') %>
+                      <% elsif (org_admin_perm_names & user_perm_names).any?  %>
+                        <%= _('Organisational Admin') %>
+                      <% end %>
                     </span>
                     <br>
                     <%# Do not allow a user to change their own permissions or a super admin's permissions if they are not a super admin %>
-                    <% unless current_user == user || !is_super_admin && user.can_super_admin? %>
+                    <% unless current_user == user || (!is_super_admin && is_user_super_admin) %>
                       <%= link_to( _('Edit'), admin_grant_permissions_user_path(user)) %>
                     <% end %>
                   </td>
