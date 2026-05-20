@@ -11,15 +11,15 @@
        }
        %>
        </p>
-      <div class="well well-sm">
+      <div class="card bg-light mb-3 p-2">
         <%= sanitize editable_feedback_message(plan.owner.org, plan.owner.org.feedback_msg, plan.title) %>
       </div>
       <p><%= _('You can continue to edit and download the plan in the interim.') %></p>
-      <div class="form-group col-xs-8">
+      <div class="form-control mb-3 col-xs-8">
         <%= link_to _('Request feedback'),
                      feedback_requests_path(plan_id: @plan.id),
                      data: { method: 'post' },
-                     class: "btn btn-default#{' disabled' if @plan.feedback_requested?}" %>
+                     class: "btn btn-secondary#{' disabled' if @plan.feedback_requested?}" %>
         <span><%= _("Feedback has been requested.") if @plan.feedback_requested? %></span>
       </div>
     <% end %>

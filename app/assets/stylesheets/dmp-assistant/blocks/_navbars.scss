@@ -1,0 +1,136 @@
+@use '../variables/colours' as *;
+
+.navbar-nav {
+    margin-left: 2.5em;
+}
+
+@media (min-width: 768px) {
+	#app-navbar {
+		margin-bottom: 0;
+		font-size: 12px;
+
+		.navbar-nav .nav-link {
+			font-size: 1.2rem;
+			white-space: nowrap;
+			padding: 0.25rem 1rem;
+
+			&:focus,
+			&:hover {
+				color: $color-alliance-darker-yellow;
+				background-color: $color-alliance-digital-grey;
+			}
+		}
+	}
+
+    // Dropdowns
+	.navbar-nav {
+		// Fallback: `.open` is a legacy Bootstrap 3 state; keep during migration.
+		// TODO(bs-5-cleanup): remove `.open` fallback after legacy Bootstrap 3 dropdown JS/classes are fully removed.
+		> .open > .nav-link,
+		// Bootstrap 5 state for expanded dropdown toggles.
+		> .show > .nav-link {
+			&,
+			&:hover,
+			&:focus {
+				background-color: $color-alliance-lighter-grey;
+				color: $color-alliance-darker-yellow;
+			}
+		}
+	}
+
+	#org-navbar { // _navbars.scss
+		margin: auto;
+	}
+
+    #app-navbar .navbar-nav .nav-link.active,
+	#app-navbar .navbar-nav .nav-item.active .nav-link {
+		color: $color-alliance-darker-yellow;
+		background-color: $color-alliance-digital-grey;
+	}
+}
+
+#app-navbar {
+	font-weight: 700;
+}
+
+@media (max-width: 767px) {
+	.navbar-header {
+		margin: 0;
+		padding: 0;
+		width: 100%;
+	}
+
+	.navbar-collapse {
+		&.collapse {
+			z-index: 1;
+
+			// Bootstrap 5 expanded mobile navbar state.
+			&.show,
+			// Fallback: `.in` is the legacy Bootstrap 3 expanded state.
+			// TODO(bs-5-cleanup): remove `.in` fallback after all collapses are driven only by Bootstrap 5 classes.
+			&.in {
+				position: absolute;
+				z-index: 100;
+				width: 100%;
+				background-color: $color-alliance-darker-yellow;
+			}
+		}
+	}
+
+	.navbar-toggler { // show the other breadcrumb icon on right top
+		border-color: $color-alliance-lighter-grey;
+
+		.icon-bar {
+			background-color: $color-alliance-lightest-grey;
+		}
+	}
+}
+
+// dropdown-menu positioning and sizing for navbar dropdowns
+#app-navbar-menu,
+#org-navbar-menu {
+	.dropdown-menu {
+		min-width: 100%;    // match trigger button width
+		margin-top: 0;      // align flush with trigger
+
+		@media (min-width: 768px) {
+			width: max-content;
+			max-width: calc(100vw - 1rem);
+		}
+	}
+}
+
+@media (min-width: 768px) {
+  #app-navbar-menu .dropdown-menu {
+    left: 50%;
+    transform: translateX(-50%); // center dropdown under trigger to prevent horizontal shift
+  }
+  a#user-menu {
+    min-width: 12rem; // guard against short user names
+  }
+}
+
+/* Exceptions to general link visibility/accessibility styling (see rebranding-animation.scss) */
+#app-navbar-menu .nav .nav-link,
+#org-navbar-menu .navbar-nav .nav-link,
+#app-navbar-menu .dropdown-menu .dropdown-item,
+#org-navbar-menu .dropdown-menu .dropdown-item {
+	text-decoration: none;
+	color: $color-alliance-digital-grey;
+}
+
+/* For org navbar custom background color */
+@media (min-width: 768px) {
+    #admin-dropdown .dropdown-item,
+    #super-admin-dropdown .dropdown-item {
+		&:hover,
+		&:focus {
+			color: $color-alliance-darker-yellow !important;
+			background-color: $color-alliance-digital-grey;
+		}
+	}
+}
+
+#org-navbar .org-links {
+  padding-top: 0 !important;
+}

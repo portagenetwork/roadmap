@@ -1,14 +1,13 @@
 // Import locally defined variables. Load this before 'bootstrap'
-
-@use "variables" as *;
+@use "variables";
 
 // Pull in the webpacker managed copy of Bootstrap Stylesheets
-@import "../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
-@import "../../../node_modules/bootstrap-select/sass/bootstrap-select.scss";
+@import "bootstrap/scss/bootstrap";
+@import "bootstrap-select/sass/bootstrap-select.scss";
 
 // Pull in the webapcker managed copy of JQuery-UI Stylesheets
 // we are using the Datepicker and Sortable at the very least
-@import "../../../node_modules/jquery-ui-sass/assets/sass/jquery-ui.scss";
+@import "jquery-ui-sass/assets/sass/jquery-ui.scss";
 
 $fa-font-path: '.';
 @import '@fortawesome/fontawesome-free/scss/fontawesome';
@@ -17,6 +16,15 @@ $fa-font-path: '.';
 @import '@fortawesome/fontawesome-free/scss/regular';
 @import '@fortawesome/fontawesome-free/scss/solid';
 
+// NOTE: The `@import "bootstrap/scss/bootstrap";`
+//       statement already imports .../bootstrap/scss/grid
+// TODO: Remove this temporary duplicate grid import after form wrapper divs no
+//       longer mix Bootstrap layout classes such as .row and .col-md-6 with
+//       .form-control. Until that cleanup is complete, removing it can change
+//       form spacing and layout.
+@import "bootstrap/scss/grid";
+
+//Importing customised stylesheets after Bootstrap defaults
 @import "blocks";
 @import "utils";
 

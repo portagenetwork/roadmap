@@ -1,12 +1,13 @@
-@import '../../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables';
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
 
 /* HEADER LOGOS */
 .app-logo {
   height: 80px;
-  padding-right: $grid-gutter-width / 2;
+  padding-right: calc($grid-gutter-width / 2);
 }
 
 .org-logo {
   height: 65px;
-  padding-right: $grid-gutter-width / 2;
+  padding-right: calc($grid-gutter-width / 2);
 }

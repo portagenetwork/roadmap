@@ -4,7 +4,7 @@
       <%= _('New organisation')  %>
     </h1>
     <% if current_user.can_super_admin? %>
-      <%= link_to _('View all organisations'), super_admin_orgs_path, class: 'btn btn-default pull-right' %>
+      <%= link_to _('View all organisations'), super_admin_orgs_path, class: 'btn btn-secondary float-end' %>
     <% end %>
   </div>
 </div>
@@ -13,15 +13,15 @@
   <div class="col-md-12">
     <ul class="nav nav-tabs" role="tablist">
       <li role="profile" class="active">
-        <a href="#profile" role="tab" aria-controls="profile" data-toggle="tab"><%= _('Profile information') %></a>
+        <a href="#profile" role="tab" aria-controls="profile" data-bs-toggle="tab"><%= _('Profile information') %></a>
       </li>
     </ul>
 
     <!-- render navigation tabs for the template-->
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane active" id="profile">
-        <div class="panel panel-default">
-          <div class="panel-body">
+        <div class="card card-default">
+          <div class="card-body">
             <div class="px-2">
               <%= render partial: 'orgs/profile_form',
                          locals: {

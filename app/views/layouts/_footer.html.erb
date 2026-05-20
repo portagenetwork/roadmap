@@ -5,89 +5,107 @@
 %>
 
 <!-- footer container -->
-<div id="footer-navbar" class="navbar-inverse navbar-fixed-bottom" role="navigation">
+<div id="footer-navbar" class="navbar navbar-dark bg-dark fixed-bottom" role="navigation">
   <div class="container-fluid">
-    <ul class="nav navbar-nav navbar">
 
-      <li>
+    <ul class="nav d-flex align-items-center flex-wrap gap-4 justify-content-start w-100">
+
+      <li class="nav-item d-flex align-items-center">
         <%= link_to("https://alliancecan.ca/", title: _("Digital Research Alliance of Canada"), target: '_blank', class: 'has-new-window-popup-info')  do %>
           <%= image_tag("alliance-white.png", 
-                        class: "img-responsive",
+                        class: "img-fluid",
                         alt: "#{_('Digital Research Alliance of Canada')} #{_('(opens in a new window)')}",
                         id: "alliance-logo" ) %>
           <span class="new-window-popup-info"><%= _('Opens in new window') %></span>
         <% end %>
       </li>
 
-      <li>
+      <li class="nav-item d-flex align-items-center">
         <%= link_to("https://www.library.ualberta.ca/", title: _("University of Alberta Library"), target: '_blank', class: 'has-new-window-popup-info')  do %>
           <%= image_tag("UA-LIBR-1C-SOLID-REVERSE.png",
-                        class: "img-responsive",
+                        class: "img-fluid",
                         alt: "#{_('University of Alberta Library')} #{_('(opens in a new window)')}") %>
           <span class="new-window-popup-info"><%= _('Opens in new window') %></span>
         <% end %>
       </li>
 
-      <li>
+      <li class="nav-item d-flex align-items-center">
         <%= link_to("https://www.uvic.ca/systems/researchcomputing/about-us/arbutus/index.php", title: _("Arbutus Research Cloud"), target: '_blank', class: 'has-new-window-popup-info')  do %>
           <%= image_tag("arbutus-cloud.png", 
-                          style: "width: 50px; height: 40px;", 
-                          class: "img-responsive", 
-                          alt:  "#{_('Arbutus Research Cloud')} #{_('(opens in a new window)')}") %>
+                        style: "width: 50px; height: 40px;", 
+                        class: "img-fluid", 
+                        alt:  "#{_('Arbutus Research Cloud')} #{_('(opens in a new window)')}") %>
           <span class="new-window-popup-info"><%= _('Opens in new window') %></span>
         <% end %>
       </li>
 
-      <li>
+      <li class="nav-item d-flex align-items-center">
         <%= link_to("https://www.uvic.ca/", title: _("University of Victoria"), target: '_blank', class: 'has-new-window-popup-info')  do %>
           <%= image_tag("uvic-crest.png", 
-                        class: "img-responsive",
+                        class: "img-fluid",
                         style: "width: 100px; height: 34px;",
                         alt: "#{_('University of Victoria')} #{_('(opens in a new window)')}" ) %>
           <span class="new-window-popup-info"><%= _('Opens in new window') %></span>
         <% end %>
       </li>
       
-      <li>
+      <li class="nav-item d-flex align-items-center">
         <%= link_to("http://www.dcc.ac.uk/", title: _("Digital Curation Centre"), target: '_blank', class: 'has-new-window-popup-info')  do %>
           <%= image_tag("dcc_logo_white.png", 
-                        class: "img-responsive", 
+                        class: "img-fluid", 
                         alt: "#{_('Digital Curation Centre')} #{_('(opens in a new window)')}") %>
           <span class="new-window-popup-info"><%= _('Opens in new window') %></span>
         <% end %>
       </li>
 
-      <li>
+      <li class="nav-item d-flex align-items-center">
         <%= link_to("https://dmponline.dcc.ac.uk/about_us", title: _("DMP Online"), target: '_blank', class: 'has-new-window-popup-info')  do %>
           <%= image_tag("dmp-online-logo-white.png",
-                        class: "img-responsive",
+                        class: "img-fluid",
                         alt: "#{_('DMP Online')} #{_('(opens in a new window)')}") %>
           <span class="new-window-popup-info"><%= _('Opens in new window') %></span>
         <% end %>
       </li>
 
-      <li>
+      <li class="nav-item d-flex align-items-center">
         <%= link_to("https://cdlib.org/services/uc3/", title: _("University of California Curation Center"), target: '_blank', class: 'has-new-window-popup-info')  do %>
           <%= image_tag("uc3_logo_white.png", 
-                        class: "img-responsive", 
+                        class: "img-fluid", 
                         alt: "#{_('University of California Curation Center')} #{_('(opens in a new window)')}") %>
           <span class="new-window-popup-info"><%= _('Opens in new window') %></span>
         <% end %>
       </li>
 
     </ul>
-  </div>
-  <div class="container-fluid">
-    <ul class="nav navbar-nav">
-      <li><%= link_to(sanitize(_("&copy; 2004 - %{year} %{org_name}")) % {
-        year: Time.now.year, 
-        org_name: _(Rails.configuration.branding[:organisation][:name])
-        }, Rails.configuration.branding[:organisation][:url])%></li>
-      <li>•</li>
-      <li><a href="<%= contact_us %>"><%= _('Contact us') %></a></li>
-      <li><a href="<%= terms_path %>"><%= _('Terms of use') %></a></li>
-      <li><a href="/privacy"><%= _('Privacy statement') %></a></li>
-      <li><a href="https://github.com/portagenetwork/roadmap"><%= _('GitHub') %></a></li>
-    </ul>    
+
+    <ul class="nav d-flex flex-wrap gap-3 mt-2 justify-content-start w-100">
+
+      <li class="nav-item d-flex align-items-center">
+        <%= link_to(sanitize(_("&copy; 2004 - %{year} %{org_name}")) % {
+          year: Time.now.year, 
+          org_name: _(Rails.configuration.branding[:organisation][:name])
+        }, Rails.configuration.branding[:organisation][:url])%>
+      </li>
+
+      <li class="nav-item d-flex align-items-center">•</li>
+
+      <li class="nav-item d-flex align-items-center">
+        <a href="<%= contact_us %>"><%= _('Contact us') %></a>
+      </li>
+
+      <li class="nav-item d-flex align-items-center">
+        <a href="<%= terms_path %>"><%= _('Terms of use') %></a>
+      </li>
+
+      <li class="nav-item d-flex align-items-center">
+        <a href="/privacy"><%= _('Privacy statement') %></a>
+      </li>
+
+      <li class="nav-item d-flex align-items-center">
+        <a href="https://github.com/portagenetwork/roadmap"><%= _('GitHub') %></a>
+      </li>
+
+    </ul>
+
   </div>
 </div>

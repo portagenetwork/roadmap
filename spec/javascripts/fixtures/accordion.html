@@ -1,6 +1,6 @@
 <div id="accordion-tester">
   <!-- accordion expand/collapse all controls -->
-  <div class="accordion-controls" data-parent="accordion">
+  <div class="accordion-controls" data-bs-parent="accordion">
     <a href="#" data-toggle-direction="show"><%= _('expand all') %></a>
     <span>|</span>
     <a href="#" data-toggle-direction="hide"><%= _('collapse all') %></a>
@@ -8,51 +8,51 @@
 
 
   <!-- Standard Bootstrap 3.x accordion -->
-  <div id="accordion" class="panel-group" role="tablist" aria-multiselectable="true">
-    <div class="panel panel-default">
-      <div class="panel-heading" role="tab" id="headingA">
-        <h2 class="panel-title">
-          <a role="button" data-toggle="collapse" data-parent="accordion" href="#collapseA" aria-controls="collapseA" aria-expanded="false">
+  <div id="accordion" class="card-group" role="tablist" aria-multiselectable="true">
+    <div class="card card-default">
+      <div class="card-heading" role="tab" id="headingA">
+        <h2 class="card-title">
+          <a role="button" data-bs-toggle="collapse" data-bs-parent="accordion" href="#collapseA" aria-controls="collapseA" aria-expanded="false">
             Section A
             <span class="fas fa-plus" aria-hidden="true"></span>
           </a>
         </h2>
       </div>
     </div>
-    <div id="collapseA" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingA">
-      <div class="panel-body">
+    <div id="collapseA" class="card-collapse collapse" role="tabpanel" aria-labelledby="headingA">
+      <div class="card-body">
         This is test section A.
       </div>
     </div>
 
-    <div class="panel panel-default">
-      <div class="panel-heading" role="tab" id="headingB">
-        <h2 class="panel-title">
-          <a role="button" data-toggle="collapse" data-parent="accordion" href="#collapseB" aria-controls="collapseB" aria-expanded="false">
+    <div class="card card-default">
+      <div class="card-heading" role="tab" id="headingB">
+        <h2 class="card-title">
+          <a role="button" data-bs-toggle="collapse" data-bs-parent="accordion" href="#collapseB" aria-controls="collapseB" aria-expanded="false">
             Section B
             <span class="fas fa-plus" aria-hidden="true"></span>
           </a>
         </h2>
       </div>
     </div>
-    <div id="collapseB" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingB">
-      <div class="panel-body">
+    <div id="collapseB" class="card-collapse collapse" role="tabpanel" aria-labelledby="headingB">
+      <div class="card-body">
         This is test section B.
       </div>
     </div>
 
-    <div class="panel panel-default">
-      <div class="panel-heading" role="tab" id="headingC">
-        <h2 class="panel-title">
-          <a role="button" data-toggle="collapse" data-parent="accordion" href="#collapseC" aria-controls="collapseC" aria-expanded="false">
+    <div class="card card-default">
+      <div class="card-heading" role="tab" id="headingC">
+        <h2 class="card-title">
+          <a role="button" data-bs-toggle="collapse" data-bs-parent="accordion" href="#collapseC" aria-controls="collapseC" aria-expanded="false">
             Section C
             <span class="fas fa-plus" aria-hidden="true"></span>
           </a>
         </h2>
       </div>
     </div>
-    <div id="collapseC" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingC">
-      <div class="panel-body">
+    <div id="collapseC" class="card-collapse collapse" role="tabpanel" aria-labelledby="headingC">
+      <div class="card-body">
         This is test section C.
       </div>
     </div>
