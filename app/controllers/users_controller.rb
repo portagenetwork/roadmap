@@ -24,7 +24,7 @@ class UsersController < ApplicationController
                    User.includes(:department, :org, :perms, :roles, identifiers: :identifier_scheme).page(1)
                  else
                    current_user.org.users
-                               .includes(:department, :org, :perms, :roles, identifiers: :identifier_scheme)
+                               .includes(:department, :perms, :roles, identifiers: :identifier_scheme)
                                .page(1)
                  end
       end
