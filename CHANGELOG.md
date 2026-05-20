@@ -32,6 +32,8 @@
 
  - chore(doorkeeper): set `base_controller 'ApplicationController'` [#1332](https://github.com/portagenetwork/roadmap/pull/1332)
 
+ - chore(admin-users-list): remove CSV export and "View all" options [#1349](https://github.com/portagenetwork/roadmap/pull/1349)
+
 ### Dependency Updates
 
  - chore(deps): bump eslint from 8.38.0 to 9.26.0 [#1270](https://github.com/portagenetwork/roadmap/pull/1270)
