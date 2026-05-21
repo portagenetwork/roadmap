@@ -128,6 +128,10 @@ class Plan < ApplicationRecord
 
   has_many :research_outputs, dependent: :destroy
 
+  # No `dependent` option means Rails will not cascade-delete snapshots;
+  # database foreign-key behavior determines whether plan deletion is allowed.
+  has_many :snapshots, class_name: 'PlanSnapshot'
+
   # =====================
   # = Nested Attributes =
   # =====================
