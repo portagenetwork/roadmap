@@ -10,6 +10,8 @@
 
  - chore(deps): bump hono from 4.12.14 to 4.12.18 [#1342](https://github.com/portagenetwork/roadmap/pull/1342)
 
+ - chore(deps): bump js-cookie from 3.0.1 to 3.0.7 [#1352](https://github.com/portagenetwork/roadmap/pull/1352)
+
 ## [4.1.1+portage-4.8.0]
 
 ### Added
