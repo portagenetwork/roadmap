@@ -131,7 +131,11 @@ Rails.application.routes.draw do
 
     resources :contributors, except: %i[show]
 
-    resources :research_outputs, except: %i[show]
+    resources :research_outputs, except: %i[show] do
+      collection do
+        get :fetch_doi
+      end
+    end
 
     member do
       get 'answer'
