@@ -9,7 +9,7 @@ FactoryBot.define do
     visibility { PlanSnapshot.visibilities.keys.first }
     rda_json { PlanSnapshotValues.mock_rda_json }
     extension_json { PlanSnapshotValues.mock_extension_json }
-    checksum { PlanSnapshotValues.random_md5 }
+    checksum { PlanSnapshotChecksum.calculate(rda_json, extension_json) }
     fixity_checked_at { nil }
   end
 end

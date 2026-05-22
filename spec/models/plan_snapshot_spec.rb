@@ -51,4 +51,49 @@ RSpec.describe PlanSnapshot, type: :model do
       expect(duplicate.errors[:plan_id]).to include('has already been taken')
     end
   end
+
+  describe '.create_from_plan' do
+    let(:plan) { create(:plan) }
+    let(:rda_json) { PlanSnapshotValues.mock_rda_json }
+    let(:extension_json) { PlanSnapshotValues.mock_extension_json }
+    let(:checksum) { PlanSnapshotValues.random_md5 }
+
+    before(:each) do
+      Api::V2::Serialization::RdaSerializer.stubs(:call).returns(rda_json)
+      Api::V2::Serialization::ExtensionSerializer.stubs(:call).returns(extension_json)
+
+      PlanSnapshotChecksum.stubs(:calculate).returns(checksum)
+    end
+
+    it 'creates a valid snapshot with correct attributes' do
+      snapshot = described_class.create_from_plan(plan: plan, visibility: 'privately_visible')
+      expect(snapshot).to be_persisted
+      expect(snapshot.plan).to eq(plan)
+      expect(snapshot.visibility).to eq('privately_visible')
+      expect(snapshot.rda_json).to eq(rda_json)
+      expect(snapshot.extension_json).to eq(extension_json)
+      expect(snapshot.checksum).to eq(checksum)
+      expect(snapshot.version).to eq(1)
+    end
+
+    it 'increments version for subsequent snapshots' do
+      described_class.create_from_plan(plan: plan, visibility: 'privately_visible')
+      snapshot2 = described_class.create_from_plan(plan: plan, visibility: 'privately_visible')
+      expect(snapshot2.version).to eq(2)
+    end
+  end
+
+  describe '.send(:next_version_for_plan)' do
+    let(:plan) { create(:plan) }
+
+    it 'returns 1 if no snapshots exist' do
+      expect(described_class.send(:next_version_for_plan, plan)).to eq(1)
+    end
+
+    it 'returns max version + 1 if snapshots exist' do
+      create(:plan_snapshot, plan: plan, version: 1)
+      create(:plan_snapshot, plan: plan, version: 2)
+      expect(described_class.send(:next_version_for_plan, plan)).to eq(3)
+    end
+  end
 end
