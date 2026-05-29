@@ -17,18 +17,6 @@ module Paginable
       )
     end
 
-    # GET /paginable/plans/organisationally_or_publicly_visible/:page
-    def organisationally_or_publicly_visible
-      authorize Plan
-
-      paginable_renderise(
-        partial: 'organisationally_or_publicly_visible',
-        scope: Plan.organisationally_or_publicly_visible(current_user),
-        query_params: { sort_field: 'plans.updated_at', sort_direction: :desc },
-        format: :json
-      )
-    end
-
     # GET /paginable/plans/publicly_visible/:page
     def publicly_visible
       # We want the pagination/sort/search to be retained in the URL so redirect instead

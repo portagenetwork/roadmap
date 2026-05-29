@@ -165,20 +165,6 @@ class Plan < ApplicationRecord
       .where(id: plan_ids)
   }
 
-  # Retrieves any plan organisationally or publicly visible for a given org id
-  scope :organisationally_or_publicly_visible, lambda { |user|
-    plan_ids = user.org.org_admin_plans.where(complete: true).pluck(:id).uniq
-    includes(:template, roles: :user)
-      .where(id: plan_ids, visibility: [
-               visibilities[:organisationally_visible],
-               visibilities[:publicly_visible]
-             ])
-      .where(
-        'NOT EXISTS (SELECT 1 FROM roles WHERE plan_id = plans.id AND user_id = ?)',
-        user.id
-      )
-  }
-
   scope :search, lambda { |term|
     if date_range?(term: term)
       joins(:template, roles: [user: :org])

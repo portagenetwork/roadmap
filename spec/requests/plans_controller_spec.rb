@@ -10,29 +10,14 @@ RSpec.describe 'PlansController', type: :request do
 
   describe 'GET /plans' do
     let!(:user_created_plan) { create(:plan, :creator, creator: user, org: user.org) }
-    let!(:admin_for_user_org) { create(:user, :org_admin, org: user.org) }
-    let!(:admin_for_other_org) { create(:user, :org_admin, org: create(:org)) }
-    let!(:visible_plan_by_admin_from_same_org) do
-      create(:plan, :organisationally_visible, :creator, creator: admin_for_user_org, org: user.org, complete: true)
-    end
-    let!(:visible_plan_by_admin_from_other_org) do
-      create(:plan, :organisationally_visible, :creator, creator: admin_for_other_org, org: admin_for_other_org.org,
-                                                         complete: true)
-    end
 
-    it 'Renders My Plans and organisationally visible plans correctly' do
+    it 'renders My Plans correctly' do
       get plans_path
       expect(response).to have_http_status(:ok)
       html = Nokogiri::HTML(response.body)
 
       user_plans_table = html.at_css('table#my-plans')
       expect(user_plans_table.text).to include(user_created_plan.title)
-
-      # NOTE: id="my-plans" exists for table belonging to user plans
-      # TODO: Add something like id="org-plans" to the table listing org plans
-      # (See app/views/paginable/plans/_organisationally_or_publicly_visible.html.erb)
-      expect(response.body).to include(visible_plan_by_admin_from_same_org.title)
-      expect(response.body).to_not include(visible_plan_by_admin_from_other_org.title)
     end
   end
 
