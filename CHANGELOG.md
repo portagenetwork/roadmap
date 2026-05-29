@@ -12,6 +12,8 @@
 
  - chore(deps): bump js-cookie from 3.0.1 to 3.0.7 [#1352](https://github.com/portagenetwork/roadmap/pull/1352)
 
+ - chore(deps): bump tmp from 0.2.5 to 0.2.7 [#1357](https://github.com/portagenetwork/roadmap/pull/1357)
+
 ## [4.1.1+portage-4.8.0]
 
 ### Added
