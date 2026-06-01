@@ -78,8 +78,4 @@ class PlanPolicy < ApplicationPolicy
   def privately_visible?
     @user.present?
   end
-
-  def organisationally_or_publicly_visible?
-    @user.present?
-  end
 end

@@ -13,21 +13,14 @@ class PlansController < ApplicationController
   before_action :setup_local_orgs, only: %i[new show]
 
   # GET /plans
-  # rubocop:disable Metrics/AbcSize
   def index
     authorize Plan
     @plans = Plan.includes(:roles).active(current_user).page(1)
-    @organisationally_or_publicly_visible = if current_user.org.is_other?
-                                              []
-                                            else
-                                              Plan.organisationally_or_publicly_visible(current_user).page(1)
-                                            end
     # TODO: Is this still used? We cannot switch this to use the :plan_params
     #       strong params because any calls that do not include `plan` in the
     #       query string will fail
     @template = Template.find(params[:plan][:template_id]) if params[:plan].present?
   end
-  # rubocop:enable Metrics/AbcSize
 
   # GET /plans/new
   # rubocop:disable Metrics/AbcSize

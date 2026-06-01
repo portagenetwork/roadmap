@@ -234,10 +234,6 @@ Rails.application.routes.draw do
       get 'privately_visible/:page',
           action: :privately_visible, on: :collection, as: :privately_visible
 
-      get 'organisationally_or_publicly_visible/:page',
-          action: :organisationally_or_publicly_visible,
-          on: :collection, as: :organisationally_or_publicly_visible
-
       get 'publicly_visible/:page', action: :publicly_visible,
                                     on: :collection, as: :publicly_visible
 
