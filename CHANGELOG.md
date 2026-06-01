@@ -10,6 +10,8 @@
 
  - chore(bootstrap): migrate UI from Bootstrap 3 to 5 [#1310](https://github.com/portagenetwork/roadmap/pull/1310)
 
+ - chore(plans): remove organisational/public plans feature and dead code [#1358](https://github.com/portagenetwork/roadmap/pull/1358)
+
  ### Dependency Updates
 
  - chore(deps): bump nginx from 1.29.8-alpine to 1.31.0-alpine [#1346](https://github.com/portagenetwork/roadmap/pull/1346)
