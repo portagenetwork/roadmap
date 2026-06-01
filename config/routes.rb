@@ -60,6 +60,7 @@ Rails.application.routes.draw do
   get 'help' => 'static_pages#help'
   get 'terms' => 'static_pages#termsuse'
   get 'privacy' => 'static_pages#privacy'
+  get 'oauth_api_access_covenant' => 'static_pages#oauth_api_access_covenant'
   get 'public_plans' => 'public_pages#plan_index'
   get 'public_templates' => 'public_pages#template_index'
   get 'template_export/:id' => 'public_pages#template_export', as: 'template_export'
