@@ -2,6 +2,10 @@
 
 ## [4.1.1+portage-4.9.0]
 
+### Fixed
+
+ - Fix and Refactor Querying of `template.phases` and Associations Within `OrgAdmin TemplatesController` [#991](https://github.com/portagenetwork/roadmap/pull/991)
+
 ### Changed
 
  - chore(annotate): regen schema info for models & factories [#1340](https://github.com/portagenetwork/roadmap/pull/1340)
