@@ -20,10 +20,10 @@ $(() => {
     // If a template has been selected and it is a string
     if (tmplt && isString(tmplt)) {
       // remove the disabled attribute and make the button clickable
-      submitButton.removeAttr('disabled').removeAttr('data-toggle').removeAttr('title');
+      submitButton.removeAttr('disabled').removeAttr('data-bs-toggle').removeAttr('title');
     } else {
       // otherwise keep it disabled
-      submitButton.attr('disabled', true).attr('data-toggle', 'tooltip')
+      submitButton.attr('disabled', true).attr('data-bs-toggle', 'tooltip')
       .attr('title', getConstant('NEW_PLAN_DISABLED_TOOLTIP'));
     }
   };
@@ -81,7 +81,7 @@ $(() => {
   const appendGroup = (menu, header, templates) => {
     if (templates.length === 0) return;
 
-    menu.append(`<h6 class="dropdown-header text-muted">${header}</h6>`);
+    menu.append(`<h6 class="dropdown-header">${header}</h6>`);
     templates.forEach((t) => menu.append(createTemplateItem(t)));
     menu.append('<div class="dropdown-divider"></div>');
   };
@@ -91,7 +91,7 @@ $(() => {
     if (otherTemplates.length === 0) return;
 
     const showMore = $(`
-      <button type="button" class="btn btn-default" id="show-more-templates">
+      <button type="button" class="btn btn-secondary" id="show-more-templates">
         ${getConstant('SHOW_MORE_TEMPLATES')}
       </button>
     `);
@@ -107,7 +107,7 @@ $(() => {
       e.stopPropagation(); // prevent closing dropdown
 
       hiddenContainer.empty(); // clear before adding
-      hiddenContainer.append(`<h6 class="dropdown-header text-muted">${getConstant('OTHER_TEMPLATES')}</h6>`);
+      hiddenContainer.append(`<h6 class="dropdown-header">${getConstant('OTHER_TEMPLATES')}</h6>`);
       otherTemplates.forEach((t) => hiddenContainer.append(createTemplateItem(t)));
 
       hiddenContainer.slideDown(10);

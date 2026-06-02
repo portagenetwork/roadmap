@@ -29,19 +29,5 @@
     <%= link_to _('Create plan'), new_plan_path, class: "btn btn-primary" %>
   </div>
 </div>
-<div class="row">
-  <div class="col-md-12">
-    <% if @organisationally_or_publicly_visible.any? && !current_user.org.is_other? %>
-      <h2><%= _('%{org_title} Plans') % { :org_title => current_user.org.name } %></h2>
-      <p><%= _('The table below lists the plans that users at your organisation have created and shared within your organisation. This allows you to download a PDF and view their plans as samples or to discover new research data.') %></p>
-      <%= paginable_renderise(
-        partial: '/paginable/plans/organisationally_or_publicly_visible',
-        controller: 'paginable/plans',
-        action: 'organisationally_or_publicly_visible',
-        scope: @organisationally_or_publicly_visible,
-        query_params: { sort_field: 'plans.title', sort_direction: :asc }) %>
-    <% end %>
-  </div>
-</div>
 
 <%= render 'shared/create_plan_modal' unless @template.nil? %>

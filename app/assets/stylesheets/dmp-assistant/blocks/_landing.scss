@@ -9,13 +9,6 @@
     font-size: 18px;
     color: $color-alliance-digital-grey;
     position: relative;
-
-    &::before {
-      content: "▸";
-      position: absolute;
-      left: 16px;
-      transition: transform 0.2s ease;
-    }
   }
 
   details[open] summary::before {

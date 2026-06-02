@@ -1,14 +1,16 @@
-@import '../../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables';
-/* For sticky footer */
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+
 #footer-navbar {
   margin-bottom: 0px;
   position: absolute;
+  overflow: hidden;
   bottom: 0;
   width: 100%;
   border-radius:0px;
   z-index: 1;
   ul {
-    padding-right: $grid-gutter-width / 2;
+    padding-right: calc($grid-gutter-width / 2);
 
     #alliance-logo{
       @media only screen 

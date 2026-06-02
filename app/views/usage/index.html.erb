@@ -11,10 +11,9 @@
            locals: { user_count: @total_org_users,
                      plan_count: @total_org_plans,
                      separators: @separators } %>
-<div class="panel-group usage-accordion" role="tablist" aria-multiselectable="true">
+<div  id="usage-accordion" class="accordion" role="tablist" aria-multiselectable="true">
   <%= render partial: 'usage/user_statistics_accordion', locals: {expanded: true} %>
   <%= render partial: 'usage/template_statistics_accordion', locals: {expanded: false} %>
 </div>
 
 <%= render partial: 'usage/filter' %>
-

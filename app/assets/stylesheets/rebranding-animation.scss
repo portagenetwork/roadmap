@@ -19,22 +19,14 @@ a.btn.btn-link, input.btn-link, // "Edit" & "Destroy" buttons for /oauth/applica
 }
 
 /* Exceptions to general link visibility/accessibility styling */
-#app-navbar-menu .nav > li > a,
-#org-navbar-menu > .nav.navbar-nav.navbar-right > li > a,
-#app-navbar-menu .nav > .dropdown > .dropdown-menu > li > a,
-#org-navbar-menu .nav > .dropdown > .dropdown-menu > li > a {
-  text-decoration: none;
-  color: $color-alliance-digital-grey;
-}
-
 a.btn,
 .nav > li > a:not(#org-navbar-menu .nav > li > a) {
   text-decoration: none;
 }
 
   /* This is added to the header of the Write Plan section in the Plans*/
-  .heading-button > .panel-heading,
-  .panel-default > .panel-heading {
+  .heading-button > .card-heading,
+  .card-default > .card-heading {
   color: $color-alliance-digital-grey;
   background-color: $color-alliance-lighter-grey;
   border-top: 3px solid $color-alliance-yellow;
@@ -52,7 +44,7 @@ a.btn,
 }
 
 /* Guidance collapse bar in Templates section icon color issues fix on-hover OR on focus*/
-.panel-heading {
+.card-heading {
   &:hover,
   &:focus {
     i.fas.pull-left.fa-minus,
@@ -62,7 +54,7 @@ a.btn,
     }
   }
 }
-// form > fieldset > button.btn.btn-default {
+// form > fieldset > button.btn.btn-secondary {
 //   animation: wiggle 2s linear infinite;
 // }
 

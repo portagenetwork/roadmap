@@ -18,10 +18,10 @@
                 class="btn btn-link dropdown-toggle"
                 type="button"
                 id="department-<%= department.id %>-actions"
-                data-toggle="dropdown"
+                data-bs-toggle="dropdown"
                 aria-haspopup="true"
                 aria-expanded="true">
-                <%= _('Actions') %><span class="caret"></span>
+                <%= _('Actions') %>
               </button>
               <ul class="dropdown-menu" aria-labelledby="department-<%= department.id %>-actions">
                 <li><%= link_to _('Edit'), edit_org_department_path(org_id: department.org_id, id: department.id) %></li>

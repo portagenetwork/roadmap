@@ -1,5 +1,5 @@
-<div class="form-group col-xs-12">
-    <%= f.label(:confirmed_at, _('Email status: '), class: 'control-label') %>
+<div class="form-control mb-3 col-xs-12">
+    <%= f.label(:confirmed_at, _('Email status: '), class: 'form-label') %>
     <%= @user.confirmed? ? _("Confirmed.") : _("Unconfirmed.") %>
     <br>
     <% is_checkbox_disabled = @user.can_super_admin? && @user.confirmed_at.present? %>

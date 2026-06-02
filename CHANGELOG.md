@@ -1,8 +1,30 @@
 # Changelog
 
-## [Unreleased]
+## [4.1.1+portage-4.9.0]
 
-### Dependency Updates
+### Changed
+
+ - chore(annotate): regen schema info for models & factories [#1340](https://github.com/portagenetwork/roadmap/pull/1340)
+
+ - refactor(api/v2/plans): extract extension JSON into separate partial and add test coverage [#1343](https://github.com/portagenetwork/roadmap/pull/1343)
+
+ - chore(bootstrap): migrate UI from Bootstrap 3 to 5 [#1310](https://github.com/portagenetwork/roadmap/pull/1310)
+
+ - chore(plans): remove organisational/public plans feature and dead code [#1358](https://github.com/portagenetwork/roadmap/pull/1358)
+
+ ### Added
+
+  - feat(oauth): OAuth API access covenant static page [#1359](https://github.com/portagenetwork/roadmap/pull/1359)
+
+ ### Dependency Updates
+
+ - chore(deps): bump nginx from 1.29.8-alpine to 1.31.0-alpine [#1346](https://github.com/portagenetwork/roadmap/pull/1346)
+
+ - chore(deps): bump docker/login-action from 4.1.0 to 4.2.0 [#1353](https://github.com/portagenetwork/roadmap/pull/1353)
+
+ - chore(deps): bump docker/build-push-action from 7.1.0 to 7.2.0 [#1351](https://github.com/portagenetwork/roadmap/pull/1351)
+
+ - chore(deps): bump nginx from 1.31.0-alpine to 1.31.1-alpine [#1356](https://github.com/portagenetwork/roadmap/pull/1356)
 
  - chore(deps): bump @babel/plugin-transform-modules-systemjs from 7.20.11 to 7.29.4 [#1345](https://github.com/portagenetwork/roadmap/pull/1345)
 
@@ -35,6 +57,8 @@
  - refactor(api-v1 specs): create spec file for `Api::Plans::CreateFromDmpService` & move `Api::V1::PlansController` specs [#1329](https://github.com/portagenetwork/roadmap/pull/1329)
 
  - chore(doorkeeper): set `base_controller 'ApplicationController'` [#1332](https://github.com/portagenetwork/roadmap/pull/1332)
+
+ - chore(admin-users-list): remove CSV export and "View all" options [#1349](https://github.com/portagenetwork/roadmap/pull/1349)
 
 ### Dependency Updates
 

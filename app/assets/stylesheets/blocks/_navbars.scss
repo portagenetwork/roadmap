@@ -1,6 +1,9 @@
 @use '../variables/colours' as *;
 @use '../variables/bootstrap' as *;
-@import '../../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables';
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
 /* For org navbar custom height */
 #org-navbar {
   border-radius: 0px;
@@ -38,14 +41,14 @@
     color: $navbar-org-link-color;
     &:hover,
     &:focus {
-      color: darken($navbar-org-link-hover-color,10%);
+      color: shade-color($navbar-org-link-hover-color,10%)
     }
   }
   #org-navbar .navbar-nav ul .active a {
     color: $navbar-org-link-active-color;
   }
   #org-navbar .org-links {
-    padding-top: $grid-gutter-width / 2;
+    padding-top: calc($grid-gutter-width / 2);
   }
   #org-navbar .org-a {
     line-height: 36px !important;
@@ -97,7 +100,7 @@
   }
 
   // Darken the responsive nav toggle
-  .navbar-toggle {
+  .navbar-toggler {
     border-color: $navbar-branding-toggle-border-color;
     &:hover,
     &:focus {
@@ -110,7 +113,7 @@
 
   .navbar-collapse,
   .navbar-form {
-    border-color: darken($navbar-branding-bg, 7%);
+    border-color: shade-color($navbar-branding-bg, 7%);
   }
 
   // Dropdowns
@@ -124,7 +127,7 @@
       }
     }
 
-    @media (max-width: $grid-float-breakpoint-max) {
+    @include media-breakpoint-down(lg) {
       // Dropdowns get custom display
       .open .dropdown-menu {
         > .dropdown-header {

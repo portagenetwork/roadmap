@@ -1,5 +1,10 @@
 @use '../../dmp-assistant/variables/colours' as *;
 
+#admin-dropdown .dropdown-menu {
+  right: 0;
+  left: auto;
+}
+
 #template-dropdown {
   white-space: nowrap;
   overflow: hidden;

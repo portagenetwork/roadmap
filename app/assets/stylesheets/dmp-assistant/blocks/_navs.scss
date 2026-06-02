@@ -1,0 +1,45 @@
+@use '../variables/colours' as *;
+
+.nav-tabs, .nav-pills {
+	background-color: $color-alliance-digital-grey;
+}
+
+/* nav-tabs overiding on active */
+.nav-tabs .nav-link:hover,
+.nav-tabs .nav-link:focus,
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-link.active:hover,
+.nav-tabs .nav-link.active:focus {
+	color: $color-alliance-digital-grey !important;
+}
+
+/* Styling for the Sign in & Create account .nav-tabs container */
+.sign-in .nav-tabs {
+	background: $color-white;
+	border: 1px solid #000;
+	border-bottom: none;
+	overflow: hidden;
+	display: flex;
+}
+
+/* Make the Sign in & Create account .nav-tabs evenly spaced */
+.sign-in .nav-tabs .nav-item {
+	flex: 1;
+}
+
+/* General styling for the clickable Sign in & Create account tabs */
+.sign-in .nav-tabs .nav-link {
+	color: $color-alliance-digital-grey;
+	text-align: center;
+	width: 100%; /* ensures the <a> fills the <li> */
+	white-space: nowrap;
+}
+
+/* Styling for the selected .sign-in tab */
+.sign-in .nav-tabs .nav-link.active,
+.sign-in .nav-tabs .nav-link.active:hover {
+	color: $color-alliance-darker-yellow !important;
+	background: $color-alliance-digital-grey !important;
+	font-weight: bold;
+	border-bottom: 3px solid $color-alliance-darker-yellow;
+}

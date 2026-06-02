@@ -10,7 +10,7 @@
   <div class="col-md-12">
     <h1><%= _('Create a new plan') %></h1>
 
-    <p class="left-indent">
+    <p class="start-indent">
       <%= _("Before you get started, we need some information about your research project to set you up with the best DMP template for your needs.") %>
     </p>
   </div>
@@ -20,21 +20,23 @@
   <div class="col-md-12">
     <%= form_for Plan.new, url: plans_path do |f| %>
       <!-- Plan name section -->
-      <h2 id="project-title"><span class="red" title="<%= required_project_title_tooltip %>">*<em class="sr-only"><%= required_project_title_tooltip %></em> </span><%= _('What research project are you planning?') %></h2>
+      <h2 id="project-title">
+        <span class="red" title="<%= required_project_title_tooltip %>">*<em class="sr-only"><%= required_project_title_tooltip %></em> </span>
+        <%= _('What research project are you planning?') %>
+      </h2>
       <div class="row">
-        <div class="form-group col-xs-6">
-          <em class="sr-only"><%= project_title_tooltip %></em>
+        <div class="form-control mb-3 col-md-6">
           <%= f.text_field(:title, class: 'form-control', 'aria-labelledby': 'project-title', 'aria-required': 'true', 'aria-label': 'project-title',
-                'data-toggle': 'tooltip',
+                'data-bs-toggle': 'tooltip',
                 'data-placement': 'bottom',
                 spellcheck: true,
                 title: project_title_tooltip ) %>
         </div>
-        <div class="col-md-1">&nbsp;</div>
-        <div class="form-group col-xs-5">
-          <div class="checkbox create-plan-mock">
-            <%= label_tag(:is_test) do %>
-              <%= check_box_tag(:is_test, "1", false) %>
+        <div class="col-md-1 text-center"></div>
+        <div class="mb-3 col-md-3">
+          <div class="form-check">
+            <%= label_tag(:is_test, class: 'form-check-label') do %>
+              <%= check_box_tag(:is_test, "1", false, class: "form-check-input") %>
               <%= _('mock project for testing, practice, or educational purposes') %>
             <% end %>
           </div>
@@ -47,7 +49,7 @@
         <%= _('Indicate the primary research organisation') %>
       </h2>
       <div id="research-org-controls" class="row">
-        <div class="form-group col-md-6">
+        <div class="form-control mb-3 col-md-6">
            <em class="sr-only"><%= research_org_tooltip %></em>
            <% dflt = @orgs.include?(current_user.org) ? current_user.org : nil %>
            <%= f.fields_for :org, @plan.org do |org_fields| %>
@@ -63,12 +65,12 @@
                         } %>
           <% end %>
         </div>
-        <div class="col-md-1 pad-top-10 create-plan-or"><strong>- <%= _('or') %> -</strong></div>
-        <div class="form-group col-md-5 create-plan-checkbox">
-          <div class="checkbox">
+        <div class="col-md-1 text-center"><strong>- <%= _('or') %> -</strong></div>
+        <div class="mb-3 col-md-3">
+          <div class="form-check">
             <% primary_research_org_message = _('No research organisation associated with this plan or my research organisation is not listed') %>
-            <%= label_tag(:plan_no_org) do %>
-              <%= check_box_tag(:plan_no_org, "0", false, class: "toggle-autocomplete") %>
+            <%= label_tag(:plan_no_org, class: "form-check-label") do %>
+              <%= check_box_tag(:plan_no_org, "0", false, class: "form-check-input toggle-autocomplete") %>
               <%= primary_research_org_message %>
             <% end %>
           </div>
@@ -77,28 +79,31 @@
 
       <!-- Funder selection -->
       <div class="hide-funder-section" style="display: none;">
-        <h2 id="funder-org"><span class="red" title="<%= required_primary_funding_tooltip %>">* <em class="sr-only"><%= required_primary_funding_tooltip %></em> </span><%= _('Select the primary funding organisation') %></h2>
+        <h2 id="funder-org">
+          <span class="red" title="<%= required_primary_funding_tooltip %>">* <em class="sr-only"><%= required_primary_funding_tooltip %></em> </span>
+          <%= _('Select the primary funding organisation') %>
+        </h2>
         <div id="funder-org-controls" class="row">
-          <div class="form-group col-xs-6">
+          <div class="form-control mb-3 col-md-6">
             <em class="sr-only"><%= primary_funding_tooltip %></em>
             <%= f.fields_for :funder, @plan.funder = Org.new do |funder_fields| %>
               <%= render partial: "shared/org_selectors/local_only",
-                          locals: {
-                            form: funder_fields,
-                            id_field: :id,
-                            label: _("Funder"),
-                            default_org: nil,
-                            orgs: @funders,
-                            required: false
-                          } %>
+                         locals: {
+                           form: funder_fields,
+                           id_field: :id,
+                           label: _("Funder"),
+                           default_org: nil,
+                           orgs: @funders,
+                           required: false
+                         } %>
             <% end %>
           </div>
-          <div class="col-md-1 create-plan-or"><strong>- <%= _('or') %> -</strong></div>
-          <div class="form-group col-xs-5 create-plan-checkbox">
-            <div class="checkbox">
+          <div class="col-md-1 right-of-input"><strong>- <%= _('or') %> -</strong></div>
+          <div class="mb-3 col-md-3 right-of-input">
+            <div class="form-check">
               <% primary_funding_message = _('No funder associated with this plan or my funder is not listed') %>
               <%= label_tag(:plan_no_funder) do %>
-                <%= check_box_tag(:plan_no_funder, '1', true) %>
+                <%= check_box_tag(:plan_no_funder, "1", false, class: "toggle-autocomplete") %>
                 <%= primary_funding_message %>
               <% end %>
             </div>
@@ -110,32 +115,31 @@
       <div id="available-templates" style="display: none;">
         <%= hidden_field_tag 'template-option-target', template_options_path %>
         <h2 id="template-selection"><%= _('Which DMP template would you like to use?') %></h2>
-        <div class="form-group row">
-          <div class="col-xs-6">
-            <div class="form-group">
-              <div class="dropdown" id="template-dropdown-container">
-                <button
-                  class="form-control text-left"
-                  type="button"
-                  id="template-dropdown"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  <%= _('Please select a template') %>
-                </button>
-                <div
-                  class="dropdown-menu w-100"
-                  aria-labelledby="template-dropdown"
-                  id="template-dropdown-menu"
-                >
-                  <!-- JS will populate this with <a class="dropdown-item"> -->
+        <div class="mb-3 row">
+          <div class="col-md-6">
+            <div class="dropdown" id="template-dropdown-container">
+              <button
+                class="form-select text-start"
+                type="button"
+                id="template-dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                data-bs-toggle="dropdown"
+              >
+                <%= _('Please select a template') %>
+              </button>
+              <div
+                class="dropdown-menu w-100"
+                aria-labelledby="template-dropdown"
+                id="template-dropdown-menu"
+              >
+                <!-- JS will populate this with <a class="dropdown-item"> -->
                 </div>
-                <%= hidden_field_tag 'plan[template_id]', '', id: 'plan_template_id' %>
-              </div>
+              <%= hidden_field_tag 'plan[template_id]', '', id: 'plan_template_id' %>
             </div>
           </div>
-          <div class="col-xs-6">
+          <div class="col-md-1 text-center"></div>
+          <div class="mb-3 col-md-3">
             <span id="multiple-templates">
               <%= _('We found multiple DMP templates corresponding to your primary research organisation') %>
             </span>
@@ -145,7 +149,7 @@
 
       <%= f.hidden_field(:visibility, value: @is_test ? 'is_test' : Rails.configuration.x.plans.default_visibility) %>
       <%= f.button(_('Create plan'), class: "btn btn-primary", type: "submit") %>
-      <%= link_to _('Cancel'), plans_path, class: 'btn btn-default' %>
+      <%= link_to _('Cancel'), plans_path, class: 'btn btn-secondary' %>
     <% end %>
   </div>
 </div>
