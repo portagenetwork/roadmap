@@ -1,0 +1,130 @@
+<% page_title = _('Covenant for OAuth Application API Access') %>
+<% content = 
+sanitize(
+    _(%{
+        <p>
+            <strong>Policy Version:</strong> 1.0
+            <br><strong>Effective Date:</strong> June 1, 2026
+            <br><strong>Next Scheduled Review:</strong> No later than May 31, 2029
+            <br><strong>Review Frequency:</strong> Not less than once every three (3) years
+            <br><strong>Policy Owner:</strong> Product Lead, DMP, Digital Research Alliance of Canada
+            <br><strong>Status:</strong> Draft
+        </p>
+
+        <h3>1. Purpose</h3>
+        <p>
+            The Covenant for OAuth Application API Access establishes the duties and responsibilities of third-party application providers that access organizational systems and services through OAuth-based API authorization. It affirms the obligation to respect user privacy, securely manage credentials, store all keys server-side, and comply with applicable policies and laws. Acceptance of OAuth credentials constitutes agreement to this Covenant.
+        </p>
+
+        <h3>2. Scope</h3>
+        <p>
+            This policy applies to all third-party applications using OAuth to access APIs, their providers, and all OAuth credentials, tokens, secrets, and keys issued for API access.
+        </p>
+
+        <h3>3. Guiding Principles</h3>
+        <p>
+            Application providers must respect user privacy, apply least-privilege access, ensure server-side security by design, implement security by default, and act with transparency and accountability.
+        </p>
+
+        <h3>4. Privacy Obligations</h3>
+        <p>
+            Providers must process data only for authorized purposes, comply with privacy laws and policies, avoid re-identification or unauthorized secondary use, and ensure downstream systems provide equivalent protections.
+        </p>
+
+        <h3>4.1 Access to Developer Tools</h3>
+        <p>
+            Accounts used to access the Developer Tools area of DMP Assistant must belong to named individuals and not be shared access accounts. The sharing of accounts with access to developer tools may lead to withdrawal of access under section 9 of this Covenant.
+        </p>
+
+        <h3>5. Credential, Key, and Secret Management</h3>
+        <p>
+            All OAuth client secrets, API keys, refresh tokens, and access tokens must be stored securely on the server side only. Credentials must never be embedded in client-side applications, repositories, or distributed configuration files. Access must be strictly limited and protected using industry-accepted security controls.
+        </p>
+
+        <h3>6. Key Rotation and Compromise Response</h3>
+        <p>
+            If credentials are suspected or confirmed to be exposed, providers must immediately rotate and revoke affected keys, review logs, assess impact, and remediate insecure practices. Key rotation is mandatory.
+        </p>
+
+        <h3>7. Incident Notification and Support Engagement</h3>
+        <p>
+            Providers must promptly notify the help desk of credential exposure, misuse, or incidents, cooperate with investigations, and provide timely and accurate information.
+        </p>
+
+        <h3>8. Compliance with Other Policies</h3>
+        <p>
+            This Covenant operates alongside privacy, security, acceptable use, and API governance policies. Providers are responsible for compliance with all applicable requirements.
+        </p>
+
+        <h3>9. Enforcement and Consequences</h3>
+        <p>
+            Non-compliance may result in revocation of credentials, withdrawal of all keys, suspension or termination of access, or other corrective actions. All keys may be withdrawn without notice.
+        </p>
+
+        <h3>10. Acknowledgement</h3>
+        <p>
+            By using OAuth credentials, providers acknowledge their obligation to store keys securely server-side and comply with this Covenant.
+        </p>
+
+        <h3>11. Review and Maintenance</h3>
+        <p>
+            This policy will be reviewed from time to time and not less than every three years. The next review will occur no later than May 31, 2029.
+        </p>
+
+    }), tags: %w[p strong br h3]) %>
+<% version_history_rows = [
+    {
+        version: '0.0',
+        date: 'April 2, 2026',
+        description: _('Initial pre-1.0 release')
+    },
+    {
+        version: '0.1',
+        date: 'April 2, 2026',
+        description: _('Explicit requirement for secure server-side key storage')
+    },
+    {
+        version: '0.2',
+        date: 'April 30, 2026',
+        description: _('4.1 introduced to require access by named accounts only')
+    },
+    {
+        version: '1.0',
+        date: 'June 1, 2026',
+        description: _('Promoted to version 1 for deployment on DMP Assistant')
+    }
+] %>
+<% title page_title %>
+<div class="row mt-5">
+  <div class="col-md-12">
+    <h1><%= page_title %></h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div>
+      <%= content %>
+      <section class="mt-4">
+        <h3><%= _('Version History') %></h3>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th><%= _('Version') %></th>
+              <th><%= _('Date') %></th>
+              <th><%= _('Description') %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% version_history_rows.each do |row| %>
+              <tr>
+                <td><%= row[:version] %></td>
+                <td><%= row[:date] %></td>
+                <td><%= row[:description] %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </section>
+    </div>
+  </div>
+</div>

@@ -12,6 +12,10 @@
 
  - chore(plans): remove organisational/public plans feature and dead code [#1358](https://github.com/portagenetwork/roadmap/pull/1358)
 
+ ### Added
+
+  - feat(oauth): OAuth API access covenant static page [#1359](https://github.com/portagenetwork/roadmap/pull/1359)
+
  ### Dependency Updates
 
  - chore(deps): bump nginx from 1.29.8-alpine to 1.31.0-alpine [#1346](https://github.com/portagenetwork/roadmap/pull/1346)

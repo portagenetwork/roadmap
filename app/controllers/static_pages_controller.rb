@@ -11,4 +11,6 @@ class StaticPagesController < ApplicationController
   def termsuse; end
 
   def help; end
+
+  def oauth_api_access_covenant; end
 end
