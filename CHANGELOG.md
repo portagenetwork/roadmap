@@ -2,6 +2,10 @@
 
 ## [4.1.1+portage-4.9.0]
 
+### Fixed
+
+ - Fix Handling of "Only Show Admins" Filter [#996](https://github.com/portagenetwork/roadmap/pull/996)
+
 ### Changed
 
  - chore(annotate): regen schema info for models & factories [#1340](https://github.com/portagenetwork/roadmap/pull/1340)
