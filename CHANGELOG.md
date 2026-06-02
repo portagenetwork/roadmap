@@ -22,6 +22,16 @@
 
  - chore(deps): bump nginx from 1.31.0-alpine to 1.31.1-alpine [#1356](https://github.com/portagenetwork/roadmap/pull/1356)
 
+ - chore(deps): bump @babel/plugin-transform-modules-systemjs from 7.20.11 to 7.29.4 [#1345](https://github.com/portagenetwork/roadmap/pull/1345)
+
+ - chore(deps): bump fast-uri from 3.1.0 to 3.1.2 [#1344](https://github.com/portagenetwork/roadmap/pull/1344)
+
+ - chore(deps): bump hono from 4.12.14 to 4.12.18 [#1342](https://github.com/portagenetwork/roadmap/pull/1342)
+
+ - chore(deps): bump js-cookie from 3.0.1 to 3.0.7 [#1352](https://github.com/portagenetwork/roadmap/pull/1352)
+
+ - chore(deps): bump tmp from 0.2.5 to 0.2.7 [#1357](https://github.com/portagenetwork/roadmap/pull/1357)
+
 ## [4.1.1+portage-4.8.0]
 
 ### Added
