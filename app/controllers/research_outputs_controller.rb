@@ -18,9 +18,24 @@ class ResearchOutputsController < ApplicationController
   end
 
   # GET /plans/:plan_id/research_outputs/new
-  def new
-    @research_output = ResearchOutput.new(plan_id: @plan.id, output_type: '')
+  def new # rubocop:disable Metrics/AbcSize
+    @research_output = ResearchOutput.new(plan_id: @plan.id)
     authorize @research_output
+
+    # Check if a DOI parameter was carried over in the redirect URL query string
+    return unless params[:prefill_doi].present?
+
+    # Call DataCite service using the DOI string found in the URL parameters
+    metadata = ExternalApis::DataciteService.fetch_metadata(doi: params[:prefill_doi])
+
+    # If DataCite successfully returned data, inject it directly into the object attributes
+    return unless metadata.present?
+
+    @research_output.title = metadata[:title]
+    @research_output.description = metadata[:description]
+    @research_output.output_type = metadata[:output_type]
+    @research_output.doi = metadata[:doi] if @research_output.respond_to?(:doi)
+    @research_output.release_date = metadata[:release_date] if @research_output.respond_to?(:release_date)
   end
 
   # GET /plans/:plan_id/research_outputs/:id/edit
