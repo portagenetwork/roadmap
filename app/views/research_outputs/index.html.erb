@@ -10,6 +10,34 @@
 </div>
 
 <% content_for :plan_tab_body do %>
+  <% if @plan.administerable_by?(current_user.id) %>
+    <div class="panel panel-default doi-lookup-section" style="margin-top: 20px; background-color: #f9f9f9; border-color: #ddd;">
+      <div class="panel-body">
+        <div class="form-group">
+          <label for="doi_lookup_input" class="control-label">
+            <%= _("Pre-fill with DOI") %>
+          </label>
+          <p class="help-block">
+            <%= _("Enter a dataset or software DOI (e.g., 10.5281/zenodo.4884775) to automatically import its metadata into a new form.") %>
+          </p>
+          <div class="input-group" style="max-width: 500px;">
+            <input type="text" id="doi_lookup_input" class="form-control" placeholder="10.xxxx/xxxxxx">
+            <span class="input-group-btn">
+              <button id="btn_fetch_doi" 
+                      class="btn btn-default" 
+                      type="button" 
+                      data-plan-id="<%= @plan.id %>">
+                <%= _("Fetch & Add") %>
+              </button>
+            </span>
+          </div>
+          <span id="doi_lookup_status" class="help-block hidden"></span>
+        </div>
+      </div>
+    </div>
+    <hr />
+  <% end %>
+
   <div class="row">
     <div class="col-md-12">
       <p>
