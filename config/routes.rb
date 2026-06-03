@@ -128,6 +128,11 @@ Rails.application.routes.draw do
   resources :feedback_requests, only: [:create]
 
   resources :plans do
+    resources :snapshots,
+              only: %i[show create],
+              controller: 'plan_snapshots',
+              path: 'versions'
+
     resource :export, only: [:show], controller: 'plan_exports'
 
     resources :contributors, except: %i[show]
