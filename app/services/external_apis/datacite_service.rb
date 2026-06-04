@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'cgi'
 module ExternalApis
   # This service provides an interface to the DataCite API
   class DataciteService < BaseService
@@ -19,9 +20,7 @@ module ExternalApis
         # Strip 'https://doi.org/'
         clean_doi = doi.strip.gsub(%r{^https?://doi.org/}, '')
 
-        # Build URL safely ensuring a trailing slash following api_base_url
-        base = api_base_url.end_with?('/') ? api_base_url : "#{api_base_url}/"
-        url = "#{base}dois/#{clean_doi}"
+        url = "#{api_base_url}/dois/#{CGI.escape(clean_doi)}"
 
         response = HTTParty.get(url, headers: { 'Accept' => 'application/vnd.api+json' })
         return nil unless response.code == 200
@@ -34,7 +33,7 @@ module ExternalApis
           # Find the title of the first item in the titles array
           title: attributes.dig(:titles, 0, :title),
           description: extract_description(attributes),
-          output_type: map_resource_type(attributes.dig(:types, :resourceTypeGeneral)),
+          output_type: ResearchOutput.output_type_from_datacite(attributes.dig(:types, :resourceTypeGeneral)),
           release_date: attributes[:published],
           doi: clean_doi
         }
@@ -54,29 +53,6 @@ module ExternalApis
         # If an abstract hash was found, extract its text content.
         # Otherwise, fall back to the very first text item in the array
         abstract ? abstract[:description] : descriptions.dig(0, :description)
-      end
-
-      # Map resource type from DataCite response to resource output type in model
-      def map_resource_type(type)
-        return :other if type.blank?
-
-        mapping = {
-          'Audiovisual' => :audiovisual,
-          'Collection' => :collection,
-          'DataPaper' => :data_paper,
-          'Dataset' => :dataset,
-          'Event' => :event,
-          'Image' => :image,
-          'InteractiveResource' => :interactive_resource,
-          'Model' => :model_representation,
-          'PhysicalObject' => :physical_object,
-          'Service' => :service,
-          'Software' => :software,
-          'Sound' => :sound,
-          'Text' => :text,
-          'Workflow' => :workflow
-        }
-        mapping[type] || :other
       end
     end
   end
