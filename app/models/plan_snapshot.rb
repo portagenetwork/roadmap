@@ -35,6 +35,10 @@ class PlanSnapshot < ApplicationRecord
                                    .or(where('fixity_checked_at < ?', FIXITY_CHECK_INTERVAL.ago))
                                }
 
+  scope :for_plan, lambda { |plan|
+    where(plan: plan).order(version: :desc)
+  }
+
   # =================
   # = Class Methods =
   # =================
