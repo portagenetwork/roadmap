@@ -31,9 +31,12 @@
       <% if @plan.administerable_by?(current_user.id) %>
         <%= link_to _("Add a research output"), new_plan_research_output_path(@plan),
                                             class: "btn btn-primary" %>
-        <button id="btn_toggle_doi_form" type="button" class="btn btn-default">
-            <%= _("Add from DOI") %>
+        <% if ExternalApis::DataciteService.active? %>
+          <button id="btn_toggle_doi_form" type="button" class="btn btn-default">
+              <%= _("Add from DOI") %>
           </button>
+        <% end %>
+
 
         <div id="doi_lookup_panel" class="panel panel-default doi-lookup-section hidden" style="background-color: #f9f9f9; border-color: #ddd; max-width: 600px;">
           <div class="panel-body">
