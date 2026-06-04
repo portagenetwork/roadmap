@@ -9,6 +9,18 @@ $(() => {
     Tinymce.init({ selector: '#research_output_description' });
   }
 
+  // Toggle DOI form visibility
+  $('body').on('click', '#btn_toggle_doi_form', (e) => {
+    e.preventDefault();
+    const panel = $('#doi_lookup_panel');
+
+    panel.toggleClass('hidden');
+    
+    if (!panel.hasClass('hidden')) {
+      $('#doi_lookup_input').focus();
+    }
+  });
+
   // DOI Verification & Redirect to New Form
   $('body').on('click', '#btn_fetch_doi', (e) => {
     e.preventDefault();
