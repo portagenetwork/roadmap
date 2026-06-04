@@ -114,4 +114,23 @@ RSpec.describe PlanSnapshot, type: :model do
       expect(described_class.send(:next_version_for_plan, plan)).to eq(3)
     end
   end
+
+  describe '.for_plan' do
+    let(:plan) { create(:plan) }
+    let(:other_plan) { create(:plan) }
+
+    it 'returns only snapshots for the specified plan' do
+      matching_snapshot = create(:plan_snapshot, plan: plan, version: 1)
+      create(:plan_snapshot, plan: other_plan, version: 1)
+
+      expect(described_class.for_plan(plan)).to contain_exactly(matching_snapshot)
+    end
+
+    it 'orders snapshots by version descending' do
+      first = create(:plan_snapshot, plan: plan, version: 1)
+      last = create(:plan_snapshot, plan: plan, version: 2)
+
+      expect(described_class.for_plan(plan)).to eq([last, first])
+    end
+  end
 end
