@@ -6,7 +6,7 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
   let(:user) { create(:user) }
   let(:plan) { create(:plan) }
   let(:doi) { '10.5281/zenodo.4884775' }
-  let(:base_url) { 'https://api.datacite.org/' }
+  let(:base_url) { 'https://api.datacite.org' }
 
   before do
     create(:role, :creator, user: user, plan: plan)
@@ -15,7 +15,6 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
 
     Rails.configuration.x.datacite = ActiveSupport::OrderedOptions.new if Rails.configuration.x.datacite.nil?
     Rails.configuration.x.datacite.active = true
-    Rails.configuration.x.datacite.api_base_url = base_url
   end
 
   describe 'GET /plans/:plan_id/research_outputs/fetch_doi' do
@@ -36,7 +35,7 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
       end
 
       before do
-        stub_request(:get, "#{base_url}dois/#{doi}")
+        stub_request(:get, "#{base_url}/dois/#{CGI.escape(doi)}")
           .with(headers: { 'Accept' => 'application/vnd.api+json' })
           .to_return(status: 200, body: datacite_json, headers: { 'Content-Type' => 'application/json' })
       end
@@ -64,7 +63,7 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
 
     context 'when the service cannot find the DOI' do
       before do
-        stub_request(:get, "#{base_url}dois/invalid-doi")
+        stub_request(:get, "#{base_url}/dois/invalid-doi")
           .with(headers: { 'Accept' => 'application/vnd.api+json' })
           .to_return(status: 404, body: '', headers: {})
       end
