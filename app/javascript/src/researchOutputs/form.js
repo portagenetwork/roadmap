@@ -2,6 +2,8 @@ import getConstant from '../utils/constants';
 import { isUndefined, isObject } from '../utils/isType';
 import { Tinymce } from '../utils/tinymce.js';
 
+const STATUS_CLASSES = 'hidden text-muted text-danger text-success';
+
 $(() => {
   const form = $('.research_output_form');
 
@@ -29,31 +31,38 @@ $(() => {
     const statusText = $('#doi_lookup_status');
     
     const doi = inputField.val().trim();
-    const planId = button.data('plan-id');
+    
+    const fetchDoiPath = button.data('fetch-doi-path');
+    const newResearchOutputPath = button.data('new-research-output-path');
+
+    // Helper for DRY-ing state updates
+    const setLookupStatus = (type, message) => {
+      statusText.removeClass(STATUS_CLASSES).addClass(type).text(message);
+    };
 
     if (!doi) {
-      statusText.removeClass('hidden text-success').addClass('text-danger').text('Please enter a DOI string.');
+      setLookupStatus('text-danger', 'Please enter a DOI string.');
       return;
     }
 
     button.prop('disabled', true).text('Verifying...');
-    statusText.removeClass('hidden text-danger text-success').addClass('text-muted').text('Validating identifier with DataCite...');
+    setLookupStatus('text-muted', 'Validating identifier with DataCite...');
 
     $.ajax({
-      url: `/plans/${planId}/research_outputs/fetch_doi`,
+      url: fetchDoiPath,
       method: 'GET',
       data: { doi: doi },
       dataType: 'json'
     }).done((data) => {
-      statusText.removeClass('text-muted text-danger').addClass('text-success').text('DOI Verified! Redirecting to form...');
+      setLookupStatus('text-success', 'DOI Verified! Redirecting to form...');
       
       // Dynamic browser redirection to the standard "New" view layout route
-      window.location.href = `/plans/${planId}/research_outputs/new?prefill_doi=${encodeURIComponent(doi)}`;
+      window.location.href = `${newResearchOutputPath}?prefill_doi=${encodeURIComponent(doi)}`;
     }).fail((xhr) => {
       button.prop('disabled', false).text('Fetch & Add');
       const response = xhr.responseJSON;
       const errorMsg = response && response.error ? response.error : 'Could not retrieve metadata for this DOI.';
-      statusText.removeClass('text-muted text-success').addClass('text-danger').text(errorMsg);
+      setLookupStatus('text-danger', errorMsg);
     });
   });
 
