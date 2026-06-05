@@ -36,20 +36,27 @@ class ContributorsController < ApplicationController
 
     args = translate_roles(hash: contributor_params)
     args = process_org(hash: args)
+
     if args.blank?
       @contributor = Contributor.new(args)
       @contributor.errors.add(:affiliation, 'invalid')
       flash[:alert] = failure_message(@contributor, _('add'))
       render :new
     else
-      args = process_orcid_for_create(hash: args)
       args[:plan_id] = @plan.id
-
       @contributor = Contributor.new(args)
+
+      process_orcid(hash: args, contributor: @contributor)
+
+      if @contributor.errors.any?
+        flash[:alert] = failure_message(@contributor, _('add'))
+        return render :new
+      end
+
       stash_orcid
 
       if @contributor.save
-        # Now that the model has been ssaved, go ahead and save the identifiers
+        # Now that the model has been saved, go ahead and save the identifiers
         save_orcid
 
         redirect_to plan_contributors_path(@plan),
