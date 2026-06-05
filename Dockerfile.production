@@ -1,4 +1,4 @@
-FROM surnet/alpine-wkhtmltopdf:3.23.2-0.12.6-small AS wkhtmltopdf
+FROM surnet/alpine-wkhtmltopdf:3.23.4-0.12.6-small AS wkhtmltopdf
 
 FROM ruby:3.1.4-alpine AS builder
 

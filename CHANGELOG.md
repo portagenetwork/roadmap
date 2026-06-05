@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Dependency Updates
+
+ - chore(deps): bump surnet/alpine-wkhtmltopdf from 3.23.2-0.12.6-small to 3.23.4-0.12.6-small [#1363](https://github.com/portagenetwork/roadmap/pull/1363)
+
 ## [4.1.1+portage-4.9.0]
 
 ### Changed
