@@ -22,7 +22,7 @@ RSpec.describe ContributorsController, type: :controller do
         }.to_json,
         identifiers_attributes: { '0': {
           identifier_scheme_id: @scheme.id,
-          value: SecureRandom.uuid
+          value: '0000-0002-1825-0097'
         } }
       }
     }
