@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Dependency Updates
+
+ - chore(deps): bump hono from 4.12.18 to 4.12.23 [#1196](https://github.com/portagenetwork/roadmap/pull/1364)
+
 ## [4.1.1+portage-4.9.0]
 
 ### Changed
