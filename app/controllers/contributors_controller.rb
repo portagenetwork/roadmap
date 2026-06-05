@@ -130,11 +130,17 @@ class ContributorsController < ApplicationController
   end
 
   # When creating, just remove the ORCID if it was left blank
-  def process_orcid_for_create(hash:)
+  def process_orcid(hash:, contributor:)
     return hash unless hash[:identifiers_attributes].present?
 
     id_hash = hash[:identifiers_attributes][:'0']
-    return hash unless id_hash[:value].blank?
+
+    if id_hash[:value].present?
+      validate_and_clean_orcid(id_hash, contributor)
+      return hash
+    end
+
+    contributor.identifier_for_scheme(scheme: 'orcid')&.destroy if contributor.persisted?
 
     hash.delete(:identifiers_attributes)
     hash
