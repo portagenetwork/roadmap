@@ -54,7 +54,7 @@
     "regenerator-runtime": "^0.13.5",
     "sass": "^1.57.1",
     "timeago.js": "^4.0.2",
-    "tinymce": "^7.2.0",
+    "tinymce": "^7.9.3",
     "webpack": "^5.104.1",
     "webpack-cli": "^5.0.1"
   },
