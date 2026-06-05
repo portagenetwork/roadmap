@@ -70,21 +70,21 @@ class ContributorsController < ApplicationController
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
   # PUT /plans/:plan_id/contributors/:id
-  def update
+  def update # rubocop:disable Metrics/AbcSize
     authorize @plan
     args = translate_roles(hash: contributor_params)
     args = process_org(hash: args)
-    args = process_orcid_for_update(hash: args)
+    args = process_orcid(hash: args, contributor: @contributor)
 
-    if @contributor.update(args)
-      redirect_to edit_plan_contributor_path(@plan, @contributor),
-                  notice: success_message(@contributor, _('saved'))
-    else
-      flash.now[:alert] = failure_message(@contributor, _('save'))
-      render :edit
+    if @contributor.errors.blank? && @contributor.update(args)
+      return redirect_to edit_plan_contributor_path(@plan, @contributor),
+                         notice: success_message(@contributor, _('saved'))
     end
+
+    @contributor.assign_attributes(args)
+    flash.now[:alert] = failure_message(@contributor, _('save'))
+    render :edit
   end
-  # rubocop:enable
 
   # DELETE /plans/:plan_id/contributors/:id
   def destroy
