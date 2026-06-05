@@ -52,6 +52,75 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
       end
     end
 
+    context 'when given a full DOI URL instead of a raw identifier' do
+      let(:full_url_doi) { "https://doi.org/#{doi}" }
+      let(:datacite_json) do
+        { data: { attributes: { titles: [{ title: 'URL Stripped Output' }],
+                                types: { resourceTypeGeneral: 'Software' } } } }.to_json
+      end
+
+      it 'strips the domain protocol prefix and fetches successfully' do
+        stub_request(:get, "#{base_url}/dois/#{CGI.escape(doi)}")
+          .with(headers: { 'Accept' => 'application/vnd.api+json' })
+          .to_return(status: 200, body: datacite_json)
+
+        get fetch_doi_plan_research_outputs_path(plan, doi: full_url_doi)
+
+        json_response = JSON.parse(response.body)
+        expect(json_response['doi']).to eq(doi)
+        expect(json_response['output_type']).to eq('software')
+      end
+    end
+
+    context 'when descriptions do not contain an explicit Abstract type' do
+      let(:datacite_json) do
+        {
+          data: {
+            attributes: {
+              titles: [{ title: 'Fallback Desc Output' }],
+              descriptions: [{ description: 'First general description block text.' }],
+              types: { resourceTypeGeneral: 'Text' }
+            }
+          }
+        }.to_json
+      end
+
+      it 'falls back to prefilling with the first description element' do
+        stub_request(:get, "#{base_url}/dois/#{CGI.escape(doi)}")
+          .with(headers: { 'Accept' => 'application/vnd.api+json' })
+          .to_return(status: 200, body: datacite_json)
+
+        get fetch_doi_plan_research_outputs_path(plan, doi: doi)
+
+        json_response = JSON.parse(response.body)
+        expect(json_response['description']).to eq('First general description block text.')
+      end
+    end
+
+    context 'when DataCite returns an unmapped or missing resourceTypeGeneral' do
+      let(:datacite_json) do
+        {
+          data: {
+            attributes: {
+              titles: [{ title: 'Unknown Type Output' }],
+              types: { resourceTypeGeneral: 'UnrecognizedType' }
+            }
+          }
+        }.to_json
+      end
+
+      it 'defaults the output type to other' do
+        stub_request(:get, "#{base_url}/dois/#{CGI.escape(doi)}")
+          .with(headers: { 'Accept' => 'application/vnd.api+json' })
+          .to_return(status: 200, body: datacite_json)
+
+        get fetch_doi_plan_research_outputs_path(plan, doi: doi)
+
+        json_response = JSON.parse(response.body)
+        expect(json_response['output_type']).to eq('other')
+      end
+    end
+
     context 'when DOI parameter is missing' do
       it 'returns a 400 Bad Request JSON response' do
         get fetch_doi_plan_research_outputs_path(plan, doi: '')
