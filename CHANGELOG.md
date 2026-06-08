@@ -6,6 +6,8 @@
 
  - chore(deps): bump hono from 4.12.18 to 4.12.23 [#1196](https://github.com/portagenetwork/roadmap/pull/1364)
 
+ - chore(deps): bump tinymce from 7.2.0 to 7.9.3 [#1366](https://github.com/portagenetwork/roadmap/pull/1366)
+
 ## [4.1.1+portage-4.9.0]
 
 ### Changed
