@@ -5,6 +5,8 @@ class ContributorsController < ApplicationController
   include OrgSelectable
   helper PaginableHelper
 
+  ORCID_REGEX = /\A\d{4}-\d{4}-\d{4}-\d{3}[\dX]\z/
+
   before_action :fetch_plan
   before_action :fetch_contributor, only: %i[edit update destroy]
   after_action :verify_authorized
@@ -138,17 +140,15 @@ class ContributorsController < ApplicationController
     hash
   end
 
-  # When updating, destroy the ORCID if it was blanked out on form
-  def process_orcid_for_update(hash:)
-    return hash unless hash[:identifiers_attributes].present?
+  def validate_and_clean_orcid(id_hash, contributor)
+    raw_value = id_hash[:value].to_s.strip
+    raw_value = raw_value.split('orcid.org/').last if raw_value.include?('orcid.org/')
 
-    id_hash = hash[:identifiers_attributes][:'0']
-    return hash unless id_hash[:value].blank?
-
-    existing = @contributor.identifier_for_scheme(scheme: 'orcid')
-    existing.destroy if existing.present?
-    hash.delete(:identifiers_attributes)
-    hash
+    if raw_value.match?(ORCID_REGEX)
+      id_hash[:value] = raw_value
+    else
+      contributor.errors.add(:base, 'Invalid ORCID format. Expected format: 0000-0000-0000-0000')
+    end
   end
 
   # =============
