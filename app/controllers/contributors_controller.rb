@@ -29,7 +29,7 @@ class ContributorsController < ApplicationController
     authorize @plan
   end
 
-  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   # POST /plans/:plan_id/contributors
   def create
     authorize @plan, :edit?
@@ -40,34 +40,26 @@ class ContributorsController < ApplicationController
     if args.blank?
       @contributor = Contributor.new(args)
       @contributor.errors.add(:affiliation, 'invalid')
-      flash[:alert] = failure_message(@contributor, _('add'))
-      render :new
-    else
-      args[:plan_id] = @plan.id
-      @contributor = Contributor.new(args)
-
-      process_orcid(hash: args, contributor: @contributor)
-
-      if @contributor.errors.any?
-        flash[:alert] = failure_message(@contributor, _('add'))
-        return render :new
-      end
-
-      stash_orcid
-
-      if @contributor.save
-        # Now that the model has been saved, go ahead and save the identifiers
-        save_orcid
-
-        redirect_to plan_contributors_path(@plan),
-                    notice: success_message(@contributor, _('added'))
-      else
-        flash[:alert] = failure_message(@contributor, _('add'))
-        render :new
-      end
+      return render_create_failure
     end
+
+    args[:plan_id] = @plan.id
+    @contributor = Contributor.new(args)
+
+    process_orcid(hash: args, contributor: @contributor)
+
+    return render_create_failure if @contributor.errors.any?
+
+    stash_orcid
+
+    return render_create_failure unless @contributor.save
+
+    save_orcid
+
+    redirect_to plan_contributors_path(@plan),
+                notice: success_message(@contributor, _('added'))
   end
-  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   # PUT /plans/:plan_id/contributors/:id
   def update # rubocop:disable Metrics/AbcSize
@@ -162,6 +154,11 @@ class ContributorsController < ApplicationController
     else
       contributor.errors.add(:base, 'Invalid ORCID format. Expected format: 0000-0000-0000-0000')
     end
+  end
+
+  def render_create_failure
+    flash[:alert] = failure_message(@contributor, _('add'))
+    render :new
   end
 
   # =============
