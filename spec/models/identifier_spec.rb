@@ -65,6 +65,58 @@ RSpec.describe Identifier, type: :model do
         expect(id.valid?).to eql(true)
       end
     end
+    describe '#orcid_format' do
+      let(:scheme) do
+        create(
+          :identifier_scheme,
+          name: 'orcid',
+          identifier_prefix: 'https://orcid.org'
+        )
+      end
+
+      it 'accepts a valid ORCID without a prefix' do
+        id = build(
+          :identifier,
+          identifier_scheme: scheme,
+          value: '0000-0002-1825-0097'
+        )
+
+        expect(id.valid?).to eql(true)
+      end
+
+      it 'accepts a valid ORCID with a prefix' do
+        id = build(
+          :identifier,
+          identifier_scheme: scheme,
+          value: 'https://orcid.org/0000-0002-1825-0097'
+        )
+
+        expect(id.valid?).to eql(true)
+      end
+
+      it 'rejects an invalid ORCID' do
+        id = build(
+          :identifier,
+          identifier_scheme: scheme,
+          value: 'not-an-orcid'
+        )
+
+        expect(id.valid?).to eql(false)
+        expect(id.errors[:value]).to include(
+          'Invalid ORCID format. Expected format: 0000-0000-0000-0000'
+        )
+      end
+
+      it 'does not validate non-ORCID schemes' do
+        id = build(
+          :identifier,
+          identifier_scheme: create(:identifier_scheme, name: 'ror'),
+          value: 'not-an-orcid'
+        )
+
+        expect(id.valid?).to eql(true)
+      end
+    end
   end
 
   context 'associations' do
@@ -219,6 +271,24 @@ RSpec.describe Identifier, type: :model do
       id = build(:identifier, value: val, identifier_scheme: @scheme)
       expected = @scheme.identifier_prefix
       expect(id.value.starts_with?(expected)).to eql(true)
+    end
+  end
+
+  describe '#normalized_orcid_value' do
+    it 'strips the ORCID host from the value' do
+      scheme = create(
+        :identifier_scheme,
+        name: 'orcid',
+        identifier_prefix: 'https://orcid.org'
+      )
+
+      id = build(
+        :identifier,
+        identifier_scheme: scheme,
+        value: 'https://orcid.org/0000-0002-1825-0097'
+      )
+
+      expect(id.send(:normalized_orcid_value)).to eql('0000-0002-1825-0097')
     end
   end
 end
