@@ -27,8 +27,7 @@ RSpec.describe Api::V1::ContributorPresenter do
       expect(rslt).to eql(nil)
     end
     it 'returns the ORCID' do
-      scheme = create(:identifier_scheme, name: 'orcid')
-      orcid = create(:identifier, identifier_scheme: scheme, identifiable: @contributor)
+      orcid = create(:identifier, :orcid, identifiable: @contributor)
       @contributor.reload
       rslt = described_class.contributor_id(identifiers: @contributor.identifiers)
       expect(rslt).to eql(orcid)
