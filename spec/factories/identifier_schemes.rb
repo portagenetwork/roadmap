@@ -33,6 +33,11 @@ FactoryBot.define do
       end
     end
 
+    trait :orcid do
+      name { 'orcid' }
+      identifier_prefix { 'https://orcid.org/' }
+    end
+
     trait :openid_connect do
       name { 'openid_connect' }
       description { 'CILogon' }

@@ -67,11 +67,7 @@ RSpec.describe Identifier, type: :model do
     end
     describe '#orcid_format' do
       let(:scheme) do
-        create(
-          :identifier_scheme,
-          name: 'orcid',
-          identifier_prefix: 'https://orcid.org'
-        )
+        create(:identifier_scheme, :orcid)
       end
 
       it 'accepts a valid ORCID without a prefix' do
@@ -276,11 +272,7 @@ RSpec.describe Identifier, type: :model do
 
   describe '#normalized_orcid_value' do
     it 'strips the ORCID host from the value' do
-      scheme = create(
-        :identifier_scheme,
-        name: 'orcid',
-        identifier_prefix: 'https://orcid.org'
-      )
+      scheme = create(:identifier_scheme, :orcid)
 
       id = build(
         :identifier,

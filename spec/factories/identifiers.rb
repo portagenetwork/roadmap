@@ -37,5 +37,11 @@ FactoryBot.define do
     trait :for_user do
       association :identifiable, factory: :user
     end
+
+    trait :orcid do
+      association :identifier_scheme, factory: %i[identifier_scheme orcid]
+      association :identifiable, factory: :user
+      value { '0000-0000-0000-000X' }
+    end
   end
 end

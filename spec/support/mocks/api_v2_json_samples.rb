@@ -14,7 +14,7 @@ module Mocks
     def mock_identifier_schemes
       create(:identifier_scheme, name: 'ror')
       create(:identifier_scheme, name: 'fundref')
-      create(:identifier_scheme, name: 'orcid')
+      create(:identifier_scheme, :orcid)
       create(:identifier_scheme, name: 'grant')
     end
 
@@ -83,7 +83,7 @@ module Mocks
           Faker::TvShows::Simpsons.character.split.last
         ].join(' '),
         email: Faker::Internet.email,
-        id: SecureRandom.uuid
+        id: '0000-0000-0000-000X'
       }
 
       {
@@ -134,7 +134,7 @@ module Mocks
             },
             contributor_id: {
               type: 'orcid',
-              identifier: SecureRandom.uuid
+              identifier: '0000-0000-0000-0000'
             }
           }, {
             role: [

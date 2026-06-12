@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe ContributorsController, type: :controller do
   before(:each) do
-    @scheme = create(:identifier_scheme, name: 'orcid')
+    @scheme = create(:identifier_scheme, :orcid)
     @org = create(:org, managed: true)
     @plan = create(:plan, :creator, org: @org)
     @user = @plan.owner
@@ -22,7 +22,7 @@ RSpec.describe ContributorsController, type: :controller do
         }.to_json,
         identifiers_attributes: { '0': {
           identifier_scheme_id: @scheme.id,
-          value: SecureRandom.uuid
+          value: '0000-0000-0000-000X'
         } }
       }
     }
