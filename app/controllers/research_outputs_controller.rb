@@ -31,9 +31,7 @@ class ResearchOutputsController < ApplicationController
     # If DataCite successfully returned data, inject it directly into the object attributes
     return unless metadata.present?
 
-    @research_output.title = metadata[:title]
-    @research_output.description = metadata[:description]
-    @research_output.output_type = metadata[:output_type]
+    @research_output.assign_attributes(metadata.slice(:title, :description, :output_type))
     @research_output.doi = metadata[:doi] if @research_output.respond_to?(:doi)
     @research_output.release_date = metadata[:release_date] if @research_output.respond_to?(:release_date)
   end
