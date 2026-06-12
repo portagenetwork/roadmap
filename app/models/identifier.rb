@@ -22,6 +22,9 @@
 
 # Object that represents an identifier for an object
 class Identifier < ApplicationRecord
+  ORCID = 'orcid'
+  ORCID_REGEX = /\A\d{4}-\d{4}-\d{4}-\d{3}[\dX]\z/
+
   # ================
   # = Associations =
   # ================
@@ -41,6 +44,8 @@ class Identifier < ApplicationRecord
   validate :value_uniqueness_with_scheme, if: :schemed?
 
   validate :value_uniqueness_without_scheme, unless: :schemed?
+
+  validate :validate_orcid, if: -> { identifier_scheme&.name == ORCID }
 
   # ===============
   # = Scopes =
@@ -142,5 +147,23 @@ class Identifier < ApplicationRecord
                                        identifiable: identifiable).any?
       errors.add(:identifier_scheme, _('already assigned a value'))
     end
+  end
+
+  def validate_orcid
+    return unless identifier_scheme&.name == ORCID
+    return if value.blank?
+
+    normalize_orcid!
+    return if value.match?(ORCID_REGEX)
+
+    errors.add(:value, 'Invalid ORCID format. Expected format: 0000-0000-0000-0000')
+  end
+
+  def normalize_orcid!
+    return if value.blank?
+
+    raw = value.to_s.strip
+    raw = raw.split('orcid.org/').last if raw.include?('orcid.org/')
+    self.value = raw
   end
 end

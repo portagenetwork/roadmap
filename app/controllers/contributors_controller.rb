@@ -5,8 +5,6 @@ class ContributorsController < ApplicationController
   include OrgSelectable
   helper PaginableHelper
 
-  ORCID_REGEX = /\A\d{4}-\d{4}-\d{4}-\d{3}[\dX]\z/
-
   before_action :fetch_plan
   before_action :fetch_contributor, only: %i[edit update destroy]
   after_action :verify_authorized
@@ -47,8 +45,6 @@ class ContributorsController < ApplicationController
     @contributor = Contributor.new(args)
 
     process_orcid(hash: args, contributor: @contributor)
-
-    return render_create_failure if @contributor.errors.any?
 
     stash_orcid
 
@@ -128,31 +124,17 @@ class ContributorsController < ApplicationController
     hash
   end
 
-  # When creating, just remove the ORCID if it was left blank
   def process_orcid(hash:, contributor:)
     return unless hash[:identifiers_attributes].present?
 
     id_hash = hash[:identifiers_attributes][:'0']
 
-    if id_hash[:value].present?
-      validate_and_clean_orcid(id_hash, contributor)
-      return
-    end
+    return if id_hash[:value].present?
 
+    # ORCID was cleared or left blank in the form
     contributor.identifier_for_scheme(scheme: 'orcid')&.destroy if contributor.persisted?
 
     hash.delete(:identifiers_attributes)
-  end
-
-  def validate_and_clean_orcid(id_hash, contributor)
-    raw_value = id_hash[:value].to_s.strip
-    raw_value = raw_value.split('orcid.org/').last if raw_value.include?('orcid.org/')
-
-    if raw_value.match?(ORCID_REGEX)
-      id_hash[:value] = raw_value
-    else
-      contributor.errors.add(:base, 'Invalid ORCID format. Expected format: 0000-0000-0000-0000')
-    end
   end
 
   def render_create_failure
