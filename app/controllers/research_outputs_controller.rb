@@ -26,7 +26,7 @@ class ResearchOutputsController < ApplicationController
     return unless params[:prefill_doi].present?
 
     # Call DataCite service using the DOI string found in the URL parameters
-    metadata = ExternalApis::DataciteService.fetch_metadata(doi: params[:prefill_doi])
+    metadata = fetch_metadata_from_datacite(params[:prefill_doi])
 
     # If DataCite successfully returned data, inject it directly into the object attributes
     return unless metadata.present?
@@ -164,7 +164,7 @@ class ResearchOutputsController < ApplicationController
     end
 
     # Obtain research output metadata from DataCite service
-    metadata = ExternalApis::DataciteService.fetch_metadata(doi: params[:doi])
+    metadata = fetch_metadata_from_datacite(params[:doi])
 
     if metadata.present?
       render json: metadata, status: :ok
@@ -246,5 +246,11 @@ class ResearchOutputsController < ApplicationController
                    @plan.research_outputs.include?(@research_output)
 
     redirect_to plan_research_outputs_path, alert: _('research output not found')
+  end
+
+  def fetch_metadata_from_datacite(doi)
+    return nil if doi.blank?
+
+    ExternalApis::DataciteService.fetch_metadata(doi: doi)
   end
 end
