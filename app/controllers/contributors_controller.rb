@@ -66,7 +66,7 @@ class ContributorsController < ApplicationController
     authorize @plan
     args = translate_roles(hash: contributor_params)
     args = process_org(hash: args)
-    args = process_orcid(hash: args, contributor: @contributor)
+    process_orcid(hash: args, contributor: @contributor)
 
     if @contributor.errors.blank? && @contributor.update(args)
       return redirect_to edit_plan_contributor_path(@plan, @contributor),
@@ -130,19 +130,18 @@ class ContributorsController < ApplicationController
 
   # When creating, just remove the ORCID if it was left blank
   def process_orcid(hash:, contributor:)
-    return hash unless hash[:identifiers_attributes].present?
+    return unless hash[:identifiers_attributes].present?
 
     id_hash = hash[:identifiers_attributes][:'0']
 
     if id_hash[:value].present?
       validate_and_clean_orcid(id_hash, contributor)
-      return hash
+      return
     end
 
     contributor.identifier_for_scheme(scheme: 'orcid')&.destroy if contributor.persisted?
 
     hash.delete(:identifiers_attributes)
-    hash
   end
 
   def validate_and_clean_orcid(id_hash, contributor)
