@@ -20,23 +20,26 @@ module ExternalApis
         # Strip 'https://doi.org/'
         clean_doi = doi.strip.gsub(%r{^https?://doi.org/}, '')
 
-        url = "#{api_base_url}/dois/#{CGI.escape(clean_doi)}"
+        # Cache the result for 5 minutes. If this DOI is requested again within 5 minutes
+        # Rails returns the cached hash instantly.
+        Rails.cache.fetch("datacite/metadata/#{clean_doi.parameterize}", expires_in: 5.minutes) do
+          url = "#{api_base_url}/dois/#{CGI.escape(clean_doi)}"
 
-        response = HTTParty.get(url, headers: { 'Accept' => 'application/vnd.api+json' })
-        return nil unless response.code == 200
+          response = HTTParty.get(url, headers: { 'Accept' => 'application/vnd.api+json' })
+          return nil unless response.code == 200
 
-        json = JSON.parse(response.body).with_indifferent_access
-        attributes = json.dig(:data, :attributes)
-        return nil if attributes.blank?
+          json = JSON.parse(response.body).with_indifferent_access
+          attributes = json.dig(:data, :attributes)
+          return nil if attributes.blank?
 
-        {
-          # Find the title of the first item in the titles array
-          title: attributes.dig(:titles, 0, :title),
-          description: extract_description(attributes),
-          output_type: ResearchOutput.output_type_from_datacite(attributes.dig(:types, :resourceTypeGeneral)),
-          release_date: attributes[:published],
-          doi: clean_doi
-        }
+          {
+            title: attributes.dig(:titles, 0, :title),
+            description: extract_description(attributes),
+            output_type: ResearchOutput.output_type_from_datacite(attributes.dig(:types, :resourceTypeGeneral)),
+            release_date: attributes[:published],
+            doi: clean_doi
+          }
+        end
       rescue SocketError, HTTParty::Error, Timeout::Error, JSON::ParserError => e
         Rails.logger.error "DataCite Service Error [fetch_metadata]: #{e.message}"
         nil
