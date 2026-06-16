@@ -13,7 +13,6 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
 
     sign_in user
 
-    Rails.configuration.x.datacite = ActiveSupport::OrderedOptions.new if Rails.configuration.x.datacite.nil?
     Rails.configuration.x.datacite.active = true
   end
 
