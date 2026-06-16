@@ -14,7 +14,7 @@ module ExternalApis
       end
 
       # Main function for the "Add Research Output by DOI" feature
-      def fetch_metadata(doi:) # rubocop:disable Metrics/AbcSize
+      def fetch_metadata(doi:)
         return nil unless active? && doi.present?
 
         # Strip 'https://doi.org/'
@@ -23,22 +23,10 @@ module ExternalApis
         # Cache the result for 5 minutes. If this DOI is requested again within 5 minutes
         # Rails returns the cached hash instantly.
         Rails.cache.fetch("datacite/metadata/#{clean_doi.parameterize}", expires_in: 5.minutes) do
-          url = "#{api_base_url}/dois/#{CGI.escape(clean_doi)}"
-
-          response = HTTParty.get(url, headers: { 'Accept' => 'application/vnd.api+json' })
+          response = execute_api_get(clean_doi)
           return nil unless response.code == 200
 
-          json = JSON.parse(response.body).with_indifferent_access
-          attributes = json.dig(:data, :attributes)
-          return nil if attributes.blank?
-
-          {
-            title: attributes.dig(:titles, 0, :title),
-            description: extract_description(attributes),
-            output_type: ResearchOutput.output_type_from_datacite(attributes.dig(:types, :resourceTypeGeneral)),
-            release_date: attributes[:published],
-            doi: clean_doi
-          }
+          parse_datacite_attributes(response.body, clean_doi)
         end
       rescue SocketError, HTTParty::Error, Timeout::Error, JSON::ParserError => e
         Rails.logger.error "DataCite Service Error [fetch_metadata]: #{e.message}"
@@ -56,6 +44,25 @@ module ExternalApis
         # If an abstract hash was found, extract its text content.
         # Otherwise, fall back to the very first text item in the array
         abstract ? abstract[:description] : descriptions.dig(0, :description)
+      end
+
+      def execute_api_get(clean_doi)
+        url = "#{api_base_url}/dois/#{CGI.escape(clean_doi)}"
+        HTTParty.get(url, headers: { 'Accept' => 'application/vnd.api+json' })
+      end
+
+      def parse_datacite_attributes(body, clean_doi)
+        json = JSON.parse(body).with_indifferent_access
+        attributes = json.dig(:data, :attributes)
+        return nil if attributes.blank?
+
+        {
+          title: attributes.dig(:titles, 0, :title),
+          description: extract_description(attributes),
+          output_type: ResearchOutput.output_type_from_datacite(attributes.dig(:types, :resourceTypeGeneral)),
+          release_date: attributes[:published],
+          doi: clean_doi
+        }
       end
     end
   end
