@@ -2,6 +2,7 @@
 
 # Represents a version/snapshot of a Plan, capturing its state and metadata at a specific point in time.
 class PlanSnapshot < ApplicationRecord
+  FIXITY_CHECK_INTERVAL = 1.month
   # ==============
   # = Attributes =
   # ==============
@@ -49,4 +50,27 @@ class PlanSnapshot < ApplicationRecord
   end
 
   private_class_method :next_version_for_plan
+
+  # ===========================
+  # = Public Instance Methods =
+  # ===========================
+
+  def recalculated_checksum
+    PlanSnapshotChecksum.calculate(rda_json, extension_json)
+  end
+
+  def fixity_check_passed?
+    return false if checksum.blank?
+
+    # Compare recalculated and stored digest values for snapshot integrity.
+    ActiveSupport::SecurityUtils.secure_compare(recalculated_checksum, checksum)
+  rescue JSON::ParserError, TypeError
+    false
+  end
+
+  # Returns true if a fixity check has never been performed,
+  # or if the previous check is older than the configured interval.
+  def fixity_check_due?
+    fixity_checked_at.nil? || fixity_checked_at.before?(FIXITY_CHECK_INTERVAL.ago)
+  end
 end
