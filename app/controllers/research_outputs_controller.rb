@@ -18,7 +18,7 @@ class ResearchOutputsController < ApplicationController
   end
 
   # GET /plans/:plan_id/research_outputs/new
-  def new # rubocop:disable Metrics/AbcSize
+  def new
     @research_output = ResearchOutput.new(plan_id: @plan.id)
     authorize @research_output
 
@@ -31,9 +31,7 @@ class ResearchOutputsController < ApplicationController
     # If DataCite successfully returned data, inject it directly into the object attributes
     return unless metadata.present?
 
-    @research_output.assign_attributes(metadata.slice(:title, :description, :output_type))
-    @research_output.doi = metadata[:doi] if @research_output.respond_to?(:doi)
-    @research_output.release_date = metadata[:release_date] if @research_output.respond_to?(:release_date)
+    @research_output.assign_attributes(metadata.slice(:title, :description, :output_type, :release_date))
   end
 
   # GET /plans/:plan_id/research_outputs/:id/edit
