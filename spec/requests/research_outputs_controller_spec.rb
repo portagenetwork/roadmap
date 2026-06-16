@@ -35,9 +35,7 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
       end
 
       before do
-        stub_request(:get, "#{base_url}/dois/#{CGI.escape(doi)}")
-          .with(headers: { 'Accept' => 'application/vnd.api+json' })
-          .to_return(status: 200, body: datacite_json, headers: { 'Content-Type' => 'application/json' })
+        stub_datacite_request(body: datacite_json, headers: { 'Content-Type' => 'application/json' })
       end
 
       it 'returns a successful 200 OK JSON response' do
@@ -60,9 +58,7 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
       end
 
       it 'strips the domain protocol prefix and fetches successfully' do
-        stub_request(:get, "#{base_url}/dois/#{CGI.escape(doi)}")
-          .with(headers: { 'Accept' => 'application/vnd.api+json' })
-          .to_return(status: 200, body: datacite_json)
+        stub_datacite_request(body: datacite_json)
 
         get fetch_doi_plan_research_outputs_path(plan, doi: full_url_doi)
 
@@ -86,9 +82,7 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
       end
 
       it 'falls back to prefilling with the first description element' do
-        stub_request(:get, "#{base_url}/dois/#{CGI.escape(doi)}")
-          .with(headers: { 'Accept' => 'application/vnd.api+json' })
-          .to_return(status: 200, body: datacite_json)
+        stub_datacite_request(body: datacite_json)
 
         get fetch_doi_plan_research_outputs_path(plan, doi: doi)
 
@@ -110,9 +104,7 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
       end
 
       it 'defaults the output type to other' do
-        stub_request(:get, "#{base_url}/dois/#{CGI.escape(doi)}")
-          .with(headers: { 'Accept' => 'application/vnd.api+json' })
-          .to_return(status: 200, body: datacite_json)
+        stub_datacite_request(body: datacite_json)
 
         get fetch_doi_plan_research_outputs_path(plan, doi: doi)
 
@@ -132,9 +124,7 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
 
     context 'when the service cannot find the DOI' do
       before do
-        stub_request(:get, "#{base_url}/dois/invalid-doi")
-          .with(headers: { 'Accept' => 'application/vnd.api+json' })
-          .to_return(status: 404, body: '', headers: {})
+        stub_datacite_request(target_doi: 'invalid-doi', status: 404, body: '')
       end
 
       it 'returns a 404 Not Found JSON response' do
@@ -143,4 +133,12 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
       end
     end
   end
+end
+
+def stub_datacite_request(target_doi: doi, status: 200, body: '', headers: {})
+  escaped_path = target_doi == 'invalid-doi' ? 'invalid-doi' : CGI.escape(target_doi)
+
+  stub_request(:get, "#{base_url}/dois/#{escaped_path}")
+    .with(headers: { 'Accept' => 'application/vnd.api+json' })
+    .to_return(status: status, body: body, headers: headers)
 end
