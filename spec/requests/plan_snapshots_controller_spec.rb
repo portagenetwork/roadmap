@@ -83,6 +83,27 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
 
       include_examples 'redirects as unauthorized', :get
     end
+
+    context 'when fixity check fails' do
+      before do
+        PlanSnapshots::FixityCheckService
+          .stubs(:new)
+          .returns(stub(call: { status: :failed }))
+      end
+
+      before do
+        sign_in(administrator)
+      end
+
+      it 'returns an error response' do
+        get request_path
+
+        expect(response).to have_http_status(:unprocessable_entity)
+
+        json = JSON.parse(response.body)
+        expect(json['error']).to be_present
+      end
+    end
   end
 
   describe 'POST /plans/:plan_id/versions' do

@@ -8,7 +8,15 @@ class PlanSnapshotsController < ApplicationController
 
   # GET /plans/:plan_id/versions/:id
   def show
-    render json: @snapshot.rda_json.merge(@snapshot.extension_json)
+    result = PlanSnapshots::FixityCheckService.new(@snapshot).call
+    if result[:status] == :failed
+      render json: {
+        error: _('There was an error detected. The administrators of the repository have been alerted. ' \
+                 'A check on (metadata/plan data) did not find matching checksums.')
+      }, status: :unprocessable_entity
+    else
+      render json: @snapshot.rda_json.merge(@snapshot.extension_json)
+    end
   end
 
   # POST /plans/:plan_id/versions
