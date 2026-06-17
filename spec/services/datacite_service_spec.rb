@@ -13,6 +13,36 @@ RSpec.describe ExternalApis::DataciteService, type: :service do
     Rails.configuration.x.datacite.active = true
   end
 
+  context 'when the API returns a response that results in nil' do
+    let(:datacite_json) do
+      {
+        data: {
+          attributes: {
+            titles: [{ title: 'Fallback Desc Output' }],
+            descriptions: [{ description: 'First general description block text.' }],
+            types: { resourceTypeGeneral: 'Text' }
+          }
+        }
+      }.to_json
+    end
+
+    it 'does not cache the nil value and retries the network on subsequent calls' do
+      stub_datacite_request(body: { data: {} }.to_json)
+
+      # First call should return nil and bypass caching
+      expect(described_class.fetch_metadata(doi: doi)).to eq(nil)
+
+      stub_datacite_request(body: { data: {} }.to_json)
+
+      # Second call will hit successfully because skip_nil: true prevented saving nil
+      stub_datacite_request(body: datacite_json)
+
+      result = described_class.fetch_metadata(doi: doi)
+
+      expect(result[:description]).to eq('First general description block text.')
+    end
+  end
+
   context 'when given a full DOI URL instead of a raw identifier' do
     let(:full_url_doi) { "https://doi.org/#{doi}" }
     let(:datacite_json) do

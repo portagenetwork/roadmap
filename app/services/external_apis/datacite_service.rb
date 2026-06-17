@@ -22,9 +22,9 @@ module ExternalApis
 
         # Cache the result for 5 minutes. If this DOI is requested again within 5 minutes
         # Rails returns the cached hash instantly.
-        Rails.cache.fetch("datacite/metadata/#{clean_doi.parameterize}", expires_in: 5.minutes) do
+        Rails.cache.fetch("datacite/metadata/#{clean_doi.parameterize}", expires_in: 5.minutes, skip_nil: true) do
           response = execute_api_get(clean_doi)
-          return nil unless response.code == 200
+          return nil unless response&.code == 200
 
           parse_datacite_attributes(response.body, clean_doi)
         end
