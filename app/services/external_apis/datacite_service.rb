@@ -29,8 +29,7 @@ module ExternalApis
           parse_datacite_attributes(response.body, clean_doi)
         end
       rescue SocketError, HTTParty::Error, Timeout::Error, JSON::ParserError => e
-        Rails.logger.error "DataCite Service Error [fetch_metadata]: #{e.message}"
-        nil
+        log_and_notify_error(e, doi)
       end
 
       private
@@ -63,6 +62,14 @@ module ExternalApis
           release_date: attributes[:published],
           doi: clean_doi
         }
+      end
+
+      def log_and_notify_error(error, doi)
+        # Local logs for immediate debugging
+        Rails.logger.error "DataCite Service Error [fetch_metadata]: #{error.message}"
+        # External error tracking to notify the team
+        Rollbar.error(error, "DataCite Service Error [fetch_metadata] for DOI: #{doi}")
+        nil
       end
     end
   end
