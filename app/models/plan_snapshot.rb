@@ -26,6 +26,15 @@ class PlanSnapshot < ApplicationRecord
   validates :checksum, presence: true, format: { with: /\A[a-f0-9]{32}\z/i, message: 'must be a valid MD5 hex string' }
   validates :plan_id, uniqueness: { scope: :version }
 
+  # ==========
+  # = Scopes =
+  # ==========
+
+  scope :due_for_fixity_check, lambda {
+                                 where(fixity_checked_at: nil)
+                                   .or(where('fixity_checked_at < ?', FIXITY_CHECK_INTERVAL.ago))
+                               }
+
   # =================
   # = Class Methods =
   # =================

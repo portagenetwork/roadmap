@@ -83,6 +83,24 @@ RSpec.describe PlanSnapshot, type: :model do
     end
   end
 
+  describe '.due_for_fixity_check' do
+    let!(:never_checked) { create(:plan_snapshot, fixity_checked_at: nil) }
+    let!(:stale) { create(:plan_snapshot, :stale) }
+    let!(:recently_checked) { create(:plan_snapshot, :recently_checked) }
+
+    it 'includes snapshots that have never been checked' do
+      expect(described_class.due_for_fixity_check).to include(never_checked)
+    end
+
+    it 'includes snapshots whose fixity check is overdue' do
+      expect(described_class.due_for_fixity_check).to include(stale)
+    end
+
+    it 'excludes snapshots that were checked recently' do
+      expect(described_class.due_for_fixity_check).not_to include(recently_checked)
+    end
+  end
+
   describe '.send(:next_version_for_plan)' do
     let(:plan) { create(:plan) }
 
