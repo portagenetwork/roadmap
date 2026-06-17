@@ -41,12 +41,12 @@ $(() => {
     };
 
     if (!doi) {
-      setLookupStatus('text-danger', 'Please enter a DOI string.');
+      setLookupStatus('text-danger', getConstant('DOI_VALIDATION_EMPTY'));
       return;
     }
 
-    button.prop('disabled', true).text('Verifying...');
-    setLookupStatus('text-muted', 'Validating identifier with DataCite...');
+    button.prop('disabled', true).text(getConstant('DOI_VALIDATION_VERIFYING'));
+    setLookupStatus('text-muted', getConstant('DOI_VALIDATION_FETCHING'));
 
     $.ajax({
       url: fetchDoiPath,
@@ -54,14 +54,14 @@ $(() => {
       data: { doi: doi },
       dataType: 'json'
     }).done((data) => {
-      setLookupStatus('text-success', 'DOI Verified! Redirecting to form...');
+      setLookupStatus('text-success', getConstant('DOI_VALIDATION_SUCCESS'));
       
       // Dynamic browser redirection to the standard "New" view layout route
       window.location.href = `${newResearchOutputPath}?prefill_doi=${encodeURIComponent(doi)}`;
     }).fail((xhr) => {
-      button.prop('disabled', false).text('Fetch & Add');
+      button.prop('disabled', false).text(getConstant('DOI_BUTTON_TEXT_DEFAULT'));
       const response = xhr.responseJSON;
-      const errorMsg = response && response.error ? response.error : 'Could not retrieve metadata for this DOI.';
+      const errorMsg = response && response.error ? response.error : getConstant('DOI_VALIDATION_FALLBACK_ERROR');
       setLookupStatus('text-danger', errorMsg);
     });
   });
