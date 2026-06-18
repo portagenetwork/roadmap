@@ -53,4 +53,8 @@ class ResearchOutputPolicy < ApplicationPolicy
   def metadata_standard_search?
     @research_output.plan.administerable_by?(@user.id)
   end
+
+  def fetch_doi?
+    create?
+  end
 end
