@@ -51,9 +51,9 @@ $(() => {
     $.ajax({
       url: fetchDoiPath,
       method: 'GET',
-      data: { doi: doi },
+      data: { doi },
       dataType: 'json'
-    }).done((data) => {
+    }).done(() => {
       setLookupStatus('text-success', getConstant('DOI_VALIDATION_SUCCESS'));
       
       // Dynamic browser redirection to the standard "New" view layout route
