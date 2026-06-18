@@ -81,6 +81,19 @@ class ResearchOutput < ApplicationRecord
                  }
 
   # ====================
+  # = Class methods =
+  # ====================
+
+  # Helper method for extracting output type from datacite call in DataCite Service
+  def self.output_type_from_datacite(type)
+    return :other if type.blank?
+    return :model_representation if type == 'Model' # Handle explicit edge-case mapping
+
+    normalized = type.underscore.to_sym
+    output_types.key?(normalized.to_s) ? normalized : :other
+  end
+
+  # ====================
   # = Instance methods =
   # ====================
 
