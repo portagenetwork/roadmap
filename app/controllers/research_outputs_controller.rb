@@ -19,8 +19,19 @@ class ResearchOutputsController < ApplicationController
 
   # GET /plans/:plan_id/research_outputs/new
   def new
-    @research_output = ResearchOutput.new(plan_id: @plan.id, output_type: '')
+    @research_output = ResearchOutput.new(plan_id: @plan.id)
     authorize @research_output
+
+    # Check if a DOI parameter was carried over in the redirect URL query string
+    return unless params[:prefill_doi].present?
+
+    # Call DataCite service using the DOI string found in the URL parameters
+    metadata = fetch_metadata_from_datacite(params[:prefill_doi])
+
+    # If DataCite successfully returned data, inject it directly into the object attributes
+    return unless metadata.present?
+
+    @research_output.assign_attributes(metadata.slice(:title, :description, :output_type, :release_date))
   end
 
   # GET /plans/:plan_id/research_outputs/:id/edit
