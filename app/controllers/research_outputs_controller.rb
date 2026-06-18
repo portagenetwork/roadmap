@@ -142,6 +142,24 @@ class ResearchOutputsController < ApplicationController
                                       .page(params[:page])
   end
 
+  def fetch_doi
+    authorize ResearchOutput.new(plan_id: params[:plan_id])
+
+    if params[:doi].blank?
+      render json: { error: 'DOI is required' }, status: :bad_request
+      return
+    end
+
+    # Obtain research output metadata from DataCite service
+    metadata = fetch_metadata_from_datacite(params[:doi])
+
+    if metadata.present?
+      render json: metadata, status: :ok
+    else
+      render json: { error: 'Could not find metadata for the provided DOI.' }, status: :not_found
+    end
+  end
+
   private
 
   def output_params
@@ -215,5 +233,11 @@ class ResearchOutputsController < ApplicationController
                    @plan.research_outputs.include?(@research_output)
 
     redirect_to plan_research_outputs_path, alert: _('research output not found')
+  end
+
+  def fetch_metadata_from_datacite(doi)
+    return nil if doi.blank?
+
+    ExternalApis::DataciteService.fetch_metadata(doi: doi)
   end
 end
