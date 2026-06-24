@@ -116,13 +116,11 @@ class Question < ApplicationRecord
 
   # text and default_value are translated through the translation gem
   def text
-    text = read_attribute(:text)
-    _(text) unless text.blank?
+    TemplateTranslationService.translate(self, :text)
   end
 
   def default_value
-    default_value = read_attribute(:default_value)
-    _(default_value) unless default_value.blank?
+    TemplateTranslationService.translate(self, :default_value)
   end
 
   # rubocop:disable Metrics/AbcSize
