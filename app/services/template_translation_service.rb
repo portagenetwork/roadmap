@@ -27,24 +27,13 @@ class TemplateTranslationService
 
     # Traverses up associations to find the parent template and check its org
     def default_funder_template?(record)
-      template = fetch_template_from_record(record)
-
+      template = record.is_a?(Template) ? record : record.template
       return false if template.blank?
 
-      # Check if template belongs to default funder
       template.org_id == Rails.application.config.default_funder_id
     rescue StandardError => e
       Rails.logger.error "Template translation error: #{e.message}"
-    end
-
-    def fetch_template_from_record(record) # rubocop:disable Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
-      case record.class.name
-      when 'Template'       then record
-      when 'Phase'          then record.template
-      when 'Section'        then record.phase&.template
-      when 'Question'       then record.section&.phase&.template
-      when 'Annotation', 'QuestionOption' then record.question&.section&.phase&.template
-      end
+      false
     end
   end
 end
