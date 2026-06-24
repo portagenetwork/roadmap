@@ -134,6 +134,21 @@ RSpec.describe PlanSnapshot, type: :model do
     end
   end
 
+  describe '#visibility_label' do
+    it 'maps enum values to concise labels' do
+      expect(build(:plan_snapshot, visibility: 'privately_visible').visibility_label).to eq('private')
+      expect(build(:plan_snapshot, visibility: 'organisationally_visible').visibility_label).to eq('organizational')
+      expect(build(:plan_snapshot, visibility: 'publicly_visible').visibility_label).to eq('public')
+    end
+
+    it 'returns nil for unknown visibility' do
+      snapshot = build(:plan_snapshot)
+      snapshot.stubs(:visibility).returns('custom_visible')
+
+      expect(snapshot.visibility_label).to be_nil
+    end
+  end
+
   describe '#dmp_identifier' do
     it 'returns the dmp_id identifier from rda_json' do
       snapshot = build(:plan_snapshot, rda_json: PlanSnapshotValues.mock_rda_json)

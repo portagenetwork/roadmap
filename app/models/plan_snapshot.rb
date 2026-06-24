@@ -3,6 +3,12 @@
 # Represents a version/snapshot of a Plan, capturing its state and metadata at a specific point in time.
 class PlanSnapshot < ApplicationRecord
   FIXITY_CHECK_INTERVAL = 1.month
+  VISIBILITY_MESSAGE = {
+    organisationally_visible: _('organizational'),
+    publicly_visible: _('public'),
+    privately_visible: _('private')
+  }.freeze
+
   # ==============
   # = Attributes =
   # ==============
@@ -85,6 +91,11 @@ class PlanSnapshot < ApplicationRecord
   # or if the previous check is older than the configured interval.
   def fixity_check_due?
     fixity_checked_at.nil? || fixity_checked_at.before?(FIXITY_CHECK_INTERVAL.ago)
+  end
+
+  # Human-readable label for user display
+  def visibility_label
+    VISIBILITY_MESSAGE[visibility.to_sym]
   end
 
   delegate :identifier, :identifier_type, to: :rda_json_reader, prefix: :dmp
