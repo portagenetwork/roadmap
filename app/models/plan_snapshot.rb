@@ -86,4 +86,12 @@ class PlanSnapshot < ApplicationRecord
   def fixity_check_due?
     fixity_checked_at.nil? || fixity_checked_at.before?(FIXITY_CHECK_INTERVAL.ago)
   end
+
+  delegate :identifier, :identifier_type, to: :rda_json_reader, prefix: :dmp
+
+  private
+
+  def rda_json_reader
+    @rda_json_reader ||= PlanSnapshotRdaJson.new(rda_json: rda_json)
+  end
 end
