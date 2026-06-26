@@ -39,6 +39,23 @@ RSpec.describe PlanSnapshotChecksum do
       expect(described_class.calculate(rda_json,
                                        extension_json)).not_to eq(described_class.calculate(altered, extension_json))
     end
+
+    context 'when serializers are called multiple times on an unchanged plan' do
+      let(:plan) { create(:plan, start_date: nil, end_date: nil) }
+
+      it 'produces the same checksum on repeated serialization calls' do
+        checksum_one = PlanSnapshotChecksum.calculate(
+          Api::V2::Serialization::RdaSerializer.call(plan: plan),
+          Api::V2::Serialization::ExtensionSerializer.call(plan: plan)
+        )
+        checksum_two = PlanSnapshotChecksum.calculate(
+          Api::V2::Serialization::RdaSerializer.call(plan: plan),
+          Api::V2::Serialization::ExtensionSerializer.call(plan: plan)
+        )
+
+        expect(checksum_one).to eq(checksum_two)
+      end
+    end
   end
 
   describe '.normalize_json_for_checksum' do
