@@ -13,12 +13,6 @@ class PlanPolicy < ApplicationPolicy
     @record.readable_by?(@user.id)
   end
 
-  def publish?
-    @record.editable_by?(@user.id) ||
-      (@user.can_org_admin? &&
-       @user.org.plans.include?(@record))
-  end
-
   def share?
     @record.editable_by?(@user.id) ||
       (@user.can_org_admin? &&

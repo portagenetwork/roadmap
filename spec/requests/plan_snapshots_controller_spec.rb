@@ -55,6 +55,42 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
     end
   end
 
+  describe 'GET /plans/:plan_id/versions' do
+    let(:request_path) { plan_snapshots_path(plan) }
+
+    before do
+      create(:plan_snapshot, plan: plan)
+    end
+
+    shared_examples 'can access snapshots index' do
+      it 'returns successfully' do
+        get request_path
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'as an administrator' do
+      before { sign_in(administrator) }
+
+      include_examples 'can access snapshots index'
+    end
+
+    context 'as a commenter' do
+      before do
+        create(:role, :commenter, plan: plan, user: commenter)
+        sign_in(commenter)
+      end
+
+      include_examples 'can access snapshots index'
+    end
+
+    context 'without access to the plan' do
+      before { sign_in(other_user) }
+
+      include_examples 'redirects as unauthorized', :get
+    end
+  end
+
   describe 'GET /plans/:plan_id/versions/:id' do
     let(:snapshot) { create(:plan_snapshot, plan: plan, version: 1) }
     let(:request_path) { plan_snapshot_path(plan, snapshot) }

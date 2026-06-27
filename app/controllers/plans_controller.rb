@@ -291,17 +291,6 @@ class PlansController < ApplicationController
   end
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity
 
-  # GET /plans/:id/publish
-  def publish
-    @plan = Plan.find(params[:id])
-    if @plan.present?
-      authorize @plan
-      @plan_roles = @plan.roles.where(active: true)
-    else
-      redirect_to(plans_path)
-    end
-  end
-
   # GET /plans/:id/share
   def share
     @plan = Plan.find(params[:id])
