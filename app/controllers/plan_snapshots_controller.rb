@@ -27,7 +27,8 @@ class PlanSnapshotsController < ApplicationController
   # POST /plans/:plan_id/versions
   def create
     PlanSnapshot.create_from_plan(plan: @plan, visibility: params[:plan_snapshot][:visibility])
-    redirect_to @plan, notice: _('New version published.')
+    redirect_to plan_snapshots_path(@plan),
+                notice: _('New version published.')
   end
 
   private
