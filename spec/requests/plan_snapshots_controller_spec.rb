@@ -158,7 +158,7 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
         snapshot = plan.snapshots.order(:version).last
 
         expect(snapshot.visibility).to eq(visibility)
-        expect(response).to redirect_to(plan_path(plan))
+        expect(response).to redirect_to(plan_snapshots_path(plan))
         expect(flash[:notice]).to eq('New version published.')
       end
     end
