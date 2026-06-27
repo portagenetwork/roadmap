@@ -37,9 +37,9 @@
          class="nav-link" aria-controls="content"><%= _('Request feedback') %></a>
     </li>
   <% end %>
-  <% if plan.administerable_by?(current_user.id) || (current_user.can_org_admin? && current_user.org.plans.include?(plan)) %>
-    <li role="presentation" class="nav-item <%= (active_page?(publish_plan_path(plan)) ? 'active' : '') %>">
-      <a href="<%= publish_plan_path(plan) %>" role="tab"
+  <% if PlanSnapshotPolicy.new(current_user, plan).index? %>
+    <li role="presentation" class="nav-item <%= (active_page?(plan_snapshots_path(plan)) ? 'active' : '') %>">
+      <a href="<%= plan_snapshots_path(plan) %>" role="tab"
          class="nav-link" aria-controls="content"><%= _('Versions') %></a>
     </li>
   <% end %>

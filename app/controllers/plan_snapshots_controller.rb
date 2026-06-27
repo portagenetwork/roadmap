@@ -6,6 +6,11 @@ class PlanSnapshotsController < ApplicationController
   before_action :authorize_plan
   before_action :set_snapshot, only: [:show]
 
+  # GET /plans/:plan_id/versions
+  def index
+    @snapshots = PlanSnapshot.for_plan(@plan)
+  end
+
   # GET /plans/:plan_id/versions/:id
   def show
     result = PlanSnapshots::FixityCheckService.new(@snapshot).call
