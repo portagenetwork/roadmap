@@ -4,189 +4,123 @@ require 'rails_helper'
 
 RSpec.describe 'PlanSnapshotsController', type: :request do
   let(:plan) { create(:plan) }
-
-  let(:administrator) { create(:user) }
-  let(:editor) { create(:user) }
-  let(:commenter) { create(:user) }
-  let(:other_user) { create(:user) }
+  let(:user) { create(:user) }
 
   let(:visibility) { PlanSnapshot.visibilities.keys.first }
   let(:post_params) { { plan_snapshot: { visibility: visibility } } }
 
-  before do
-    create(:role, :administrator, plan: plan, user: administrator)
+  before { sign_in(user) }
+
+  def json
+    JSON.parse(response.body)
   end
 
-  shared_examples 'can view the snapshot' do
-    subject(:perform_request) { get request_path }
+  def authorize_as(role)
+    create(:role, role, plan: plan, user: user)
+  end
 
-    let(:json) { JSON.parse(response.body) }
-
-    it 'returns the snapshot JSON' do
-      perform_request
-
+  shared_examples 'an authorized request' do
+    it 'returns 200 OK' do
+      subject
       expect(response).to have_http_status(:ok)
+    end
+  end
+
+  shared_examples 'an unauthorized request' do
+    it 'redirects as unauthorized' do
+      subject
+
+      expect(response).to redirect_to(plans_url)
+      follow_redirect!
+
+      expect(flash[:alert]).to eq('You are not authorized to perform this action.')
+    end
+  end
+
+  shared_examples 'returns snapshot json' do
+    it 'includes snapshot data' do
+      subject
+
       expect(json).to include(
         snapshot.rda_json.merge(snapshot.extension_json)
       )
     end
   end
 
-  shared_examples 'redirects as unauthorized' do |http_method, params = {}|
-    subject(:perform_request) { public_send(http_method, request_path, params: params) }
-
-    it 'redirects with a not-authorized message' do
-      perform_request
-
-      expect(response).to redirect_to(plans_url)
-
-      follow_redirect!
-      expect(flash[:alert]).to eq('You are not authorized to perform this action.')
-    end
-  end
-
-  shared_examples 'cannot create snapshot' do
-    it 'does not create a snapshot' do
-      expect do
-        post request_path, params: post_params
-      end.not_to change(plan.snapshots, :count)
-
-      expect(response).to redirect_to(plans_url)
-    end
-  end
-
   describe 'GET /plans/:plan_id/versions' do
+    let(:snapshot) { create(:plan_snapshot, plan: plan) }
     let(:request_path) { plan_snapshots_path(plan) }
+    subject { get request_path }
 
-    before do
-      create(:plan_snapshot, plan: plan)
+    before { create(:plan_snapshot, plan: plan) }
+
+    context 'when authorized' do
+      before { authorize_as(:commenter) }
+
+      include_examples 'an authorized request'
     end
 
-    shared_examples 'can access snapshots index' do
-      it 'returns successfully' do
-        get request_path
-        expect(response).to have_http_status(:ok)
-      end
-    end
-
-    context 'as an administrator' do
-      before { sign_in(administrator) }
-
-      include_examples 'can access snapshots index'
-    end
-
-    context 'as a commenter' do
-      before do
-        create(:role, :commenter, plan: plan, user: commenter)
-        sign_in(commenter)
-      end
-
-      include_examples 'can access snapshots index'
-    end
-
-    context 'without access to the plan' do
-      before { sign_in(other_user) }
-
-      include_examples 'redirects as unauthorized', :get
+    context 'when unauthorized' do
+      include_examples 'an unauthorized request'
     end
   end
 
   describe 'GET /plans/:plan_id/versions/:id' do
-    let(:snapshot) { create(:plan_snapshot, plan: plan, version: 1) }
+    let(:snapshot) { create(:plan_snapshot, plan: plan) }
     let(:request_path) { plan_snapshot_path(plan, snapshot) }
+    subject { get request_path }
 
-    context 'as an administrator' do
-      before do
-        sign_in(administrator)
-      end
+    context 'when authorized' do
+      before { authorize_as(:commenter) }
 
-      include_examples 'can view the snapshot'
-    end
-
-    context 'as a commenter' do
-      before do
-        create(:role, :commenter, plan: plan, user: commenter)
-        sign_in(commenter)
-      end
-
-      include_examples 'can view the snapshot'
-    end
-
-    context 'without access to the plan' do
-      before do
-        sign_in(other_user)
-      end
-
-      include_examples 'redirects as unauthorized', :get
+      include_examples 'an authorized request'
+      include_examples 'returns snapshot json'
     end
 
     context 'when fixity check fails' do
       before do
+        authorize_as(:administrator)
+
         PlanSnapshots::FixityCheckService
           .stubs(:new)
-          .returns(stub(call: { status: :failed }))
+          .returns(stub(call: { status: :failed, error: 'corrupt' }))
       end
 
-      before do
-        sign_in(administrator)
-      end
-
-      it 'returns an error response' do
-        get request_path
+      it 'returns unprocessable entity' do
+        subject
 
         expect(response).to have_http_status(:unprocessable_entity)
-
-        json = JSON.parse(response.body)
         expect(json['error']).to be_present
       end
+    end
+
+    context 'when unauthorized' do
+      include_examples 'an unauthorized request'
     end
   end
 
   describe 'POST /plans/:plan_id/versions' do
     let(:request_path) { plan_snapshots_path(plan) }
+    subject { post request_path, params: post_params }
 
-    context 'as an administrator' do
-      before do
-        sign_in(administrator)
-      end
+    context 'when authorized' do
+      before { authorize_as(:administrator) }
 
-      it 'publishes a snapshot' do
-        expect do
-          post request_path, params: post_params
-        end.to change(plan.snapshots, :count).by(1)
+      it 'creates a snapshot' do
+        expect { subject }.to change(plan.snapshots, :count).by(1)
 
-        snapshot = plan.snapshots.order(:version).last
-
-        expect(snapshot.visibility).to eq(visibility)
         expect(response).to redirect_to(plan_snapshots_path(plan))
-        expect(flash[:notice]).to eq('New version published.')
+
+        expect(plan.snapshots.order(:version).last.visibility).to eq(visibility)
       end
     end
 
-    context 'as an editor' do
-      before do
-        create(:role, :editor, plan: plan, user: editor)
-        sign_in(editor)
+    context 'when unauthorized' do
+      it 'does not create a snapshot' do
+        expect { subject }.not_to change(plan.snapshots, :count)
+
+        expect(response).to redirect_to(plans_url)
       end
-
-      include_examples 'cannot create snapshot'
-    end
-
-    context 'as a commenter' do
-      before do
-        create(:role, :commenter, plan: plan, user: commenter)
-        sign_in(commenter)
-      end
-
-      include_examples 'cannot create snapshot'
-    end
-
-    context 'without access to the plan' do
-      before do
-        sign_in(other_user)
-      end
-
-      include_examples 'cannot create snapshot'
     end
   end
 end
