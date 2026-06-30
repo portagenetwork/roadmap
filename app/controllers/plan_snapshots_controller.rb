@@ -8,7 +8,11 @@ class PlanSnapshotsController < ApplicationController
 
   # GET /plans/:plan_id/versions
   def index
-    @snapshots = PlanSnapshot.for_plan(@plan)
+    render locals: {
+      plan: @plan,
+      snapshots: PlanSnapshot.for_plan(@plan),
+      snapshot_creation_enabled: PlanSnapshotPolicy.new(current_user, @plan).create?
+    }
   end
 
   # GET /plans/:plan_id/versions/:id

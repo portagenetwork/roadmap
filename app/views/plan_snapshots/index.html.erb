@@ -1,0 +1,18 @@
+<%# locals: plan, snapshots, snapshot_creation_enabled %>
+<% title "#{plan.title} - Versions" %>
+<div class="row">
+  <div class="col-md-12">
+    <h1><%= plan.title %></h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <%= render partial: 'index',
+               layout: 'plans/navigation',
+               locals: {
+                 plan: plan,
+                 snapshots: snapshots,
+                 snapshot_creation_enabled: snapshot_creation_enabled
+               } %>
+  </div>
+</div>
