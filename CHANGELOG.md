@@ -12,6 +12,8 @@
 
  - chore(deps): bump nginx from 1.31.1-alpine to 1.31.2-alpine [#1372](https://github.com/portagenetwork/roadmap/pull/1372)
 
+ - chore(deps): bump actions/checkout from 6 to 7 [#1371](https://github.com/portagenetwork/roadmap/pull/1371)
+
 ## [4.1.1+portage-4.9.0]
 
 ### Changed
