@@ -4,6 +4,8 @@
 
 ### Dependency Updates
 
+ - chore(deps): bump hono from 4.12.23 to 4.12.26 [#1375](https://github.com/portagenetwork/roadmap/pull/1375)
+
  - chore(deps): bump js-yaml from 4.1.1 to 4.3.0 [#1379](https://github.com/portagenetwork/roadmap/pull/1379)
 
  - chore(deps): bump hono from 4.12.18 to 4.12.23 [#1196](https://github.com/portagenetwork/roadmap/pull/1364)
