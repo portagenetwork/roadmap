@@ -52,6 +52,32 @@ RSpec.describe PlanSnapshot, type: :model do
     end
   end
 
+  describe 'checksum uniqueness per plan' do
+    let(:plan) { create(:plan) }
+    let(:checksum) { PlanSnapshotValues.random_md5 }
+
+    it 'is invalid when checksum matches the last snapshot for the same plan' do
+      create(:plan_snapshot, plan: plan, version: 1, checksum: checksum)
+      duplicate = build(:plan_snapshot, plan: plan, version: 2, checksum: checksum)
+
+      expect(duplicate).not_to be_valid
+      expect(duplicate.errors[:checksum]).to include('matches the last snapshot; plan has not changed')
+    end
+
+    it 'is valid when checksum differs from the last snapshot' do
+      create(:plan_snapshot, plan: plan, version: 1, checksum: checksum)
+      new_snapshot = build(:plan_snapshot, plan: plan, version: 2, checksum: PlanSnapshotValues.random_md5)
+
+      expect(new_snapshot).to be_valid
+    end
+
+    it 'is valid when it is the first snapshot for the plan' do
+      snapshot = build(:plan_snapshot, plan: plan, version: 1, checksum: checksum)
+
+      expect(snapshot).to be_valid
+    end
+  end
+
   describe '.create_from_plan' do
     let(:plan) { create(:plan) }
     let(:rda_json) { PlanSnapshotValues.mock_rda_json }
@@ -80,6 +106,14 @@ RSpec.describe PlanSnapshot, type: :model do
       described_class.create_from_plan(plan: plan, visibility: 'privately_visible')
       snapshot2 = described_class.create_from_plan(plan: plan, visibility: 'privately_visible')
       expect(snapshot2.version).to eq(2)
+    end
+
+    it 'raises ActiveRecord::RecordInvalid when plan has not changed since last snapshot' do
+      described_class.create_from_plan(plan: plan, visibility: 'privately_visible')
+
+      expect do
+        described_class.create_from_plan(plan: plan, visibility: 'privately_visible')
+      end.to raise_error(ActiveRecord::RecordInvalid, /matches the last snapshot/)
     end
   end
 

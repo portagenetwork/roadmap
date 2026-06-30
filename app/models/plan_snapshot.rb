@@ -31,6 +31,7 @@ class PlanSnapshot < ApplicationRecord
   validates :extension_json, presence: true
   validates :checksum, presence: true, format: { with: /\A[a-f0-9]{32}\z/i, message: 'must be a valid MD5 hex string' }
   validates :plan_id, uniqueness: { scope: :version }
+  validate :checksum_differs_from_last_snapshot, on: :create
 
   # ==========
   # = Scopes =
@@ -101,6 +102,13 @@ class PlanSnapshot < ApplicationRecord
   delegate :identifier, :identifier_type, to: :rda_json_reader, prefix: :dmp
 
   private
+
+  def checksum_differs_from_last_snapshot
+    return unless checksum.present?
+
+    last_checksum = self.class.for_plan(plan).pick(:checksum)
+    errors.add(:checksum, _('matches the last snapshot; plan has not changed')) if last_checksum == checksum
+  end
 
   def rda_json_reader
     @rda_json_reader ||= PlanSnapshotRdaJson.new(rda_json: rda_json)
