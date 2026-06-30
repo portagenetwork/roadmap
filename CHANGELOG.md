@@ -10,6 +10,8 @@
 
  - chore(deps): bump surnet/alpine-wkhtmltopdf from 3.23.2-0.12.6-small to 3.23.4-0.12.6-small [#1363](https://github.com/portagenetwork/roadmap/pull/1363)
 
+ - chore(deps): bump nginx from 1.31.1-alpine to 1.31.2-alpine [#1372](https://github.com/portagenetwork/roadmap/pull/1372)
+
 ## [4.1.1+portage-4.9.0]
 
 ### Changed
