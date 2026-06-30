@@ -9,8 +9,12 @@ FactoryBot.define do
     visibility { PlanSnapshot.visibilities.keys.first }
     rda_json { PlanSnapshotValues.mock_rda_json }
     extension_json { PlanSnapshotValues.mock_extension_json }
-    checksum { PlanSnapshotChecksum.calculate(rda_json, extension_json) }
+    checksum { PlanSnapshotValues.random_md5 }
     fixity_checked_at { nil }
+
+    trait :calculated_checksum do
+      checksum { PlanSnapshotChecksum.calculate(rda_json, extension_json) }
+    end
 
     trait :recently_checked do
       fixity_checked_at { PlanSnapshot::FIXITY_CHECK_INTERVAL.ago + 1.second }

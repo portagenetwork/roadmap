@@ -21,6 +21,8 @@ RSpec.describe PlanSnapshots::FixityCheckService do
     context 'when snapshot is due and valid' do
       let(:snapshot) { create(:plan_snapshot, :stale) }
 
+      before { snapshot.stubs(:fixity_check_passed?).returns(true) }
+
       it 'marks as ok and updates last checked timestamp' do
         result = service.call
 
@@ -30,14 +32,17 @@ RSpec.describe PlanSnapshots::FixityCheckService do
     end
 
     context 'when snapshot is due and invalid' do
-      # alter checksum to fail fixity check
-      let(:snapshot) { create(:plan_snapshot, :tampered) }
+      let(:snapshot) { create(:plan_snapshot, :stale) }
+
+      before { snapshot.stubs(:fixity_check_passed?).returns(false) }
 
       it 'returns failed without updating timestamp' do
+        original_checked_at = snapshot.fixity_checked_at
+
         result = service.call
 
         expect(result[:status]).to eq(:failed)
-        expect(snapshot.reload.fixity_checked_at).to be_nil
+        expect(snapshot.reload.fixity_checked_at).to be_within(1.second).of(original_checked_at)
       end
     end
   end

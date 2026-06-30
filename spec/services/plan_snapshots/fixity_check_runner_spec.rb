@@ -7,7 +7,7 @@ RSpec.describe PlanSnapshots::FixityCheckRunner do
 
   describe '#call' do
     context 'when all snapshots succeed' do
-      let!(:snapshots) { create_list(:plan_snapshot, 2, :stale) }
+      let!(:snapshots) { create_list(:plan_snapshot, 2, :stale, :calculated_checksum) }
 
       it 'returns aggregated ok counts' do
         expect(runner.call).to eq(ok: 2)
@@ -15,7 +15,7 @@ RSpec.describe PlanSnapshots::FixityCheckRunner do
     end
 
     context 'when snapshots have mixed results' do
-      let!(:ok_snapshot) { create(:plan_snapshot, :stale) }
+      let!(:ok_snapshot) { create(:plan_snapshot, :stale, :calculated_checksum) }
       let!(:failed_snapshot) { create(:plan_snapshot, :stale, :tampered) }
 
       it 'aggregates ok and failed counts' do

@@ -71,7 +71,10 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
     subject { get request_path }
 
     context 'when authorized' do
-      before { authorize_as(:commenter) }
+      before do
+        authorize_as(:commenter)
+        PlanSnapshots::FixityCheckService.stubs(:new).returns(stub(call: { status: :ok }))
+      end
 
       include_examples 'an authorized request'
       include_examples 'returns snapshot json'

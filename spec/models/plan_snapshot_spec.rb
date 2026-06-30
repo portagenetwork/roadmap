@@ -104,6 +104,8 @@ RSpec.describe PlanSnapshot, type: :model do
 
     it 'increments version for subsequent snapshots' do
       described_class.create_from_plan(plan: plan, visibility: 'privately_visible')
+      # Stub `calculate` again for checksum_differs_from_last_snapshot validator
+      PlanSnapshotChecksum.stubs(:calculate).returns(PlanSnapshotValues.random_md5)
       snapshot2 = described_class.create_from_plan(plan: plan, visibility: 'privately_visible')
       expect(snapshot2.version).to eq(2)
     end
