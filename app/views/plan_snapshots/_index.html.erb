@@ -1,0 +1,41 @@
+<%# locals: plan, snapshots, snapshot_creation_enabled %>
+<% if snapshots.any? %>
+  <p>
+    <%= _('This is a list of your versioned DMPs with any associated identifiers.') %>
+  </p>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <% [_('Identifier'), _('Type'), _('Version'), _('Release date'), _('Visibility'), _('Actions')].each do |header| %>
+          <th><%= header %></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% snapshots.each do |snapshot| %>
+        <tr>
+          <td><%= snapshot.dmp_identifier %></td>
+          <td><%= snapshot.dmp_identifier_type %></td>
+          <td><%= snapshot.version %></td>
+          <td><%= snapshot.created_at.to_date %></td>
+          <td><%= snapshot.visibility_label %></td>
+          <td>
+            <%= link_to _('View'), plan_snapshot_path(plan, snapshot) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>
+    <%= _('No versions of this DMP have been published.') %>
+  </p>
+<% end %>
+<% if snapshot_creation_enabled %>
+  <div class="mt-3">
+    <%= form_with url: plan_snapshots_path(plan), method: :post, local: true do |f| %>
+      <%= hidden_field_tag 'plan_snapshot[visibility]', 'privately_visible' %>
+      <%= f.submit _('Create a version of this DMP'), class: 'btn btn-primary' %>
+    <% end %>
+  </div>
+<% end %>
