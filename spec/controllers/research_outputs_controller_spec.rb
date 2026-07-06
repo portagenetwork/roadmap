@@ -31,7 +31,7 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
                 { description: 'Abstract description text...', descriptionType: 'Abstract' }
               ],
               types: { resourceTypeGeneral: 'Dataset' },
-              published: '2021'
+              registered: '2021-05-12'
             }
           }
         }.to_json
@@ -48,6 +48,7 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
         json_response = JSON.parse(response.body)
         expect(json_response['title']).to eq('Example dataset')
         expect(json_response['output_type']).to eq('dataset')
+        expect(json_response['release_date']).to eq('2021-05-12')
       end
     end
 

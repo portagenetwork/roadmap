@@ -21,7 +21,7 @@ RSpec.describe ExternalApis::DataciteService, type: :service do
                 { descriptionType: 'Abstract', description: 'Explicit abstract text.' }
               ],
               types: { resourceTypeGeneral: 'Software' },
-              published: '2023'
+              registered: '2023-05-12'
             }
           }
         }.to_json
@@ -34,7 +34,7 @@ RSpec.describe ExternalApis::DataciteService, type: :service do
                                title: 'Helper Function Test Title',
                                description: 'Explicit abstract text.',
                                output_type: :software,
-                               release_date: '2023',
+                               release_date: '2023-05-12',
                                doi: doi
                              })
       end

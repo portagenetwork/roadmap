@@ -38,7 +38,7 @@ module ExternalApis
           title: attributes.dig(:titles, 0, :title),
           description: extract_description(attributes),
           output_type: ResearchOutput.output_type_from_datacite(attributes.dig(:types, :resourceTypeGeneral)),
-          release_date: attributes[:published],
+          release_date: attributes[:registered],
           doi: clean_doi
         }
       end

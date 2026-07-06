@@ -14,7 +14,7 @@ RSpec.describe ExternalApis::DoiResolutionService, type: :service do
       titles: [{ title: 'DataCite Document' }],
       descriptions: [{ description: 'DataCite Abstract' }],
       types: { resourceTypeGeneral: 'Dataset' },
-      published: '2021'
+      registered: '2021-05-12'
     } } }.to_json
   end
 
@@ -48,8 +48,10 @@ RSpec.describe ExternalApis::DoiResolutionService, type: :service do
 
         result = described_class.fetch_metadata(doi: messy_doi)
 
-        expect(result[:title]).to eq('DataCite Document')
-        expect(result[:doi]).to eq(doi)
+        expect(result[:status]).to eq(:ok)
+        expect(result[:metadata][:title]).to eq('DataCite Document')
+        expect(result[:metadata][:doi]).to eq(doi)
+        expect(result[:metadata][:release_date]).to eq('2021-05-12')
         expect(dc_stub).to have_been_requested
         expect(cr_stub).not_to have_been_requested
       end
