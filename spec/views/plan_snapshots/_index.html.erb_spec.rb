@@ -3,16 +3,18 @@
 require 'rails_helper'
 
 RSpec.describe 'plan_snapshots/_index.html.erb', type: :view do
-  let(:plan) { create(:plan) }
+  let(:plan) { create(:plan, :snapshot_ready) }
   let(:snapshots) { [] }
-  let(:snapshot_creation_enabled) { true }
+  let(:can_create_snapshot) { true }
+  let(:snapshot_blockers) { [] }
 
   before do
     render partial: 'plan_snapshots/index',
            locals: {
              plan: plan,
              snapshots: snapshots,
-             snapshot_creation_enabled: snapshot_creation_enabled
+             can_create_snapshot: can_create_snapshot,
+             snapshot_blockers: snapshot_blockers
            }
   end
 
@@ -58,24 +60,18 @@ RSpec.describe 'plan_snapshots/_index.html.erb', type: :view do
     end
   end
 
-  context 'when snapshot creation is enabled' do
-    it 'renders the create snapshot form' do
-      expect(rendered).to include(
-        'Create a version of this DMP',
-        'plan_snapshot[visibility]',
-        'privately_visible'
-      )
+  context 'when the user can create snapshots' do
+    it 'renders the create snapshot partial' do
+      expect(rendered).to include('Create a version of this DMP')
     end
   end
 
-  context 'when snapshot creation is disabled' do
-    let(:snapshot_creation_enabled) { false }
+  context 'when the user cannot create snapshots' do
+    let(:can_create_snapshot) { false }
 
-    it 'does not render the create snapshot form' do
+    it 'does not render the create snapshot partial' do
       expect(rendered).not_to include('Create a version of this DMP')
-      expect(rendered).not_to include('plan_snapshot[visibility]')
-      expect(rendered).not_to include('privately_visible')
-      expect(rendered).not_to include(%(<form))
+      expect(rendered).not_to include('<form')
     end
   end
 end

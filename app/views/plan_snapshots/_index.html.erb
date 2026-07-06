@@ -1,4 +1,4 @@
-<%# locals: plan, snapshots, snapshot_creation_enabled %>
+<%# locals: plan, snapshots, can_create_snapshot, snapshot_blockers %>
 <% if snapshots.any? %>
   <p>
     <%= _('This is a list of your versioned DMPs with any associated identifiers.') %>
@@ -31,11 +31,10 @@
     <%= _('No versions of this DMP have been published.') %>
   </p>
 <% end %>
-<% if snapshot_creation_enabled %>
-  <div class="mt-3">
-    <%= form_with url: plan_snapshots_path(plan), method: :post, local: true do |f| %>
-      <%= hidden_field_tag 'plan_snapshot[visibility]', 'privately_visible' %>
-      <%= f.submit _('Create a version of this DMP'), class: 'btn btn-primary' %>
-    <% end %>
-  </div>
+<% if can_create_snapshot %>
+  <%= render partial: 'create_snapshot_form',
+               locals: {
+                 plan: plan,
+                 snapshot_blockers: snapshot_blockers
+               } %>
 <% end %>

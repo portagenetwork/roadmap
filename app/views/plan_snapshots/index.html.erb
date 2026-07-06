@@ -1,4 +1,4 @@
-<%# locals: plan, snapshots, snapshot_creation_enabled %>
+<%# locals: plan, snapshots, can_create_snapshot, snapshot_blockers %>
 <% title "#{plan.title} - Versions" %>
 <div class="row">
   <div class="col-md-12">
@@ -12,7 +12,8 @@
                locals: {
                  plan: plan,
                  snapshots: snapshots,
-                 snapshot_creation_enabled: snapshot_creation_enabled
+                 can_create_snapshot: can_create_snapshot,
+                 snapshot_blockers: snapshot_blockers
                } %>
   </div>
 </div>

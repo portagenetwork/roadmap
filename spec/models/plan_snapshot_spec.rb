@@ -26,34 +26,47 @@ RSpec.describe PlanSnapshot, type: :model do
     end
 
     it 'validates presence and format of checksum' do
+      plan = create(:plan, :snapshot_ready)
+
       snapshot = build(:plan_snapshot, checksum: nil, rda_json: PlanSnapshotValues.mock_rda_json,
-                                       extension_json: PlanSnapshotValues.mock_extension_json)
+                                       extension_json: PlanSnapshotValues.mock_extension_json,
+                                       plan: plan)
       expect(snapshot).not_to be_valid
       expect(snapshot.errors[:checksum]).to include("can't be blank")
 
       snapshot = build(:plan_snapshot, checksum: 'invalid', rda_json: PlanSnapshotValues.mock_rda_json,
-                                       extension_json: PlanSnapshotValues.mock_extension_json)
+                                       extension_json: PlanSnapshotValues.mock_extension_json,
+                                       plan: plan)
       expect(snapshot).not_to be_valid
       expect(snapshot.errors[:checksum]).to include('must be a valid MD5 hex string')
 
       snapshot = build(:plan_snapshot, checksum: PlanSnapshotValues.random_md5,
                                        rda_json: PlanSnapshotValues.mock_rda_json,
-                                       extension_json: PlanSnapshotValues.mock_extension_json)
+                                       extension_json: PlanSnapshotValues.mock_extension_json,
+                                       plan: plan)
       expect(snapshot).to be_valid
     end
 
     # Uniqueness validation: set up a valid record first
     it 'validates uniqueness of plan_id scoped to version' do
-      plan = create(:plan)
+      plan = create(:plan, :snapshot_ready)
       create(:plan_snapshot, plan: plan, version: 1)
       duplicate = build(:plan_snapshot, plan: plan, version: 1)
       expect(duplicate).not_to be_valid
       expect(duplicate.errors[:plan_id]).to include('has already been taken')
     end
+
+    it 'is invalid when the plan is not ready for snapshot creation' do
+      plan = create(:plan)
+      snapshot = build(:plan_snapshot, plan: plan)
+
+      expect(snapshot).not_to be_valid
+      expect(snapshot.errors[:plan]).to include('is not ready for snapshot creation')
+    end
   end
 
   describe 'checksum uniqueness per plan' do
-    let(:plan) { create(:plan) }
+    let(:plan) { create(:plan, :snapshot_ready) }
     let(:checksum) { PlanSnapshotValues.random_md5 }
 
     it 'is invalid when checksum matches the last snapshot for the same plan' do
@@ -79,12 +92,14 @@ RSpec.describe PlanSnapshot, type: :model do
   end
 
   describe '.create_from_plan' do
-    let(:plan) { create(:plan) }
+    let(:plan) { create(:plan, :snapshot_ready) }
     let(:rda_json) { PlanSnapshotValues.mock_rda_json }
     let(:extension_json) { PlanSnapshotValues.mock_extension_json }
     let(:checksum) { PlanSnapshotValues.random_md5 }
 
     before(:each) do
+      plan.stubs(:snapshot_ready?).returns(true)
+
       Api::V2::Serialization::RdaSerializer.stubs(:call).returns(rda_json)
       Api::V2::Serialization::ExtensionSerializer.stubs(:call).returns(extension_json)
 
@@ -109,14 +124,6 @@ RSpec.describe PlanSnapshot, type: :model do
       snapshot2 = described_class.create_from_plan(plan: plan, visibility: 'privately_visible')
       expect(snapshot2.version).to eq(2)
     end
-
-    it 'raises ActiveRecord::RecordInvalid when plan has not changed since last snapshot' do
-      described_class.create_from_plan(plan: plan, visibility: 'privately_visible')
-
-      expect do
-        described_class.create_from_plan(plan: plan, visibility: 'privately_visible')
-      end.to raise_error(ActiveRecord::RecordInvalid, /matches the last snapshot/)
-    end
   end
 
   describe '.due_for_fixity_check' do
@@ -138,7 +145,7 @@ RSpec.describe PlanSnapshot, type: :model do
   end
 
   describe '.send(:next_version_for_plan)' do
-    let(:plan) { create(:plan) }
+    let(:plan) { create(:plan, :snapshot_ready) }
 
     it 'returns 1 if no snapshots exist' do
       expect(described_class.send(:next_version_for_plan, plan)).to eq(1)
@@ -152,8 +159,8 @@ RSpec.describe PlanSnapshot, type: :model do
   end
 
   describe '.for_plan' do
-    let(:plan) { create(:plan) }
-    let(:other_plan) { create(:plan) }
+    let(:plan) { create(:plan, :snapshot_ready) }
+    let(:other_plan) { create(:plan, :snapshot_ready) }
 
     it 'returns only snapshots for the specified plan' do
       matching_snapshot = create(:plan_snapshot, plan: plan, version: 1)

@@ -1,0 +1,22 @@
+<%# locals: plan, snapshot_blockers %>
+<% disabled = snapshot_blockers.any? %>
+<div class="mt-3">
+  <%= form_with url: plan_snapshots_path(plan), method: :post, local: true do |f| %>
+    <%= hidden_field_tag 'plan_snapshot[visibility]', 'privately_visible' %>
+    <%= f.submit _('Create a version of this DMP'),
+        class: 'btn btn-primary',
+        disabled: disabled %>
+    <% if disabled %>
+      <div class="alert alert-warning mt-3">
+        <p>
+          <%= _('Unable to create a version of this DMP. Please address the following:') %>
+        </p>
+        <ul class="mb-0">
+          <% snapshot_blockers.each do |b| %>
+            <li><%= b %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  <% end %>
+</div>

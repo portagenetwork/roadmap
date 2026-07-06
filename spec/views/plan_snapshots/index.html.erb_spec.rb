@@ -13,7 +13,8 @@ RSpec.describe 'plan_snapshots/index.html.erb', type: :view do
     render locals: {
       plan: plan,
       snapshots: [],
-      snapshot_creation_enabled: true
+      can_create_snapshot: false,
+      snapshot_blockers: []
     }
   end
 

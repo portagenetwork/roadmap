@@ -640,6 +640,20 @@ class Plan < ApplicationRecord
   end
   # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
 
+  def snapshot_ready?
+    snapshot_blockers.empty?
+  end
+
+  # Returns an array of human-readable messages explaining
+  # which requirements for snapshot creation are not satisfied.
+  def snapshot_blockers
+    [].tap do |b|
+      b << _('A project start date must be included.') if start_date.blank?
+      b << _('A project end date must be included.') if end_date.blank?
+      b << _('At least one question must be answered.') unless answers.any?(&:answered?)
+    end
+  end
+
   private
 
   # Validation to prevent end date from coming before the start date

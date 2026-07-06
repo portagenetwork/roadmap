@@ -62,6 +62,11 @@ FactoryBot.define do
       answers { 0 }
       guidance_groups { 0 }
     end
+
+    trait :snapshot_ready do
+      answers { 1 }
+    end
+
     trait :creator do
       after(:create) do |obj, evaluator|
         # If a User was passed in, use them as the creator; otherwise, create a new User with a new org.

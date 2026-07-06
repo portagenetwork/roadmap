@@ -31,6 +31,7 @@ class PlanSnapshot < ApplicationRecord
   validates :extension_json, presence: true
   validates :checksum, presence: true, format: { with: /\A[a-f0-9]{32}\z/i, message: 'must be a valid MD5 hex string' }
   validates :plan_id, uniqueness: { scope: :version }
+  validate :plan_ready_for_snapshot, on: :create
   validate :checksum_differs_from_last_snapshot, on: :create
 
   # ==========
@@ -55,7 +56,7 @@ class PlanSnapshot < ApplicationRecord
     rda_json = Api::V2::Serialization::RdaSerializer.call(plan: plan)
     extension_json = Api::V2::Serialization::ExtensionSerializer.call(plan: plan)
 
-    create!(
+    create(
       plan: plan,
       visibility: visibility,
       version: next_version_for_plan(plan),
@@ -102,6 +103,12 @@ class PlanSnapshot < ApplicationRecord
   delegate :identifier, :identifier_type, to: :rda_json_reader, prefix: :dmp
 
   private
+
+  def plan_ready_for_snapshot
+    return if plan&.snapshot_ready?
+
+    errors.add(:plan, _('is not ready for snapshot creation'))
+  end
 
   def checksum_differs_from_last_snapshot
     return unless checksum.present?
