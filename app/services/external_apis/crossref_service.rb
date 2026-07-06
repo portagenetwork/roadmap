@@ -13,27 +13,6 @@ module ExternalApis
         Rails.configuration.x.crossref&.active || false
       end
 
-      # Main entry point for fetching and caching Crossref DOI records
-      def fetch_metadata(doi:)
-        return nil unless active? && doi.present?
-
-        # Strip 'https://doi.org/'
-        clean_doi = doi.strip.gsub(%r{^https?://doi.org/}, '')
-
-        # Cache the result for 5 minutes. If this DOI is requested again within 5 minutes
-        # Rails returns the cached hash instantly.
-        Rails.cache.fetch("crossref/metadata/#{clean_doi}", expires_in: 5.minutes, skip_nil: true) do
-          response = execute_api_get(clean_doi)
-          return nil unless response&.code == 200
-
-          parse_crossref_attributes(response.body, clean_doi)
-        end
-      rescue SocketError, HTTParty::Error, Timeout::Error, JSON::ParserError => e
-        log_and_notify_error(e, doi)
-      end
-
-      private
-
       def execute_api_get(clean_doi)
         url = "#{api_base_url}/works/#{CGI.escape(clean_doi)}"
         headers = {
@@ -45,7 +24,7 @@ module ExternalApis
         HTTParty.get(url, headers: headers)
       end
 
-      def parse_crossref_attributes(body, clean_doi)
+      def parse_attributes(body, clean_doi)
         json = JSON.parse(body).with_indifferent_access
         work = json[:message]
         return nil if work.blank?
