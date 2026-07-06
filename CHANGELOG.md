@@ -16,6 +16,8 @@
 
  - chore(deps): bump docker/login-action from 4.2.0 to 4.4.0 [#1382][https://github.com/portagenetwork/roadmap/pull/1382]
 
+ - chore(deps): bump docker/build-push-action from 7.2.0 to 7.3.0 [#1380](https://github.com/portagenetwork/roadmap/pull/1380)
+
 ## [4.1.1+portage-4.9.0]
 
 ### Changed
