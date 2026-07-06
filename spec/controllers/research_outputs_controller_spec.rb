@@ -6,7 +6,8 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
   let(:user) { create(:user) }
   let(:plan) { create(:plan) }
   let(:doi) { '10.5281/zenodo.4884775' }
-  let(:base_url) { 'https://api.datacite.org' }
+  let(:datacite_base_url) { 'https://api.datacite.org' }
+  let(:crossref_base_url) { 'https://api.crossref.org' }
 
   before do
     create(:role, :creator, user: user, plan: plan)
@@ -14,6 +15,9 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
     sign_in user
 
     Rails.configuration.x.datacite.active = true
+    Rails.configuration.x.crossref.active = true
+
+    Rails.cache.clear
   end
 
   describe 'GET /plans/:plan_id/research_outputs/fetch_doi' do
@@ -58,7 +62,9 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
 
     context 'when the service cannot find the DOI' do
       before do
+        # stub both services to return 404
         stub_datacite_request(target_doi: 'invalid-doi', status: 404, body: '')
+        stub_crossref_request(target_doi: 'invalid-doi', status: 404, body: '')
       end
 
       it 'returns a 404 Not Found JSON response' do
@@ -72,7 +78,15 @@ end
 def stub_datacite_request(target_doi: doi, status: 200, body: '', headers: {})
   escaped_path = CGI.escape(target_doi)
 
-  stub_request(:get, "#{base_url}/dois/#{escaped_path}")
+  stub_request(:get, "#{datacite_base_url}/dois/#{escaped_path}")
     .with(headers: { 'Accept' => 'application/vnd.api+json' })
+    .to_return(status: status, body: body, headers: headers)
+end
+
+def stub_crossref_request(target_doi: doi, status: 200, body: '', headers: {})
+  escaped_path = target_doi.split('/').map { |segment| CGI.escape(segment) }.join('/')
+
+  stub_request(:get, "#{crossref_base_url}/works/#{escaped_path}")
+    .with(headers: { 'Accept' => 'application/json' })
     .to_return(status: status, body: body, headers: headers)
 end
