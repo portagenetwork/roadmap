@@ -11,7 +11,8 @@ class PlanSnapshotsController < ApplicationController
     render locals: {
       plan: @plan,
       snapshots: PlanSnapshot.for_plan(@plan),
-      snapshot_creation_enabled: PlanSnapshotPolicy.new(current_user, @plan).create?
+      can_create_snapshot: PlanSnapshotPolicy.new(current_user, @plan).create?,
+      snapshot_blockers: @plan.snapshot_blockers
     }
   end
 
@@ -30,9 +31,15 @@ class PlanSnapshotsController < ApplicationController
 
   # POST /plans/:plan_id/versions
   def create
-    PlanSnapshot.create_from_plan(plan: @plan, visibility: params[:plan_snapshot][:visibility])
-    redirect_to plan_snapshots_path(@plan),
-                notice: _('New version published.')
+    snapshot = PlanSnapshot.create_from_plan(plan: @plan, visibility: params[:plan_snapshot][:visibility])
+
+    if snapshot.persisted?
+      redirect_to plan_snapshots_path(@plan),
+                  notice: _('New version published.')
+    else
+      redirect_to plan_snapshots_path(@plan),
+                  alert: failure_message(snapshot, _('create'))
+    end
   end
 
   private

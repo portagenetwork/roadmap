@@ -4,7 +4,7 @@ require_relative '../support/mocks/plan_snapshot_values'
 
 FactoryBot.define do
   factory :plan_snapshot do
-    association :plan
+    association :plan, :snapshot_ready
     version { 1 }
     visibility { PlanSnapshot.visibilities.keys.first }
     rda_json { PlanSnapshotValues.mock_rda_json }

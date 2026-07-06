@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'PlanSnapshotsController', type: :request do
-  let(:plan) { create(:plan) }
+  let(:plan) { create(:plan, :snapshot_ready) }
   let(:user) { create(:user) }
 
   let(:visibility) { PlanSnapshot.visibilities.keys.first }
@@ -115,6 +115,52 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
         expect(response).to redirect_to(plan_snapshots_path(plan))
 
         expect(plan.snapshots.order(:version).last.visibility).to eq(visibility)
+      end
+    end
+
+    context 'when the plan is not ready for snapshot creation' do
+      let(:invalid_snapshot) do
+        snapshot = PlanSnapshot.new
+        snapshot.errors.add(:plan, 'is not ready for snapshot creation')
+        snapshot
+      end
+
+      before do
+        authorize_as(:administrator)
+        PlanSnapshot
+          .stubs(:create_from_plan)
+          .returns(invalid_snapshot)
+      end
+
+      it 'does not create a snapshot and redirects with an alert' do
+        expect { subject }.not_to change(plan.snapshots, :count)
+
+        expect(response).to redirect_to(plan_snapshots_path(plan))
+        expect(flash[:alert]).to include('Unable to create the plansnapshot.')
+        expect(flash[:alert]).to include('Plan is not ready for snapshot creation')
+      end
+    end
+
+    context 'when the plan has not changed since the previous snapshot' do
+      let(:invalid_snapshot) do
+        snapshot = PlanSnapshot.new
+        snapshot.errors.add(:checksum, 'matches the last snapshot; plan has not changed')
+        snapshot
+      end
+
+      before do
+        authorize_as(:administrator)
+        PlanSnapshot
+          .stubs(:create_from_plan)
+          .returns(invalid_snapshot)
+      end
+
+      it 'does not create a snapshot and redirects with an alert' do
+        expect { subject }.not_to change(plan.snapshots, :count)
+
+        expect(response).to redirect_to(plan_snapshots_path(plan))
+        expect(flash[:alert]).to include('Unable to create the plansnapshot.')
+        expect(flash[:alert]).to include('Checksum matches the last snapshot; plan has not changed')
       end
     end
 
