@@ -75,7 +75,7 @@ jobs:
 
 
       - name: Build and push the app stage image
-        uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a
         with:
           context: .
           file: Dockerfile.production
@@ -89,7 +89,7 @@ jobs:
           cache-to: type=registry,ref=ualbertalib/dmp_roadmap:build-cache-app,mode=max
 
       - name: Build and push the assets stage image
-        uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a
         with:
           context: .
           file: Dockerfile.production
