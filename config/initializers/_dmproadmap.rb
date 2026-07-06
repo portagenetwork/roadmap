@@ -35,6 +35,8 @@ module DMPRoadmap
     config.x.organisation.do_not_reply_email 'noreply@dmp-pgd.ca'
     # This email is used in email communications
     config.x.organisation.helpdesk_email = 'dmp-assistant@tech.alliancecan.ca'
+    # This email is used to contact developers
+    config.x.organisation.development_email = 'dmp-development@gw.alliancecan.ca'
     # Your organisation's telephone number - used on the contact us page
     config.x.organisation.telephone = nil
     # Your organisation's address - used on the contact us page

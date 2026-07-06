@@ -18,7 +18,7 @@ module ExternalApis
         headers = {
           # Add User-Agent for polite API Access
           # See https://www.crossref.org/documentation/retrieve-metadata/rest-api/access-and-authentication/ for more
-          'User-Agent' => 'DMPAssistant (mailto:dmp-development@gw.alliancecan.ca)',
+          'User-Agent' => "DMPAssistant (mailto: #{Rails.configuration.x.organisation.development_email})",
           'Accept' => 'application/json'
         }
         HTTParty.get(url, headers: headers)
