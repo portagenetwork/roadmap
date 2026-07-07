@@ -257,6 +257,11 @@ Rails.application.routes.draw do
       resources :research_outputs, only: %i[index] do
         get 'index/:page', action: :index, on: :collection, as: :index
       end
+
+      # Paginable actions for plan_snapshots
+      resources :snapshots, only: %i[index], controller: 'plan_snapshots', path: 'versions' do
+        get 'index/:page', action: :index, on: :collection, as: :index
+      end
     end
 
     # Paginable actions for users

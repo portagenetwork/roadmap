@@ -5,15 +5,30 @@
     <h1><%= plan.title %></h1>
   </div>
 </div>
-<div class="row">
-  <div class="col-md-12">
-    <%= render partial: 'index',
-               layout: 'plans/navigation',
+<% content_for :plan_tab_body do %>
+  <% if snapshots.any? %>
+    <p>
+      <%= _('This is a list of your versioned DMPs with any associated identifiers.') %>
+    </p>
+    <%= paginable_renderise partial: '/paginable/plan_snapshots/index',
+                            controller: 'paginable/plan_snapshots',
+                            action: 'index',
+                            scope: snapshots,
+                            remote: true,
+                            locals: { plan: plan },
+                            view_all: true
+                            %>
+  <% else %>
+    <p>
+      <%= _('No versions of this DMP have been published.') %>
+    </p>
+  <% end %>
+  <% if can_create_snapshot %>
+    <%= render partial: 'create_snapshot_form',
                locals: {
                  plan: plan,
-                 snapshots: snapshots,
-                 can_create_snapshot: can_create_snapshot,
                  snapshot_blockers: snapshot_blockers
                } %>
-  </div>
-</div>
+  <% end %>
+<% end %>
+<%= render partial: 'plans/navigation', locals: { plan: plan } %>
