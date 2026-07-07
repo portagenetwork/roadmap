@@ -56,14 +56,16 @@ class PlanSnapshot < ApplicationRecord
     rda_json = Api::V2::Serialization::RdaSerializer.call(plan: plan)
     extension_json = Api::V2::Serialization::ExtensionSerializer.call(plan: plan)
 
-    create(
-      plan: plan,
-      visibility: visibility,
-      version: next_version_for_plan(plan),
-      rda_json: rda_json,
-      extension_json: extension_json,
-      checksum: PlanSnapshotChecksum.calculate(rda_json, extension_json)
-    )
+    plan.with_lock do
+      create(
+        plan: plan,
+        visibility: visibility,
+        version: next_version_for_plan(plan),
+        rda_json: rda_json,
+        extension_json: extension_json,
+        checksum: PlanSnapshotChecksum.calculate(rda_json, extension_json)
+      )
+    end
   end
 
   def self.next_version_for_plan(plan)

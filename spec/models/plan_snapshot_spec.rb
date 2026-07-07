@@ -124,6 +124,12 @@ RSpec.describe PlanSnapshot, type: :model do
       snapshot2 = described_class.create_from_plan(plan: plan, visibility: 'privately_visible')
       expect(snapshot2.version).to eq(2)
     end
+
+    it 'locks the plan while assigning the next version' do
+      plan.expects(:with_lock).yields
+
+      described_class.create_from_plan(plan: plan, visibility: 'privately_visible')
+    end
   end
 
   describe '.due_for_fixity_check' do
