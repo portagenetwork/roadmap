@@ -26,7 +26,12 @@ module ExternalApis
 
       def execute_api_get(clean_doi)
         url = "#{api_base_url}/dois/#{CGI.escape(clean_doi)}"
-        HTTParty.get(url, headers: { 'Accept' => 'application/vnd.api+json' })
+        HTTParty.get(
+          url,
+          headers: { 'Accept' => 'application/vnd.api+json' },
+          open_timeout: 5,
+          read_timeout: 5
+        )
       end
 
       def parse_attributes(body, clean_doi)

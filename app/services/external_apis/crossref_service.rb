@@ -21,7 +21,12 @@ module ExternalApis
           'User-Agent' => "DMPAssistant (mailto: #{Rails.configuration.x.organisation.development_email})",
           'Accept' => 'application/json'
         }
-        HTTParty.get(url, headers: headers)
+        HTTParty.get(
+          url,
+          headers: headers,
+          open_timeout: 5,
+          read_timeout: 5
+        )
       end
 
       def parse_attributes(body, clean_doi)
