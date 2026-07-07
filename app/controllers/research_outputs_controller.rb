@@ -26,12 +26,15 @@ class ResearchOutputsController < ApplicationController
     return unless params[:prefill_doi].present?
 
     # Call DataCite or Crossref service using the DOI string found in the URL parameters
-    metadata = ExternalApis::DoiResolutionService.fetch_metadata(doi: params[:prefill_doi])
+    result = ExternalApis::DoiResolutionService.fetch_metadata(doi: params[:prefill_doi])
 
-    # If DataCite successfully returned data, inject it directly into the object attributes
-    return unless metadata.present?
+    return unless result[:status] == :ok && result[:metadata].present?
 
-    @research_output.assign_attributes(metadata.slice(:title, :description, :output_type, :release_date))
+    metadata = result[:metadata]
+
+    @research_output.assign_attributes(
+      metadata.slice(:title, :description, :output_type, :release_date)
+    )
   end
 
   # GET /plans/:plan_id/research_outputs/:id/edit
@@ -156,18 +159,22 @@ class ResearchOutputsController < ApplicationController
   def fetch_doi
     authorize ResearchOutput.new(plan_id: params[:plan_id])
 
-    if params[:doi].blank?
-      render json: { error: 'DOI is required' }, status: :bad_request
-      return
-    end
-
     # Obtain research output metadata from DataCite or Crossref service
-    metadata = ExternalApis::DoiResolutionService.fetch_metadata(doi: params[:doi])
+    result = ExternalApis::DoiResolutionService.fetch_metadata(
+      doi: params[:doi]
+    )
 
-    if metadata.present?
-      render json: metadata, status: :ok
-    else
+    case result[:status]
+    when :ok
+      render json: result[:metadata]
+    when :blank
+      render json: { error: 'DOI is required.' }, status: :bad_request
+    when :invalid
+      render json: { error: 'Does not appear to be a valid DOI.' }, status: :bad_request
+    when :not_found
       render json: { error: 'Could not find metadata for the provided DOI.' }, status: :not_found
+    else
+      render json: { error: 'An unexpected error occurred.' }, status: :internal_server_error
     end
   end
 
