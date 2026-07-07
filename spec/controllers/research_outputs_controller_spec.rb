@@ -57,37 +57,39 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
         get fetch_doi_plan_research_outputs_path(plan, doi: '')
 
         expect(response.code).to eql('400')
-        expect(JSON.parse(response.body)['error']).to eq('DOI is required')
+        expect(JSON.parse(response.body)['error']).to eq('DOI is required.')
       end
     end
 
     context 'when the service cannot find the DOI' do
       before do
         # stub both services to return 404
-        stub_datacite_request(target_doi: 'invalid-doi', status: 404, body: '')
-        stub_crossref_request(target_doi: 'invalid-doi', status: 404, body: '')
+        stub_datacite_request(target_doi: '10.5281/not-found', status: 404, body: '')
+        stub_crossref_request(target_doi: '10.5281/not-found', status: 404, body: '')
       end
 
       it 'returns a 404 Not Found JSON response' do
-        get fetch_doi_plan_research_outputs_path(plan, doi: 'invalid-doi')
+        get fetch_doi_plan_research_outputs_path(plan, doi: '10.5281/not-found')
         expect(response.code).to eql('404')
       end
     end
   end
-end
 
-def stub_datacite_request(target_doi: doi, status: 200, body: '', headers: {})
-  escaped_path = CGI.escape(target_doi)
+  private
 
-  stub_request(:get, "#{datacite_base_url}/dois/#{escaped_path}")
-    .with(headers: { 'Accept' => 'application/vnd.api+json' })
-    .to_return(status: status, body: body, headers: headers)
-end
+  def stub_datacite_request(target_doi: doi, status: 200, body: '', headers: {})
+    escaped_path = CGI.escape(target_doi)
 
-def stub_crossref_request(target_doi: doi, status: 200, body: '', headers: {})
-  escaped_path = target_doi.split('/').map { |segment| CGI.escape(segment) }.join('/')
+    stub_request(:get, "#{datacite_base_url}/dois/#{escaped_path}")
+      .with(headers: { 'Accept' => 'application/vnd.api+json' })
+      .to_return(status: status, body: body, headers: headers)
+  end
 
-  stub_request(:get, "#{crossref_base_url}/works/#{escaped_path}")
-    .with(headers: { 'Accept' => 'application/json' })
-    .to_return(status: status, body: body, headers: headers)
+  def stub_crossref_request(target_doi: doi, status: 200, body: '', headers: {})
+    escaped_path = CGI.escape(target_doi)
+
+    stub_request(:get, "#{crossref_base_url}/works/#{escaped_path}")
+      .with(headers: { 'Accept' => 'application/json' })
+      .to_return(status: status, body: body, headers: headers)
+  end
 end
