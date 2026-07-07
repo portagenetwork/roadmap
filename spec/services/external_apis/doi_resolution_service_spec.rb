@@ -37,6 +37,18 @@ RSpec.describe ExternalApis::DoiResolutionService, type: :service do
   end
 
   describe '.fetch_metadata' do
+    context 'when the DOI parameter is blank' do
+      it 'returns a status of :blank' do
+        expect(described_class.fetch_metadata(doi: '   ')).to eq({ status: :blank })
+      end
+    end
+
+    context 'when the DOI fails pattern regex matching rules' do
+      it 'returns a status of :invalid' do
+        expect(described_class.fetch_metadata(doi: 'invalid-doi-string')).to eq({ status: :invalid })
+      end
+    end
+
     context 'when DataCite has the record' do
       it 'successfully cleans the input string, gets DataCite data, and ignores Crossref' do
         messy_doi = "  https://doi.org/#{doi}  "
@@ -48,8 +60,9 @@ RSpec.describe ExternalApis::DoiResolutionService, type: :service do
 
         result = described_class.fetch_metadata(doi: messy_doi)
 
-        expect(result[:title]).to eq('DataCite Document')
-        expect(result[:doi]).to eq(doi)
+        expect(result[:status]).to eq(:ok)
+        expect(result[:metadata][:title]).to eq('DataCite Document')
+        expect(result[:metadata][:doi]).to eq(doi)
         expect(dc_stub).to have_been_requested
         expect(cr_stub).not_to have_been_requested
       end
@@ -60,25 +73,24 @@ RSpec.describe ExternalApis::DoiResolutionService, type: :service do
         dc_stub = stub_request(:get, "#{datacite_base_url}/dois/10.5281%2Fzenodo.4884775")
                   .to_return(status: 404, body: '')
 
-        # Fixed: Match the %2F URL encoding expected by HTTParty
         cr_stub = stub_request(:get, "#{crossref_base_url}/works/10.5281%2Fzenodo.4884775")
                   .to_return(status: 200, body: crossref_body)
 
         result = described_class.fetch_metadata(doi: doi)
 
-        expect(result[:title]).to eq('Crossref Publication')
-        expect(result[:output_type]).to eq(:text)
+        expect(result[:status]).to eq(:ok)
+        expect(result[:metadata][:title]).to eq('Crossref Publication')
         expect(dc_stub).to have_been_requested
         expect(cr_stub).to have_been_requested
       end
     end
 
     context 'when both services fail to locate the asset' do
-      it 'returns nil safely' do
+      it 'returns status :not_found safely' do
         stub_request(:get, /api.datacite.org/).to_return(status: 404)
         stub_request(:get, /api.crossref.org/).to_return(status: 404)
 
-        expect(described_class.fetch_metadata(doi: doi)).to be_nil
+        expect(described_class.fetch_metadata(doi: doi)).to eq({ status: :not_found })
       end
     end
   end
@@ -90,7 +102,6 @@ RSpec.describe ExternalApis::DoiResolutionService, type: :service do
 
         dc_stub = stub_request(:get, /api.datacite.org/)
 
-        # Bypass private scope using Ruby's .send method (3 arguments)
         result = described_class.send(:execute_fetch, ExternalApis::DataciteService, 'datacite', doi)
 
         expect(result).to be_nil
