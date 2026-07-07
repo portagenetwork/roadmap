@@ -164,6 +164,20 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
       end
     end
 
+    context 'when plan_snapshot params are missing' do
+      let(:post_params) { {} }
+
+      before { authorize_as(:administrator) }
+
+      it 'does not create a snapshot and redirects with an alert' do
+        expect { subject }.not_to change(plan.snapshots, :count)
+
+        expect(response).to redirect_to(plan_snapshots_path(plan))
+        expect(flash[:alert]).to include('Unable to create the plansnapshot.')
+        expect(flash[:alert]).to include('Visibility is not included in the list')
+      end
+    end
+
     context 'when unauthorized' do
       it 'does not create a snapshot' do
         expect { subject }.not_to change(plan.snapshots, :count)
