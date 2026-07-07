@@ -31,7 +31,7 @@ class PlanSnapshotsController < ApplicationController
 
   # POST /plans/:plan_id/versions
   def create
-    snapshot = PlanSnapshot.create_from_plan(plan: @plan, visibility: params[:plan_snapshot][:visibility])
+    snapshot = PlanSnapshot.create_from_plan(plan: @plan, visibility: plan_snapshot_params[:visibility])
 
     if snapshot.persisted?
       redirect_to plan_snapshots_path(@plan),
@@ -54,5 +54,9 @@ class PlanSnapshotsController < ApplicationController
 
   def set_snapshot
     @snapshot = @plan.snapshots.find(params[:id])
+  end
+
+  def plan_snapshot_params
+    params.fetch(:plan_snapshot, {}).permit(:visibility)
   end
 end
