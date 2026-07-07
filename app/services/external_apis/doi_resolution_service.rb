@@ -12,20 +12,24 @@ module ExternalApis
 
       # Main function for the "Add Research Output by DOI" feature
       def fetch_metadata(doi:)
-        return nil if doi.blank?
+        return { status: :blank } if doi.blank?
 
         # Strip 'https://doi.org/'
         clean_doi = doi.strip.gsub(%r{^https?://doi.org/}, '')
+
         # Validate DOIs with regex
         # See https://www.crossref.org/blog/dois-and-matching-regular-expressions/ for more
-        return nil unless doi.to_s.match?(MODERN_DOI_REGEX) || doi.to_s.match?(OLD_DOI_REGEX)
+        return { status: :invalid } unless clean_doi.match?(MODERN_DOI_REGEX) || clean_doi.match?(OLD_DOI_REGEX)
 
-        # Try DataCite first
         metadata = execute_fetch(ExternalApis::DataciteService, 'datacite', clean_doi)
-        return metadata if metadata.present?
+        # Fall back to Crossref if DataCite does not return anything
+        metadata ||= execute_fetch(ExternalApis::CrossrefService, 'crossref', clean_doi)
 
-        # Fall back to Crossref
-        execute_fetch(ExternalApis::CrossrefService, 'crossref', clean_doi)
+        if metadata.present?
+          { status: :ok, metadata: metadata }
+        else
+          { status: :not_found }
+        end
       end
 
       private
