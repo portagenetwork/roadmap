@@ -3,6 +3,7 @@
 # Represents a version/snapshot of a Plan, capturing its state and metadata at a specific point in time.
 class PlanSnapshot < ApplicationRecord
   FIXITY_CHECK_INTERVAL = 1.month
+  MISSING_REQUIRED_JSON_FIELDS_MESSAGE = 'Required fields are missing from the generated JSON'
   VISIBILITY_MESSAGE = {
     organisationally_visible: _('organizational'),
     publicly_visible: _('public'),
@@ -33,6 +34,8 @@ class PlanSnapshot < ApplicationRecord
   validates :plan_id, uniqueness: { scope: :version }
   validate :plan_ready_for_snapshot, on: :create
   validate :checksum_differs_from_last_snapshot, on: :create
+  validate :rda_json_has_required_fields, on: :create, if: -> { plan&.snapshot_ready? }
+  validate :extension_json_has_required_fields, on: :create, if: -> { plan&.snapshot_ready? }
 
   # ==========
   # = Scopes =
@@ -117,6 +120,18 @@ class PlanSnapshot < ApplicationRecord
 
     last_checksum = self.class.for_plan(plan).pick(:checksum)
     errors.add(:checksum, _('matches the last snapshot; plan has not changed')) if last_checksum == checksum
+  end
+
+  def rda_json_has_required_fields
+    return if PlanSnapshots::RdaJsonValidator.new(rda_json).valid?
+
+    errors.add(:rda_json, _(MISSING_REQUIRED_JSON_FIELDS_MESSAGE))
+  end
+
+  def extension_json_has_required_fields
+    return if PlanSnapshots::ExtensionJsonValidator.new(extension_json).valid?
+
+    errors.add(:extension_json, _(MISSING_REQUIRED_JSON_FIELDS_MESSAGE))
   end
 
   def rda_json_reader
