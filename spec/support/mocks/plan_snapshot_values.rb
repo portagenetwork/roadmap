@@ -14,6 +14,12 @@ module PlanSnapshotValues
         'language' => 'eng',
         'created' => '2026-05-20T00:00:00Z',
         'modified' => '2026-05-20T00:00:00Z',
+        'project' => [
+          {
+            'start' => '2026-06-01T00:00:00Z',
+            'end' => '2026-12-31T00:00:00Z'
+          }
+        ],
         'dmp_id' => mock_dmp_id(type: type, identifier: identifier)
       }
     }
@@ -28,9 +34,20 @@ module PlanSnapshotValues
               'id' => 1,
               'title' => 'Test Template'
             }
-          }
+          },
+          'complete_plan' => [mock_complete_plan_item]
         }
       ]
+    }
+  end
+
+  def self.mock_complete_plan_item
+    {
+      'title' => 'Project details',
+      'answer' => 'Example answer',
+      'section' => 'General Information',
+      'question' => 'What is the project about?',
+      'question_id' => 1
     }
   end
 
