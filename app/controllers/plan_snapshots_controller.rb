@@ -2,6 +2,8 @@
 
 # Controller responsible for managing plan snapshots
 class PlanSnapshotsController < ApplicationController
+  JSON_GENERATION_ERROR_ATTRIBUTES = %i[rda_json extension_json].freeze
+
   before_action :set_plan
   before_action :authorize_plan
   before_action :set_snapshot, only: [:show]
@@ -38,7 +40,7 @@ class PlanSnapshotsController < ApplicationController
                   notice: _('New version published.')
     else
       redirect_to plan_snapshots_path(@plan),
-                  alert: failure_message(snapshot, _('create'))
+                  alert: create_failure_alert(snapshot)
     end
   end
 
@@ -58,5 +60,39 @@ class PlanSnapshotsController < ApplicationController
 
   def plan_snapshot_params
     params.fetch(:plan_snapshot, {}).permit(:visibility)
+  end
+
+  def create_failure_alert(snapshot)
+    if json_generation_failure?(snapshot)
+      notify_json_generation_failure(snapshot)
+      _('An error was detected and a new version cannot be published at this time. ' \
+        'The administrators of the repository have been alerted.')
+    else
+      failure_message(snapshot, _('create'))
+    end
+  end
+
+  def json_generation_failure?(snapshot)
+    snapshot.errors.attribute_names.any? { |attr| JSON_GENERATION_ERROR_ATTRIBUTES.include?(attr.to_sym) }
+  end
+
+  def notify_json_generation_failure(snapshot)
+    payload = json_generation_alert_payload(snapshot)
+    failure_message = 'Plan snapshot JSON generation failed'
+    Rails.logger.error(
+      payload.merge(
+        message: failure_message
+      )
+    )
+
+    Rollbar.error(failure_message, payload)
+  end
+
+  def json_generation_alert_payload(snapshot)
+    {
+      plan_id: @plan.id,
+      user_id: current_user&.id,
+      errors: snapshot.errors.to_hash(true)
+    }
   end
 end

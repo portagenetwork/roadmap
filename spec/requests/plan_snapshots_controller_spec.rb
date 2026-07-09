@@ -164,6 +164,31 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
       end
     end
 
+    context 'when generated snapshot JSON is missing required fields' do
+      let(:invalid_snapshot) do
+        snapshot = PlanSnapshot.new
+        snapshot.errors.add(:rda_json, 'Required fields are missing from the generated JSON')
+        snapshot
+      end
+
+      before do
+        authorize_as(:administrator)
+        PlanSnapshot
+          .stubs(:create_from_plan)
+          .returns(invalid_snapshot)
+      end
+
+      it 'does not create a snapshot and redirects with a generic alert' do
+        expect { subject }.not_to change(plan.snapshots, :count)
+
+        expect(response).to redirect_to(plan_snapshots_path(plan))
+        expect(flash[:alert]).to eq(
+          'An error was detected and a new version cannot be published at this time. ' \
+          'The administrators of the repository have been alerted.'
+        )
+      end
+    end
+
     context 'when plan_snapshot params are missing' do
       let(:post_params) { {} }
 
