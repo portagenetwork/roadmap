@@ -91,6 +91,48 @@ RSpec.describe PlanSnapshot, type: :model do
     end
   end
 
+  describe 'generated JSON validators' do
+    let(:snapshot) { build(:plan_snapshot, plan: create(:plan, :snapshot_ready)) }
+
+    it 'does not add JSON validation errors when plan is not snapshot-ready' do
+      snapshot.plan.stubs(:snapshot_ready?).returns(false)
+      PlanSnapshots::RdaJsonValidator.any_instance.stubs(:valid?).returns(false)
+      PlanSnapshots::ExtensionJsonValidator.any_instance.stubs(:valid?).returns(false)
+
+      snapshot.valid?
+      expect(snapshot.errors[:rda_json]).to be_empty
+      expect(snapshot.errors[:extension_json]).to be_empty
+    end
+
+    it 'is valid when RdaJsonValidator returns true' do
+      PlanSnapshots::RdaJsonValidator.any_instance.stubs(:valid?).returns(true)
+
+      snapshot.valid?
+      expect(snapshot.errors[:rda_json]).to be_empty
+    end
+
+    it 'is invalid when RdaJsonValidator returns false' do
+      PlanSnapshots::RdaJsonValidator.any_instance.stubs(:valid?).returns(false)
+
+      expect(snapshot).not_to be_valid
+      expect(snapshot.errors[:rda_json]).to include(PlanSnapshot::MISSING_REQUIRED_JSON_FIELDS_MESSAGE)
+    end
+
+    it 'is valid when ExtensionJsonValidator returns true' do
+      PlanSnapshots::ExtensionJsonValidator.any_instance.stubs(:valid?).returns(true)
+
+      snapshot.valid?
+      expect(snapshot.errors[:extension_json]).to be_empty
+    end
+
+    it 'is invalid when ExtensionJsonValidator returns false' do
+      PlanSnapshots::ExtensionJsonValidator.any_instance.stubs(:valid?).returns(false)
+
+      expect(snapshot).not_to be_valid
+      expect(snapshot.errors[:extension_json]).to include(PlanSnapshot::MISSING_REQUIRED_JSON_FIELDS_MESSAGE)
+    end
+  end
+
   describe '.create_from_plan' do
     let(:plan) { create(:plan, :snapshot_ready) }
     let(:rda_json) { PlanSnapshotValues.mock_rda_json }
