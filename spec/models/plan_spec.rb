@@ -1298,6 +1298,16 @@ describe Plan do
       it { expect(plan.snapshot_ready?).to be(false) }
     end
   end
+
+  describe '#destroy with snapshots' do
+    let!(:plan) { create(:plan, :snapshot_ready) }
+    let!(:snapshot) { create(:plan_snapshot, plan: plan) }
+
+    it 'is blocked by the database foreign key and keeps the snapshot' do
+      expect { plan.destroy }.to raise_error(ActiveRecord::InvalidForeignKey)
+      expect(PlanSnapshot.exists?(snapshot.id)).to be(true)
+    end
+  end
   describe '#grant association sanity checks' do
     let!(:plan) { create(:plan, :creator) }
 
