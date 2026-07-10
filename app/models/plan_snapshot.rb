@@ -4,6 +4,7 @@
 class PlanSnapshot < ApplicationRecord
   FIXITY_CHECK_INTERVAL = 1.month
   MISSING_REQUIRED_JSON_FIELDS_MESSAGE = 'Required fields are missing from the generated JSON'
+  IMMUTABLE_SNAPSHOT_FIELDS = %w[plan_id version visibility rda_json extension_json checksum].freeze
   VISIBILITY_MESSAGE = {
     organisationally_visible: _('organizational'),
     publicly_visible: _('public'),
@@ -22,6 +23,12 @@ class PlanSnapshot < ApplicationRecord
 
   belongs_to :plan
 
+  # =============
+  # = Callbacks =
+  # =============
+
+  before_destroy :prevent_deletion
+
   # ===============
   # = Validations =
   # ===============
@@ -36,6 +43,7 @@ class PlanSnapshot < ApplicationRecord
   validate :checksum_differs_from_last_snapshot, on: :create
   validate :rda_json_has_required_fields, on: :create, if: -> { plan&.snapshot_ready? }
   validate :extension_json_has_required_fields, on: :create, if: -> { plan&.snapshot_ready? }
+  validate :snapshot_fields_immutable_after_create, on: :update
 
   # ==========
   # = Scopes =
@@ -132,6 +140,18 @@ class PlanSnapshot < ApplicationRecord
     return if PlanSnapshots::ExtensionJsonValidator.new(extension_json).valid?
 
     errors.add(:extension_json, _(MISSING_REQUIRED_JSON_FIELDS_MESSAGE))
+  end
+
+  def snapshot_fields_immutable_after_create
+    changed_immutable_fields = changed & IMMUTABLE_SNAPSHOT_FIELDS
+    return if changed_immutable_fields.empty?
+
+    errors.add(:base, _('Snapshot content cannot be modified after creation'))
+  end
+
+  def prevent_deletion
+    errors.add(:base, _('Snapshots cannot be deleted once created'))
+    throw :abort
   end
 
   def rda_json_reader
