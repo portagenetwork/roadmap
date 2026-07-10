@@ -133,6 +133,49 @@ RSpec.describe PlanSnapshot, type: :model do
     end
   end
 
+  describe 'immutability on update' do
+    let(:snapshot) { create(:plan_snapshot) }
+
+    it 'allows updating fixity_checked_at' do
+      expect { snapshot.update!(fixity_checked_at: Time.current) }
+        .to change { snapshot.reload.fixity_checked_at }
+    end
+
+    it 'does not allow updating immutable snapshot fields' do
+      checksum = PlanSnapshotValues.random_md5
+      expect { snapshot.update!(checksum: checksum) }
+        .to raise_error(ActiveRecord::RecordInvalid)
+
+      expect(snapshot.reload.checksum).not_to eq(checksum)
+    end
+  end
+
+  describe '#destroy' do
+    let!(:snapshot) { create(:plan_snapshot) }
+
+    it 'does not destroy the record' do
+      expect { snapshot.destroy }.not_to change { PlanSnapshot.count }
+    end
+
+    it 'returns false' do
+      expect(snapshot.destroy).to eql(false)
+    end
+
+    it 'adds an error to the record' do
+      snapshot.destroy
+      expect(snapshot.errors[:base]).to include('Snapshots cannot be deleted once created')
+    end
+
+    it 'raises RecordNotDestroyed when using destroy!' do
+      expect { snapshot.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)
+    end
+
+    it 'still exists in the database afterward' do
+      snapshot.destroy
+      expect(PlanSnapshot.exists?(snapshot.id)).to eql(true)
+    end
+  end
+
   describe '.create_from_plan' do
     let(:plan) { create(:plan, :snapshot_ready) }
     let(:rda_json) { PlanSnapshotValues.mock_rda_json }
