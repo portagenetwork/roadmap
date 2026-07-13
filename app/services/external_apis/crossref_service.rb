@@ -34,7 +34,8 @@ module ExternalApis
         work = json[:message]
         return nil if work.blank?
 
-        # Safely capture publication date parts [YYYY, MM, DD] from Crossref's structure
+        # The `issued.date-parts` array from Crossref can be partial ([YYYY], [YYYY, MM], or [YYYY, MM, DD]).
+        # We preserve the available precision only
         date_parts = work.dig(:issued, :'date-parts', 0) || []
         release_date = date_parts.compact.join('-') if date_parts.any?
 
