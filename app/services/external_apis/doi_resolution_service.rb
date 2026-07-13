@@ -10,6 +10,10 @@ module ExternalApis
       # Catch-all for early DOIs with complex/opaque formatting
       OLD_DOI_REGEX = %r{10\.1002/[^\s]+}i
 
+      def active?
+        Rails.configuration.x.datacite&.active || Rails.configuration.x.crossref&.active
+      end
+
       # Main function for the "Add Research Output by DOI" feature
       def fetch_metadata(doi:)
         return { status: :blank } if doi.blank?
