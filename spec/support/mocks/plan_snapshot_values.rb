@@ -2,10 +2,6 @@
 
 # Helpers for PlanSnapshot-related test values and generators
 module PlanSnapshotValues
-  def self.random_md5
-    Array.new(32) { ('a'..'f').to_a.concat(('0'..'9').to_a).sample }.join
-  end
-
   def self.mock_rda_json(type: 'url', identifier: mock_plan_identifier_url)
     {
       'dmp' => {

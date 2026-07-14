@@ -26,24 +26,15 @@ RSpec.describe PlanSnapshot, type: :model do
     end
 
     it 'validates presence and format of checksum' do
-      plan = create(:plan, :snapshot_ready)
-
-      snapshot = build(:plan_snapshot, checksum: nil, rda_json: PlanSnapshotValues.mock_rda_json,
-                                       extension_json: PlanSnapshotValues.mock_extension_json,
-                                       plan: plan)
+      snapshot = build(:plan_snapshot, checksum: nil)
       expect(snapshot).not_to be_valid
       expect(snapshot.errors[:checksum]).to include("can't be blank")
 
-      snapshot = build(:plan_snapshot, checksum: 'invalid', rda_json: PlanSnapshotValues.mock_rda_json,
-                                       extension_json: PlanSnapshotValues.mock_extension_json,
-                                       plan: plan)
+      snapshot = build(:plan_snapshot, checksum: 'invalid')
       expect(snapshot).not_to be_valid
       expect(snapshot.errors[:checksum]).to include('must be a valid MD5 hex string')
 
-      snapshot = build(:plan_snapshot, checksum: PlanSnapshotValues.random_md5,
-                                       rda_json: PlanSnapshotValues.mock_rda_json,
-                                       extension_json: PlanSnapshotValues.mock_extension_json,
-                                       plan: plan)
+      snapshot = build(:plan_snapshot, plan: create(:plan, :snapshot_ready))
       expect(snapshot).to be_valid
     end
 
@@ -67,7 +58,7 @@ RSpec.describe PlanSnapshot, type: :model do
 
   describe 'checksum uniqueness per plan' do
     let(:plan) { create(:plan, :snapshot_ready) }
-    let(:checksum) { PlanSnapshotValues.random_md5 }
+    let(:checksum) { SecureRandom.hex }
 
     it 'is invalid when checksum matches the last snapshot for the same plan' do
       create(:plan_snapshot, plan: plan, version: 1, checksum: checksum)
@@ -79,7 +70,7 @@ RSpec.describe PlanSnapshot, type: :model do
 
     it 'is valid when checksum differs from the last snapshot' do
       create(:plan_snapshot, plan: plan, version: 1, checksum: checksum)
-      new_snapshot = build(:plan_snapshot, plan: plan, version: 2, checksum: PlanSnapshotValues.random_md5)
+      new_snapshot = build(:plan_snapshot, plan: plan, version: 2)
 
       expect(new_snapshot).to be_valid
     end
@@ -142,7 +133,7 @@ RSpec.describe PlanSnapshot, type: :model do
     end
 
     it 'does not allow updating immutable snapshot fields' do
-      checksum = PlanSnapshotValues.random_md5
+      checksum = SecureRandom.hex
       expect { snapshot.update!(checksum: checksum) }
         .to raise_error(ActiveRecord::RecordInvalid)
 
@@ -180,7 +171,7 @@ RSpec.describe PlanSnapshot, type: :model do
     let(:plan) { create(:plan, :snapshot_ready) }
     let(:rda_json) { PlanSnapshotValues.mock_rda_json }
     let(:extension_json) { PlanSnapshotValues.mock_extension_json }
-    let(:checksum) { PlanSnapshotValues.random_md5 }
+    let(:checksum) { SecureRandom.hex }
 
     before(:each) do
       plan.stubs(:snapshot_ready?).returns(true)
@@ -205,7 +196,7 @@ RSpec.describe PlanSnapshot, type: :model do
     it 'increments version for subsequent snapshots' do
       described_class.create_from_plan(plan: plan, visibility: 'privately_visible')
       # Stub `calculate` again for checksum_differs_from_last_snapshot validator
-      PlanSnapshotChecksum.stubs(:calculate).returns(PlanSnapshotValues.random_md5)
+      PlanSnapshotChecksum.stubs(:calculate).returns(SecureRandom.hex)
       snapshot2 = described_class.create_from_plan(plan: plan, visibility: 'privately_visible')
       expect(snapshot2.version).to eq(2)
     end
