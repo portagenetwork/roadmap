@@ -6,6 +6,8 @@
 
  - feat(Identifier): add orcid_format validator and specs [#1370](https://github.com/portagenetwork/roadmap/pull/1370)
 
+ - Allow pre-filling Research Outputs with DOI [#1374](https://github.com/portagenetwork/roadmap/pull/1374)
+
 ### Dependency Updates
 
  - chore(deps): bump surnet/alpine-wkhtmltopdf from 3.23.2-0.12.6-small to 3.23.4-0.12.6-small [#1363](https://github.com/portagenetwork/roadmap/pull/1363)

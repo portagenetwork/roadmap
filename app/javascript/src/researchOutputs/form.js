@@ -2,12 +2,70 @@ import getConstant from '../utils/constants';
 import { isUndefined, isObject } from '../utils/isType';
 import { Tinymce } from '../utils/tinymce.js';
 
+const STATUS_CLASSES = 'd-none text-muted text-danger text-success';
+
 $(() => {
   const form = $('.research_output_form');
 
   if (!isUndefined(form) && isObject(form)) {
     Tinymce.init({ selector: '#research_output_description' });
   }
+
+  // Toggle DOI form visibility
+  $('body').on('click', '#btn_toggle_doi_form', (e) => {
+    e.preventDefault();
+    const panel = $('#doi_lookup_panel');
+
+    panel.toggleClass('d-none');
+    
+    if (!panel.hasClass('d-none')) {
+      $('#doi_lookup_input').focus();
+    }
+  });
+
+  // DOI Verification & Redirect to New Form
+  $('body').on('click', '#btn_fetch_doi', (e) => {
+    e.preventDefault();
+    const button = $(e.currentTarget);
+    const inputField = $('#doi_lookup_input');
+    const statusText = $('#doi_lookup_status');
+    
+    const doi = inputField.val().trim();
+    
+    const fetchDoiPath = button.data('fetch-doi-path');
+    const newResearchOutputPath = button.data('new-research-output-path');
+
+    // Helper for DRY-ing state updates
+    const setLookupStatus = (type, message) => {
+      statusText.removeClass(STATUS_CLASSES).addClass(type).text(message);
+    };
+
+    if (!doi) {
+      setLookupStatus('text-danger', getConstant('DOI_VALIDATION_EMPTY'));
+      return;
+    }
+
+    button.prop('disabled', true).text(getConstant('DOI_VALIDATION_VERIFYING'));
+    setLookupStatus('text-muted', getConstant('DOI_VALIDATION_FETCHING'));
+
+    $.ajax({
+      url: fetchDoiPath,
+      method: 'GET',
+      data: { doi },
+      dataType: 'json'
+    }).done(() => {
+      setLookupStatus('text-success', getConstant('DOI_VALIDATION_SUCCESS'));
+      
+      // Dynamic browser redirection to the standard "New" view layout route
+      window.location.href = `${newResearchOutputPath}?prefill_doi=${encodeURIComponent(doi)}`;
+    }).fail((xhr) => {
+      button.prop('disabled', false).text(getConstant('DOI_BUTTON_TEXT_DEFAULT'));
+      const response = xhr.responseJSON;
+      const errorMsg = response && response.error ? response.error : getConstant('DOI_VALIDATION_FALLBACK_ERROR');
+      setLookupStatus('text-danger', errorMsg);
+    });
+  });
+
 
   // Expands/Collapses the search results 'More info'/'Less info' section
   $('body').on('click', '.modal-search-result .more-info a.more-info-link', (e) => {

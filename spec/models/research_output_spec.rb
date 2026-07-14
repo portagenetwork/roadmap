@@ -65,4 +65,23 @@ RSpec.describe ResearchOutput, type: :model do
       true
     end
   end
+
+  describe '.output_type_from_datacite' do
+    context 'when the type parameter is blank' do
+      it 'returns :other when type is nil' do
+        expect(described_class.output_type_from_datacite(nil)).to eq(:other)
+      end
+
+      it 'returns :other when type is an empty string' do
+        expect(described_class.output_type_from_datacite('')).to eq(:other)
+      end
+    end
+
+    context 'when the type parameter is not recognized by the system' do
+      it 'defaults safely back to :other' do
+        expect(described_class.output_type_from_datacite('UnrecognizedType')).to eq(:other)
+        expect(described_class.output_type_from_datacite('SomeFakeCategory')).to eq(:other)
+      end
+    end
+  end
 end
