@@ -213,7 +213,7 @@ class Plan < ApplicationRecord
 
   # Eager loads all associations needed for API v2 serialization,
   # and restricts to plans where the user_id has an active role.
-  scope :for_api_v2, lambda { |user_id|
+  scope :for_api_v2, lambda { |user_id| # rubocop:disable Metrics/BlockLength
     joins(:roles)
       .includes(
         :research_outputs,
