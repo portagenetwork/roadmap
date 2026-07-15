@@ -183,12 +183,12 @@ class Plan < ApplicationRecord
 
   scope :search, lambda { |term|
     if date_range?(term: term)
-      joins(:template, roles: [user: :org])
+      joins(:template, roles: [{ user: :org }])
         .where(roles: { active: true })
         .by_date_range(:created_at, term)
     else
       search_pattern = "%#{term}%"
-      joins(:template, roles: [user: :org])
+      joins(:template, roles: [{ user: :org }])
         .left_outer_joins(:identifiers, :contributors)
         .where(roles: { active: true })
         .where("lower(plans.title) LIKE lower(:search_pattern)
@@ -225,11 +225,13 @@ class Plan < ApplicationRecord
           { org: { identifiers: :identifier_scheme } }
         ],
         roles: [
-          user: [
-            :language,
-            { identifiers: :identifier_scheme },
-            { org: { identifiers: :identifier_scheme } }
-          ]
+          {
+            user: [
+              :language,
+              { identifiers: :identifier_scheme },
+              { org: { identifiers: :identifier_scheme } }
+            ]
+          }
         ],
         # plan.org is only executed when `plan.funder.present? || plan.grant_id.present? == true`
         # - (see `app/views/api/v2/plans/_project.json.jbuilder`)
