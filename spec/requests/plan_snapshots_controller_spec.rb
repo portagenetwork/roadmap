@@ -179,7 +179,12 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
       end
 
       it 'does not create a snapshot and redirects with a generic alert' do
-        expect { subject }.not_to change(plan.snapshots, :count)
+        ActionMailer::Base.deliveries.clear
+
+        expect do
+          subject
+        end.to change(ActionMailer::Base.deliveries, :count).by(1)
+                                                            .and change(plan.snapshots, :count).by(0)
 
         expect(response).to redirect_to(plan_snapshots_path(plan))
         expect(flash[:alert]).to eq(

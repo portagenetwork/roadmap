@@ -77,15 +77,10 @@ class PlanSnapshotsController < ApplicationController
   end
 
   def notify_json_generation_failure(snapshot)
-    payload = json_generation_alert_payload(snapshot)
-    failure_message = 'Plan snapshot JSON generation failed'
-    Rails.logger.error(
-      payload.merge(
-        message: failure_message
-      )
+    PlanSnapshots::FailureNotifier.call(
+      message: PlanSnapshots::FailureNotifier::JSON_GENERATION_FAILURE_MESSAGE,
+      payload: json_generation_alert_payload(snapshot)
     )
-
-    Rollbar.error(failure_message, payload)
   end
 
   def json_generation_alert_payload(snapshot)

@@ -52,15 +52,10 @@ module PlanSnapshots
     end
 
     def log_failure
-      payload = alert_payload
-
-      Rails.logger.error(
-        payload.merge(
-          message: 'Fixity check failed'
-        )
+      PlanSnapshots::FailureNotifier.call(
+        message: PlanSnapshots::FailureNotifier::FIXITY_CHECK_FAILURE_MESSAGE,
+        payload: alert_payload
       )
-
-      Rollbar.error('PlanSnapshot fixity check failed', payload)
     end
 
     def alert_payload
