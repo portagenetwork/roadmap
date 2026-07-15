@@ -59,7 +59,7 @@ class ApplicationController < ActionController::Base
     unless ['/users/sign_in',
             '/users/sign_up',
             '/users/password',
-            '/users/invitation/accept'].intersect?(request.fullpath) || request.xhr?
+            '/users/invitation/accept'].any? { |ur| request.fullpath.include?(ur) } || request.xhr?
       session[:previous_url] = request.fullpath
     end
   end
