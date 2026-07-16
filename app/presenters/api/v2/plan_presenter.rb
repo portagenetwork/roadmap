@@ -59,6 +59,8 @@ module Api
         return [] unless answers.present?
 
         answers.filter_map do |answer|
+          next unless answer.answered?
+
           q = answer.question
           next unless q.present?
 
