@@ -136,7 +136,7 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
         expect { subject }.not_to change(plan.snapshots, :count)
 
         expect(response).to redirect_to(plan_snapshots_path(plan))
-        expect(flash[:alert]).to include('Unable to create the plansnapshot.')
+        expect(flash[:alert]).to include('Unable to create the version.')
         expect(flash[:alert]).to include('Plan is not ready for snapshot creation')
       end
     end
@@ -144,7 +144,8 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
     context 'when the plan has not changed since the previous snapshot' do
       let(:invalid_snapshot) do
         snapshot = PlanSnapshot.new
-        snapshot.errors.add(:checksum, 'matches the last snapshot; plan has not changed')
+        snapshot.errors.add(:base,
+                            'A new version cannot be published because the plan has not changed since the last version')
         snapshot
       end
 
@@ -159,8 +160,10 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
         expect { subject }.not_to change(plan.snapshots, :count)
 
         expect(response).to redirect_to(plan_snapshots_path(plan))
-        expect(flash[:alert]).to include('Unable to create the plansnapshot.')
-        expect(flash[:alert]).to include('Checksum matches the last snapshot; plan has not changed')
+        expect(flash[:alert]).to include('Unable to create the version.')
+        expect(flash[:alert]).to include(
+          'A new version cannot be published because the plan has not changed since the last version'
+        )
       end
     end
 
@@ -203,7 +206,7 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
         expect { subject }.not_to change(plan.snapshots, :count)
 
         expect(response).to redirect_to(plan_snapshots_path(plan))
-        expect(flash[:alert]).to include('Unable to create the plansnapshot.')
+        expect(flash[:alert]).to include('Unable to create the version.')
         expect(flash[:alert]).to include('Visibility is not included in the list')
       end
     end
