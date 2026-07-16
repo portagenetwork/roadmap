@@ -65,7 +65,9 @@ RSpec.describe PlanSnapshot, type: :model do
       duplicate = build(:plan_snapshot, plan: plan, version: 2, checksum: checksum)
 
       expect(duplicate).not_to be_valid
-      expect(duplicate.errors[:checksum]).to include('matches the last snapshot; plan has not changed')
+      expect(duplicate.errors[:base]).to include(
+        'A new version cannot be published because the plan has not changed since the last version'
+      )
     end
 
     it 'is valid when checksum differs from the last snapshot' do

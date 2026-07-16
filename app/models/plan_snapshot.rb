@@ -127,7 +127,9 @@ class PlanSnapshot < ApplicationRecord
     return unless checksum.present?
 
     last_checksum = self.class.for_plan(plan).pick(:checksum)
-    errors.add(:checksum, _('matches the last snapshot; plan has not changed')) if last_checksum == checksum
+    return unless last_checksum == checksum
+
+    errors.add(:base, _('A new version cannot be published because the plan has not changed since the last version'))
   end
 
   def rda_json_has_required_fields
