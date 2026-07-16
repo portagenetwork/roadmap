@@ -211,6 +211,39 @@ class Plan < ApplicationRecord
     includes(:phases, :sections, :questions, template: [:org]).find(id)
   }
 
+  # Eager loads all associations needed for API v2 serialization,
+  # and restricts to plans where the user_id has an active role.
+  scope :for_api_v2, lambda { |user_id|
+    joins(:roles)
+      .includes(
+        :research_outputs,
+        :template,
+        { identifiers: :identifier_scheme },
+        funder: { identifiers: :identifier_scheme },
+        contributors: [
+          { identifiers: :identifier_scheme },
+          { org: { identifiers: :identifier_scheme } }
+        ],
+        roles: [
+          user: [
+            :language,
+            { identifiers: :identifier_scheme },
+            { org: { identifiers: :identifier_scheme } }
+          ]
+        ],
+        # plan.org is only executed when `plan.funder.present? || plan.grant_id.present? == true`
+        # - (see `app/views/api/v2/plans/_project.json.jbuilder`)
+        # Thus, the following line avoids N+1 queries in some cases,
+        # but performs unnecessary eager loading in others
+        org: [
+          :region,
+          { identifiers: :identifier_scheme }
+        ]
+      )
+      .where(roles: { user_id: user_id, active: true })
+      .distinct
+  }
+
   ##
   # Settings for the template
   has_settings :export, class_name: 'Settings::Template' do |s|
