@@ -202,12 +202,12 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
 
       before { authorize_as(:administrator) }
 
-      it 'does not create a snapshot and redirects with an alert' do
-        expect { subject }.not_to change(plan.snapshots, :count)
+      it 'creates a privately visible snapshot and redirects with a notice' do
+        expect { subject }.to change(plan.snapshots, :count).by(1)
 
         expect(response).to redirect_to(plan_snapshots_path(plan))
-        expect(flash[:alert]).to include('Unable to create the version.')
-        expect(flash[:alert]).to include('Visibility is not included in the list')
+        expect(flash[:notice]).to eq('New version published.')
+        expect(plan.snapshots.order(:version).last.visibility).to eq('privately_visible')
       end
     end
 
