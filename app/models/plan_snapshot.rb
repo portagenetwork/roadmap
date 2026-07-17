@@ -63,14 +63,15 @@ class PlanSnapshot < ApplicationRecord
   # =================
 
   # Create a new snapshot from the given plan.
-  def self.create_from_plan(plan:, visibility:)
+  def self.create_from_plan(plan:, visibility:) # rubocop:disable  Lint/UnusedMethodArgument
     rda_json = Api::V2::Serialization::RdaSerializer.call(plan: plan)
     extension_json = Api::V2::Serialization::ExtensionSerializer.call(plan: plan)
 
     plan.with_lock do
       create(
         plan: plan,
-        visibility: visibility,
+        # Enforce private visibility until DMP minting is implemented
+        visibility: :privately_visible,
         version: next_version_for_plan(plan),
         rda_json: rda_json,
         extension_json: extension_json,
