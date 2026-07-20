@@ -401,6 +401,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 | app.serviceAccount.automount | bool | `true` | Automatically mount a ServiceAccount's API credentials? |
 | app.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | app.serviceAccount.name | string | If not set and create is true, a name is generated using the fullname template | The name of the service account to use. |
+| app.startupProbe | object | `{"failureThreshold":48,"httpGet":{"path":"/api/v1/heartbeat","port":"http"},"periodSeconds":10,"successThreshold":1,"timeoutSeconds":10}` | Startup probe configuration for the app |
 | app.tolerations | list | `[]` | Tolerations for the app deployment |
 | app.volumeMounts | list | `[]` | Additional volume mounts for the app deployment |
 | app.volumes | list | `[]` | Additional volumes for the app deployment |

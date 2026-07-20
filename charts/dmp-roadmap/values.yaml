@@ -313,6 +313,17 @@ app:
     limits:
       cpu: 500m
       memory: 1Gi
+  
+  # -- Startup probe configuration for the app
+  # @section -- Application Configuration
+  startupProbe:
+    httpGet:
+      path: /api/v1/heartbeat
+      port: http
+    periodSeconds: 10
+    timeoutSeconds: 10
+    failureThreshold: 48
+    successThreshold: 1
 
   # -- Liveness probe configuration for the app
   # @section -- Application Configuration

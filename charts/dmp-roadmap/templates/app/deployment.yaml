@@ -57,6 +57,14 @@ spec:
             - name: http
               containerPort: {{ .Values.app.service.targetPort }}
               protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /api/v1/heartbeat
+              port: {{ .Values.app.service.targetPort }}
+            periodSeconds: {{ .Values.app.startupProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.app.startupProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.app.startupProbe.failureThreshold }}
+            successThreshold: {{ .Values.app.startupProbe.successThreshold }}
           livenessProbe:
             httpGet:
               path: /api/v1/heartbeat
