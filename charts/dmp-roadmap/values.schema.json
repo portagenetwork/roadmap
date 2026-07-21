@@ -149,12 +149,6 @@
               "title": "httpGet",
               "type": "object"
             },
-            "initialDelaySeconds": {
-              "default": 120,
-              "required": [],
-              "title": "initialDelaySeconds",
-              "type": "integer"
-            },
             "periodSeconds": {
               "default": 20,
               "required": [],
@@ -176,7 +170,6 @@
           },
           "required": [
             "httpGet",
-            "initialDelaySeconds",
             "periodSeconds",
             "timeoutSeconds",
             "failureThreshold",
@@ -256,12 +249,6 @@
               "title": "httpGet",
               "type": "object"
             },
-            "initialDelaySeconds": {
-              "default": 60,
-              "required": [],
-              "title": "initialDelaySeconds",
-              "type": "integer"
-            },
             "periodSeconds": {
               "default": 20,
               "required": [],
@@ -283,7 +270,6 @@
           },
           "required": [
             "httpGet",
-            "initialDelaySeconds",
             "periodSeconds",
             "timeoutSeconds",
             "failureThreshold",
@@ -520,6 +506,68 @@
           "title": "serviceAccount",
           "type": "object"
         },
+        "startupProbe": {
+          "additionalProperties": false,
+          "description": "Startup probe configuration for the app",
+          "properties": {
+            "failureThreshold": {
+              "default": 48,
+              "required": [],
+              "title": "failureThreshold",
+              "type": "integer"
+            },
+            "httpGet": {
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "default": "/api/v1/heartbeat",
+                  "required": [],
+                  "title": "path",
+                  "type": "string"
+                },
+                "port": {
+                  "default": "http",
+                  "required": [],
+                  "title": "port",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "port"
+              ],
+              "title": "httpGet",
+              "type": "object"
+            },
+            "periodSeconds": {
+              "default": 10,
+              "required": [],
+              "title": "periodSeconds",
+              "type": "integer"
+            },
+            "successThreshold": {
+              "default": 1,
+              "required": [],
+              "title": "successThreshold",
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "default": 10,
+              "required": [],
+              "title": "timeoutSeconds",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "httpGet",
+            "periodSeconds",
+            "timeoutSeconds",
+            "failureThreshold",
+            "successThreshold"
+          ],
+          "title": "startupProbe",
+          "type": "object"
+        },
         "tolerations": {
           "description": "Tolerations for the app deployment",
           "items": {
@@ -549,6 +597,7 @@
         }
       },
       "required": [
+        "startupProbe",
         "livenessProbe",
         "readinessProbe",
         "autoscaling",
