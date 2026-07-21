@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+ - fix(charts): add `startupProbe` [#1388](https://github.com/portagenetwork/roadmap/pull/1388)
+
 ### Dependency Updates
 
  - chore(deps): bump @babel/core from 7.21.4 to 7.29.6 [#1376](https://github.com/portagenetwork/roadmap/pull/1376)
