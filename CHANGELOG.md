@@ -22,6 +22,8 @@
 
  - chore(deps): bump nginx from 1.31.2-alpine to 1.31.3-alpine [#1386](https://github.com/portagenetwork/roadmap/pull/1386)
 
+ - chore(deps): bump actions/setup-node from 6 to 7 [#1385](https://github.com/portagenetwork/roadmap/pull/1385)
+
 ## [4.1.1+portage-4.9.0]
 
 ### Changed
