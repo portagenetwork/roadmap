@@ -331,7 +331,6 @@ app:
     httpGet:
       path: /api/v1/heartbeat
       port: http
-    initialDelaySeconds: 120
     periodSeconds: 20
     timeoutSeconds: 10
     failureThreshold: 6
@@ -343,7 +342,6 @@ app:
     httpGet:
       path: /api/v1/heartbeat
       port: http
-    initialDelaySeconds: 60
     periodSeconds: 20
     timeoutSeconds: 10
     failureThreshold: 6

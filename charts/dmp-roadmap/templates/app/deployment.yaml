@@ -69,7 +69,6 @@ spec:
             httpGet:
               path: /api/v1/heartbeat
               port: {{ .Values.app.service.targetPort }}
-            initialDelaySeconds: {{ .Values.app.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.app.livenessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.app.livenessProbe.timeoutSeconds }}
             failureThreshold: {{ .Values.app.livenessProbe.failureThreshold }}
@@ -78,7 +77,6 @@ spec:
             httpGet:
               path: /api/v1/heartbeat
               port: {{ .Values.app.service.targetPort }}
-            initialDelaySeconds: {{ .Values.app.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.app.readinessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.app.readinessProbe.timeoutSeconds }}
             failureThreshold: {{ .Values.app.readinessProbe.failureThreshold }}

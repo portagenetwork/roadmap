@@ -149,12 +149,6 @@
               "title": "httpGet",
               "type": "object"
             },
-            "initialDelaySeconds": {
-              "default": 120,
-              "required": [],
-              "title": "initialDelaySeconds",
-              "type": "integer"
-            },
             "periodSeconds": {
               "default": 20,
               "required": [],
@@ -176,7 +170,6 @@
           },
           "required": [
             "httpGet",
-            "initialDelaySeconds",
             "periodSeconds",
             "timeoutSeconds",
             "failureThreshold",
@@ -256,12 +249,6 @@
               "title": "httpGet",
               "type": "object"
             },
-            "initialDelaySeconds": {
-              "default": 60,
-              "required": [],
-              "title": "initialDelaySeconds",
-              "type": "integer"
-            },
             "periodSeconds": {
               "default": 20,
               "required": [],
@@ -283,7 +270,6 @@
           },
           "required": [
             "httpGet",
-            "initialDelaySeconds",
             "periodSeconds",
             "timeoutSeconds",
             "failureThreshold",

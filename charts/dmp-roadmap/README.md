@@ -385,12 +385,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 | app.image.repository | string | global.image.repository | Repository to use for the DMP Roadmap app |
 | app.image.tag | string | global.image.tag or chart appVersion | Tag to use for the DMP Roadmap app |
 | app.imagePullSecrets | list | global.imagePullSecrets | Secrets with credentials to pull images from a private registry |
-| app.livenessProbe | object | `{"failureThreshold":6,"httpGet":{"path":"/api/v1/heartbeat","port":"http"},"initialDelaySeconds":120,"periodSeconds":20,"successThreshold":1,"timeoutSeconds":10}` | Liveness probe configuration for the app |
+| app.livenessProbe | object | `{"failureThreshold":6,"httpGet":{"path":"/api/v1/heartbeat","port":"http"},"periodSeconds":20,"successThreshold":1,"timeoutSeconds":10}` | Liveness probe configuration for the app |
 | app.nodeSelector | object | `{}` | Node selector for the app deployment |
 | app.podAnnotations | object | `{}` | Pod annotations for the app deployment |
 | app.podLabels | object | `{}` | Pod labels for the app deployment |
 | app.podSecurityContext | object | `{"fsGroup":3000}` | Pod security context for the app deployment |
-| app.readinessProbe | object | `{"failureThreshold":6,"httpGet":{"path":"/api/v1/heartbeat","port":"http"},"initialDelaySeconds":60,"periodSeconds":20,"successThreshold":1,"timeoutSeconds":10}` | Readiness probe configuration for the app |
+| app.readinessProbe | object | `{"failureThreshold":6,"httpGet":{"path":"/api/v1/heartbeat","port":"http"},"periodSeconds":20,"successThreshold":1,"timeoutSeconds":10}` | Readiness probe configuration for the app |
 | app.replicas | int | `1` | Number of app replicas |
 | app.resources | object | `{"limits":{"cpu":"500m","memory":"1Gi"},"requests":{"cpu":"200m","memory":"512Mi"}}` | Resource requests and limits for the app |
 | app.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"privileged":false,"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":1000,"seccompProfile":{"type":"RuntimeDefault"}}` | Container security context for the app deployment |
