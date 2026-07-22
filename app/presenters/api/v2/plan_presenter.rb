@@ -56,22 +56,23 @@ module Api
       # Fetch all questions and answers from a plan, regardless of theme
       def fetch_all_q_and_a
         answers = @plan.answers
-        return [] unless answers.present?
+        return [] if answers.blank?
 
-        answers.filter_map do |answer|
-          next unless answer.answered?
+        answers.filter_map { |answer| build_q_and_a_item(answer) }
+      end
 
-          q = answer.question
-          next unless q.present?
+      def build_q_and_a_item(answer)
+        formatted_answer = answer.serialized_answer_text
+        return if formatted_answer.blank?
 
-          {
-            id: q.id,
-            title: "Question #{q.number || q.id}",
-            section: q.section&.title,
-            question: q.text.to_s,
-            answer: answer.text.to_s
-          }
-        end
+        q = answer.question
+        {
+          id: q.id,
+          title: "Question #{q.number || q.id}",
+          section: q.section&.title,
+          question: ActionController::Base.helpers.strip_tags(q.text),
+          answer: ActionController::Base.helpers.strip_tags(formatted_answer)
+        }
       end
     end
   end
