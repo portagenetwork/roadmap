@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require_relative '../support/mocks/plan_snapshot_values'
+require_relative '../../support/mocks/plan_snapshot_values'
 
-RSpec.describe PlanSnapshotRdaJson do
+RSpec.describe PlanSnapshots::RdaJson do
   let(:reader) do
     described_class.new(
       rda_json: PlanSnapshotValues.mock_rda_json
