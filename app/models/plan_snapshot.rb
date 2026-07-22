@@ -158,6 +158,6 @@ class PlanSnapshot < ApplicationRecord
   end
 
   def rda_json_reader
-    @rda_json_reader ||= PlanSnapshotRdaJson.new(rda_json: rda_json)
+    @rda_json_reader ||= PlanSnapshots::RdaJson.new(rda_json: rda_json)
   end
 end
