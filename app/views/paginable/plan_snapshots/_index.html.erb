@@ -18,8 +18,8 @@
   <tbody>
     <% scope.each do |snapshot| %>
       <tr>
-        <td><%= snapshot.dmp_identifier %></td>
-        <td><%= snapshot.dmp_identifier_type %></td>
+        <td><%= snapshot.dmp_id.identifier %></td>
+        <td><%= snapshot.dmp_id.type %></td>
         <td><%= snapshot.version %></td>
         <td><%= snapshot.created_at.to_date %></td>
         <td><%= snapshot.visibility_label %></td>
