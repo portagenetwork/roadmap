@@ -159,6 +159,53 @@ RSpec.describe Answer, type: :model do
     end
   end
 
+  describe '#serialized_answer_text' do
+    let(:answer) { create(:answer) }
+
+    subject { answer.serialized_answer_text }
+
+    context 'when answer is not answered' do
+      let(:answer) { build(:answer, text: nil, question_options: []) }
+
+      it { is_expected.to eq('') }
+    end
+
+    context 'when answer is plain text' do
+      before { answer.text = 'Plain text answer' }
+
+      it { is_expected.to eq('Plain text answer') }
+    end
+
+    context 'when question is option-based' do
+      let(:option_format) { create(:question_format, option_based: true) }
+      let(:question) do
+        question = build(:question, question_format: option_format)
+        question.question_options << build(:question_option, text: 'Choice 1')
+        question.question_options << build(:question_option, text: 'Choice 2')
+        question
+      end
+
+      before do
+        answer.question = question
+        answer.question_options = question.question_options
+        # Explicitly clear text so no random text is added
+        answer.text = nil
+      end
+
+      it 'joins selected option texts' do
+        expect(subject).to eq('Choice 1, Choice 2')
+      end
+
+      context 'and includes additional comment text' do
+        before { answer.text = 'Additional comment' }
+
+        it 'joins option texts and comment text' do
+          expect(subject).to eq('Choice 1, Choice 2, Additional comment')
+        end
+      end
+    end
+  end
+
   describe '#non_archived_notes' do
     before do
       @answer         = create(:answer)
