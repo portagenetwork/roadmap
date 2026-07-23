@@ -10,12 +10,8 @@ module PlanSnapshots
       @rda_json = rda_json
     end
 
-    def identifier
-      dmp_id_hash[:identifier]
-    end
-
-    def identifier_type
-      dmp_id_hash[:type]
+    def dmp_id
+      @dmp_id ||= Identifier.new(dmp_id_hash)
     end
 
     private
@@ -27,6 +23,25 @@ module PlanSnapshots
       return {}.with_indifferent_access unless dmp_id.is_a?(Hash)
 
       dmp_id.with_indifferent_access
+    end
+
+    # Wraps any RDA { type, identifier } pair
+    class Identifier
+      def initialize(hash)
+        @hash = hash
+      end
+
+      def identifier
+        hash[:identifier]
+      end
+
+      def type
+        hash[:type]
+      end
+
+      private
+
+      attr_reader :hash
     end
   end
 end

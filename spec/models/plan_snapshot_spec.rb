@@ -283,19 +283,19 @@ RSpec.describe PlanSnapshot, type: :model do
     end
   end
 
-  describe '#dmp_identifier' do
-    it 'returns the dmp_id identifier from rda_json' do
-      snapshot = build(:plan_snapshot, rda_json: PlanSnapshotValues.mock_rda_json)
+  describe '#dmp_id' do
+    let(:snapshot) { build(:plan_snapshot, rda_json: PlanSnapshotValues.mock_rda_json) }
 
-      expect(snapshot.dmp_identifier).to eq(PlanSnapshotValues.mock_plan_identifier_url)
+    describe '#identifier' do
+      it 'returns the dmp_id.identifier from rda_json' do
+        expect(snapshot.dmp_id.identifier).to eq(PlanSnapshotValues.mock_plan_identifier_url)
+      end
     end
-  end
 
-  describe '#dmp_identifier_type' do
-    it 'returns the dmp_id type from rda_json' do
-      snapshot = build(:plan_snapshot, rda_json: PlanSnapshotValues.mock_rda_json)
-
-      expect(snapshot.dmp_identifier_type).to eq('url')
+    describe '#type' do
+      it 'returns the dmp_id.type from rda_json' do
+        expect(snapshot.dmp_id.type).to eq('url')
+      end
     end
   end
 end

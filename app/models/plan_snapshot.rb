@@ -114,7 +114,7 @@ class PlanSnapshot < ApplicationRecord
     VISIBILITY_MESSAGE[visibility.to_sym]
   end
 
-  delegate :identifier, :identifier_type, to: :rda_json_reader, prefix: :dmp
+  delegate :dmp_id, to: :rda_json_reader
 
   private
 

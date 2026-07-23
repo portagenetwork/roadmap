@@ -38,8 +38,8 @@ RSpec.describe 'paginable/plan_snapshots/_index.html.erb', type: :view do
 
   it 'renders the snapshot row and view link' do
     expect(rendered).to include(
-      snapshot.dmp_identifier.to_s,
-      snapshot.dmp_identifier_type.to_s,
+      snapshot.dmp_id.identifier.to_s,
+      snapshot.dmp_id.type.to_s,
       snapshot.version.to_s,
       snapshot.created_at.to_date.to_s,
       snapshot.visibility_label,
