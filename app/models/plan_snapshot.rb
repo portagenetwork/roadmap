@@ -114,7 +114,11 @@ class PlanSnapshot < ApplicationRecord
     VISIBILITY_MESSAGE[visibility.to_sym]
   end
 
-  delegate :dmp_id, to: :rda_json_reader
+  delegate :dmp_id, :project, :title,
+           to: :rda_json_reader
+
+  delegate :complete_plan, :template,
+           to: :extension_json_reader
 
   private
 
@@ -159,5 +163,9 @@ class PlanSnapshot < ApplicationRecord
 
   def rda_json_reader
     @rda_json_reader ||= PlanSnapshots::RdaJson.new(rda_json: rda_json)
+  end
+
+  def extension_json_reader
+    @extension_json_reader ||= PlanSnapshots::ExtensionJson.new(extension_json: extension_json)
   end
 end

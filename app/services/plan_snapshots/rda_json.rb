@@ -11,32 +11,62 @@ module PlanSnapshots
     end
 
     def dmp_id
-      @dmp_id ||= Identifier.new(dmp_id_hash)
+      @dmp_id ||= Identifier.new(dmp_hash['dmp_id'])
+    end
+
+    def project
+      @project ||= Project.new(project_hash)
+    end
+
+    def title
+      dmp_hash['title']
     end
 
     private
 
     attr_reader :rda_json
 
-    def dmp_id_hash
-      dmp_id = rda_json&.dig('dmp', 'dmp_id')
-      return {}.with_indifferent_access unless dmp_id.is_a?(Hash)
+    def dmp_hash
+      dmp = rda_json&.dig('dmp')
+      dmp.is_a?(Hash) ? dmp : {}
+    end
 
-      dmp_id.with_indifferent_access
+    def project_hash
+      p = Array(dmp_hash['project']).first
+      p.is_a?(Hash) ? p : {}
     end
 
     # Wraps any RDA { type, identifier } pair
     class Identifier
       def initialize(hash)
-        @hash = hash
+        @hash = hash.is_a?(Hash) ? hash : {}
       end
 
       def identifier
-        hash[:identifier]
+        hash['identifier']
       end
 
       def type
-        hash[:type]
+        hash['type']
+      end
+
+      private
+
+      attr_reader :hash
+    end
+
+    # Wraps the first entry of dmp.project
+    class Project
+      def initialize(hash)
+        @hash = hash.is_a?(Hash) ? hash : {}
+      end
+
+      def start_date
+        hash['start']
+      end
+
+      def end_date
+        hash['end']
       end
 
       private

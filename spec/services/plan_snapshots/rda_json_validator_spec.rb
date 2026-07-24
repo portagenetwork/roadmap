@@ -25,15 +25,19 @@ RSpec.describe PlanSnapshots::RdaJsonValidator do
       expect(validator_with_modified_json { |json| json['dmp']['dmp_id'].delete('type') }.valid?).to be(false)
     end
 
-    it 'returns false when rda_json is missing dmp.project.start' do
+    it 'returns false when rda_json is missing dmp.project[].start' do
       expect(validator_with_modified_json { |json| json['dmp']['project'].first.delete('start') }.valid?).to be(false)
     end
 
-    it 'returns false when rda_json is missing dmp.project.end' do
+    it 'returns false when rda_json is missing dmp.project[].end' do
       expect(validator_with_modified_json { |json| json['dmp']['project'].first.delete('end') }.valid?).to be(false)
     end
 
-    it 'returns false when dmp or dmp_id is missing' do
+    it 'returns false when dmp_id is missing entirely' do
+      expect(validator_with_modified_json { |json| json['dmp'].delete('dmp_id') }.valid?).to be(false)
+    end
+
+    it 'returns false when rda_json is completely empty' do
       expect(described_class.new({}).valid?).to be(false)
     end
   end
