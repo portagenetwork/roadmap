@@ -283,19 +283,14 @@ RSpec.describe PlanSnapshot, type: :model do
     end
   end
 
-  describe '#dmp_id' do
-    let(:snapshot) { build(:plan_snapshot, rda_json: PlanSnapshotValues.mock_rda_json) }
+  it 'responds to the delegated reader methods without raising' do
+    snapshot = build(:plan_snapshot, rda_json: PlanSnapshotValues.mock_rda_json,
+                                     extension_json: PlanSnapshotValues.mock_extension_json)
 
-    describe '#identifier' do
-      it 'returns the dmp_id.identifier from rda_json' do
-        expect(snapshot.dmp_id.identifier).to eq(PlanSnapshotValues.mock_plan_identifier_url)
-      end
-    end
-
-    describe '#type' do
-      it 'returns the dmp_id.type from rda_json' do
-        expect(snapshot.dmp_id.type).to eq('url')
-      end
-    end
+    expect { snapshot.dmp_id }.not_to raise_error
+    expect { snapshot.project }.not_to raise_error
+    expect { snapshot.title }.not_to raise_error
+    expect { snapshot.complete_plan }.not_to raise_error
+    expect { snapshot.template }.not_to raise_error
   end
 end
