@@ -287,6 +287,9 @@ RSpec.describe PlanSnapshot, type: :model do
     snapshot = build(:plan_snapshot, rda_json: PlanSnapshotValues.mock_rda_json,
                                      extension_json: PlanSnapshotValues.mock_extension_json)
 
+    expect { snapshot.contact }.not_to raise_error
+    expect { snapshot.contributors }.not_to raise_error
+    expect { snapshot.description }.not_to raise_error
     expect { snapshot.dmp_id }.not_to raise_error
     expect { snapshot.project }.not_to raise_error
     expect { snapshot.title }.not_to raise_error
