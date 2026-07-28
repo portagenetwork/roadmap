@@ -114,7 +114,7 @@ class PlanSnapshot < ApplicationRecord
     VISIBILITY_MESSAGE[visibility.to_sym]
   end
 
-  delegate :dmp_id, :project, :title,
+  delegate :contact, :contributors, :description, :dmp_id, :project, :title,
            to: :rda_json_reader
 
   delegate :complete_plan, :template,
