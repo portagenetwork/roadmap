@@ -209,17 +209,20 @@ class PlansController < ApplicationController
   # GET /plans/:plan_id/phases/:id/edit
   # rubocop:disable Metrics/AbcSize
   def edit
-    plan = Plan.includes(
-      { template: {
-        phases: {
-          sections: {
-            questions: %i[question_format annotations]
-          }
-        }
-      } },
-      { answers: :notes }
-    )
-               .find(params[:id])
+    plan = Plan.with_detailed_template
+               .includes(
+                 {
+                   template: {
+                     phases: {
+                       sections: {
+                         questions: %i[question_format annotations]
+                       }
+                     }
+                   }
+                 },
+                 { answers: :notes }
+               ).find(params[:id])
+
     authorize plan
     phase_id = params[:phase_id].to_i
     phase = plan.template.phases.find { |p| p.id == phase_id }
@@ -437,7 +440,8 @@ class PlansController < ApplicationController
 
   # GET /plans/:id/overview
   def overview
-    plan = Plan.includes(template: [:org, { phases: { sections: :questions } }])
+    plan = Plan.with_detailed_template
+               .includes(template: :org)
                .find(params[:id])
 
     authorize plan
