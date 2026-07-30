@@ -45,12 +45,12 @@ RSpec.describe PlanSnapshotChecksum do
 
       it 'produces the same checksum on repeated serialization calls' do
         checksum_one = PlanSnapshotChecksum.calculate(
-          Api::V2::Serialization::RdaSerializer.call(plan: plan),
-          Api::V2::Serialization::ExtensionSerializer.call(plan: plan)
+          Api::V2::Serialization::PlanSnapshots::RdaSerializer.call(plan: plan),
+          Api::V2::Serialization::PlanSnapshots::ExtensionSerializer.call(plan: plan)
         )
         checksum_two = PlanSnapshotChecksum.calculate(
-          Api::V2::Serialization::RdaSerializer.call(plan: plan),
-          Api::V2::Serialization::ExtensionSerializer.call(plan: plan)
+          Api::V2::Serialization::PlanSnapshots::RdaSerializer.call(plan: plan),
+          Api::V2::Serialization::PlanSnapshots::ExtensionSerializer.call(plan: plan)
         )
 
         expect(checksum_one).to eq(checksum_two)
