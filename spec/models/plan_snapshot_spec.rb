@@ -178,8 +178,8 @@ RSpec.describe PlanSnapshot, type: :model do
     before(:each) do
       plan.stubs(:snapshot_ready?).returns(true)
 
-      Api::V2::Serialization::RdaSerializer.stubs(:call).returns(rda_json)
-      Api::V2::Serialization::ExtensionSerializer.stubs(:call).returns(extension_json)
+      Api::V2::Serialization::PlanSnapshots::RdaSerializer.stubs(:call).returns(rda_json)
+      Api::V2::Serialization::PlanSnapshots::ExtensionSerializer.stubs(:call).returns(extension_json)
 
       PlanSnapshotChecksum.stubs(:calculate).returns(checksum)
     end
