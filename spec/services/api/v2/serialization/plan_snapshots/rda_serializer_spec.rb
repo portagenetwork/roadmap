@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V2::Serialization::RdaSerializer do
+RSpec.describe Api::V2::Serialization::PlanSnapshots::RdaSerializer do
   describe '.call' do
     let(:plan) { create(:plan, :creator) }
 

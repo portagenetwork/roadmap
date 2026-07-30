@@ -64,8 +64,8 @@ class PlanSnapshot < ApplicationRecord
 
   # Create a new snapshot from the given plan.
   def self.create_from_plan(plan:, visibility:) # rubocop:disable  Lint/UnusedMethodArgument
-    rda_json = Api::V2::Serialization::RdaSerializer.call(plan: plan)
-    extension_json = Api::V2::Serialization::ExtensionSerializer.call(plan: plan)
+    rda_json = Api::V2::Serialization::PlanSnapshots::RdaSerializer.call(plan: plan)
+    extension_json = Api::V2::Serialization::PlanSnapshots::ExtensionSerializer.call(plan: plan)
 
     plan.with_lock do
       create(
