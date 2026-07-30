@@ -96,6 +96,23 @@ class Phase < ApplicationRecord
     Phase.where(template_id: template_id).select(:id, :title)
   }
 
+  scope :with_template_includes, lambda {
+    includes(
+      :template,
+      {
+        sections: [
+          :template,
+          {
+            questions: [
+              :template,
+              { question_options: :template }
+            ]
+          }
+        ]
+      }
+    )
+  }
+
   def deep_copy(**options)
     copy = dup
     copy.modifiable = options.fetch(:modifiable, modifiable)
