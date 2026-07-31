@@ -84,6 +84,22 @@ class Answer < ApplicationRecord
     question_option_ids.include?(option_id)
   end
 
+  # Returns a unified string representation of the answer regardless of question format
+  # Combines option-based selections (checkboxes, radio buttons) with free-text/comments
+  def serialized_answer_text
+    return '' unless answered?
+
+    values = []
+
+    # Gather selected options (checkboxes, radio buttons, dates, dropdowns)
+    values.concat(question_options.pluck(:text)) if question.question_format.option_based?
+
+    values << text if text.present?
+
+    # Take the remaining valid strings and combine them into a single string
+    values.reject(&:blank?).join(', ')
+  end
+
   # If the answer's question is option_based, it is checked if exist any question_option
   # selected. For non option_based (e.g. textarea or textfield), it is checked the
   # presence of text

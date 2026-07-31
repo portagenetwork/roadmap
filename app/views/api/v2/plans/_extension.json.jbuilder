@@ -19,8 +19,8 @@ json.extension [plan.template] do |template|
         json.question_id item[:id]
         json.title item[:title]
         json.section strip_tags(item[:section])
-        json.question sanitize(item[:question])
-        json.answer sanitize(item[:answer])
+        json.question item[:question]
+        json.answer item[:answer]
       end
     end
   end
