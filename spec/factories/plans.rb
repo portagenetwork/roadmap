@@ -64,7 +64,13 @@ FactoryBot.define do
     end
 
     trait :snapshot_ready do
-      answers { 1 }
+      template { association(:template, phases: 1, sections: 1, questions: 1) }
+      answers { 0 }
+
+      after(:create) do |plan|
+        question = plan.questions.first
+        create(:answer, plan: plan, question: question, text: 'Snapshot-ready answer') if question.present?
+      end
     end
 
     trait :creator do

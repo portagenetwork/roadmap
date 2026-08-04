@@ -9,8 +9,7 @@ module PlanSnapshots
     end
 
     def valid?
-      required_template_fields_present? &&
-        complete_plan_requirements_met?
+      required_template_fields_present? && any_question_answered?
     end
 
     private
@@ -26,17 +25,12 @@ module PlanSnapshots
         extension_json.template.title.present?
     end
 
-    def complete_plan_requirements_met?
-      extension_json.complete_plan.any? &&
-        extension_json.complete_plan.all? { |item| complete_plan_item_valid?(item) }
+    def any_question_answered?
+      all_questions.any? { |question| question.answer.text.present? }
     end
 
-    def complete_plan_item_valid?(item)
-      item.title.present? &&
-        item.answer.present? &&
-        item.section.present? &&
-        item.question.present? &&
-        item.question_id.present?
+    def all_questions
+      extension_json.template.phases.flat_map(&:sections).flat_map(&:questions)
     end
   end
 end

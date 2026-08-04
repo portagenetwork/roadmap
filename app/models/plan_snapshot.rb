@@ -117,7 +117,7 @@ class PlanSnapshot < ApplicationRecord
   delegate :contact, :contributors, :description, :dmp_id, :project, :title,
            to: :rda_json_reader
 
-  delegate :complete_plan, :template,
+  delegate :template,
            to: :extension_json_reader
 
   private
