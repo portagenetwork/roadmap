@@ -11,14 +11,14 @@ RSpec.describe Api::V2::Serialization::PlanSnapshots::ExtensionSerializer do
       expect(result).to be_a(Hash)
     end
 
-    it 'returns only extension payload (not full dmp wrapper)' do
+    it 'returns a template payload keyed at the top level' do
       result = described_class.call(plan: plan)
-      expect(result).not_to have_key(:dmp)
-      expect(result).to have_key('extension')
+      expect(result).to have_key('template')
     end
 
-    it 'does not include RDA root fields' do
+    it 'does not include the RDA dmp wrapper' do
       result = described_class.call(plan: plan)
+      expect(result).not_to have_key('dmp')
       expect(result).not_to have_key('dmp_id')
     end
 
@@ -26,25 +26,9 @@ RSpec.describe Api::V2::Serialization::PlanSnapshots::ExtensionSerializer do
       expect { described_class.call }.to raise_error(ArgumentError)
     end
 
-    context 'when the plan has answers' do
-      let(:question) { create(:question, section: create(:section, template: plan.template)) }
-      let!(:answer) { create(:answer, plan: plan, question: question, text: 'Test answer') }
-
-      it 'renders the complete_plan section with Q&A' do
-        result = described_class.call(plan: plan)
-        extension = result['extension'].first
-        expect(extension['complete_plan']).to be_an(Array)
-        expect(extension['complete_plan'].first['question_id']).to eq(question.id)
-        expect(extension['complete_plan'].first['answer']).to eq('Test answer')
-      end
-    end
-
-    context 'when the plan has no answers' do
-      it 'does not render the complete_plan section' do
-        result = described_class.call(plan: plan)
-        extension = result['extension'].first
-        expect(extension['complete_plan']).to be_nil
-      end
+    it "renders the plan's actual template id through the full pipeline" do
+      result = described_class.call(plan: plan)
+      expect(result['template']['id']).to eq(plan.template.id)
     end
   end
 end

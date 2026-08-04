@@ -34,27 +34,39 @@ module PlanSnapshotValues # rubocop:disable Metrics/ModuleLength
 
   def self.mock_extension_json
     {
-      'extension' => [
-        {
-          'dmproadmap' => {
-            'template' => {
-              'id' => 1,
-              'title' => 'Test Template'
-            }
-          },
-          'complete_plan' => [mock_complete_plan_item]
-        }
-      ]
+      'template' => {
+        'id' => 1,
+        'title' => 'Test Template',
+        'version' => 3,
+        'phases' => [mock_phase]
+      }
     }
   end
 
-  def self.mock_complete_plan_item
+  def self.mock_phase
     {
-      'title' => 'Project details',
-      'answer' => 'Example answer',
-      'section' => 'General Information',
-      'question' => 'What is the project about?',
-      'question_id' => 1
+      'title' => 'Phase 1',
+      'number' => 1,
+      'sections' => [mock_section]
+    }
+  end
+
+  def self.mock_section
+    {
+      'title' => 'Section 1',
+      'number' => 1,
+      'modifiable' => true,
+      'questions' => [mock_question]
+    }
+  end
+
+  def self.mock_question
+    {
+      'id' => 101,
+      'number' => 1,
+      'text' => 'What is your project about?',
+      'format' => { 'id' => 5, 'title' => 'Text area' },
+      'answer' => { 'text' => 'Example answer' }
     }
   end
 
