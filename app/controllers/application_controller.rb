@@ -56,12 +56,10 @@ class ApplicationController < ActionController::Base
     # store last url - this is needed for post-login redirect to whatever the user last
     # visited.
     # don't store ajax calls
-    unless ['/users/sign_in',
-            '/users/sign_up',
-            '/users/password',
-            '/users/invitation/accept'].any? { |ur| request.fullpath.include?(ur) } || request.xhr?
-      session[:previous_url] = request.fullpath
-    end
+    devise_paths = %r{/users/(sign_in|sign_up|password|invitation/accept)}
+    return if request.fullpath.match?(devise_paths) || request.xhr?
+
+    session[:previous_url] = request.fullpath
   end
 
   def after_sign_in_path_for(_resource)

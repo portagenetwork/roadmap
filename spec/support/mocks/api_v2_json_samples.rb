@@ -54,10 +54,12 @@ module Mocks
             title: Faker::Lorem.sentence
           }],
           extension: [
-            "#{ApplicationService.application_name.split('-').first}": {
-              template: {
-                id: Template.last.id,
-                title: Faker::Lorem.sentence
+            {
+              "#{ApplicationService.application_name.split('-').first}": {
+                template: {
+                  id: Template.last.id,
+                  title: Faker::Lorem.sentence
+                }
               }
             }
           ]
