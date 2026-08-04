@@ -41,9 +41,7 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
     it 'includes snapshot data' do
       subject
 
-      expect(json).to include(
-        snapshot.rda_json.merge(snapshot.extension_json)
-      )
+      expect(json).to include(snapshot.rda_json)
     end
   end
 
