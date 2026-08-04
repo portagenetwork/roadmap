@@ -1,3 +1,8 @@
+<%# NOTE: This view is structurally similar to shared/export/plan_snapshot.html.erb —
+    keep the two in sync when editing either one.
+    TODO: refactor both into a shared partial backed by a common coversheet
+    presenter, since @plan and @snapshot expose different method names for the
+    same concepts (e.g. identifier, funder, grant, ORCID lookup). %>
 <hr />
 <h1><%= sanitize(@plan.title) %></h1>
 <p><em><%= _("A Data Management Plan created using %{application_name}") % { application_name: ApplicationService.application_name } %></em></p>

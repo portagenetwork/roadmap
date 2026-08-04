@@ -74,8 +74,36 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
         PlanSnapshots::FixityCheckService.stubs(:new).returns(stub(call: { status: :ok }))
       end
 
+      it 'defaults to JSON when no format is provided' do
+        subject
+
+        expect(response).to have_http_status(:ok)
+        expect(response.media_type).to eq('application/json')
+      end
+
       include_examples 'an authorized request'
       include_examples 'returns snapshot json'
+
+      context 'when requesting JSON explicitly' do
+        let(:request_path) { plan_snapshot_path(plan, snapshot, format: :json) }
+
+        include_examples 'an authorized request'
+        include_examples 'returns snapshot json'
+      end
+
+      context 'when requesting PDF explicitly' do
+        let(:request_path) { plan_snapshot_path(plan, snapshot, format: :pdf) }
+
+        it 'renders the PDF response path' do
+          subject
+
+          expect(response).to have_http_status(:ok)
+          expect(response.media_type).to eq('application/pdf')
+          expect(response.body).to be_present
+          expect(response.headers['Content-Disposition']).to include(snapshot.version.to_s)
+          expect(response.headers['Content-Disposition']).to include('_v')
+        end
+      end
     end
 
     context 'when fixity check fails' do

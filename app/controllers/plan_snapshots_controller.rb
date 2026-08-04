@@ -2,6 +2,8 @@
 
 # Controller responsible for managing plan snapshots
 class PlanSnapshotsController < ApplicationController
+  include PdfExportable
+
   JSON_GENERATION_ERROR_ATTRIBUTES = %i[rda_json extension_json].freeze
 
   before_action :set_plan
@@ -27,7 +29,10 @@ class PlanSnapshotsController < ApplicationController
                  'A check on (metadata/plan data) did not find matching checksums.')
       }, status: :unprocessable_entity
     else
-      render json: @snapshot.rda_json
+      respond_to do |format|
+        format.pdf  { show_pdf }
+        format.any  { render json: @snapshot.rda_json }
+      end
     end
   end
 
@@ -60,6 +65,32 @@ class PlanSnapshotsController < ApplicationController
 
   def plan_snapshot_params
     params.fetch(:plan_snapshot, {}).permit(:visibility)
+  end
+
+  def show_pdf
+    @formatting = Settings::Template::DEFAULT_SETTINGS
+    assign_contributors
+
+    render pdf: file_name,
+           template: 'shared/export/plan_snapshot',
+           margin: @formatting[:margin],
+           zoom: PDF_ZOOM,
+           footer: pdf_footer(
+             message: format(_('Created using %{application_name}. Version from %{date}'),
+                             application_name: ApplicationService.application_name,
+                             date: l(@snapshot.created_at.to_date, format: :readable))
+           )
+  end
+
+  def assign_contributors
+    @investigators = @snapshot.contributors.with_role(:investigation)
+    @data_curators = @snapshot.contributors.with_role(:data_curation)
+    @project_administrators = @snapshot.contributors.with_role(:project_administration)
+    @other_contributors = @snapshot.contributors.with_role(:other)
+  end
+
+  def file_name
+    sanitized_file_name(@snapshot.title, suffix: "_v#{@snapshot.version}")
   end
 
   def create_failure_alert(snapshot)
