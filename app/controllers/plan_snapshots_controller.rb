@@ -27,7 +27,7 @@ class PlanSnapshotsController < ApplicationController
                  'A check on (metadata/plan data) did not find matching checksums.')
       }, status: :unprocessable_entity
     else
-      render json: @snapshot.rda_json.merge(@snapshot.extension_json)
+      render json: @snapshot.rda_json
     end
   end
 
