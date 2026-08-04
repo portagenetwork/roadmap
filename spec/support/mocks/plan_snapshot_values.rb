@@ -2,6 +2,7 @@
 
 # Helpers for PlanSnapshot-related test values and generators
 module PlanSnapshotValues # rubocop:disable Metrics/ModuleLength
+  ORCID_ID = '0000-0001-2345-6789'
   ROLE_BASE_URL = Contributor::ONTOLOGY_BASE_URL
   ROLE_URIS = {
     data_curation: "#{ROLE_BASE_URL}data-curation",
@@ -115,7 +116,7 @@ module PlanSnapshotValues # rubocop:disable Metrics/ModuleLength
     }
   end
 
-  def self.mock_contributor_id(type: 'orcid', identifier: '0000-0001-2345-6789')
+  def self.mock_contributor_id(type: 'orcid', identifier: ORCID_ID)
     {
       'type' => type,
       'identifier' => identifier

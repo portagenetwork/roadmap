@@ -1,0 +1,48 @@
+<%# NOTE: This view is structurally similar to app/views/shared/export/_plan.erb —
+    keep the two in sync when editing either one.
+    TODO: refactor both into a shared partial backed by a common coversheet
+    presenter, since @plan and @snapshot expose different method names for the
+    same concepts (e.g. identifier, funder, grant, ORCID lookup). %>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" />
+    <meta content="text/html" />
+    <meta charset="utf-8" />
+    <title><%= sanitize(@snapshot.title) %></title>
+    <%= render partial: 'shared/export/plan_styling',
+               locals: {
+                 font_face: font_face,
+                 font_size: "#{font_size}pt",
+                 margin: "#{margin_top}px #{margin_right}px #{margin_bottom}px #{margin_left}px"
+               } %>
+  </head>
+  <body>
+    <%= render partial: 'shared/export/plan_snapshot_coversheet' %>
+
+    <% @snapshot.template.phases.sort_by(&:number).each do |phase| %>
+      <div style="page-break-before:always;"></div>
+      <h1><%= sanitize(phase.title) %></h1>
+      <hr />
+      <% phase.sections.sort_by(&:number).each do |section| %>
+        <br>
+        <h3><%= sanitize(section.title) %></h3>
+        <br>
+        <% section.questions.sort_by(&:number).each do |question| %>
+          <div class="question">
+            <div class="bold"><%= sanitize(question.text.to_s, scrubber: TableFreeScrubber.new) %></div>
+            <br>
+            <% answer_text = question.answer.text.to_s %>
+            <% if answer_text.present? %>
+              <%= sanitize(answer_text) %>
+            <% else %>
+              <p><%= _('Question not answered.') %></p>
+            <% end %>
+            <br>
+            <br>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  </body>
+</html>
