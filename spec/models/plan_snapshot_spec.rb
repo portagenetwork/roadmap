@@ -293,7 +293,6 @@ RSpec.describe PlanSnapshot, type: :model do
     expect { snapshot.dmp_id }.not_to raise_error
     expect { snapshot.project }.not_to raise_error
     expect { snapshot.title }.not_to raise_error
-    expect { snapshot.complete_plan }.not_to raise_error
     expect { snapshot.template }.not_to raise_error
   end
 end

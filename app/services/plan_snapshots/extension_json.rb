@@ -3,22 +3,15 @@
 module PlanSnapshots
   # Accessor/wrapper for PlanSnapshot.extension_json.
   #
-  # The underlying JSON payload contains DMPRoadmap-specific extension data:
-  # - Template metadata
-  # - Complete plan question/answer data
+  # The underlying JSON payload contains a single top-level "template" key
+  # describing the plan's template, phases, sections, questions, and answers.
   class ExtensionJson
     def initialize(extension_json:)
       @extension_json = extension_json
     end
 
     def template
-      @template ||= Template.new(extension_hash.dig('dmproadmap', 'template'))
-    end
-
-    def complete_plan
-      @complete_plan ||= Array(extension_hash['complete_plan']).map do |item|
-        CompletePlanItem.new(item)
-      end
+      @template ||= Template.new(extension_hash['template'])
     end
 
     private
@@ -26,12 +19,121 @@ module PlanSnapshots
     attr_reader :extension_json
 
     def extension_hash
-      extension = Array(extension_json&.dig('extension')).first
-      extension.is_a?(Hash) ? extension : {}
+      extension_json.is_a?(Hash) ? extension_json : {}
     end
 
-    # Wraps dmproadmap.template
+    # Wraps template
     class Template
+      def initialize(hash)
+        @hash = hash.is_a?(Hash) ? hash : {}
+      end
+
+      def id
+        hash['id']
+      end
+
+      def title
+        hash['title']
+      end
+
+      def version
+        hash['version']
+      end
+
+      def phases
+        @phases ||= Array(hash['phases']).map { |phase| Phase.new(phase) }
+      end
+
+      private
+
+      attr_reader :hash
+    end
+
+    # Wraps template.phases entries
+    class Phase
+      def initialize(hash)
+        @hash = hash.is_a?(Hash) ? hash : {}
+      end
+
+      def title
+        hash['title']
+      end
+
+      def number
+        hash['number']
+      end
+
+      def sections
+        @sections ||= Array(hash['sections']).map { |section| Section.new(section) }
+      end
+
+      private
+
+      attr_reader :hash
+    end
+
+    # Wraps template.phases.sections entries
+    class Section
+      def initialize(hash)
+        @hash = hash.is_a?(Hash) ? hash : {}
+      end
+
+      def title
+        hash['title']
+      end
+
+      def number
+        hash['number']
+      end
+
+      def modifiable
+        hash['modifiable']
+      end
+
+      def questions
+        @questions ||= Array(hash['questions']).map { |question| Question.new(question) }
+      end
+
+      private
+
+      attr_reader :hash
+    end
+
+    # Wraps template.phases.sections.questions entries
+    class Question
+      def initialize(hash)
+        @hash = hash.is_a?(Hash) ? hash : {}
+      end
+
+      def id
+        hash['id']
+      end
+
+      def number
+        hash['number']
+      end
+
+      def text
+        hash['text']
+      end
+
+      def format
+        return nil unless hash['format'].is_a?(Hash)
+
+        @format ||= Format.new(hash['format'])
+      end
+
+      def answer
+        @answer ||= Answer.new(hash['answer'])
+      end
+
+      private
+
+      attr_reader :hash
+    end
+
+    # Wraps question.format
+    class Format
       def initialize(hash)
         @hash = hash.is_a?(Hash) ? hash : {}
       end
@@ -49,30 +151,14 @@ module PlanSnapshots
       attr_reader :hash
     end
 
-    # Wraps entries in extension.complete_plan
-    class CompletePlanItem
+    # Wraps question.answer
+    class Answer
       def initialize(hash)
         @hash = hash.is_a?(Hash) ? hash : {}
       end
 
-      def title
-        hash['title']
-      end
-
-      def answer
-        hash['answer']
-      end
-
-      def section
-        hash['section']
-      end
-
-      def question
-        hash['question']
-      end
-
-      def question_id
-        hash['question_id']
+      def text
+        hash['text']
       end
 
       private

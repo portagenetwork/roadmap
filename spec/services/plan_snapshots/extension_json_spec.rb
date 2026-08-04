@@ -4,102 +4,71 @@ require 'rails_helper'
 require_relative '../../support/mocks/plan_snapshot_values'
 
 RSpec.describe PlanSnapshots::ExtensionJson do
-  let(:mock_extension) { PlanSnapshotValues.mock_extension_json }
-  let(:reader) { described_class.new(extension_json: mock_extension) }
-  let(:extension_json) { mock_extension['extension'].first }
-  let(:dmproadmap_json) { extension_json['dmproadmap'] }
+  let(:extension_json) { PlanSnapshotValues.mock_extension_json }
+  subject(:extension) { described_class.new(extension_json: extension_json) }
+  let(:template) { extension.template }
+
+  let(:template_json) { extension_json['template'] }
+  let(:phase_json) { template_json['phases'].first }
+  let(:section_json) { phase_json['sections'].first }
+  let(:question_json) { section_json['questions'].first }
+  let(:format_json) { question_json['format'] }
+  let(:answer_json) { question_json['answer'] }
 
   describe '#template' do
-    let(:template_json) { dmproadmap_json['template'] }
-    describe '#id' do
-      it 'returns template.id' do
-        expect(reader.template.id).to eq(template_json['id'])
+    it 'exposes template attributes' do
+      expect(template.id).to eq(template_json['id'])
+      expect(template.title).to eq(template_json['title'])
+      expect(template.version).to eq(template_json['version'])
+    end
+
+    it 'wraps phases, sections, questions, formats, and answers' do
+      phase = template.phases.first
+      section = phase.sections.first
+      question = section.questions.first
+
+      aggregate_failures do
+        expect(phase.title).to eq(phase_json['title'])
+        expect(phase.number).to eq(phase_json['number'])
+
+        expect(section.title).to eq(section_json['title'])
+        expect(section.number).to eq(section_json['number'])
+        expect(section.modifiable).to eq(section_json['modifiable'])
+
+        expect(question.id).to eq(question_json['id'])
+        expect(question.number).to eq(question_json['number'])
+        expect(question.text).to eq(question_json['text'])
+
+        expect(question.format.id).to eq(format_json['id'])
+        expect(question.format.title).to eq(format_json['title'])
+
+        expect(question.answer.text).to eq(answer_json['text'])
       end
     end
 
-    describe '#title' do
-      it 'returns template.title' do
-        expect(reader.template.title).to eq(template_json['title'])
-      end
-    end
-  end
-
-  describe '#complete_plan' do
-    let(:complete_plan_json) { extension_json['complete_plan'] }
-    it 'returns complete plan items' do
-      expect(reader.complete_plan.length).to eq(1)
-    end
-
-    describe 'first item' do
-      let(:item) { reader.complete_plan.first }
-      let(:item_json) { complete_plan_json.first }
-
-      it 'returns title' do
-        expect(item.title).to eq(item_json['title'])
+    context 'when a question has no format' do
+      before do
+        question_json.delete('format')
       end
 
-      it 'returns answer' do
-        expect(item.answer).to eq(item_json['answer'])
+      it 'returns nil' do
+        question = template.phases.first.sections.first.questions.first
+
+        expect(question.format).to be_nil
       end
-
-      it 'returns section' do
-        expect(item.section).to eq(item_json['section'])
-      end
-
-      it 'returns question' do
-        expect(item.question).to eq(item_json['question'])
-      end
-
-      it 'returns question_id' do
-        expect(item.question_id).to eq(item_json['question_id'])
-      end
-    end
-
-    context 'when extension.complete_plan is an empty array' do
-      let(:mock_extension) do
-        json = PlanSnapshotValues.mock_extension_json
-        json['extension'].first['complete_plan'] = []
-        json
-      end
-
-      it 'returns an empty array' do
-        expect(reader.complete_plan).to eq([])
-      end
-    end
-
-    context 'when extension.complete_plan is absent' do
-      let(:mock_extension) do
-        json = PlanSnapshotValues.mock_extension_json
-        json['extension'].first.delete('complete_plan')
-        json
-      end
-
-      it 'returns an empty array' do
-        expect(reader.complete_plan).to eq([])
-      end
-    end
-  end
-
-  context 'when extension_json is missing expected keys' do
-    let(:reader) { described_class.new(extension_json: {}) }
-
-    it 'returns nil for scalar accessors' do
-      expect(reader.template.id).to be_nil
-      expect(reader.template.title).to be_nil
-    end
-
-    it 'returns an empty array for complete_plan' do
-      expect(reader.complete_plan).to eq([])
     end
   end
 
   context 'when extension_json is nil' do
-    let(:reader) { described_class.new(extension_json: nil) }
+    let(:extension_json) { nil }
 
-    it 'does not raise and returns nil/empty defaults' do
-      expect(reader.template.id).to be_nil
-      expect(reader.template.title).to be_nil
-      expect(reader.complete_plan).to eq([])
+    it 'returns an empty template wrapper' do
+      aggregate_failures do
+        expect(template.id).to be_nil
+        expect(template.title).to be_nil
+        expect(template.version).to be_nil
+        expect(template.phases).to eq([])
+      end
     end
   end
 end
