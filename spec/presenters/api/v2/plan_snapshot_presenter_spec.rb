@@ -111,6 +111,34 @@ RSpec.describe Api::V2::PlanSnapshotPresenter do
           rendered_question = presenter.template[:phases].first[:sections].first[:questions].first
 
           expect(rendered_question[:answer][:text]).to eq('Test answer')
+          expect(rendered_question[:answer][:question_options]).to eq([])
+        end
+      end
+
+      context 'when the answer has selected question options' do
+        let(:option_question) do
+          create(:question, :radiobuttons, section: section, number: 2, text: 'Pick one', options: 2)
+        end
+
+        before do
+          option_question
+          answer = create(:answer, plan: plan, question: option_question, text: '')
+          answer.question_options << option_question.question_options.first
+        end
+
+        it 'renders selected option ids and texts' do
+          rendered_question = presenter.template[:phases].first[:sections].first[:questions]
+                                       .find { |q| q[:id] == option_question.id }
+
+          expect(rendered_question[:answer][:text]).to eq('')
+          expect(
+            rendered_question[:answer][:question_options]
+          ).to eq([
+                    {
+                      id: option_question.question_options.first.id,
+                      text: option_question.question_options.first.text
+                    }
+                  ])
         end
       end
 
@@ -118,7 +146,7 @@ RSpec.describe Api::V2::PlanSnapshotPresenter do
         it 'renders an answer hash with an empty string for text' do
           rendered_question = presenter.template[:phases].first[:sections].first[:questions].first
 
-          expect(rendered_question[:answer]).to eq(text: '')
+          expect(rendered_question[:answer]).to eq(text: '', question_options: [])
         end
       end
 
@@ -131,7 +159,7 @@ RSpec.describe Api::V2::PlanSnapshotPresenter do
           rendered_question = presenter.template[:phases].first[:sections].first[:questions]
                                        .find { |q| q[:id] == question.id }
 
-          expect(rendered_question[:answer]).to eq(text: '')
+          expect(rendered_question[:answer]).to eq(text: '', question_options: [])
         end
       end
     end
