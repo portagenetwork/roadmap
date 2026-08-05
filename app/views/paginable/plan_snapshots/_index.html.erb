@@ -17,9 +17,10 @@
   </thead>
   <tbody>
     <% scope.each do |snapshot| %>
+      <% identifier = PlanSnapshots::IdentifierResolver.call(plan: plan, snapshot: snapshot) %>
       <tr>
-        <td><%= snapshot.dmp_id.identifier %></td>
-        <td><%= snapshot.dmp_id.type %></td>
+        <td><%= link_to identifier.identifier, identifier.identifier %></td>
+        <td><%= identifier.type %></td>
         <td><%= snapshot.version %></td>
         <td><%= snapshot.created_at.to_date %></td>
         <td><%= snapshot.visibility_label %></td>
