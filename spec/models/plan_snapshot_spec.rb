@@ -283,6 +283,14 @@ RSpec.describe PlanSnapshot, type: :model do
     end
   end
 
+  describe '#to_param' do
+    it 'returns the snapshot version as a string' do
+      snapshot = build(:plan_snapshot, version: 12)
+
+      expect(snapshot.to_param).to eq('12')
+    end
+  end
+
   it 'responds to the delegated reader methods without raising' do
     snapshot = build(:plan_snapshot, rda_json: PlanSnapshotValues.mock_rda_json,
                                      extension_json: PlanSnapshotValues.mock_extension_json)
