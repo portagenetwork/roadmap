@@ -10,6 +10,8 @@ module Api
       before_action :doorkeeper_authorize!, except: %i[heartbeat]
       # get details of server (e.g. DMPonline) and client app
       before_action :base_response_content
+      # check if the user account associated with the token is active
+      before_action :authorize_resource_owner, except: %i[heartbeat]
 
       before_action :log_access
 
@@ -57,6 +59,13 @@ module Api
         return unless doorkeeper_token&.resource_owner_id
 
         @resource_owner = User.find(doorkeeper_token.resource_owner_id)
+      end
+
+      # Reject request if the resource owner account is deactivated
+      def authorize_resource_owner
+        return if @resource_owner.active?
+
+        render_error(errors: _('User account has been deactivated.'), status: :unauthorized)
       end
 
       def log_access
