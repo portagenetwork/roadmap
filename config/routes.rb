@@ -131,7 +131,8 @@ Rails.application.routes.draw do
     resources :snapshots,
               only: %i[index show create],
               controller: 'plan_snapshots',
-              path: 'versions'
+              path: 'versions',
+              param: :version
 
     resource :export, only: [:show], controller: 'plan_exports'
 
