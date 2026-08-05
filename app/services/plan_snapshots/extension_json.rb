@@ -161,6 +161,29 @@ module PlanSnapshots
         hash['text']
       end
 
+      def question_options
+        @question_options ||= Array(hash['question_options']).map { |option| Option.new(option) }
+      end
+
+      private
+
+      attr_reader :hash
+    end
+
+    # Wraps answer.question_options entries
+    class Option
+      def initialize(hash)
+        @hash = hash.is_a?(Hash) ? hash : {}
+      end
+
+      def id
+        hash['id']
+      end
+
+      def text
+        hash['text']
+      end
+
       private
 
       attr_reader :hash

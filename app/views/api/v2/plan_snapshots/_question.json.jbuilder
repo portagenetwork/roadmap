@@ -15,4 +15,10 @@ end
 
 json.answer do
   json.text sanitize(question[:answer][:text])
+  json.question_options do
+    json.array! Array(question.dig(:answer, :question_options)) do |option|
+      json.id option[:id]
+      json.text sanitize(option[:text])
+    end
+  end
 end

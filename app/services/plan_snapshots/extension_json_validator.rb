@@ -26,7 +26,9 @@ module PlanSnapshots
     end
 
     def any_question_answered?
-      all_questions.any? { |question| question.answer.text.present? }
+      all_questions.any? do |question|
+        question.answer.text.present? || question.answer.question_options.any?
+      end
     end
 
     def all_questions

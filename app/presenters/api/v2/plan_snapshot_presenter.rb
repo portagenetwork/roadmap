@@ -51,9 +51,7 @@ module Api
             number: question.number,
             text: question.text.to_s,
             format: question_format(question),
-            answer: {
-              text: answer_for(question)
-            }
+            answer: answer_for(question)
           }
         end
       end
@@ -70,7 +68,23 @@ module Api
       end
 
       def answer_for(question)
-        @answers_by_question_id[question.id]&.text.to_s
+        answer = @answers_by_question_id[question.id]
+
+        {
+          text: answer&.text.to_s,
+          question_options: answer_question_options(answer)
+        }
+      end
+
+      def answer_question_options(answer)
+        return [] unless answer
+
+        answer.question_options.map do |option|
+          {
+            id: option.id,
+            text: option.text.to_s
+          }
+        end
       end
     end
   end

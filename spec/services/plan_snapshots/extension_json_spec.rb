@@ -43,6 +43,21 @@ RSpec.describe PlanSnapshots::ExtensionJson do
         expect(question.format.title).to eq(format_json['title'])
 
         expect(question.answer.text).to eq(answer_json['text'])
+        expect(question.answer.question_options).to eq([])
+      end
+    end
+
+    context 'when the answer includes selected question options' do
+      before do
+        question_json['answer']['question_options'] = [{ 'id' => 10, 'text' => 'Selected option' }]
+      end
+
+      it 'wraps option id and text' do
+        question = template.phases.first.sections.first.questions.first
+        option = question.answer.question_options.first
+
+        expect(option.id).to eq(10)
+        expect(option.text).to eq('Selected option')
       end
     end
 
