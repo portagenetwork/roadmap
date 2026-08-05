@@ -63,7 +63,7 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
     end
   end
 
-  describe 'GET /plans/:plan_id/versions/:id' do
+  describe 'GET /plans/:plan_id/versions/:version' do
     let(:snapshot) { create(:plan_snapshot, plan: plan) }
     let(:request_path) { plan_snapshot_path(plan, snapshot) }
     subject { get request_path }
@@ -77,6 +77,7 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
       it 'defaults to JSON when no format is provided' do
         subject
 
+        expect(request_path).to end_with("/plans/#{plan.id}/versions/#{snapshot.version}")
         expect(response).to have_http_status(:ok)
         expect(response.media_type).to eq('application/json')
       end

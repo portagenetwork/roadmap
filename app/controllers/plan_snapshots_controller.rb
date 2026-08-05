@@ -20,7 +20,7 @@ class PlanSnapshotsController < ApplicationController
     }
   end
 
-  # GET /plans/:plan_id/versions/:id
+  # GET /plans/:plan_id/versions/:version
   def show
     result = PlanSnapshots::FixityCheckService.new(@snapshot).call
     if result[:status] == :failed
@@ -60,7 +60,7 @@ class PlanSnapshotsController < ApplicationController
   end
 
   def set_snapshot
-    @snapshot = @plan.snapshots.find(params[:id])
+    @snapshot = @plan.snapshots.find_by!(version: params[:version])
   end
 
   def plan_snapshot_params

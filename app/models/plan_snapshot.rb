@@ -114,6 +114,11 @@ class PlanSnapshot < ApplicationRecord
     VISIBILITY_MESSAGE[visibility.to_sym]
   end
 
+  # Use version in nested snapshot routes: /plans/:plan_id/versions/:version
+  def to_param
+    version.to_s
+  end
+
   delegate :contact, :contributors, :description, :dmp_id, :project, :title,
            to: :rda_json_reader
 
