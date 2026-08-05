@@ -37,13 +37,17 @@ RSpec.describe 'paginable/plan_snapshots/_index.html.erb', type: :view do
   end
 
   it 'renders the snapshot row and view link' do
+    identifier = PlanSnapshots::IdentifierResolver.call(plan: plan, snapshot: snapshot)
+
     expect(rendered).to include(
-      snapshot.dmp_id.identifier.to_s,
-      snapshot.dmp_id.type.to_s,
+      identifier.identifier.to_s,
+      identifier.type.to_s,
       snapshot.version.to_s,
       snapshot.created_at.to_date.to_s,
       snapshot.visibility_label,
       'View'
     )
+
+    expect(rendered).to include("href=\"#{identifier.identifier}\"")
   end
 end
