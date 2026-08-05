@@ -31,7 +31,7 @@ RSpec.describe 'paginable/plan_snapshots/_index.html.erb', type: :view do
       'Type',
       'Version',
       'Release date',
-      'Visibility',
+      # 'Visibility',
       'Actions'
     )
   end
@@ -44,7 +44,7 @@ RSpec.describe 'paginable/plan_snapshots/_index.html.erb', type: :view do
       identifier.type.to_s,
       snapshot.version.to_s,
       snapshot.created_at.to_date.to_s,
-      snapshot.visibility_label,
+      # snapshot.visibility_label,
       'View'
     )
 
