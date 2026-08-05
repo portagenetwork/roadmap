@@ -11,7 +11,11 @@
       <th scope="col">
         <%= _('Release date') %>&nbsp;<%= paginable_sort_link('plan_snapshots.created_at') %>
       </th>
-      <th scope="col" class="sorter-false"><%= _('Visibility') %></th>
+      <!--
+      TODO: Re-enable this code when DOI minting is implemented.
+            Until then, 'Private' is redundantly displayed for each entry.
+      <th scope="col" class="sorter-false"><%#= _('Visibility') %></th>
+      -->
       <th scope="col" class="sorter-false"><%= _('Actions') %></th>
     </tr>
   </thead>
@@ -23,7 +27,9 @@
         <td><%= identifier.type %></td>
         <td><%= snapshot.version %></td>
         <td><%= snapshot.created_at.to_date %></td>
-        <td><%= snapshot.visibility_label %></td>
+        <!--
+        <td><%#= snapshot.visibility_label %></td>
+        -->
         <td>
           <div class="dropdown">
             <button class="btn btn-link dropdown-toggle" type="button"
