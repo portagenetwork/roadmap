@@ -33,9 +33,19 @@
             <div class="bold"><%= sanitize(question.text.to_s, scrubber: TableFreeScrubber.new) %></div>
             <br>
             <% answer_text = question.answer.text.to_s %>
+            <% option_texts = question.answer.question_options.map(&:text).filter_map(&:presence) %>
+
+            <% if option_texts.any? %>
+              <ul>
+                <% option_texts.each do |option_text| %>
+                  <li><%= sanitize(option_text) %></li>
+                <% end %>
+              </ul>
+            <% end %>
+
             <% if answer_text.present? %>
               <%= sanitize(answer_text) %>
-            <% else %>
+            <% elsif option_texts.empty? %>
               <p><%= _('Question not answered.') %></p>
             <% end %>
             <br>

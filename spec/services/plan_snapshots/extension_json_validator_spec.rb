@@ -31,6 +31,13 @@ RSpec.describe PlanSnapshots::ExtensionJsonValidator do
       end.valid?).to be(false)
     end
 
+    it 'returns true when a question has selected options but blank text' do
+      expect(validator_for_modified_json do |json|
+        blank_all_answers(json)
+        questions_json(json).first['answer']['question_options'] = [{ 'id' => 9, 'text' => 'Selected option' }]
+      end.valid?).to be(true)
+    end
+
     it 'returns false when a question has no answer key at all' do
       expect(validator_for_modified_json do |json|
         remove_all_answers(json)
@@ -80,7 +87,7 @@ RSpec.describe PlanSnapshots::ExtensionJsonValidator do
 
   def blank_all_answers(json)
     questions_json(json).each do |question|
-      question['answer'] = { 'text' => '' }
+      question['answer'] = { 'text' => '', 'question_options' => [] }
     end
   end
 

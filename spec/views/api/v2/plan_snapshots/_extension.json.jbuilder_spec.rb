@@ -61,6 +61,26 @@ RSpec.describe 'api/v2/plan_snapshots/_extension', type: :view do
     expected_answer = template_hash[:phases].first[:sections].first[:questions].first[:answer]
 
     expect(answer['text']).to eq(expected_answer[:text])
+    expect(answer['question_options']).to eq([])
+  end
+
+  context 'when an answer has selected options' do
+    let(:template_hash) do
+      hash = super().dup
+      question = hash[:phases].first[:sections].first[:questions].first
+      question = question.merge(answer: { text: '', question_options: [{ id: 7, text: 'Option A' }] })
+      section = hash[:phases].first[:sections].first.merge(questions: [question])
+      hash[:phases] = [hash[:phases].first.merge(sections: [section])]
+      hash
+    end
+
+    it 'renders answer question options' do
+      options = rendered_json['template']['phases'].first['sections']
+                                                   .first['questions']
+                                                   .first['answer']['question_options']
+
+      expect(options).to eq([{ 'id' => 7, 'text' => 'Option A' }])
+    end
   end
 
   context 'when a question has no format' do

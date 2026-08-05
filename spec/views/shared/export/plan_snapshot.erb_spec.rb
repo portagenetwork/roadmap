@@ -30,7 +30,8 @@ RSpec.describe 'shared/export/plan_snapshot.erb', type: :view do
   context 'when a question is unanswered' do
     let(:extension_json) do
       json = PlanSnapshotValues.mock_extension_json.deep_dup
-      json['template']['phases'][0]['sections'][0]['questions'][0]['answer']['text'] = ''
+      json['template']['phases'][0]['sections'][0]['questions'][0]['answer'] =
+        { 'text' => '', 'question_options' => [] }
       json
     end
 
@@ -52,6 +53,22 @@ RSpec.describe 'shared/export/plan_snapshot.erb', type: :view do
       expect(rendered).to include('Question text')
       expect(rendered).to include('Answer text')
       expect(rendered).not_to include('<script>')
+    end
+  end
+
+  context 'when a question is answered with selected options only' do
+    let(:extension_json) do
+      json = PlanSnapshotValues.mock_extension_json.deep_dup
+      json['template']['phases'][0]['sections'][0]['questions'][0]['answer'] = {
+        'text' => '',
+        'question_options' => [{ 'id' => 12, 'text' => 'Selected option' }]
+      }
+      json
+    end
+
+    it 'renders selected options and does not render unanswered text' do
+      expect(rendered).to include('Selected option')
+      expect(rendered).not_to include('Question not answered.')
     end
   end
 end
