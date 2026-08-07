@@ -10,6 +10,30 @@ RSpec.describe 'api/v2/plan_snapshots/_extension', type: :view do
     JSON.parse(rendered)
   end
 
+  def json_phase
+    rendered_json['template']['phases'].first
+  end
+
+  def json_section
+    json_phase['sections'].first
+  end
+
+  def json_question
+    json_section['questions'].first
+  end
+
+  def expected_phase
+    template_hash[:phases].first
+  end
+
+  def expected_section
+    expected_phase[:sections].first
+  end
+
+  def expected_question
+    expected_section[:questions].first
+  end
+
   before do
     render partial: 'api/v2/plan_snapshots/extension', locals: { presenter: presenter }
   end
@@ -23,45 +47,30 @@ RSpec.describe 'api/v2/plan_snapshots/_extension', type: :view do
   end
 
   it 'renders the phase title and number' do
-    phase = rendered_json['template']['phases'].first
-    expected_phase = template_hash[:phases].first
-
-    expect(phase['title']).to eq(expected_phase[:title])
-    expect(phase['number']).to eq(expected_phase[:number])
+    expect(json_phase['title']).to eq(expected_phase[:title])
+    expect(json_phase['number']).to eq(expected_phase[:number])
   end
 
   it 'renders the section title, number, and modifiable' do
-    section = rendered_json['template']['phases'].first['sections'].first
-    expected_section = template_hash[:phases].first[:sections].first
-
-    expect(section['title']).to eq(expected_section[:title])
-    expect(section['number']).to eq(expected_section[:number])
-    expect(section['modifiable']).to eq(expected_section[:modifiable])
+    expect(json_section['title']).to eq(expected_section[:title])
+    expect(json_section['number']).to eq(expected_section[:number])
+    expect(json_section['modifiable']).to eq(expected_section[:modifiable])
   end
 
   it 'renders the question id, number, and text' do
-    question = rendered_json['template']['phases'].first['sections'].first['questions'].first
-    expected_question = template_hash[:phases].first[:sections].first[:questions].first
-
-    expect(question['id']).to eq(expected_question[:id])
-    expect(question['number']).to eq(expected_question[:number])
-    expect(question['text']).to eq(expected_question[:text])
+    expect(json_question['id']).to eq(expected_question[:id])
+    expect(json_question['number']).to eq(expected_question[:number])
+    expect(json_question['text']).to eq(expected_question[:text])
   end
 
   it 'renders the format id and title' do
-    format = rendered_json['template']['phases'].first['sections'].first['questions'].first['format']
-    expected_format = template_hash[:phases].first[:sections].first[:questions].first[:format]
-
-    expect(format['id']).to eq(expected_format[:id])
-    expect(format['title']).to eq(expected_format[:title])
+    expect(json_question['format']['id']).to eq(expected_question[:format][:id])
+    expect(json_question['format']['title']).to eq(expected_question[:format][:title])
   end
 
   it 'renders the answer text' do
-    answer = rendered_json['template']['phases'].first['sections'].first['questions'].first['answer']
-    expected_answer = template_hash[:phases].first[:sections].first[:questions].first[:answer]
-
-    expect(answer['text']).to eq(expected_answer[:text])
-    expect(answer['question_options']).to eq([])
+    expect(json_question['answer']['text']).to eq(expected_question[:answer][:text])
+    expect(json_question['answer']['question_options']).to eq([])
   end
 
   context 'when an answer has selected options' do
@@ -75,9 +84,7 @@ RSpec.describe 'api/v2/plan_snapshots/_extension', type: :view do
     end
 
     it 'renders answer question options' do
-      options = rendered_json['template']['phases'].first['sections']
-                                                   .first['questions']
-                                                   .first['answer']['question_options']
+      options = json_question['answer']['question_options']
 
       expect(options).to eq([{ 'id' => 7, 'text' => 'Option A' }])
     end
@@ -93,9 +100,7 @@ RSpec.describe 'api/v2/plan_snapshots/_extension', type: :view do
     end
 
     it 'omits the format key' do
-      question = rendered_json['template']['phases'].first['sections'].first['questions'].first
-
-      expect(question).not_to have_key('format')
+      expect(json_question).not_to have_key('format')
     end
   end
 
@@ -115,9 +120,7 @@ RSpec.describe 'api/v2/plan_snapshots/_extension', type: :view do
     end
 
     it 'strips tags from the phase title' do
-      expected_title = template_hash[:phases].first[:title]
-
-      expect(rendered_json['template']['phases'].first['title']).to eq(strip_tags(expected_title))
+      expect(json_phase['title']).to eq(strip_tags(expected_phase[:title]))
     end
   end
 
@@ -130,9 +133,7 @@ RSpec.describe 'api/v2/plan_snapshots/_extension', type: :view do
     end
 
     it 'strips tags from the section title' do
-      expected_title = template_hash[:phases].first[:sections].first[:title]
-
-      expect(rendered_json['template']['phases'].first['sections'].first['title']).to eq(strip_tags(expected_title))
+      expect(json_section['title']).to eq(strip_tags(expected_section[:title]))
     end
   end
 
@@ -147,10 +148,7 @@ RSpec.describe 'api/v2/plan_snapshots/_extension', type: :view do
     end
 
     it 'strips the script tag from the question text' do
-      expected_text = template_hash[:phases].first[:sections].first[:questions].first[:text]
-      text = rendered_json['template']['phases'].first['sections'].first['questions'].first['text']
-
-      expect(text).to eq(sanitize(expected_text))
+      expect(json_question['text']).to eq(sanitize(expected_question[:text]))
     end
   end
 
@@ -165,10 +163,7 @@ RSpec.describe 'api/v2/plan_snapshots/_extension', type: :view do
     end
 
     it 'strips the script tag from the answer text' do
-      expected_text = template_hash[:phases].first[:sections].first[:questions].first[:answer][:text]
-      text = rendered_json['template']['phases'].first['sections'].first['questions'].first['answer']['text']
-
-      expect(text).to eq(sanitize(expected_text))
+      expect(json_question['answer']['text']).to eq(sanitize(expected_question[:answer][:text]))
     end
   end
 end
