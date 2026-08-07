@@ -22,6 +22,8 @@
 
  - chore(deps): bump brace-expansion from 1.1.12 to 1.1.18 [#1402](https://github.com/portagenetwork/roadmap/pull/1402)
 
+ - chore(deps): bump js-yaml from 4.3.0 to 4.3.1 [#1403](https://github.com/portagenetwork/roadmap/pull/1403)
+
 ## [4.1.1+portage-4.9.0]
 
 ### Changed
