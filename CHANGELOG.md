@@ -26,6 +26,8 @@
 
  - chore(deps): bump socket.io-parser from 4.2.4 to 4.2.7 [#1398](https://github.com/portagenetwork/roadmap/pull/1398)
 
+ - chore(deps): bump immutable from 4.3.8 to 4.3.9 [#1394](https://github.com/portagenetwork/roadmap/pull/1394)
+
 ## [4.1.1+portage-4.9.0]
 
 ### Changed
