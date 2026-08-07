@@ -20,6 +20,8 @@
 
  - chore(deps): bump fast-uri from 3.1.2 to 3.1.5 [#1401](https://github.com/portagenetwork/roadmap/pull/1401)
 
+ - chore(deps): bump brace-expansion from 1.1.12 to 1.1.18 [#1402](https://github.com/portagenetwork/roadmap/pull/1402)
+
 ## [4.1.1+portage-4.9.0]
 
 ### Changed
