@@ -24,6 +24,8 @@
 
  - chore(deps): bump js-yaml from 4.3.0 to 4.3.1 [#1403](https://github.com/portagenetwork/roadmap/pull/1403)
 
+ - chore(deps): bump socket.io-parser from 4.2.4 to 4.2.7 [#1398](https://github.com/portagenetwork/roadmap/pull/1398)
+
 ## [4.1.1+portage-4.9.0]
 
 ### Changed
