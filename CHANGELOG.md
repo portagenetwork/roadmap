@@ -8,6 +8,10 @@
 
  - Allow pre-filling Research Outputs with DOI [#1374](https://github.com/portagenetwork/roadmap/pull/1374)
 
+### Fixed
+
+ - fix(v0/v1/v2-api): Remove access to API for deactivated users [#1400](https://github.com/portagenetwork/roadmap/pull/1400)
+
 ### Dependency Updates
 
  - chore(deps): bump surnet/alpine-wkhtmltopdf from 3.23.2-0.12.6-small to 3.23.4-0.12.6-small [#1363](https://github.com/portagenetwork/roadmap/pull/1363)
