@@ -265,7 +265,7 @@ class Plan < ApplicationRecord
 
   # Eager loads all associations needed for API v2 serialization,
   def self.with_api_v2_associations # rubocop:disable Metrics/MethodLength
-    Plan.includes(
+    includes(
       :template,
       { research_outputs: %i[license repositories metadata_standards] },
       { identifiers: :identifier_scheme },
@@ -290,6 +290,31 @@ class Plan < ApplicationRecord
         { identifiers: :identifier_scheme }
       ]
     )
+  end
+
+  # Eager loads associations used used to generate snapshot extension JSON.
+  def self.with_snapshot_extension_associations
+    includes(
+      answers: [
+        :question_options,
+        { question: :question_format }
+      ],
+      template: {
+        phases: {
+          sections: {
+            questions: :question_format
+          }
+        }
+      }
+    )
+  end
+
+  # Eager loads associations required by both snapshot serializers
+  # (RDA + extension payloads) to reduce query fan-out during snapshot creation.
+  def self.for_snapshot_serialization(plan_id)
+    with_api_v2_associations
+      .with_snapshot_extension_associations
+      .find(plan_id)
   end
 
   # ===========================
