@@ -8,6 +8,8 @@ module Api
 
       # call doorkeeper to authorize the request
       before_action :doorkeeper_authorize!, except: %i[heartbeat]
+      # Authorize resource owner, check if the user account associated with the token is active
+      before_action :authorize_resource_owner, except: %i[heartbeat]
       # get details of server (e.g. DMPonline) and client app
       before_action :base_response_content
 
@@ -40,13 +42,20 @@ module Api
       # define instance variable json and associated getter and setter methods
       attr_accessor :json
 
+      def authorize_resource_owner
+        return unless doorkeeper_token&.resource_owner_id.present?
+
+        @resource_owner = User.find_by(id: doorkeeper_token.resource_owner_id)
+
+        return if @resource_owner.present? && @resource_owner.active?
+
+        render_error(errors: _('User account has been deactivated.'), status: :unauthorized)
+      end
+
       def base_response_content
         @application = ApplicationService.application_name
         @client = doorkeeper_token&.application
         @caller = @client&.name || request.remote_ip
-        return unless doorkeeper_token&.resource_owner_id
-
-        @resource_owner = User.find(doorkeeper_token.resource_owner_id)
       end
 
       def log_access
