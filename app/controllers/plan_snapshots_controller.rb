@@ -56,7 +56,11 @@ class PlanSnapshotsController < ApplicationController
   end
 
   def set_plan
-    @plan = Plan.find(params[:plan_id])
+    @plan = if action_name == 'create'
+              Plan.for_snapshot_serialization(params[:plan_id])
+            else
+              Plan.find(params[:plan_id])
+            end
   end
 
   def set_snapshot
