@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/DMPRoadmap/roadmap#readme",
   "dependencies": {
-    "@babel/core": "^7.20.12",
+    "@babel/core": "^7.29.6",
     "@babel/plugin-transform-runtime": "^7.19.6",
     "@babel/preset-env": "^7.20.2",
     "@fortawesome/fontawesome-free": "^6.4.0",
@@ -54,7 +54,7 @@
     "regenerator-runtime": "^0.13.5",
     "sass": "^1.57.1",
     "timeago.js": "^4.0.2",
-    "tinymce": "^7.2.0",
+    "tinymce": "^7.9.3",
     "webpack": "^5.104.1",
     "webpack-cli": "^5.0.1"
   },

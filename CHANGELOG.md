@@ -12,6 +12,8 @@
 
  - fix(v0/v1/v2-api): Remove access to API for deactivated users [#1400](https://github.com/portagenetwork/roadmap/pull/1400)
 
+ - fix(charts): add `startupProbe` [#1388](https://github.com/portagenetwork/roadmap/pull/1388)
+
 ### Dependency Updates
 
  - chore(deps): bump surnet/alpine-wkhtmltopdf from 3.23.2-0.12.6-small to 3.23.4-0.12.6-small [#1363](https://github.com/portagenetwork/roadmap/pull/1363)
@@ -27,6 +29,29 @@
  - chore(deps): bump nginx from 1.31.2-alpine to 1.31.3-alpine [#1386](https://github.com/portagenetwork/roadmap/pull/1386)
 
  - chore(deps): bump actions/setup-node from 6 to 7 [#1385](https://github.com/portagenetwork/roadmap/pull/1385)
+
+  - chore(deps): bump @babel/core from 7.21.4 to 7.29.6 [#1376](https://github.com/portagenetwork/roadmap/pull/1376)
+
+ - chore(deps): bump hono from 4.12.23 to 4.12.26 [#1375](https://github.com/portagenetwork/roadmap/pull/1375)
+
+ - chore(deps): bump js-yaml from 4.1.1 to 4.3.0 [#1379](https://github.com/portagenetwork/roadmap/pull/1379)
+
+ - chore(deps): bump hono from 4.12.18 to 4.12.23 [#1196](https://github.com/portagenetwork/roadmap/pull/1364)
+
+ - chore(deps): bump tinymce from 7.2.0 to 7.9.3 [#1366](https://github.com/portagenetwork/roadmap/pull/1366)
+
+ - chore(deps): bump fast-uri from 3.1.2 to 3.1.5 [#1401](https://github.com/portagenetwork/roadmap/pull/1401)
+
+ - chore(deps): bump brace-expansion from 1.1.12 to 1.1.18 [#1402](https://github.com/portagenetwork/roadmap/pull/1402)
+
+ - chore(deps): bump js-yaml from 4.3.0 to 4.3.1 [#1403](https://github.com/portagenetwork/roadmap/pull/1403)
+
+ - chore(deps): bump socket.io-parser from 4.2.4 to 4.2.7 [#1398](https://github.com/portagenetwork/roadmap/pull/1398)
+
+ - chore(deps): bump immutable from 4.3.8 to 4.3.9 [#1394](https://github.com/portagenetwork/roadmap/pull/1394)
+
+ - chore(deps): bump hono from 4.12.27 to 4.13.1 [#1404](https://github.com/portagenetwork/roadmap/pull/1404)
+
 
 ## [4.1.1+portage-4.9.0]
 
