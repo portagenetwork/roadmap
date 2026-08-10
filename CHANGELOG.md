@@ -28,6 +28,8 @@
 
  - chore(deps): bump immutable from 4.3.8 to 4.3.9 [#1394](https://github.com/portagenetwork/roadmap/pull/1394)
 
+ - chore(deps): bump hono from 4.12.27 to 4.13.1 [#1404](https://github.com/portagenetwork/roadmap/pull/1404)
+
 ## [4.1.1+portage-4.9.0]
 
 ### Changed
