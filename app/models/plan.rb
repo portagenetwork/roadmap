@@ -266,8 +266,8 @@ class Plan < ApplicationRecord
   # Eager loads all associations needed for API v2 serialization,
   def self.with_api_v2_associations # rubocop:disable Metrics/MethodLength
     Plan.includes(
-      :research_outputs,
       :template,
+      { research_outputs: %i[license repositories metadata_standards] },
       { identifiers: :identifier_scheme },
       funder: { identifiers: :identifier_scheme },
       contributors: [
