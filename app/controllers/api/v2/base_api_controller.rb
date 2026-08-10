@@ -89,17 +89,14 @@ module Api
       def handle_internal_server_error(exception)
         # log server errors
         Rails.logger.error "Exception message: #{exception.message}"
+        Rails.logger.error exception.backtrace.join("\n") if exception.backtrace.present?
 
         # inform client of server error
-        message = _('There was a problem in the server.')
-        @payload = { message: [message] }
-        render '/api/v2/error', status: :internal_server_error
+        render_error(errors: _('There was a problem in the server.'), status: :internal_server_error)
       end
 
       def handle_client_not_authorized
-        message = _('The client is not authorized to perform this action.')
-        @payload = { message: [message] }
-        render '/api/v2/error', status: :forbidden
+        render_error(errors: _('The client is not authorized to perform this action.'), status: :forbidden)
       end
 
       def handle_json_parse_error(exception)
