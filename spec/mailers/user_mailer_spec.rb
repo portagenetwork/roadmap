@@ -84,7 +84,7 @@ RSpec.describe UserMailer, type: :mailer do
 
     it 'sends to development email with failure details' do
       expect(mail.to).to eq([Rails.configuration.x.organisation.development_email])
-      expect(mail.subject).to include(fmessage)
+      expect(mail.subject).to include(message)
       expect(mail.body.to_s).to include(message)
       expect(mail.body.to_s).to include('plan_id')
       expect(mail.body.to_s).to include('123')
