@@ -37,6 +37,12 @@
          class="nav-link" aria-controls="content"><%= _('Request feedback') %></a>
     </li>
   <% end %>
+  <% if PlanSnapshotPolicy.new(current_user, plan).index? %>
+    <li role="presentation" class="nav-item <%= (active_page?(plan_snapshots_path(plan)) ? 'active' : '') %>">
+      <a href="<%= plan_snapshots_path(plan) %>" role="tab"
+         class="nav-link" aria-controls="content"><%= _('Versions') %></a>
+    </li>
+  <% end %>
   <% if plan.readable_by?(current_user.id) %>
     <li role="presentation" class="nav-item <%= (active_page?(download_plan_path(plan)) ? 'active' : '') %>">
       <a href="<%= download_plan_path(plan) %>" role="tab"

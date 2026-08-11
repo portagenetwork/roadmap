@@ -1,12 +1,14 @@
 # Changelog
 
-## [Unreleased]
+## [4.1.1+portage-4.10.0]
 
 ### Added
 
  - feat(Identifier): add orcid_format validator and specs [#1370](https://github.com/portagenetwork/roadmap/pull/1370)
 
  - Allow pre-filling Research Outputs with DOI [#1374](https://github.com/portagenetwork/roadmap/pull/1374)
+
+ - feat(plan_snapshots): implement plan versioning with fixity checks, versions UI, and PDF rendering [#1378](https://github.com/portagenetwork/roadmap/pull/1378)
 
 ### Fixed
 

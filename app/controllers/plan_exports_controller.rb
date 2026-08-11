@@ -2,6 +2,7 @@
 
 # Controller for the Plan Download page
 class PlanExportsController < ApplicationController
+  include PdfExportable
   after_action :verify_authorized
 
   include ConditionsHelper
@@ -99,18 +100,13 @@ class PlanExportsController < ApplicationController
   def show_pdf
     render pdf: file_name,
            margin: @formatting[:margin],
-           # wkhtmltopdf behavior is based on the OS so force the zoom level
-           # See 'Gotchas' section of https://github.com/mileszs/wicked_pdf
-           zoom: 0.78125,
-           footer: {
-             center: format(_('Created using %{application_name}. Last modified %{date}'),
-                            application_name: ApplicationService.application_name,
-                            date: l(@plan.updated_at.to_date, format: :readable)),
-             font_size: 8,
-             spacing: (Integer(@formatting[:margin][:bottom]) / 2) - 4,
-             right: _('[page] of [topage]'),
-             encoding: 'utf8'
-           }
+           zoom: PDF_ZOOM,
+           footer: pdf_footer(
+             message: format(_('Created using %{application_name}. Last modified %{date}'),
+                             application_name: ApplicationService.application_name,
+                             date: l(@plan.updated_at.to_date, format: :readable)),
+             extra: { spacing: (Integer(@formatting[:margin][:bottom]) / 2) - 4 }
+           )
   end
 
   def show_json
@@ -122,17 +118,7 @@ class PlanExportsController < ApplicationController
   end
 
   def file_name
-    # Sanitize bad characters and replace spaces with underscores
-    ret = @plan.title
-    ret = ret.strip.gsub(/\s+/, '_')
-    ret = ret.gsub('&amp;', '&')
-    ret = ret.delete('"')
-    ret = ActiveStorage::Filename.new(ret).sanitized
-    # limit the filename length to 100 chars. Windows systems have a MAX_PATH allowance
-    # of 255 characters, so this should provide enough of the title to allow the user
-    # to understand which DMP it is and still allow for the file to be saved to a deeply
-    # nested directory
-    ret[0, 100]
+    sanitized_file_name(@plan.title)
   end
 
   def publicly_authorized?

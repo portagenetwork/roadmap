@@ -103,7 +103,7 @@ jobs:
       run: |
         bundle exec rspec spec/models/ spec/policies/ spec/services/ spec/helpers/
         bundle exec rspec spec/controllers/ spec/presenters/ spec/requests/ spec/views
-        bundle exec rspec spec/mixins/
+        bundle exec rspec spec/mailers/ spec/mixins/
 
     # Run the time consuming integration tests (using Chrome headless browser)
     - name: 'Run Integration Tests'

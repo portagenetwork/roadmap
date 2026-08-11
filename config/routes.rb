@@ -128,6 +128,12 @@ Rails.application.routes.draw do
   resources :feedback_requests, only: [:create]
 
   resources :plans do
+    resources :snapshots,
+              only: %i[index show create],
+              controller: 'plan_snapshots',
+              path: 'versions',
+              param: :version
+
     resource :export, only: [:show], controller: 'plan_exports'
 
     resources :contributors, except: %i[show]
@@ -250,6 +256,11 @@ Rails.application.routes.draw do
       end
       # Paginable actions for research_outputs
       resources :research_outputs, only: %i[index] do
+        get 'index/:page', action: :index, on: :collection, as: :index
+      end
+
+      # Paginable actions for plan_snapshots
+      resources :snapshots, only: %i[index], controller: 'plan_snapshots', path: 'versions' do
         get 'index/:page', action: :index, on: :collection, as: :index
       end
     end

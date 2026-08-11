@@ -1,0 +1,20 @@
+<p>
+  <%= _('Hello,') %>
+</p>
+
+<p>
+  <%= _('A plan snapshot failure has been detected.') %>
+</p>
+
+<p>
+  <strong><%= _('Failure message:') %></strong>
+  <%= @message %>
+</p>
+
+<p>
+  <strong><%= _('Failure details:') %></strong>
+</p>
+
+<pre><%= JSON.pretty_generate(@payload) %></pre>
+
+<%= render partial: 'email_signature', locals: { allow_change_prefs: false } %>

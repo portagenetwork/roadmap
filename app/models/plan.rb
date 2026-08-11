@@ -128,6 +128,10 @@ class Plan < ApplicationRecord
 
   has_many :research_outputs, dependent: :destroy
 
+  # No `dependent` option means Rails will not cascade-delete snapshots;
+  # database foreign-key behavior determines whether plan deletion is allowed.
+  has_many :snapshots, class_name: 'PlanSnapshot'
+
   # =====================
   # = Nested Attributes =
   # =====================
@@ -261,9 +265,9 @@ class Plan < ApplicationRecord
 
   # Eager loads all associations needed for API v2 serialization,
   def self.with_api_v2_associations # rubocop:disable Metrics/MethodLength
-    Plan.includes(
-      :research_outputs,
+    includes(
       :template,
+      { research_outputs: %i[license repositories metadata_standards] },
       { identifiers: :identifier_scheme },
       funder: { identifiers: :identifier_scheme },
       contributors: [
@@ -286,6 +290,31 @@ class Plan < ApplicationRecord
         { identifiers: :identifier_scheme }
       ]
     )
+  end
+
+  # Eager loads associations used used to generate snapshot extension JSON.
+  def self.with_snapshot_extension_associations
+    includes(
+      answers: [
+        :question_options,
+        { question: :question_format }
+      ],
+      template: {
+        phases: {
+          sections: {
+            questions: :question_format
+          }
+        }
+      }
+    )
+  end
+
+  # Eager loads associations required by both snapshot serializers
+  # (RDA + extension payloads) to reduce query fan-out during snapshot creation.
+  def self.for_snapshot_serialization(plan_id)
+    with_api_v2_associations
+      .with_snapshot_extension_associations
+      .find(plan_id)
   end
 
   # ===========================
@@ -635,6 +664,20 @@ class Plan < ApplicationRecord
     self.grant_id = current.id
   end
   # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity
+
+  def snapshot_ready?
+    snapshot_blockers.empty?
+  end
+
+  # Returns an array of human-readable messages explaining
+  # which requirements for snapshot creation are not satisfied.
+  def snapshot_blockers
+    [].tap do |b|
+      b << _('A project start date must be included.') if start_date.blank?
+      b << _('A project end date must be included.') if end_date.blank?
+      b << _('At least one question must be answered.') unless answers.any?(&:answered?)
+    end
+  end
 
   private
 
