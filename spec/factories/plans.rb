@@ -62,6 +62,17 @@ FactoryBot.define do
       answers { 0 }
       guidance_groups { 0 }
     end
+
+    trait :snapshot_ready do
+      template { association(:template, phases: 1, sections: 1, questions: 1) }
+      answers { 0 }
+
+      after(:create) do |plan|
+        question = plan.questions.first
+        create(:answer, plan: plan, question: question, text: 'Snapshot-ready answer') if question.present?
+      end
+    end
+
     trait :creator do
       after(:create) do |obj, evaluator|
         # If a User was passed in, use them as the creator; otherwise, create a new User with a new org.

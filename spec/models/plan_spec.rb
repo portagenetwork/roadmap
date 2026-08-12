@@ -1215,6 +1215,99 @@ describe Plan do
     end
   end
 
+  describe '#snapshot_blockers' do
+    let(:plan) { create(:plan, start_date: start_date, end_date: end_date) }
+    let(:question) { create(:question) }
+
+    let(:start_date) { Date.today }
+    let(:end_date) { Date.today }
+
+    subject(:blockers) { plan.snapshot_blockers }
+
+    before do
+      create(:answer, plan: plan, question: question)
+    end
+
+    shared_examples 'includes blocker' do |message|
+      it { expect(blockers).to include(message) }
+    end
+
+    context 'when everything is present' do
+      it 'returns no blockers' do
+        expect(blockers).to be_empty
+      end
+    end
+
+    context 'when start date is missing' do
+      let(:start_date) { nil }
+
+      include_examples 'includes blocker', 'A project start date must be included.'
+    end
+
+    context 'when end date is missing' do
+      let(:end_date) { nil }
+
+      include_examples 'includes blocker', 'A project end date must be included.'
+    end
+
+    context 'when both dates are missing' do
+      let(:start_date) { nil }
+      let(:end_date) { nil }
+
+      it do
+        expect(blockers).to include('A project start date must be included.')
+        expect(blockers).to include('A project end date must be included.')
+      end
+    end
+
+    context 'when there are no answers' do
+      before do
+        plan.answers.destroy_all
+      end
+
+      include_examples 'includes blocker', 'At least one question must be answered.'
+    end
+
+    context 'when answers exist but none are answered' do # see answered? method in Answer model
+      before do
+        plan.answers.destroy_all
+
+        create(:answer, plan: plan, question: question, text: '')
+      end
+
+      include_examples 'includes blocker', 'At least one question must be answered.'
+    end
+  end
+
+  describe '#snapshot_ready?' do
+    subject(:plan) { create(:plan) }
+
+    before do
+      plan.stubs(:snapshot_blockers).returns(blockers)
+    end
+
+    context 'when there are no blockers' do
+      let(:blockers) { [] }
+
+      it { expect(plan.snapshot_ready?).to be(true) }
+    end
+
+    context 'when there are blockers' do
+      let(:blockers) { ['missing something'] }
+
+      it { expect(plan.snapshot_ready?).to be(false) }
+    end
+  end
+
+  describe '#destroy with snapshots' do
+    let!(:plan) { create(:plan, :snapshot_ready) }
+    let!(:snapshot) { create(:plan_snapshot, plan: plan) }
+
+    it 'is blocked by the database foreign key and keeps the snapshot' do
+      expect { plan.destroy }.to raise_error(ActiveRecord::InvalidForeignKey)
+      expect(PlanSnapshot.exists?(snapshot.id)).to be(true)
+    end
+  end
   describe '#grant association sanity checks' do
     let!(:plan) { create(:plan, :creator) }
 

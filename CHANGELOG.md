@@ -1,14 +1,38 @@
 # Changelog
 
-## [Unreleased]
+## [4.1.1+portage-4.10.0]
+
+### Added
+
+ - feat(Identifier): add orcid_format validator and specs [#1370](https://github.com/portagenetwork/roadmap/pull/1370)
+
+ - Allow pre-filling Research Outputs with DOI [#1374](https://github.com/portagenetwork/roadmap/pull/1374)
+
+ - feat(plan_snapshots): implement plan versioning with fixity checks, versions UI, and PDF rendering [#1378](https://github.com/portagenetwork/roadmap/pull/1378)
 
 ### Fixed
+
+ - fix(v0/v1/v2-api): Remove access to API for deactivated users [#1400](https://github.com/portagenetwork/roadmap/pull/1400)
 
  - fix(charts): add `startupProbe` [#1388](https://github.com/portagenetwork/roadmap/pull/1388)
 
 ### Dependency Updates
 
- - chore(deps): bump @babel/core from 7.21.4 to 7.29.6 [#1376](https://github.com/portagenetwork/roadmap/pull/1376)
+ - chore(deps): bump surnet/alpine-wkhtmltopdf from 3.23.2-0.12.6-small to 3.23.4-0.12.6-small [#1363](https://github.com/portagenetwork/roadmap/pull/1363)
+
+ - chore(deps): bump nginx from 1.31.1-alpine to 1.31.2-alpine [#1372](https://github.com/portagenetwork/roadmap/pull/1372)
+
+ - chore(deps): bump actions/checkout from 6 to 7 [#1371](https://github.com/portagenetwork/roadmap/pull/1371)
+
+ - chore(deps): bump docker/login-action from 4.2.0 to 4.4.0 [#1382][https://github.com/portagenetwork/roadmap/pull/1382]
+
+ - chore(deps): bump docker/build-push-action from 7.2.0 to 7.3.0 [#1380](https://github.com/portagenetwork/roadmap/pull/1380)
+
+ - chore(deps): bump nginx from 1.31.2-alpine to 1.31.3-alpine [#1386](https://github.com/portagenetwork/roadmap/pull/1386)
+
+ - chore(deps): bump actions/setup-node from 6 to 7 [#1385](https://github.com/portagenetwork/roadmap/pull/1385)
+
+  - chore(deps): bump @babel/core from 7.21.4 to 7.29.6 [#1376](https://github.com/portagenetwork/roadmap/pull/1376)
 
  - chore(deps): bump hono from 4.12.23 to 4.12.26 [#1375](https://github.com/portagenetwork/roadmap/pull/1375)
 
@@ -29,6 +53,7 @@
  - chore(deps): bump immutable from 4.3.8 to 4.3.9 [#1394](https://github.com/portagenetwork/roadmap/pull/1394)
 
  - chore(deps): bump hono from 4.12.27 to 4.13.1 [#1404](https://github.com/portagenetwork/roadmap/pull/1404)
+
 
 ## [4.1.1+portage-4.9.0]
 

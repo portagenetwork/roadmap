@@ -20,8 +20,7 @@ RSpec.describe Org, type: :model do
         expect(@exported.orcid).to eql('')
       end
       it 'returns the ORCID identifier' do
-        scheme = build(:identifier_scheme, name: 'orcid')
-        identifier = build(:identifier, :for_user, identifier_scheme: scheme)
+        identifier = build(:identifier, :orcid)
         @exported.owner.identifiers << identifier
         expect(@exported.orcid).to eql(identifier.value)
       end

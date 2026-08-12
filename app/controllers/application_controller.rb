@@ -125,6 +125,7 @@ class ApplicationController < ActionController::Base
       Note: _('comment'),
       Org: _('organisation'),
       Perm: _('permission'),
+      PlanSnapshot: _('version'),
       Pref: _('preferences'),
       User: obj == current_user ? _('profile') : _('user'),
       QuestionOption: _('question option')

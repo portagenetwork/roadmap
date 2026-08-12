@@ -46,13 +46,18 @@ class ContributorsController < ApplicationController
       @contributor = Contributor.new(args)
       stash_orcid
 
-      if @contributor.save
-        # Now that the model has been ssaved, go ahead and save the identifiers
-        save_orcid
+      begin
+        ActiveRecord::Base.transaction do
+          @contributor.save!
+          # Now that the model has been saved, go ahead and save the identifiers
+          save_orcid!
+        end
 
         redirect_to plan_contributors_path(@plan),
                     notice: success_message(@contributor, _('added'))
-      else
+      rescue ActiveRecord::RecordInvalid => e
+        @contributor.errors.add(:base, e.record.errors.full_messages.to_sentence) if e.record.is_a?(Identifier)
+
         flash[:alert] = failure_message(@contributor, _('add'))
         render :new
       end
@@ -189,11 +194,11 @@ class ContributorsController < ApplicationController
     @contributor.identifiers = []
   end
 
-  def save_orcid
+  def save_orcid!
     return true unless @cached_orcid.present?
 
     @cached_orcid.identifiable = @contributor
-    @cached_orcid.save
+    @cached_orcid.save!
     @contributor.reload
   end
 end

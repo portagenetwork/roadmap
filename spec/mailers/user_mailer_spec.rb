@@ -76,4 +76,18 @@ RSpec.describe UserMailer, type: :mailer do
                        'Si vous ne souhaitez pas accepter l’invitation'
     end
   end
+
+  describe 'UserMailer Plan Snapshot Failure Alert Email' do
+    let(:message) { 'Plan snapshot JSON generation failed' }
+    let(:payload) { { plan_id: 123, errors: { rda_json: ['Missing required field'] } } }
+    let(:mail) { UserMailer.plan_snapshot_failure_alert(message: message, payload: payload) }
+
+    it 'sends to development email with failure details' do
+      expect(mail.to).to eq([Rails.configuration.x.organisation.development_email])
+      expect(mail.subject).to include(message)
+      expect(mail.body.to_s).to include(message)
+      expect(mail.body.to_s).to include('plan_id')
+      expect(mail.body.to_s).to include('123')
+    end
+  end
 end

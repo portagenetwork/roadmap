@@ -1,0 +1,49 @@
+<%# locals: plan, scope %>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col"><%= _('Identifier') %></th>
+      <th scope="col"><%= _('Type') %></th>
+      <th scope="col">
+        <%= _('Version') %>&nbsp;<%= paginable_sort_link('plan_snapshots.version') %>
+      </th>
+      <th scope="col">
+        <%= _('Release date') %>&nbsp;<%= paginable_sort_link('plan_snapshots.created_at') %>
+      </th>
+      <!--
+      TODO: Re-enable this code when DOI minting is implemented.
+            Until then, 'Private' is redundantly displayed for each entry.
+      <th scope="col" class="sorter-false"><%#= _('Visibility') %></th>
+      -->
+      <th scope="col" class="sorter-false"><%= _('Actions') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% scope.each do |snapshot| %>
+      <% identifier = PlanSnapshots::IdentifierResolver.call(plan: plan, snapshot: snapshot) %>
+      <tr>
+        <td><%= link_to identifier.identifier, identifier.identifier %></td>
+        <td><%= identifier.type %></td>
+        <td><%= snapshot.version %></td>
+        <td><%= snapshot.created_at.to_date %></td>
+        <!--
+        <td><%#= snapshot.visibility_label %></td>
+        -->
+        <td>
+          <div class="dropdown">
+            <button class="btn btn-link dropdown-toggle" type="button"
+                    id="plan-snapshot-<%= snapshot.id %>-actions" data-bs-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="true">
+              <%= _('Actions') %>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="plan-snapshot-<%= snapshot.id %>-actions">
+              <li><%= link_to _('View PDF'), plan_snapshot_path(plan, snapshot, format: :pdf), class: 'dropdown-item  px-3' %></li>
+              <li><%= link_to _('View RDA JSON'), plan_snapshot_path(plan, snapshot, format: :json), class: 'dropdown-item  px-3' %></li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -204,4 +204,17 @@ class UserMailer < ActionMailer::Base
     end
   end
   # rubocop:enable Metrics/AbcSize
+
+  def plan_snapshot_failure_alert(message:, payload:)
+    recipient = Rails.configuration.x.organisation.development_email
+    return unless recipient.present?
+
+    @message = message
+    @payload = payload
+
+    mail(to: recipient,
+         subject: format(_('%{tool_name} alert: %{message}'),
+                         tool_name: tool_name,
+                         message: message))
+  end
 end

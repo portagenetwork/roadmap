@@ -62,3 +62,13 @@
   background-color: tint-color($color-primary-background, 40%);
   border: none;
 }
+
+#btn_fetch_doi {
+  background-color: $color-black;
+  color: $color-alliance-yellow;
+  border: 1px solid $color-border-default;
+  padding: 0 20px;
+  font-size: 16px;
+  height: 40px;
+  white-space: nowrap;
+}

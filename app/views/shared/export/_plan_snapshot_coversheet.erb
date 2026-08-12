@@ -1,0 +1,70 @@
+<%# NOTE: This view is structurally similar to shared/export/plan.html.erb —
+    keep the two in sync when editing either one.
+    TODO: refactor both into a shared partial backed by a common coversheet
+    presenter, since @plan and @snapshot expose different method names for the
+    same concepts (e.g. identifier, funder, grant, ORCID lookup). %>
+
+<hr />
+<h1><%= sanitize(@snapshot.title) %></h1>
+<p><em><%= _("A Data Management Plan created using %{application_name}") % { application_name: ApplicationService.application_name } %></em></p>
+<br/>
+<div class="cover-page">
+  <% creator = @snapshot.contact.name.presence || @snapshot.contact.mbox.presence %>
+  <% if creator %>
+    <p><b><%= _("Creator: ") %></b><%= creator %></p><br>
+  <% end %>
+  <% if @investigators.present? %>
+    <p><b><%= _("Principal Investigator: ") %></b><%= @investigators.map(&:name).join(', ') %></p><br>
+  <% end %>
+  <% if @data_curators.present? %>
+    <p><b><%= _("Data Manager: ") %></b><%= @data_curators.map(&:name).join(', ') %></p><br>
+  <% end %>
+  <% if @project_administrators.present? %>
+    <p><b><%= _("Project Administrator: ") %></b><%= @project_administrators.map(&:name).join(', ') %></p><br>
+  <% end %>
+  <% if @other_contributors.present? %>
+    <p><b><%= _("Contributor: ") %></b><%= @other_contributors.map(&:name).join(', ') %></p><br>
+  <% end %>
+
+  <% if @snapshot.contact.affiliation.name.present? %>
+    <p><b><%= _("Affiliation: ") %></b><%= @snapshot.contact.affiliation.name %></p><br>
+  <% end %>
+
+  <% if @snapshot.project.funding.name.present? %>
+    <p><b><%= _("Funder: ") %></b><%= @snapshot.project.funding.name %></p><br>
+  <% end %>
+
+  <% if @snapshot.template.title.present? %>
+    <p><b><%= _("Template: ") %></b><%= @snapshot.template.title %></p><br>
+  <% end %>
+
+  <% @investigators.each do |contributor| %>
+    <% next unless contributor.contributor_id.type.to_s.casecmp('orcid').zero? %>
+    <% next unless contributor.contributor_id.identifier.present? %>
+    <p><b><%= _("ORCID iD: ") %></b><%= contributor.contributor_id.identifier %></p><br>
+  <% end %>
+
+  <% if @snapshot.description.present? %>
+    <p><b><%= _("Project abstract: ") %></b></p>
+    <div style="margin-left: 15px;"><%= sanitize(@snapshot.description) %></div><br>
+  <% end %>
+
+  <% if @snapshot.dmp_id.identifier.present? %>
+    <p><b><%= _("Identifier: ") %></b><%= @snapshot.dmp_id.identifier %></p><br>
+  <% end %>
+
+  <% if @snapshot.project.start_date.present? %>
+    <p><b><%= _("Start date: ") %></b><%= l(Date.parse(@snapshot.project.start_date), formats: :short) %></p><br>
+  <% end %>
+
+  <% if @snapshot.project.end_date.present? %>
+    <p><b><%= _("End date: ") %></b><%= l(Date.parse(@snapshot.project.end_date), formats: :short) %></p><br>
+  <% end %>
+
+  <p><b><%= _("Version date: ") %></b><%= l(@snapshot.created_at.to_date, formats: :short) %></p><br>
+
+  <% if @snapshot.project.funding.grant_id.identifier.present? %>
+    <p><b><%= _("Grant number / URL: ") %></b><%= @snapshot.project.funding.grant_id.identifier %></p><br>
+  <% end %>
+</div>
+<hr class="bottom" />
