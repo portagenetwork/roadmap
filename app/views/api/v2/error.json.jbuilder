@@ -2,7 +2,6 @@
 
 json.partial! 'api/v2/standard_response'
 
-json.items []
-json.errors @payload[:errors] if @payload[:errors].present?
-json.message @payload[:message]
+# json.items []
+json.errors @payload[:errors]
 json.details @payload[:details]
