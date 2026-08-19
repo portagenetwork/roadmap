@@ -8,7 +8,7 @@ describe 'api/v2/error.json.jbuilder' do
     @code = [200, 400, 404, 500].sample
     @errors = [Faker::Lorem.sentence, Faker::Lorem.sentence]
 
-    assign :payload, { message: @errors }
+    assign :payload, { errors: @errors }
 
     @resp = OpenStruct.new(status: @code)
     @req = Net::HTTPGenericRequest.new('GET', nil, nil, @url)
@@ -23,7 +23,7 @@ describe 'api/v2/error.json.jbuilder' do
     end
 
     it ':errors contains an array of error messages' do
-      expect(@json[:message]).to eql(@errors)
+      expect(@json[:errors]).to eql(@errors)
     end
   end
 end
