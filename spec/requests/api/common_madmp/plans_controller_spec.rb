@@ -23,15 +23,15 @@ RSpec.describe Api::CommonMadmp::PlansController do
 
     def fetch_plans_json_response
       get(dmps_path, headers: @headers)
-      expect(response).to render_template('api/v2/_standard_response')
-      expect(response).to render_template('api/v2/plans/index')
+      expect(response).to render_template('api/common_madmp/_standard_response')
+      expect(response).to render_template('api/common_madmp/dmps/index')
       JSON.parse(response.body).with_indifferent_access
     end
 
     def fetch_plan_json_response(plan)
       get(dmp_path(plan), headers: @headers)
-      expect(response).to render_template('api/v2/_standard_response')
-      expect(response).to render_template('api/v2/plans/index')
+      expect(response).to render_template('api/common_madmp/_standard_response')
+      expect(response).to render_template('api/common_madmp/dmps/index')
       JSON.parse(response.body).with_indifferent_access
     end
 
