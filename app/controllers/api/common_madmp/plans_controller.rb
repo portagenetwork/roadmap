@@ -13,14 +13,14 @@ module Api
 
         @items = [@plan]
         @total_items = 1
-        render '/api/v2/plans/index', status: :ok
+        render '/api/common_madmp/dmps/index', status: :ok
       end
 
       # GET /dmps
       def index
         @plans = plans_scope
         @items = paginate_response(results: @plans)
-        render '/api/v2/plans/index', status: :ok
+        render '/api/common_madmp/dmps/index', status: :ok
       end
     end
   end
