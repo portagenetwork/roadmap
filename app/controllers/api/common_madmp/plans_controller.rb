@@ -11,6 +11,8 @@ module Api
         plans_policy = Api::V2::PlansPolicy.new(@resource_owner, @plan)
         return render_error(errors: [_('Plan not found')], status: :not_found) unless plans_policy.show?
 
+        response.headers['Last-Modified'] = @plan.updated_at.httpdate
+
         render '/api/common_madmp/dmps/show', status: :ok
       end
 
