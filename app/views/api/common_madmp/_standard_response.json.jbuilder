@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-# locals: response, request, total_items
+# locals: response, request, total_count
 
-total_items ||= 0
+total_count ||= 0
 
 paginator = Api::V2::PaginationPresenter.new(current_url: request.path,
                                              per_page: @per_page,
-                                             total_items: total_items,
+                                             total_items: total_count,
                                              current_page: @page)
 
 json.prettify!
@@ -22,16 +22,16 @@ json.message Rack::Utils::HTTP_STATUS_CODES[response.status]
 if response.status == 200
 
   # Pagination Links
-  if total_items.positive?
+  if total_count.positive?
     json.page @page
     json.per_page @per_page
-    json.total_items total_items
+    json.total_count total_count
 
     # Prepare the base URL by removing the old pagination params
     json.prev paginator.prev_page_link if paginator.prev_page?
     json.next paginator.next_page_link if paginator.next_page?
   else
-    json.total_items 0
+    json.total_count 0
   end
 
 end

@@ -67,8 +67,8 @@ RSpec.describe Api::CommonMadmp::PlansController do
           # Items array is empty
           expect(json[:items]).to eq([])
 
-          # total_items reflects that nothing is returned
-          expect(json[:total_items]).to eq(0)
+          # total_count reflects that nothing is returned
+          expect(json[:total_count]).to eq(0)
 
           # Status code and message are correct
           expect(json[:code]).to eq(200)
@@ -89,8 +89,8 @@ RSpec.describe Api::CommonMadmp::PlansController do
           # Items array is empty
           expect(json[:items]).to eq([])
 
-          # total_items reflects that nothing is returned
-          expect(json[:total_items]).to eq(0)
+          # total_count reflects that nothing is returned
+          expect(json[:total_count]).to eq(0)
         end
 
         it 'returns the expected plans' do
