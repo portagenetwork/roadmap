@@ -141,11 +141,12 @@ RSpec.describe Api::CommonMadmp::PlansController do
         shared_examples 'returns a 404 Plan not found for show' do
           it do
             expect(response.code).to eql('404')
-            expect(response).to render_template('api/v2/error')
+            expect(response).to render_template('api/common_madmp/error')
 
             json = JSON.parse(response.body).with_indifferent_access
-            expect(json[:items]).to eq([])
-            expect(json[:errors]).to eq(['Plan not found'])
+
+            expect(json[:error_code]).to eq('dmp_not_found')
+            expect(json[:error_message]).to eq('Plan not found')
           end
         end
 
