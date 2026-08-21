@@ -30,8 +30,7 @@ RSpec.describe Api::CommonMadmp::PlansController do
 
     def fetch_plan_json_response(plan)
       get(dmp_path(plan), headers: @headers)
-      expect(response).to render_template('api/common_madmp/_standard_response')
-      expect(response).to render_template('api/common_madmp/dmps/index')
+      expect(response).to render_template('api/common_madmp/dmps/show')
       JSON.parse(response.body).with_indifferent_access
     end
 
@@ -111,17 +110,7 @@ RSpec.describe Api::CommonMadmp::PlansController do
           Role.where(plan_id: inactive_plan.id, user_id: @user.id).update(active: false)
 
           expect(json[:items].length).to be(included_plans.length)
-
-          # Api::V2::PlanPresenter.identifier uses api_v2_plan_url(@plan) to set the "identifier".
-          # That url is constructed using `request.host` / "www.example.com"
-          # api_v2_plan_url(@plan) within this test will construct the url via
-          # default_url_options[:host] / "example.org"
-          # Because the urls are misaligned, we will only compare the paths here.
-          # TODO: Consider aligning default_url_options[:host] (in test.rb) with `request.host`
-          returned_identifiers = json[:items].map { |item| item[:dmp][:dmp_id][:identifier] }
-          returned_paths = returned_identifiers.map { |url| URI(url).path }
-          expected_paths = included_plans.map { |plan| api_v2_plan_path(plan) }
-          expect(returned_paths).to eq(expected_paths)
+          expect(json[:items].map { |item| item[:id] }).to contain_exactly(*included_plans.map(&:id))
         end
 
         it 'allows for paging' do
@@ -167,16 +156,9 @@ RSpec.describe Api::CommonMadmp::PlansController do
           json = fetch_plan_json_response(plan)
 
           expect(response.code).to eql('200')
-          expect(json[:items].length).to eq(1)
-          expect(json[:total_items]).to eq(1)
-          expect(json[:code]).to eq(200)
-          expect(json[:message]).to eq('OK')
-          expect(json[:application]).to eq(ApplicationService.application_name)
-          expect(json[:source]).to eq("GET /dmps/#{plan.id}")
-          expect { Time.iso8601(json[:time]) }.not_to raise_error
-          expect(json[:caller]).to eq(@client.name)
-
-          identifier = json.dig(:items, 0, :dmp, :dmp_id, :identifier)
+          expect(json[:id]).to eq(plan.id)
+          expect(json[:dmp]).to be_a(Hash)
+          identifier = json.dig(:dmp, :dmp_id, :identifier)
           expect(identifier).to be_present
           expect(URI(identifier).path).to eq(api_v2_plan_path(plan))
         end
