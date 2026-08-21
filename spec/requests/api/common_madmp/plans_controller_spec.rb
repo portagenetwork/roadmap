@@ -156,6 +156,8 @@ RSpec.describe Api::CommonMadmp::PlansController do
           json = fetch_plan_json_response(plan)
 
           expect(response.code).to eql('200')
+          expect(response.headers['Last-Modified']).to eq(plan.updated_at.httpdate)
+
           expect(json[:id]).to eq(plan.id)
           expect(json[:dmp]).to be_a(Hash)
           identifier = json.dig(:dmp, :dmp_id, :identifier)
