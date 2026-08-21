@@ -5,6 +5,7 @@
   - Add complete plan flag to V2 API [#3595](https://github.com/DMPRoadmap/roadmap/pull/3595)
 - chore(deps): `bundle update && yarn upgrade` and bump `node-version` in workflows [#3601](https://github.com/DMPRoadmap/roadmap/pull/3601)
 - Update `database.yml.sample`: add separate test db [#3521](https://github.com/DMPRoadmap/roadmap/pull/3521)
+- Patch inactive user issue in V2 API [#3610](https://github.com/DMPRoadmap/roadmap/pull/3610)
 
 ## v5.0.2
 - Bump Ruby to v3.1.4 and use `.ruby-version` in CI

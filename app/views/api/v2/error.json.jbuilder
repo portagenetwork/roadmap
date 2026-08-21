@@ -3,5 +3,5 @@
 json.partial! 'api/v2/standard_response'
 
 # json.items []
-json.message @payload[:message]
+json.errors @payload[:errors]
 json.details @payload[:details]
