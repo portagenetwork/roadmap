@@ -11,9 +11,7 @@ module Api
         plans_policy = Api::V2::PlansPolicy.new(@resource_owner, @plan)
         return render_error(errors: [_('Plan not found')], status: :not_found) unless plans_policy.show?
 
-        @items = [@plan]
-        @total_items = 1
-        render '/api/common_madmp/dmps/index', status: :ok
+        render '/api/common_madmp/dmps/show', status: :ok
       end
 
       # GET /dmps
