@@ -3,7 +3,5 @@
 json.partial! 'api/common_madmp/standard_response', total_items: @total_items
 
 json.items @items do |item|
-  json.dmp do
-    json.partial! 'api/v2/plans/show', plan: item
-  end
+  json.partial! 'api/common_madmp/dmps/dmp', plan: item
 end
