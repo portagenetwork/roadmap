@@ -127,6 +127,9 @@ module Api
         results
       end
 
+      # TODO: Consider removing require_read_scope
+      # - doorkeeper.rb sets `default_scopes :read`, so doorkeeper_authorize! above
+      #   already requires the 'read' scope on every token that reaches this point.
       def require_read_scope
         raise Pundit::NotAuthorizedError unless doorkeeper_token.scopes.include?('read')
       end
