@@ -3,13 +3,13 @@
 module Api
   module CommonMadmp
     # Controller for the RDA Common MADMP API.
-    class PlansController < Api::V2::PlansController
+    class PlansController < BaseApiController
+      POLICY = Api::V2::PlansPolicy
       # GET /dmps/:id
       def show
         @plan = plans_scope.find_by(id: params[:id])
 
-        plans_policy = Api::V2::PlansPolicy.new(@resource_owner, @plan)
-        return dmp_not_found_error unless plans_policy.show?
+        return dmp_not_found_error unless plans_policy(@plan).show?
 
         response.headers['Last-Modified'] = @plan.updated_at.httpdate
 
@@ -24,6 +24,14 @@ module Api
       end
 
       private
+
+      def plans_scope
+        POLICY::Scope.new(@resource_owner).resolve
+      end
+
+      def plans_policy(plan)
+        POLICY.new(@resource_owner, plan)
+      end
 
       def dmp_not_found_error
         render_error(
