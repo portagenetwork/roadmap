@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Api
-  module V2
+  module CommonMadmp
     class BaseApiController < ApplicationController # rubocop:todo Style/Documentation
       # skipping the standard rails authenticity tokens passed in the UI
       skip_before_action :verify_authenticity_token
@@ -27,24 +27,11 @@ module Api
 
       rescue_from StandardError, with: :handle_exception
 
-      # GET /api/v2/heartbeat
-      def heartbeat
-        render '/api/v2/heartbeat'
-      end
-
-      # GET /me.json - recommended for doorkeeper gem
-      def me
-        render json: @resource_owner.slice(:firstname, :surname, :email).merge(
-          organisation: @resource_owner.org.name,
-          language: @resource_owner.language&.name
-        )
-      end
-
       protected
 
       def render_error(errors:, status:, details: nil)
         @payload = { errors: errors, details: details }
-        render '/api/v2/error', status: status
+        render '/api/common_madmp/error', status: status
       end
 
       private
