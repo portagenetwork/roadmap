@@ -55,8 +55,7 @@ RSpec.describe Api::V2::BaseApiController do
 
         get(api_v2_me_path, headers: @headers)
 
-        expect(response).to have_http_status(:unauthorized)
-        expect(response.headers['WWW-Authenticate']).to eq('Bearer realm="Doorkeeper", error="invalid_token", error_description="The access token is invalid"')
+        expect_doorkeeper_unauthorized
       end
     end
 
@@ -67,8 +66,7 @@ RSpec.describe Api::V2::BaseApiController do
       it 'returns 401 Unauthorized' do
         get(api_v2_me_path, headers: { Accept: 'application/json' })
 
-        expect(response).to have_http_status(:unauthorized)
-        expect(response.headers['WWW-Authenticate']).to eq('Bearer realm="Doorkeeper", error="invalid_token", error_description="The access token is invalid"')
+        expect_doorkeeper_unauthorized
       end
     end
   end
@@ -82,8 +80,7 @@ RSpec.describe Api::V2::BaseApiController do
 
       get(api_v2_me_path, headers: headers)
 
-      expect(response).to have_http_status(:unauthorized)
-      expect(response.headers['WWW-Authenticate']).to eq('Bearer realm="Doorkeeper", error="invalid_token", error_description="The access token is invalid"')
+      expect_doorkeeper_unauthorized
     end
 
     it 'returns 401 Unauthorized when the token has expired' do
@@ -100,8 +97,7 @@ RSpec.describe Api::V2::BaseApiController do
 
       get(api_v2_me_path, headers: headers)
 
-      expect(response).to have_http_status(:unauthorized)
-      expect(response.headers['WWW-Authenticate']).to eq('Bearer realm="Doorkeeper", error="invalid_token", error_description="The access token expired"')
+      expect_doorkeeper_unauthorized(description: 'The access token expired')
     end
 
     it 'returns 401 Unauthorized when the token has been revoked' do
@@ -118,8 +114,7 @@ RSpec.describe Api::V2::BaseApiController do
 
       get(api_v2_me_path, headers: headers)
 
-      expect(response).to have_http_status(:unauthorized)
-      expect(response.headers['WWW-Authenticate']).to eq('Bearer realm="Doorkeeper", error="invalid_token", error_description="The access token was revoked"')
+      expect_doorkeeper_unauthorized(description: 'The access token was revoked')
     end
 
     it 'returns 403 Forbidden when the token lacks the read scope, since default_scopes requires read' do
