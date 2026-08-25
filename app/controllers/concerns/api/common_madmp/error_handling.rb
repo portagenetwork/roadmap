@@ -2,11 +2,14 @@
 
 module Api
   module CommonMadmp
+    # Handles errors raised by the API and renders them as API error responses.
     module ErrorHandling
       extend ActiveSupport::Concern
+      include Api::DoorkeeperExceptionHandling
 
       included do
         rescue_from StandardError, with: :handle_exception
+        rescue_from Doorkeeper::Errors::DoorkeeperError, with: :handle_doorkeeper_exception
       end
 
       private

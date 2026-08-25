@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
-Doorkeeper.configure do
+Doorkeeper.configure do # rubocop:disable Metrics/BlockLength
   # set the object-relational-model (ORM)
   orm :active_record
 
   # https://doorkeeper.gitbook.io/guides/configuration/other-configurations
   base_controller 'ApplicationController'
+  handle_auth_errors :raise
 
   # ensure resource owner is authenticated
   resource_owner_authenticator do
