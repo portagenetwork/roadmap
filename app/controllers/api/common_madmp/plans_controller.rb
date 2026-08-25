@@ -40,13 +40,6 @@ module Api
           status: :not_found
         )
       end
-
-      def render_error(error_code:, error_message:, status:)
-        @error_code = error_code
-        @error_message = error_message
-
-        render '/api/common_madmp/error', status: status
-      end
     end
   end
 end
