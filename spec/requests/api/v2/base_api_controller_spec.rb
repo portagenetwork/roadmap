@@ -5,6 +5,13 @@ require 'rails_helper'
 RSpec.describe Api::V2::BaseApiController do
   include ApiHelper
 
+  def expect_doorkeeper_unauthorized(description: 'The access token is invalid')
+    expect(response).to have_http_status(:unauthorized)
+    expect(response.headers['WWW-Authenticate']).to eq(
+      "Bearer realm=\"Doorkeeper\", error=\"invalid_token\", error_description=\"#{description}\""
+    )
+  end
+
   describe 'GET /api/v2/heartbeat' do
     it 'returns 200 OK without requiring an authorization token' do
       get(api_v2_heartbeat_path, headers: { Accept: 'application/json' })

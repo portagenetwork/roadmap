@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::CommonMadmp::PlansController do
   include ApiHelper
+  include Api::CommonMadmp::Helpers
   include Mocks::ApiV2JsonSamples
   include Webmocks
   include IdentifierHelper
@@ -34,15 +35,11 @@ RSpec.describe Api::CommonMadmp::PlansController do
       JSON.parse(response.body).with_indifferent_access
     end
 
-    def expect_invalid_token_response # rubocop:disable Metrics/AbcSize
+    def expect_invalid_token_response
       headers = @headers.merge('Authorization' => "Bearer #{SecureRandom.uuid}")
       yield(headers)
 
-      expect(response.code).to eql('401')
-      expect(response.body).to be_empty
-      expect(response.headers['WWW-Authenticate']).to match(
-        /Bearer realm="Doorkeeper", error="invalid_token", error_description="The access token is invalid"/
-      )
+      expect_authentication_required_error
     end
 
     def expect_insufficient_scope_response

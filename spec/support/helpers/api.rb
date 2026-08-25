@@ -59,11 +59,4 @@ module ApiHelper
     end
   end
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
-
-  def expect_doorkeeper_unauthorized(description: 'The access token is invalid')
-    expect(response).to have_http_status(:unauthorized)
-    expect(response.headers['WWW-Authenticate']).to eq(
-      "Bearer realm=\"Doorkeeper\", error=\"invalid_token\", error_description=\"#{description}\""
-    )
-  end
 end
