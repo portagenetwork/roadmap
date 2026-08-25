@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::CommonMadmp::BaseApiController do
   include ApiHelper
+  include Api::CommonMadmp::Helpers
 
   describe 'token validation (doorkeeper_authorize!)' do
     it 'returns 401 Unauthorized when the token is malformed/invalid' do
@@ -14,8 +15,7 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
 
       get(dmps_path, headers: headers)
 
-      expect(response).to have_http_status(:unauthorized)
-      expect_doorkeeper_unauthorized
+      expect_authentication_required_error
     end
 
     it 'returns 401 Unauthorized when the token has expired' do
@@ -32,8 +32,7 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
 
       get(dmps_path, headers: headers)
 
-      expect(response).to have_http_status(:unauthorized)
-      expect_doorkeeper_unauthorized(description: 'The access token expired')
+      expect_authentication_required_error
     end
 
     it 'returns 401 Unauthorized when the token has been revoked' do
@@ -50,8 +49,7 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
 
       get(dmps_path, headers: headers)
 
-      expect(response).to have_http_status(:unauthorized)
-      expect_doorkeeper_unauthorized(description: 'The access token was revoked')
+      expect_authentication_required_error
     end
 
     it 'returns 403 Forbidden when the token lacks the read scope, since default_scopes requires read' do

@@ -5,7 +5,6 @@ module Api
     # Handles errors raised by the API and renders them as API error responses.
     module ErrorHandling
       extend ActiveSupport::Concern
-      include Api::DoorkeeperExceptionHandling
 
       included do
         rescue_from StandardError, with: :handle_exception
@@ -19,6 +18,23 @@ module Api
         @error_message = error_message
 
         render '/api/common_madmp/error', status: status
+      end
+
+      def handle_doorkeeper_exception(exception)
+        case exception
+        when Doorkeeper::Errors::TokenForbidden, Doorkeeper::Errors::InvalidScope
+          head :forbidden
+        else
+          authentication_required_error
+        end
+      end
+
+      def authentication_required_error
+        render_error(
+          error_code: 'authentication_required',
+          error_message: _('Authentication required to perform the specified request.'),
+          status: :unauthorized
+        )
       end
 
       def handle_exception(exception)
