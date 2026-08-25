@@ -11,8 +11,10 @@ module Api
 
       private
 
-      def render_error(errors:, status:, details: nil)
-        @payload = { errors: errors, details: details }
+      def render_error(error_code:, error_message:, status:)
+        @error_code = error_code
+        @error_message = error_message
+
         render '/api/common_madmp/error', status: status
       end
 
