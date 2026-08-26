@@ -51,6 +51,164 @@ RSpec.describe Api::CommonMadmp::PlansController do
       expect(response.code).to eql('403')
     end
 
+    describe 'Content negotiation (Accept header)' do
+      let!(:plan) do
+        plan = create(:plan, org: @user.org)
+        plan.add_user!(@user.id, :creator)
+        plan
+      end
+
+      let(:vendor_type) { 'application/vnd.org.rd-alliance.dmp-common.v1.2+json' }
+
+      context 'when no Accept header is included' do
+        it 'defaults to the stock JSON response' do
+          get(dmps_path, headers: @headers.except(:Accept))
+
+          expect(response).to have_http_status(:ok)
+          expect(response.headers['Content-Type']).to start_with('application/json')
+          expect(response).to render_template('api/common_madmp/dmps/index')
+        end
+
+        it 'also negotiates correctly on the show action' do
+          get(dmps_path(plan), headers: @headers.except(:Accept))
+
+          expect(response).to have_http_status(:ok)
+          expect(response.headers['Content-Type']).to start_with('application/json')
+        end
+      end
+
+      context 'when Accept: */* is included' do
+        it 'defaults to the stock JSON response' do
+          get(dmps_path, headers: @headers.merge(Accept: '*/*'))
+
+          expect(response).to have_http_status(:ok)
+          expect(response.headers['Content-Type']).to start_with('application/json')
+        end
+      end
+
+      context 'when Accept: application/* is included' do
+        it 'defaults to the stock JSON response' do
+          get(dmps_path, headers: @headers.merge(Accept: 'application/*'))
+
+          expect(response).to have_http_status(:ok)
+          expect(response.headers['Content-Type']).to start_with('application/json')
+        end
+      end
+
+      context 'when unqualified application/json is requested' do
+        it 'returns the stock JSON response' do
+          get(dmps_path, headers: @headers.merge(Accept: 'application/json'))
+
+          expect(response).to have_http_status(:ok)
+          expect(response.headers['Content-Type']).to start_with('application/json')
+        end
+      end
+
+      context 'when the RDA DMP v1.2 MIME type is requested' do
+        it 'returns the RDA DMP v1.2 content type' do
+          get(dmps_path, headers: @headers.merge(Accept: vendor_type))
+
+          expect(response).to have_http_status(:ok)
+          expect(response.headers['Content-Type']).to start_with(vendor_type)
+          expect(response).to render_template('api/common_madmp/dmps/index')
+        end
+
+        it 'also negotiates correctly on the show action' do
+          get(dmps_path(plan), headers: @headers.merge(Accept: vendor_type))
+
+          expect(response).to have_http_status(:ok)
+          expect(response.headers['Content-Type']).to start_with(vendor_type)
+          expect(response).to render_template('api/common_madmp/dmps/index')
+        end
+      end
+
+      context 'when multiple acceptable MIME types are requested' do
+        it 'selects the type with the highest client preference' do
+          accept = "application/json;q=0.5, #{vendor_type};q=1.0"
+          get(dmps_path, headers: @headers.merge(Accept: accept))
+
+          expect(response).to have_http_status(:ok)
+          expect(response.headers['Content-Type']).to start_with(vendor_type)
+        end
+
+        it 'selects JSON when it has the highest client preference' do
+          accept = "application/json;q=1.0, #{vendor_type};q=0.5"
+          get(dmps_path, headers: @headers.merge(Accept: accept))
+
+          expect(response).to have_http_status(:ok)
+          expect(response.headers['Content-Type']).to start_with('application/json')
+        end
+
+        it 'preserves header order when preferences are tied' do
+          accept = "#{vendor_type};q=0.8, application/json;q=0.8"
+          get(dmps_path, headers: @headers.merge(Accept: accept))
+
+          expect(response).to have_http_status(:ok)
+          expect(response.headers['Content-Type']).to start_with(vendor_type)
+        end
+      end
+
+      context 'when a type is explicitly excluded with q=0' do
+        it 'does not select the excluded type, even with no other acceptable type' do
+          accept = 'application/json;q=0'
+          get(dmps_path, headers: @headers.merge(Accept: accept))
+
+          expect(response).to have_http_status(:not_acceptable)
+          expect(response).to render_template('api/common_madmp/error')
+        end
+
+        it 'falls back to the remaining acceptable type' do
+          accept = "application/json;q=0, #{vendor_type};q=0.5"
+          get(dmps_path, headers: @headers.merge(Accept: accept))
+
+          expect(response).to have_http_status(:ok)
+          expect(response.headers['Content-Type']).to start_with(vendor_type)
+        end
+      end
+
+      context 'when an unsupported MIME type is requested' do
+        let(:bogus_type) { 'application/vnd.org.rd-alliance.dmp-common.v1.999+json' }
+
+        it 'returns 406 Not Acceptable' do
+          get(dmps_path, headers: @headers.merge(Accept: bogus_type))
+
+          expect(response).to have_http_status(:not_acceptable)
+          expect(response).to render_template('api/common_madmp/error')
+        end
+
+        it 'does not echo the unsupported type back as Content-Type' do
+          get(dmps_path, headers: @headers.merge(Accept: bogus_type))
+
+          expect(response.headers['Content-Type']).not_to start_with(bogus_type)
+        end
+
+        it 'returns the expected error_code in the body' do
+          get(dmps_path, headers: @headers.merge(Accept: bogus_type))
+
+          json = JSON.parse(response.body)
+          expect(json['error_code']).to eq('not_acceptable')
+          expect(json['error_message']).to be_present
+        end
+
+        it 'also rejects the show action' do
+          get(dmps_path(plan), headers: @headers.merge(Accept: bogus_type))
+
+          expect(response).to have_http_status(:not_acceptable)
+          expect(response).to render_template('api/common_madmp/error')
+        end
+      end
+
+      context 'when an unsupported type is requested alongside a supported type' do
+        it 'selects the supported RDA representation' do
+          accept = "application/xml, #{vendor_type}"
+          get(dmps_path, headers: @headers.merge(Accept: accept))
+
+          expect(response).to have_http_status(:ok)
+          expect(response.headers['Content-Type']).to start_with(vendor_type)
+        end
+      end
+    end
+
     describe 'GET /dmps (index)' do
       context 'an invalid API token is included' do
         it 'returns a 401 and the expected Oauth 2.0 headers' do
