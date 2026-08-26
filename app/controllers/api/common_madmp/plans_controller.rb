@@ -5,6 +5,7 @@ module Api
     # Controller for the RDA Common MADMP API.
     class PlansController < BaseApiController
       POLICY = Api::V2::PlansPolicy
+
       # GET /dmps/:id
       def show
         @plan = plans_scope.find_by(id: params[:id])
@@ -38,6 +39,14 @@ module Api
           error_code: 'dmp_not_found',
           error_message: _('Plan not found'),
           status: :not_found
+        )
+      end
+
+      def not_acceptable_error
+        render_error(
+          error_code: 'not_acceptable',
+          error_message: _('Unsupported schema version requested'),
+          status: :not_acceptable
         )
       end
     end
