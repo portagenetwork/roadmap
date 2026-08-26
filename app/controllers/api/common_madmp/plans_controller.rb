@@ -50,6 +50,14 @@ module Api
           status: :not_found
         )
       end
+
+      def not_acceptable_error
+        render_error(
+          error_code: 'not_acceptable',
+          error_message: _('Unsupported schema version requested'),
+          status: :not_acceptable
+        )
+      end
     end
   end
 end
