@@ -5,6 +5,7 @@ module Api
     # Controller for the RDA Common MADMP API.
     class PlansController < BaseApiController
       POLICY = Api::V2::PlansPolicy
+
       # GET /dmps/:id
       def show
         @plan = plans_scope.find_by(id: params[:id])

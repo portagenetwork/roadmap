@@ -12,6 +12,14 @@ module Api
 
       private
 
+      def not_acceptable_error
+        render_error(
+          error_code: 'not_acceptable',
+          error_message: _('Unsupported schema version requested'),
+          status: :not_acceptable
+        )
+      end
+
       def handle_json_parse_error(exception)
         Rails.logger.error "Request parsing error: #{exception.message}"
         invalid_query_string_error(error_message: _('Invalid JSON format'))

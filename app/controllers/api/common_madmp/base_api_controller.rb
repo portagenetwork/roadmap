@@ -3,6 +3,7 @@
 module Api
   module CommonMadmp
     class BaseApiController < ApplicationController # rubocop:todo Style/Documentation
+      include Api::CommonMadmp::ContentNegotiation
       include Api::CommonMadmp::ErrorHandling
       # skipping the standard rails authenticity tokens passed in the UI
       skip_before_action :verify_authenticity_token
