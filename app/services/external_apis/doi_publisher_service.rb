@@ -43,6 +43,83 @@ module ExternalApis
           canonical_doi_url: canonical_identifier.value
         )
       end
+
+      private
+
+      def mint_canonical_doi(plan, snapshot, datacite_scheme)
+        json_output = ApplicationController.renderer.render(
+          template: 'datacite/_plan_snapshot',
+          formats: [:json],
+          locals: { plan: plan, snapshot: snapshot, is_canonical: true }
+        )
+
+        payload = JSON.parse(json_output)
+        # Temporary for testing
+        payload['data']['attributes']['event'] = 'draft'
+
+        response = ExternalApis::DataciteService.mint_doi(payload: payload)
+        doi_url = "https://doi.org/#{response.dig('data', 'id')}"
+
+        plan.identifiers.create!(identifier_scheme: datacite_scheme, value: doi_url)
+      end
+
+      def mint_snapshot_doi(plan:, snapshot:, datacite_scheme:, canonical_doi:, previous_doi:)
+        json_output = ApplicationController.renderer.render(
+          template: 'datacite/_plan_snapshot',
+          formats: [:json],
+          locals: {
+            plan: plan,
+            snapshot: snapshot,
+            is_canonical: false,
+            canonical_doi: canonical_doi,
+            previous_doi: previous_doi
+          }
+        )
+
+        payload = JSON.parse(json_output)
+        payload['data']['attributes']['event'] = 'draft'
+
+        response = ExternalApis::DataciteService.mint_doi(payload: payload)
+        doi_url = "https://doi.org/#{response.dig('data', 'id')}"
+
+        Identifier.create!(
+          identifiable: snapshot,
+          identifier_scheme: datacite_scheme,
+          value: doi_url
+        )
+      end
+
+      def update_canonical_doi(plan:, snapshot:, datacite_scheme:, canonical_doi_url:) # rubocop:disable Metrics/MethodLength
+        clean_canonical_id = canonical_doi_url.gsub(%r{^https?://doi\.org/}, '')
+
+        # Collect all snapshot DOIs for this plan
+        snapshot_ids = plan.snapshots.pluck(:id)
+        has_version_dois = Identifier.where(
+          identifiable_type: 'PlanSnapshot',
+          identifiable_id: snapshot_ids,
+          identifier_scheme_id: datacite_scheme.id
+        ).pluck(:value)
+
+        json_output = ApplicationController.renderer.render(
+          template: 'datacite/_plan_snapshot',
+          formats: [:json],
+          locals: {
+            plan: plan,
+            snapshot: snapshot,
+            is_canonical: true,
+            has_version_dois: has_version_dois
+          }
+        )
+
+        payload = JSON.parse(json_output)
+        payload['data']['id'] = clean_canonical_id
+        payload['data']['attributes']['event'] = 'draft'
+
+        ExternalApis::DataciteService.update_doi(
+          doi_id: clean_canonical_id,
+          payload: payload
+        )
+      end
     end
   end
 end
