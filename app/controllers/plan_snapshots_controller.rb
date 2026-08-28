@@ -38,18 +38,48 @@ class PlanSnapshotsController < ApplicationController
 
   # POST /plans/:plan_id/versions
   def create
-    snapshot = PlanSnapshot.create_from_plan(plan: @plan, visibility: plan_snapshot_params[:visibility])
+    snapshot = create_snapshot_in_transaction
 
-    if snapshot.persisted?
-      redirect_to plan_snapshots_path(@plan),
-                  notice: _('New version published.')
+    if snapshot&.persisted?
+      redirect_to plan_snapshots_path(@plan), notice: success_notice
     else
-      redirect_to plan_snapshots_path(@plan),
-                  alert: create_failure_alert(snapshot)
+      redirect_to plan_snapshots_path(@plan), alert: create_failure_alert(snapshot)
     end
+  rescue StandardError => e
+    handle_doi_error(e)
   end
 
   private
+
+  def create_snapshot_in_transaction
+    ActiveRecord::Base.transaction do
+      visibility = plan_snapshot_params[:visibility] || 'privately_visible'
+      snapshot = PlanSnapshot.create_from_plan(plan: @plan, visibility: visibility)
+
+      mint_doi_if_needed(snapshot)
+      snapshot
+    end
+  end
+
+  def mint_doi_if_needed(snapshot)
+    return unless snapshot.persisted? && @plan.publicly_visible?
+
+    ExternalApis::DoiPublisherService.publish_snapshot(snapshot)
+  end
+
+  def success_notice
+    if @plan.publicly_visible?
+      _('New version published and DOI minted.')
+    else
+      _('New version published.')
+    end
+  end
+
+  def handle_doi_error(error)
+    Rails.logger.error("Version publishing cancelled — DOI minting failed for Plan ##{@plan.id}: #{error.message}")
+    redirect_to plan_snapshots_path(@plan),
+                alert: _('Unable to publish version because DOI minting failed.')
+  end
 
   def authorize_plan
     authorize @plan, policy_class: PlanSnapshotPolicy
