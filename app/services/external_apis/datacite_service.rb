@@ -9,6 +9,22 @@ module ExternalApis
         Rails.configuration.x.datacite&.api_base_url || super
       end
 
+      def test_api_base_url
+        Rails.configuration.x.datacite&.test_api_base_url || super
+      end
+
+      def current_api_base_url
+        Rails.env.production? ? api_base_url : test_api_base_url
+      end
+
+      def auth_repository_id
+        Rails.configuration.x.datacite&.repository_id
+      end
+
+      def auth_password
+        Rails.configuration.x.datacite&.password
+      end
+
       def active?
         Rails.configuration.x.datacite&.active || false
       end
