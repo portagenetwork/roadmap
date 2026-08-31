@@ -160,8 +160,7 @@ class Plan < ApplicationRecord
   # = Scopes =
   # ==========
 
-  # Retrieves any plan in which the user has an active role and
-  # is not a reviewer
+  # Retrieves any plan in which the user has an active role
   scope :active, lambda { |user|
     plan_ids = Role.where(active: true, user_id: user.id).pluck(:plan_id)
 
