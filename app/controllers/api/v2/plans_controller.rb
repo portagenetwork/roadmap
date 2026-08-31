@@ -43,8 +43,7 @@ module Api
 
       # PUT api/v2/plans/:id
       def update # rubocop:disable Metrics/AbcSize
-        plan = Plan.joins(:roles)
-                   .where(roles: { user_id: @resource_owner.id, active: true })
+        plan = Plan.with_active_role_for(@resource_owner.id)
                    .preload(:roles)
                    .find_by(id: params[:id])
 
