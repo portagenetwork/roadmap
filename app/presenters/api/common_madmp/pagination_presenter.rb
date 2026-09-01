@@ -4,46 +4,46 @@ module Api
   module CommonMadmp
     # Helper class for generic API V2 pagination
     class PaginationPresenter
-      def initialize(current_url:, per_page:, total_items:, current_page: 1)
+      def initialize(current_url:, count:, total_items:, current_page: 1)
         @url = current_url
-        @per_page = per_page
+        @count = count
         @total_items = total_items
-        @page = current_page
+        @offset = current_page
       end
 
       def url_without_pagination
         return nil unless @url.present? && @url.is_a?(String)
 
-        url = @url.gsub(/per_page=\d+/, '')
-                  .gsub(/page=\d+/, '')
+        url = @url.gsub(/count=\d+/, '')
+                  .gsub(/offset=\d+/, '')
                   .gsub(/(&)+$/, '').gsub(/\?$/, '')
 
         (url.include?('?') ? "#{url}&" : "#{url}?")
       end
 
       def prev_page?
-        total_pages > 1 && @page != 1
+        total_pages > 1 && @offset != 1
       end
 
       def next_page?
-        total_pages > 1 && @page < total_pages
+        total_pages > 1 && @offset < total_pages
       end
 
       def prev_page_link
-        "#{url_without_pagination}page=#{@page - 1}&per_page=#{@per_page}"
+        "#{url_without_pagination}offset=#{@offset - 1}&count=#{@count}"
       end
 
       def next_page_link
-        "#{url_without_pagination}page=#{@page + 1}&per_page=#{@per_page}"
+        "#{url_without_pagination}offset=#{@offset + 1}&count=#{@count}"
       end
 
       private
 
       def total_pages
-        return 1 unless @total_items.present? && @per_page.present? &&
-                        @total_items.positive? && @per_page.positive?
+        return 1 unless @total_items.present? && @count.present? &&
+                        @total_items.positive? && @count.positive?
 
-        (@total_items.to_f / @per_page).ceil
+        (@total_items.to_f / @count).ceil
       end
     end
   end
