@@ -59,13 +59,13 @@ module Api
       # only allow 100 per page as the max
       def pagination_params
         max_per_page = Rails.configuration.x.application.api_max_page_size
-        @page = params.fetch('page', 1).to_i
-        @per_page = params.fetch('per_page', max_per_page).to_i
-        @per_page = max_per_page if @per_page > max_per_page
+        @offset = params.fetch('offset', 1).to_i
+        @count = params.fetch('count', max_per_page).to_i
+        @count = max_per_page if @count > max_per_page
       end
 
       def paginate_response(results:)
-        results = results.page(@page).per(@per_page)
+        results = results.page(@offset).per(@count)
         @total_items = results.total_count
         results
       end
