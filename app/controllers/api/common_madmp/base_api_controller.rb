@@ -4,6 +4,7 @@ module Api
   module CommonMadmp
     class BaseApiController < ApplicationController # rubocop:todo Style/Documentation
       include Api::CommonMadmp::ErrorHandling
+      include Api::CommonMadmp::Pagination
       # skipping the standard rails authenticity tokens passed in the UI
       skip_before_action :verify_authenticity_token
 
@@ -53,21 +54,6 @@ module Api
           Rails.logger.info "Client (OAuth) application uid: #{@client.uid}"
         end
         Rails.logger.info "Resource owner id: #{@resource_owner.id}" if @resource_owner
-      end
-
-      # retrieve the requested pagination params or use defaults
-      # only allow 100 per page as the max
-      def pagination_params
-        max_per_page = Rails.configuration.x.application.api_max_page_size
-        @offset = params.fetch('offset', 1).to_i
-        @count = params.fetch('count', max_per_page).to_i
-        @count = max_per_page if @count > max_per_page
-      end
-
-      def paginate_response(results:)
-        results = results.page(@offset).per(@count)
-        @total_items = results.total_count
-        results
       end
 
       # TODO: Consider removing require_read_scope
