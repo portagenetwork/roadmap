@@ -4,10 +4,10 @@
 
 total_count ||= 0
 
-paginator = Api::V2::PaginationPresenter.new(current_url: request.path,
-                                             per_page: @per_page,
-                                             total_items: total_count,
-                                             current_page: @page)
+paginator = Api::CommonMadmp::PaginationPresenter.new(current_url: request.path,
+                                                      per_page: @per_page,
+                                                      total_items: total_count,
+                                                      current_page: @page)
 
 json.prettify!
 json.ignore_nil!
