@@ -5,9 +5,9 @@
 total_count ||= 0
 
 paginator = Api::CommonMadmp::PaginationPresenter.new(current_url: request.path,
-                                                      per_page: @per_page,
+                                                      count: @count,
                                                       total_items: total_count,
-                                                      current_page: @page)
+                                                      current_page: @offset)
 
 json.prettify!
 json.ignore_nil!
@@ -23,8 +23,8 @@ if response.status == 200
 
   # Pagination Links
   if total_count.positive?
-    json.page @page
-    json.per_page @per_page
+    json.page @offset
+    json.per_page @count
     json.total_count total_count
 
     # Prepare the base URL by removing the old pagination params
