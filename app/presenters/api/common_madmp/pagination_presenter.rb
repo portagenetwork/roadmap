@@ -4,11 +4,11 @@ module Api
   module CommonMadmp
     # Helper class for generic API V2 pagination
     class PaginationPresenter
-      def initialize(current_url:, count:, total_items:, current_page: 0)
+      def initialize(current_url:, count:, total_count:, offset: 0)
         @url = current_url
         @count = count
-        @total_items = total_items
-        @offset = current_page
+        @total_count = total_count
+        @offset = offset
       end
 
       def url_without_pagination
@@ -21,14 +21,14 @@ module Api
         (url.include?('?') ? "#{url}&" : "#{url}?")
       end
 
-      def prev_page?
+      def prev_offset?
         @offset.positive?
       end
 
-      def next_page?
-        return false unless @total_items.present? && @count.present?
+      def next_offset?
+        return false unless @total_count.present? && @count.present?
 
-        @offset + @count < @total_items
+        @offset + @count < @total_count
       end
 
       def prev_page_link

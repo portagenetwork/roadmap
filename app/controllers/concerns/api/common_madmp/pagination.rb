@@ -25,7 +25,7 @@ module Api
 
       def paginate_response(results:)
         results = results.page(@offset).per(@count)
-        @total_items = results.total_count
+        @total_count = results.total_count
         results
       end
 
