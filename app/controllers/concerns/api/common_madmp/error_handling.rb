@@ -37,6 +37,14 @@ module Api
         )
       end
 
+      def invalid_query_string_error(error_message:)
+        render_error(
+          error_code: 'invalid_query_string',
+          error_message: error_message,
+          status: :bad_request
+        )
+      end
+
       def handle_exception(exception)
         if exception.is_a?(Pundit::NotAuthorizedError)
           handle_client_not_authorized
