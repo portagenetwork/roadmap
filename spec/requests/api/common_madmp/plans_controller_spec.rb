@@ -281,6 +281,26 @@ RSpec.describe Api::CommonMadmp::PlansController do
 
           Rails.configuration.x.application.api_max_page_size = original_page_size
         end
+
+        it 'generates correct offset and count pagination links' do
+          original_page_size = Rails.configuration.x.application.api_max_page_size
+          Rails.configuration.x.application.api_max_page_size = 10
+
+          create_list(:plan, 25, :publicly_visible) do |plan|
+            plan.add_user!(@user.id, :commenter)
+          end
+
+          get(dmps_path, params: { offset: '10', count: '10' }, headers: @headers)
+          expect(response).to have_http_status(:ok)
+
+          json = JSON.parse(response.body).with_indifferent_access
+          expect(json[:next]).to include('offset=20')
+          expect(json[:next]).to include('count=10')
+          expect(json[:prev]).to include('offset=0')
+          expect(json[:prev]).to include('count=10')
+
+          Rails.configuration.x.application.api_max_page_size = original_page_size
+        end
       end
     end
 
