@@ -116,18 +116,37 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
       }
     end
 
-    it 'caps per_page at the configured maximum' do
+    it 'caps count at the configured maximum' do
       max = Rails.configuration.x.application.api_max_page_size
 
-      get(dmps_path, params: { per_page: max + 1000 }, headers: @headers)
+      get(dmps_path, params: { count: max + 1000 }, headers: @headers)
 
-      expect(response).to have_http_status(:ok)
+      expect(response).to have_http_status(:bad_request)
+
+      json = JSON.parse(response.body)
+      expect(json['error_code']).to eq('invalid_query_string')
     end
 
-    it 'defaults to page 1 when no page param is given' do
-      get(dmps_path, headers: @headers)
+    it 'rejects invalid offset and count values' do
+      get(dmps_path, params: { offset: '-1', count: '0' }, headers: @headers)
+
+      expect(response).to have_http_status(:bad_request)
+
+      json = JSON.parse(response.body)
+      expect(json['error_code']).to eq('invalid_query_string')
+    end
+
+    it 'accepts valid offset and count params' do
+      create_list(:plan, 25, org: @user.org).each do |plan|
+        plan.add_user!(@user.id, :creator)
+      end
+
+      get(dmps_path, params: { offset: '10', count: '5' }, headers: @headers)
 
       expect(response).to have_http_status(:ok)
+      json = JSON.parse(response.body)
+      expect(json['page']).to eq(10)
+      expect(json['per_page']).to eq(5)
     end
   end
 end
