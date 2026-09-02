@@ -11,16 +11,6 @@ module Api
         @offset = offset
       end
 
-      def url_without_pagination
-        return nil unless @url.present? && @url.is_a?(String)
-
-        url = @url.gsub(/count=\d+/, '')
-                  .gsub(/offset=\d+/, '')
-                  .gsub(/(&)+$/, '').gsub(/\?$/, '')
-
-        (url.include?('?') ? "#{url}&" : "#{url}?")
-      end
-
       def prev_offset?
         @offset.positive?
       end
@@ -43,6 +33,16 @@ module Api
 
       def page_link(offset)
         "#{url_without_pagination}offset=#{offset}&count=#{@count}"
+      end
+
+      def url_without_pagination
+        return nil unless @url.present? && @url.is_a?(String)
+
+        url = @url.gsub(/count=\d+/, '')
+                  .gsub(/offset=\d+/, '')
+                  .gsub(/(&)+$/, '').gsub(/\?$/, '')
+
+        (url.include?('?') ? "#{url}&" : "#{url}?")
       end
     end
   end
