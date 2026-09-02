@@ -4,6 +4,8 @@ module Api
   module CommonMadmp
     # Controller for the RDA Common MADMP API.
     class PlansController < BaseApiController
+      include Api::CommonMadmp::Sorting
+
       before_action :negotiate_dmp_format
       after_action :apply_negotiated_content_type
 
@@ -25,6 +27,9 @@ module Api
       # GET /dmps
       def index
         @plans = plans_scope
+        @plans = apply_sorting(@plans)
+        return if performed?
+
         @items = paginate_response(results: @plans)
         render '/api/common_madmp/dmps/index', status: :ok
       end

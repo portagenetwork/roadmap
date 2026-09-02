@@ -268,6 +268,27 @@ RSpec.describe Api::CommonMadmp::PlansController do
           expect(json[:items].map { |item| item[:id] }).to contain_exactly(*included_plans.map(&:id))
         end
 
+        it 'sorts by created date in descending order by default' do
+          older = create(:plan, org: @user.org, title: 'Older', created_at: 2.days.ago)
+          newer = create(:plan, org: @user.org, title: 'Newer', created_at: 1.day.ago)
+          older.add_user!(@user.id, :creator)
+          newer.add_user!(@user.id, :creator)
+
+          get(dmps_path, headers: @headers)
+
+          expect(response).to have_http_status(:ok)
+          json = JSON.parse(response.body).with_indifferent_access
+          expect(json[:items].map { |item| item[:id] }).to eq([newer.id, older.id])
+        end
+
+        it 'rejects unsupported sort values with an invalid_query_string error' do
+          get(dmps_path, params: { sort: ['x,asc'] }, headers: @headers)
+
+          expect(response).to have_http_status(:bad_request)
+          json = JSON.parse(response.body)
+          expect(json['error_code']).to eq('invalid_query_string')
+        end
+
         it 'allows for paging' do
           original_page_size = Rails.configuration.x.application.api_max_page_size
           Rails.configuration.x.application.api_max_page_size = 10
