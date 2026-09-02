@@ -4,7 +4,7 @@ module Api
   module CommonMadmp
     # Helper class for generic API V2 pagination
     class PaginationPresenter
-      def initialize(current_url:, count:, total_items:, current_page: 1)
+      def initialize(current_url:, count:, total_items:, current_page: 0)
         @url = current_url
         @count = count
         @total_items = total_items
@@ -22,28 +22,27 @@ module Api
       end
 
       def prev_page?
-        total_pages > 1 && @offset != 1
+        @offset.positive?
       end
 
       def next_page?
-        total_pages > 1 && @offset < total_pages
+        return false unless @total_items.present? && @count.present?
+
+        @offset + @count < @total_items
       end
 
       def prev_page_link
-        "#{url_without_pagination}offset=#{@offset - 1}&count=#{@count}"
+        page_link([@offset - @count, 0].max)
       end
 
       def next_page_link
-        "#{url_without_pagination}offset=#{@offset + 1}&count=#{@count}"
+        page_link(@offset + @count)
       end
 
       private
 
-      def total_pages
-        return 1 unless @total_items.present? && @count.present? &&
-                        @total_items.positive? && @count.positive?
-
-        (@total_items.to_f / @count).ceil
+      def page_link(offset)
+        "#{url_without_pagination}offset=#{offset}&count=#{@count}"
       end
     end
   end
