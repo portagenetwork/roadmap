@@ -6,6 +6,8 @@
 
  - chore(deps): bump @hono/node-server from 1.19.14 to 1.19.17 [#1407](https://github.com/portagenetwork/roadmap/pull/1407)
 
+ - chore(deps): bump @humanfs/node from 0.16.7 to 0.16.8 [#1414](https://github.com/portagenetwork/roadmap/pull/1414)
+
 ## [4.1.1+portage-4.10.0]
 
 ### Added
