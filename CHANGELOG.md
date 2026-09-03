@@ -6,6 +6,8 @@
 
  - chore(deps): bump docker/login-action from 4.4.0 to 4.6.0 [#1396](https://github.com/portagenetwork/roadmap/pull/1396)
 
+ - chore(deps): bump nginx from 1.31.3-alpine to 1.31.5-alpine [#1415](https://github.com/portagenetwork/roadmap/pull/1415)
+
 ## [4.1.1+portage-4.10.0]
 
 ### Added
