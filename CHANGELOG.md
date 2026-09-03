@@ -9,6 +9,8 @@
  - chore(deps): bump @humanfs/node from 0.16.7 to 0.16.8 [#1414](https://github.com/portagenetwork/roadmap/pull/1414)
 
  - chore(deps): bump fast-uri from 3.1.5 to 3.1.7 [#1413](https://github.com/portagenetwork/roadmap/pull/1413)
+ 
+ - chore(deps): bump browserslist from 4.28.1 to 4.28.8 [#1417](https://github.com/portagenetwork/roadmap/pull/1417)
 
 ## [4.1.1+portage-4.10.0]
 
