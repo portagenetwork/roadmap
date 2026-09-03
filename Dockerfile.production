@@ -139,7 +139,7 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]
 
 # nginx stage to serve static assets
-FROM nginx:1.31.3-alpine AS assets
+FROM nginx:1.31.5-alpine AS assets
 
 ENV INSTALL_PATH=/usr/src/app
 
