@@ -145,6 +145,58 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
       end
     end
 
+    context 'when the plan is publicly visible' do
+      before do
+        authorize_as(:administrator)
+        plan.update(visibility: :publicly_visible)
+        ExternalApis::DoiPublisherService.stubs(:publish_snapshot)
+      end
+
+      it 'mints a DOI and sets the DOI notice' do
+        ExternalApis::DoiPublisherService.expects(:publish_snapshot).once
+
+        subject
+
+        expect(response).to redirect_to(plan_snapshots_path(plan))
+        expect(flash[:notice]).to eq('New version published and DOI minted.')
+      end
+
+      context 'when DOI minting fails with an exception' do
+        before do
+          ExternalApis::DoiPublisherService
+            .stubs(:publish_snapshot)
+            .raises(StandardError, 'DataCite API Timeout')
+        end
+
+        it 'logs the error and redirects with an alert' do
+          Rails.logger.expects(:error).with(
+            regexp_matches(/Version publishing cancelled — DOI minting failed for Plan/)
+          )
+
+          subject
+
+          expect(response).to redirect_to(plan_snapshots_path(plan))
+          expect(flash[:alert]).to eq('Unable to publish version because DOI minting failed.')
+        end
+      end
+    end
+
+    context 'when the plan is not publicly visible' do
+      before do
+        authorize_as(:administrator)
+        plan.update(visibility: :privately_visible)
+      end
+
+      it 'does not mint a DOI and sets the standard notice' do
+        ExternalApis::DoiPublisherService.expects(:publish_snapshot).never
+
+        subject
+
+        expect(response).to redirect_to(plan_snapshots_path(plan))
+        expect(flash[:notice]).to eq('New version published.')
+      end
+    end
+
     context 'when the plan is not ready for snapshot creation' do
       let(:invalid_snapshot) do
         snapshot = PlanSnapshot.new
