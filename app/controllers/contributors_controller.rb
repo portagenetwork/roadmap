@@ -119,13 +119,16 @@ class ContributorsController < ApplicationController
   def process_org(hash:)
     return hash unless hash.present? && hash[:org_id].present?
 
-    allow = !Rails.configuration.x.application.restrict_orgs
-    org = org_from_params(params_in: hash,
-                          allow_create: allow)
+    org = org_from_params(params_in: hash, allow_create: true)
+
+    if org.nil?
+      flash[:alert] =
+        _('Contributor saved without affiliation. If you intended to add an affiliation, please check ' \
+          'if the organisation appears in the list in a different form.')
+    end
 
     hash = remove_org_selection_params(params_in: hash)
 
-    return hash if org.blank? && !allow
     return hash unless org.present?
 
     hash[:org_id] = org.id

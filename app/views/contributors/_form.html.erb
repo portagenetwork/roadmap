@@ -56,9 +56,8 @@ roles_tooltip = _("Select each role that applies to the contributor.")
 
 <div class="form-control mb-3 row" id="contributor-org-controls"><!-- org -->
   <div class="col-md-8">
-    <%= render partial: org_partial,
+    <%= render partial:'shared/org_selectors/combined',
                locals: { form: form,
-                         orgs: orgs,
                          default_org: contributor.org,
                          required: false,
                          label: _("Affiliation") } %>
