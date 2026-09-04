@@ -69,8 +69,7 @@ class Annotation < ApplicationRecord
 
   # text is translated through the translation gem
   def text
-    text = read_attribute(:text)
-    _(text) unless text.blank?
+    TemplateTranslationService.translate(self, :text)
   end
 
   # The text from the annotation

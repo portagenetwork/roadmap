@@ -287,13 +287,11 @@ class Template < ApplicationRecord
 
   # title and description are translated through the translation gem
   def title
-    title = read_attribute(:title)
-    _(title) unless title.blank?
+    TemplateTranslationService.translate(self, :title)
   end
 
   def description
-    description = read_attribute(:description)
-    _(description) unless description.blank?
+    TemplateTranslationService.translate(self, :description)
   end
 
   # Creates a copy of the current template

@@ -96,6 +96,23 @@ class Phase < ApplicationRecord
     Phase.where(template_id: template_id).select(:id, :title)
   }
 
+  scope :with_template_includes, lambda {
+    includes(
+      :template,
+      {
+        sections: [
+          :template,
+          {
+            questions: [
+              :template,
+              { question_options: :template }
+            ]
+          }
+        ]
+      }
+    )
+  }
+
   def deep_copy(**options)
     copy = dup
     copy.modifiable = options.fetch(:modifiable, modifiable)
@@ -149,12 +166,10 @@ class Phase < ApplicationRecord
 
   # title and description are translated through the translation gem
   def title
-    title = read_attribute(:title)
-    _(title) unless title.blank?
+    TemplateTranslationService.translate(self, :title)
   end
 
   def description
-    description = read_attribute(:description)
-    _(description) unless description.blank?
+    TemplateTranslationService.translate(self, :description)
   end
 end

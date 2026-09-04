@@ -106,11 +106,9 @@ module OrgAdmin
       authorize template
       # Load the info needed for the overview section if the authorization check passes!
       phases = template.phases
-                       .includes(sections: { questions: :question_options })
+                       .with_template_includes
                        .order('phases.number', 'sections.number', 'questions.number',
                               'question_options.number')
-                       .select('phases.title', 'phases.description', 'phases.modifiable',
-                               'sections.title', 'questions.text', 'question_options.text')
       unless template.latest?
         # rubocop:disable Layout/LineLength
         flash[:notice] = _('You are viewing a historical version of this template. You will not be able to make changes.')
@@ -125,22 +123,16 @@ module OrgAdmin
     end
 
     # GET /org_admin/templates/:id/edit
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def edit
       template = Template.includes(:org, :phases).find(params[:id])
       authorize template
       # Load the info needed for the overview section if the authorization check passes!
-      phases = template.phases.includes(sections: { questions: :question_options })
+      phases = template.phases
+                       .with_template_includes
                        .order('phases.number',
                               'sections.number',
                               'questions.number',
                               'question_options.number')
-                       .select('phases.title',
-                               'phases.description',
-                               'phases.modifiable',
-                               'sections.title',
-                               'questions.text',
-                               'question_options.text')
       if template.latest?
         render 'container', locals: {
           partial_path: 'edit',
@@ -152,7 +144,6 @@ module OrgAdmin
         redirect_to org_admin_template_path(id: template.id)
       end
     end
-    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     # GET /org_admin/templates/new
     def new
@@ -319,15 +310,22 @@ module OrgAdmin
       # now with prefetching (if guidance is added, prefetch annottaions/guidance)
       @template = Template.includes(
         :org,
-        phases: {
-          sections: {
-            questions: %i[
-              question_options
-              question_format
-              annotations
+        phases: [
+          :template,
+          {
+            sections: [
+              :template,
+              {
+                questions: [
+                  :template,
+                  :question_format,
+                  :annotations,
+                  { question_options: :template }
+                ]
+              }
             ]
           }
-        }
+        ]
       ).find(@template.id)
 
       @formatting = Settings::Template::DEFAULT_SETTINGS[:formatting]

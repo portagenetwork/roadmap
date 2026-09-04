@@ -9,7 +9,7 @@ module OrgAdmin
 
     # GET /org_admin/templates/:template_id/phases/:id
     # rubocop:disable Metrics/AbcSize
-    def show
+    def show # rubocop:disable Metrics/MethodLength
       phase = Phase.includes(:template, :sections).order(:number).find(params[:id])
       authorize phase
       unless phase.template.latest?
@@ -17,13 +17,23 @@ module OrgAdmin
         flash[:notice] = _('You are viewing a historical version of this template. You will not be able to make changes.')
         # rubocop:enable Layout/LineLength
       end
+      sections_includes = [
+        :template,
+        {
+          questions: [
+            :template,
+            { question_options: :template }
+          ]
+        }
+      ]
+
       sections = if phase.template.customization_of? && phase.template.latest?
                    # The user is working with the latest version so only use the modifiable sections
-                   phase.template_sections.order(:number)
+                   phase.template_sections.includes(sections_includes).order(:number)
                  else
                    # This is not the latest version sso just get all the sections. Everything
                    # will be readonly
-                   phase.sections.order(:number)
+                   phase.sections.includes(sections_includes).order(:number)
                  end
       render('container',
              locals: {
@@ -57,8 +67,18 @@ module OrgAdmin
                  template: phase.template,
                  phase: phase,
                  prefix_section: phase.prefix_section,
-                 sections: phase.sections.order(:number)
-                                         .select(:id, :title, :modifiable, :phase_id),
+                 sections: phase.sections
+                                .includes(
+                                  :template,
+                                  {
+                                    questions: [
+                                      :template,
+                                      { question_options: :template }
+                                    ]
+                                  }
+                                )
+                                .order(:number)
+                                .select(:id, :title, :modifiable, :phase_id),
                  suffix_sections: phase.suffix_sections.order(:number),
                  current_section: Section.find_by(id: params[:section], phase_id: phase.id)
                })
@@ -69,7 +89,20 @@ module OrgAdmin
     # preview a phase
     # GET /org_admin/templates/:template_id/phases/:id/preview
     def preview
-      @phase = Phase.includes(:template).find(params[:id])
+      @phase = Phase.includes(
+        :template,
+        {
+          sections: [
+            :template,
+            {
+              questions: [
+                :template,
+                { question_options: :template }
+              ]
+            }
+          ]
+        }
+      ).find(params[:id])
       authorize @phase
       @template = @phase.template
       @guidance_presenter = GuidancePresenter.new(Plan.new(template: @phase.template))

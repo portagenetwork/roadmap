@@ -207,6 +207,29 @@ class Plan < ApplicationRecord
       .distinct
   }
 
+  # Retrieves template with pre-fetched sections and questions
+  # to avoid eager loading when translating
+  scope :with_detailed_template, lambda {
+    includes(
+      template: {
+        phases: [
+          :template,
+          {
+            sections: [
+              :template,
+              {
+                questions: [
+                  :template,
+                  { question_options: :template }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    )
+  }
+
   ##
   # Settings for the template
   has_settings :export, class_name: 'Settings::Template' do |s|
