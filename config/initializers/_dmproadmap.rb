@@ -227,7 +227,7 @@ module DMPRoadmap
     # ---------------------------------------------------- #
 
     # Determines how long to cache results for OrgSelection::SearchService
-    config.x.cache.org_selection_expiration = 86_400
+    config.x.cache.org_selection_expiration = 3600
     # Determines how long to cache results for the ResearchProjectsController
     config.x.cache.research_projects_expiration = 86_400
 
