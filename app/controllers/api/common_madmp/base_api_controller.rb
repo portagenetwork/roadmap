@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 module Api
-  module V2
+  module CommonMadmp
     class BaseApiController < ApplicationController # rubocop:todo Style/Documentation
-      include Api::V2::ErrorHandling
+      include Api::CommonMadmp::ErrorHandling
+      include Api::CommonMadmp::Pagination
       # skipping the standard rails authenticity tokens passed in the UI
       skip_before_action :verify_authenticity_token
 
@@ -25,19 +26,6 @@ module Api
 
       # Parse the incoming JSON
       before_action :parse_request, only: %i[create update]
-
-      # GET /api/v2/heartbeat
-      def heartbeat
-        render '/api/v2/heartbeat'
-      end
-
-      # GET /me.json - recommended for doorkeeper gem
-      def me
-        render json: @resource_owner.slice(:firstname, :surname, :email).merge(
-          organisation: @resource_owner.org.name,
-          language: @resource_owner.language&.name
-        )
-      end
 
       private
 
@@ -66,21 +54,6 @@ module Api
           Rails.logger.info "Client (OAuth) application uid: #{@client.uid}"
         end
         Rails.logger.info "Resource owner id: #{@resource_owner.id}" if @resource_owner
-      end
-
-      # retrieve the requested pagination params or use defaults
-      # only allow 100 per page as the max
-      def pagination_params
-        max_per_page = Rails.configuration.x.application.api_max_page_size
-        @page = params.fetch('page', 1).to_i
-        @per_page = params.fetch('per_page', max_per_page).to_i
-        @per_page = max_per_page if @per_page > max_per_page
-      end
-
-      def paginate_response(results:)
-        results = results.page(@page).per(@per_page)
-        @total_items = results.total_count
-        results
       end
 
       # TODO: Consider removing require_read_scope
