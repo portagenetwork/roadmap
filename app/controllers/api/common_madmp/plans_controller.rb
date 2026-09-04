@@ -4,6 +4,7 @@ module Api
   module CommonMadmp
     # Controller for the RDA Common MADMP API.
     class PlansController < BaseApiController
+      include Api::CommonMadmp::Filtering
       include Api::CommonMadmp::Sorting
 
       POLICY = Api::V2::PlansPolicy
@@ -22,6 +23,9 @@ module Api
       # GET /dmps
       def index
         @plans = plans_scope
+        @plans = apply_filters(@plans)
+        return if performed?
+
         @plans = apply_sorting(@plans)
         return if performed?
 
