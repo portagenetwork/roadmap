@@ -216,13 +216,26 @@ class Template < ApplicationRecord
   }
 
   scope :for_api_v2, lambda { |org_id|
-    org_templates = organisationally_visible.where(org_id: org_id)
-    public_templates = publicly_visible.where(customization_of: nil)
-    includes(org: { identifiers: :identifier_scheme }, phases: { sections: :questions })
-      .joins(:org)
-      .published
-      .merge(org_templates.or(public_templates))
-      .order(:title)
+                       org_templates = organisationally_visible.where(org_id: org_id)
+                       public_templates = publicly_visible.where(customization_of: nil)
+                       includes(org: { identifiers: :identifier_scheme }, phases: { sections: :questions })
+                         .joins(:org)
+                         .published
+                         .merge(org_templates.or(public_templates))
+                         .order(:title)
+                     }
+
+  # For DMP Assistant's customisation of the `translation` gem
+  scope :for_translation_sync, lambda {
+    includes(phases: { sections: { questions: %i[annotations question_options] } })
+      .where(org_id: Rails.application.secrets.default_funder_id, published: true)
+      .pluck(:title, :description,
+             'phases.title', 'phases.description',
+             'sections.title', 'sections.description',
+             'questions.text', 'questions.default_value',
+             'annotations.text',
+             'question_options.text')
+      .flatten.uniq
   }
 
   # defines the export setting for a template object
