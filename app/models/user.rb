@@ -146,11 +146,7 @@ class User < ApplicationRecord
   scope :super_admins, lambda {
     joins(:perms)
       # Reuses the `can_super_admin?` definition
-      .where(perms: { name: %w[
-               add_organisations
-               grant_api_to_orgs
-               change_org_affiliation
-             ] })
+      .where(perms: { name: Perm.super_admin_names })
       .distinct
   }
 
@@ -159,10 +155,7 @@ class User < ApplicationRecord
     joins(:perms).where('users.org_id = ? AND perms.name IN (?) AND ' \
                         'users.active = ?',
                         org_id,
-                        %w[grant_permissions
-                           modify_templates
-                           modify_guidance
-                           change_org_details],
+                        Perm.org_admin_names(include_super_admin_names: false),
                         true)
   }
 

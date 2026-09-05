@@ -15,9 +15,9 @@ module Paginable
       @filter_admin = params[:filter_admin] == '1'
 
       scope = if current_user.can_super_admin?
-                User.includes(:department, :org, :perms, :roles, :identifiers)
+                User.includes(:department, :org, :perms, :roles, identifiers: :identifier_scheme)
               else
-                current_user.org.users.includes(:department, :org, :perms, :roles, :identifiers)
+                current_user.org.users.includes(:department, :perms, :roles, identifiers: :identifier_scheme)
               end
 
       scope = scope.joins(:perms).distinct if @filter_admin
