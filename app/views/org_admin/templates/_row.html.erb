@@ -9,7 +9,7 @@
     <% if template.published? %>
       <%= _('Published') %>
     <% elsif template.draft? %>
-      <% tooltip = _('This template is published changes but has unpublished changes!') %>
+      <% tooltip = _('This template is published, but now contains unpublished changes!') %>
       <%= _('Published') %> <em class="sr-only"><%= tooltip %></em>
     &nbsp;&nbsp;<i class="fas fa-pencil-square" aria-hidden="true" data-bs-toggle="tooltip" title="<%= tooltip %>"></i>
     <% else %>
