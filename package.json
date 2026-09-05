@@ -76,7 +76,7 @@
     "karma-jasmine": "^5.1.0",
     "karma-jquery": "^0.2.4",
     "karma-json-fixtures-preprocessor": "^0.0.6",
-    "karma-webpack": "^5.0.0"
+    "karma-webpack": "^5.0.1"
   },
   "resolutions": {
     "webpack": "^5.75.0"
