@@ -37,9 +37,17 @@ module Api
         )
       end
 
+      def insufficient_permissions_error
+        render_error(
+          error_code: 'insufficient_permissions',
+          error_message: _('The authenticated client does not have permission to access the requested resource.'),
+          status: :forbidden
+        )
+      end
+
       def handle_exception(exception)
         if exception.is_a?(Pundit::NotAuthorizedError)
-          handle_client_not_authorized
+          insufficient_permissions_error
         elsif exception.is_a?(ActionDispatch::Http::Parameters::ParseError) || exception.is_a?(JSON::ParserError)
           handle_json_parse_error(exception)
         else
@@ -54,10 +62,6 @@ module Api
 
         # inform client of server error
         render_error(errors: _('There was a problem in the server.'), status: :internal_server_error)
-      end
-
-      def handle_client_not_authorized
-        render_error(errors: _('The client is not authorized to perform this action.'), status: :forbidden)
       end
 
       def handle_json_parse_error(exception)

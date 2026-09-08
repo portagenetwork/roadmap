@@ -38,7 +38,7 @@ module Api
 
         return if @resource_owner.present? && @resource_owner.active?
 
-        render_error(errors: _('User account has been deactivated.'), status: :unauthorized)
+        insufficient_permissions_error
       end
 
       def base_response_content

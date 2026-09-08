@@ -66,6 +66,26 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
 
       expect(response).to have_http_status(:forbidden)
     end
+
+    it 'returns 403 Forbidden when the resource owner account is inactive' do
+      @user = create(:user)
+      @client = create(:oauth_application)
+      token = mock_authorization_code_token(oauth_application: @client, user: @user).plaintext_token
+      @user.update(active: false)
+
+      headers = {
+        Accept: 'application/json',
+        Authorization: "Bearer #{token}"
+      }
+
+      get(dmps_path, headers: headers)
+
+      expect(response).to have_http_status(:forbidden)
+      expect(response.parsed_body).to eq(
+        'error_code' => 'insufficient_permissions',
+        'error_message' => 'The authenticated client does not have permission to access the requested resource.'
+      )
+    end
   end
 
   describe 'request body parsing (parse_request)',
