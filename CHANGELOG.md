@@ -8,6 +8,22 @@
 
  - chore(deps): bump nginx from 1.31.3-alpine to 1.31.5-alpine [#1415](https://github.com/portagenetwork/roadmap/pull/1415)
 
+## [4.1.1+portage-4.10.1]
+
+### Fixed
+
+ - fix(policy): harden authorization for plan contributors [#1416](https://github.com/portagenetwork/roadmap/pull/1416)
+
+### Dependency Updates
+
+ - chore(deps): bump @hono/node-server from 1.19.14 to 1.19.17 [#1407](https://github.com/portagenetwork/roadmap/pull/1407)
+
+ - chore(deps): bump @humanfs/node from 0.16.7 to 0.16.8 [#1414](https://github.com/portagenetwork/roadmap/pull/1414)
+
+ - chore(deps): bump fast-uri from 3.1.5 to 3.1.7 [#1413](https://github.com/portagenetwork/roadmap/pull/1413)
+ 
+ - chore(deps): bump browserslist from 4.28.1 to 4.28.8 [#1417](https://github.com/portagenetwork/roadmap/pull/1417)
+
 ## [4.1.1+portage-4.10.0]
 
 ### Added
@@ -32,7 +48,7 @@
 
  - chore(deps): bump actions/checkout from 6 to 7 [#1371](https://github.com/portagenetwork/roadmap/pull/1371)
 
- - chore(deps): bump docker/login-action from 4.2.0 to 4.4.0 [#1382][https://github.com/portagenetwork/roadmap/pull/1382]
+ - chore(deps): bump docker/login-action from 4.2.0 to 4.4.0 [#1382](https://github.com/portagenetwork/roadmap/pull/1382)
 
  - chore(deps): bump docker/build-push-action from 7.2.0 to 7.3.0 [#1380](https://github.com/portagenetwork/roadmap/pull/1380)
 
