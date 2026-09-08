@@ -124,6 +124,31 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
     end
   end
 
+  describe 'error handling' do
+    before do
+      @user = create(:user)
+      @client = create(:oauth_application)
+      token = mock_authorization_code_token(oauth_application: @client, user: @user).plaintext_token
+
+      @headers = {
+        Accept: 'application/json',
+        Authorization: "Bearer #{token}"
+      }
+    end
+
+    it 'returns an internal_server_error payload when an unexpected exception is raised' do
+      described_class.any_instance.stubs(:pagination_params).raises(StandardError, 'boom')
+
+      get(dmps_path, headers: @headers)
+
+      expect(response).to have_http_status(:internal_server_error)
+
+      json = JSON.parse(response.body)
+      expect(json['error_code']).to eq('internal_server_error')
+      expect(json['error_message']).to eq('There was a problem in the server.')
+    end
+  end
+
   describe 'pagination (pagination_params)' do
     before do
       @user = create(:user)

@@ -13,13 +13,6 @@ module Api
 
       private
 
-      def render_error(error_code:, error_message:, status:)
-        @error_code = error_code
-        @error_message = error_message
-
-        render '/api/common_madmp/error', status: status
-      end
-
       def handle_doorkeeper_exception(exception)
         case exception
         when Doorkeeper::Errors::TokenForbidden, Doorkeeper::Errors::InvalidScope
@@ -32,6 +25,23 @@ module Api
       def handle_json_parse_error(exception)
         Rails.logger.error "Request parsing error: #{exception.message}"
         invalid_query_string_error(error_message: _('Invalid JSON format'))
+      end
+
+      def handle_exception(exception)
+        if exception.is_a?(Pundit::NotAuthorizedError)
+          insufficient_permissions_error
+        elsif exception.is_a?(ActionDispatch::Http::Parameters::ParseError) || exception.is_a?(JSON::ParserError)
+          handle_json_parse_error(exception)
+        else
+          handle_internal_server_error(exception)
+        end
+      end
+
+      def handle_internal_server_error(exception)
+        Rails.logger.error "Exception message: #{exception.message}"
+        Rails.logger.error exception.backtrace.join("\n") if exception.backtrace.present?
+
+        internal_server_error
       end
 
       def authentication_required_error
@@ -58,23 +68,19 @@ module Api
         )
       end
 
-      def handle_exception(exception)
-        if exception.is_a?(Pundit::NotAuthorizedError)
-          insufficient_permissions_error
-        elsif exception.is_a?(ActionDispatch::Http::Parameters::ParseError) || exception.is_a?(JSON::ParserError)
-          handle_json_parse_error(exception)
-        else
-          handle_internal_server_error(exception)
-        end
+      def internal_server_error
+        render_error(
+          error_code: 'internal_server_error',
+          error_message: _('There was a problem in the server.'),
+          status: :internal_server_error
+        )
       end
 
-      def handle_internal_server_error(exception)
-        # log server errors
-        Rails.logger.error "Exception message: #{exception.message}"
-        Rails.logger.error exception.backtrace.join("\n") if exception.backtrace.present?
+      def render_error(error_code:, error_message:, status:)
+        @error_code = error_code
+        @error_message = error_message
 
-        # inform client of server error
-        render_error(errors: _('There was a problem in the server.'), status: :internal_server_error)
+        render '/api/common_madmp/error', status: status
       end
     end
   end
