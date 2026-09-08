@@ -29,6 +29,11 @@ module Api
         end
       end
 
+      def handle_json_parse_error(exception)
+        Rails.logger.error "Request parsing error: #{exception.message}"
+        invalid_query_string_error(error_message: _('Invalid JSON format'))
+      end
+
       def authentication_required_error
         render_error(
           error_code: 'authentication_required',
@@ -42,6 +47,14 @@ module Api
           error_code: 'insufficient_permissions',
           error_message: _('The authenticated client does not have permission to access the requested resource.'),
           status: :forbidden
+        )
+      end
+
+      def invalid_query_string_error(error_message:)
+        render_error(
+          error_code: 'invalid_query_string',
+          error_message: error_message,
+          status: :bad_request
         )
       end
 
@@ -62,19 +75,6 @@ module Api
 
         # inform client of server error
         render_error(errors: _('There was a problem in the server.'), status: :internal_server_error)
-      end
-
-      def handle_json_parse_error(exception)
-        Rails.logger.error "Request parsing error: #{exception.message}"
-        details = if exception.message.include?('unexpected token')
-                    {
-                      error_code: 'invalid_json',
-                      hint: _('Check for malformed JSON (for example, unescaped quotes inside string values).')
-                    }
-                  end
-        render_error(errors: _('Invalid JSON format'),
-                     status: :bad_request,
-                     details: details)
       end
     end
   end
