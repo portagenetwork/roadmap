@@ -1,6 +1,10 @@
 # Changelog
 
-## [Unreleased]
+## [4.1.1+portage-4.10.1]
+
+### Fixed
+
+ - fix(policy): harden authorization for plan contributors [#1416](https://github.com/portagenetwork/roadmap/pull/1416)
 
 ### Dependency Updates
 
