@@ -237,7 +237,7 @@ Rails.application.routes.draw do
   end
 
   scope defaults: { format: :json } do
-    resources :dmps, only: %i[index show], controller: 'api/common_madmp/plans'
+    resources :dmps, only: %i[index show destroy], controller: 'api/common_madmp/plans'
   end
 
   namespace :paginable do

@@ -381,6 +381,18 @@ RSpec.describe Api::CommonMadmp::PlansController do
       end
     end
 
+    shared_examples 'returns a 404 Plan not found' do
+      it do
+        expect(response.code).to eql('404')
+        expect(response).to render_template('api/common_madmp/error')
+
+        json = JSON.parse(response.body).with_indifferent_access
+
+        expect(json[:error_code]).to eq('dmp_not_found')
+        expect(json[:error_message]).to eq('Plan not found')
+      end
+    end
+
     describe 'GET /dmps/:id (show)' do
       context 'an invalid API token is included' do
         it 'returns a 401 and the expected Oauth 2.0 headers' do
@@ -390,18 +402,6 @@ RSpec.describe Api::CommonMadmp::PlansController do
       end
 
       context 'a valid API token is included' do
-        shared_examples 'returns a 404 Plan not found for show' do
-          it do
-            expect(response.code).to eql('404')
-            expect(response).to render_template('api/common_madmp/error')
-
-            json = JSON.parse(response.body).with_indifferent_access
-
-            expect(json[:error_code]).to eq('dmp_not_found')
-            expect(json[:error_message]).to eq('Plan not found')
-          end
-        end
-
         it 'returns a 200 and the requested plan' do
           plan = create(:plan, org: @user.org)
           plan.add_user!(@user.id, :creator)
@@ -424,13 +424,56 @@ RSpec.describe Api::CommonMadmp::PlansController do
             get(dmp_path(other_plan), headers: @headers)
           end
 
-          it_behaves_like 'returns a 404 Plan not found for show'
+          it_behaves_like 'returns a 404 Plan not found'
         end
 
         context 'when the plan does not exist' do
           before { get(dmp_path(id: 0), headers: @headers) }
 
-          it_behaves_like 'returns a 404 Plan not found for show'
+          it_behaves_like 'returns a 404 Plan not found'
+        end
+      end
+    end
+
+    describe 'DELETE /dmps/:id (destroy)' do
+      context 'a valid API token is included' do
+        it 'returns 204 No Content and deletes the plan when the user can edit it' do
+          plan = create(:plan, org: @user.org)
+          plan.add_user!(@user.id, :creator)
+
+          delete(dmp_path(plan), headers: @headers)
+
+          expect(response).to have_http_status(:no_content)
+          expect { plan.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        end
+
+        context 'when the user does not have an active role on the plan' do
+          before do
+            other_plan = create(:plan)
+            delete(dmp_path(other_plan), headers: @headers)
+          end
+
+          it_behaves_like 'returns a 404 Plan not found'
+        end
+
+        context 'when the plan does not exist in scope' do
+          before { delete(dmp_path(id: 0), headers: @headers) }
+
+          it_behaves_like 'returns a 404 Plan not found'
+        end
+
+        it 'returns 403 Forbidden when the user has an active role but cannot edit the plan' do
+          plan = create(:plan, org: @user.org)
+          plan.add_user!(@user.id, :commenter)
+
+          delete(dmp_path(plan), headers: @headers)
+
+          expect(response).to have_http_status(:forbidden)
+          json = JSON.parse(response.body)
+          expect(json['error_code']).to eq('insufficient_permissions')
+          expect(json['error_message']).to eq(
+            'The authenticated client does not have permission to access the requested resource.'
+          )
         end
       end
     end

@@ -8,6 +8,8 @@ module Api
       include Api::CommonMadmp::Sorting
 
       before_action :negotiate_dmp_format
+      before_action -> { doorkeeper_authorize! :write }, only: %i[destroy]
+      before_action :load_plan, only: %i[show destroy]
       after_action :apply_negotiated_content_type
 
       POLICY = Api::V2::PlansPolicy
@@ -16,10 +18,6 @@ module Api
 
       # GET /dmps/:id
       def show
-        @plan = plans_scope.find_by(id: params[:id])
-
-        return dmp_not_found_error unless plans_policy(@plan).show?
-
         response.headers['Last-Modified'] = @plan.updated_at.httpdate
 
         render '/api/common_madmp/dmps/show', status: :ok
@@ -38,7 +36,23 @@ module Api
         render '/api/common_madmp/dmps/index', status: :ok
       end
 
+      # DELETE /dmps/:id
+      def destroy
+        raise Pundit::NotAuthorizedError unless plans_policy(@plan).destroy?
+
+        @plan.destroy!
+        head :no_content
+      end
+
       private
+
+      def load_plan
+        @plan = plans_scope.find_by(id: params[:id])
+        # Return 404 even if plan exists but client has no active role on it
+        # - The common-madmp-api spec allows for this behaviour "to avoid
+        # leaking information about the existence of a DMP.
+        dmp_not_found_error unless plans_policy(@plan).show?
+      end
 
       def negotiate_dmp_format
         # See the "Schema extension" section of the RDA Common MADMP API specification:
