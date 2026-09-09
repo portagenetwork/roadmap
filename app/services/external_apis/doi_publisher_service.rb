@@ -10,11 +10,7 @@ module ExternalApis
         raise 'DataCite IdentifierScheme missing' if datacite_scheme.blank?
 
         # Return existing DOI if snapshot was already published
-        existing_snapshot_doi = Identifier.find_by(
-          identifiable: snapshot,
-          identifier_scheme: datacite_scheme
-        )
-        return existing_snapshot_doi.value if existing_snapshot_doi.present?
+        return snapshot.doi if snapshot.doi.present?
 
         # 1. Fetch or mint Canonical DOI
         canonical_identifier = plan.identifiers.find_by(identifier_scheme: datacite_scheme)
