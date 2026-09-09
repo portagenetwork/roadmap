@@ -1,6 +1,7 @@
 import 'jquery-ui/ui/widgets/autocomplete';
 import getConstant from './constants';
 import { isObject, isString, isArray } from './isType';
+import debounce from '../utils/debounce';
 
 // Updates the ARIA help text that lets the user know how many suggestions
 const updateAriaHelper = (autocomplete, suggestionCount) => {
@@ -94,6 +95,12 @@ const toggleWarning = (autocomplete, displayIt) => {
   }
 };
 
+// Delayed warning display (fires only after typing pauses)
+const debouncedToggleWarning = debounce((autocomplete, displayIt) => {
+  toggleWarning(autocomplete, displayIt);
+}, 1000);
+
+
 // Looks up the value in the crosswalk
 const findInCrosswalk = (selection, crosswalk) => {
   // Default to the name only
@@ -123,7 +130,11 @@ const warnableSelection = (selection) => {
 const handleSelection = (autocomplete, hidden, crosswalk, selection) => {
   const out = findInCrosswalk(selection, crosswalk);
 
-  toggleWarning(autocomplete, warnableSelection(out));
+  // When user types, 'displayIt = false' hides warning initially
+  toggleWarning(autocomplete, false);
+
+  // After user pauses for 1 second, show warning
+  debouncedToggleWarning(autocomplete, warnableSelection(out));
 
   // Set the ID and trigger the onChange event for any view specific
   // JS to trigger events

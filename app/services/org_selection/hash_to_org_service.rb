@@ -63,6 +63,13 @@ module OrgSelection
 
       private
 
+      def match_hash_to_ror_org(hash:)
+        return nil unless hash[:ror].present?
+
+        ror_results = OrgSelection::SearchService.search_externally(search_term: hash[:name])
+        ror_results&.find { |r| r[:ror] == hash[:ror] }
+      end
+
       # Lookup the Org by it's :id and return if the name matches the search
       def lookup_org_by_id(hash:)
         org = Org.where(id: hash[:id]).first if hash[:id].present?
@@ -92,14 +99,18 @@ module OrgSelection
       def initialize_org(hash:)
         return nil unless hash.present? && hash[:name].present?
 
+        # Attempt to find an ROR match to the hash
+        ror_hash = match_hash_to_ror_org(hash: hash)
+        return nil unless ror_hash
+
         Org.new(
-          name: hash[:name],
-          links: links_from_hash(name: hash[:name], website: hash[:url]),
-          language: language_from_hash(hash: hash),
-          target_url: hash[:url],
+          name: ror_hash[:name],
+          links: links_from_hash(name: ror_hash[:name], website: ror_hash[:url]),
+          language: language_from_hash(hash: ror_hash),
+          target_url: ror_hash[:url],
           institution: true,
           is_other: false,
-          abbreviation: abbreviation_from_hash(hash: hash)
+          abbreviation: abbreviation_from_hash(hash: ror_hash)
         )
       end
 

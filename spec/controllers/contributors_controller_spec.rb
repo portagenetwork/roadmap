@@ -134,6 +134,12 @@ RSpec.describe ContributorsController, type: :controller do
     end
 
     describe '#process_org(hash:)' do
+      before do
+        @request = ActionDispatch::TestRequest.create
+        @response = ActionDispatch::TestResponse.create
+        @controller.request = @request
+        @controller.response = @response
+      end
       it 'returns the hash as is if no :org_id is present' do
         @params_hash[:contributor].delete(:org_id)
         hash = @controller.send(:process_org, hash: @params_hash[:contributor])
@@ -159,6 +165,10 @@ RSpec.describe ContributorsController, type: :controller do
       end
       it 'sets the org_id to the idea of the org' do
         new_org = create(:org)
+        # Clear name, id, and ror to prevent matching any existing org
+        @params_hash[:contributor][:org_name] = nil
+        @params_hash[:contributor][:org_id] = { id: nil, name: nil, ror: nil }.to_json
+
         @controller.stubs(:org_from_params).returns(new_org)
         hash = @controller.send(:process_org, hash: @params_hash[:contributor])
         expect(hash[:org_id]).to eql(new_org.id)
