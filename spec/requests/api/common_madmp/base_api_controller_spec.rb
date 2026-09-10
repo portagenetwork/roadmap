@@ -52,19 +52,22 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
       expect_authentication_required_error
     end
 
-    it 'returns 403 Forbidden when the token lacks the read scope, since default_scopes requires read' do
+    it 'rejects a request when the token has the endpoint-specific permission but is missing the default read scope' do
       @user = create(:user)
       @client = create(:oauth_application, scopes: 'write')
       token = mock_authorization_code_token(oauth_application: @client, user: @user).plaintext_token
+      plan = create(:plan, org: @user.org)
+      plan.add_user!(@user.id, :creator)
 
       headers = {
         Accept: 'application/json',
         Authorization: "Bearer #{token}"
       }
 
-      get(dmps_path, headers: headers)
+      delete(dmp_path(plan), headers: headers)
 
       expect(response).to have_http_status(:forbidden)
+      expect(response.body).to be_empty
     end
 
     it 'returns 403 Forbidden when the resource owner account is inactive' do

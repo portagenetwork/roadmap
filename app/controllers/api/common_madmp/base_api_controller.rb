@@ -8,7 +8,6 @@ module Api
       # skipping the standard rails authenticity tokens passed in the UI
       skip_before_action :verify_authenticity_token
 
-      # call doorkeeper to authorize the request
       before_action :doorkeeper_authorize!, except: %i[heartbeat]
       # Authorize resource owner, check if the user account associated with the token is active
       before_action :authorize_resource_owner, except: %i[heartbeat]
@@ -17,7 +16,6 @@ module Api
 
       before_action :log_access
 
-      before_action :require_read_scope, except: %i[heartbeat me]
       # controller can respond to json format requests
       respond_to :json
 
@@ -54,13 +52,6 @@ module Api
           Rails.logger.info "Client (OAuth) application uid: #{@client.uid}"
         end
         Rails.logger.info "Resource owner id: #{@resource_owner.id}" if @resource_owner
-      end
-
-      # TODO: Consider removing require_read_scope
-      # - doorkeeper.rb sets `default_scopes :read`, so doorkeeper_authorize! above
-      #   already requires the 'read' scope on every token that reaches this point.
-      def require_read_scope
-        raise Pundit::NotAuthorizedError unless doorkeeper_token.scopes.include?('read')
       end
 
       # Parse the body of the incoming request
