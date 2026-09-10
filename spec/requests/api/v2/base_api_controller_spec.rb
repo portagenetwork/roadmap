@@ -124,7 +124,7 @@ RSpec.describe Api::V2::BaseApiController do
       expect_doorkeeper_unauthorized(description: 'The access token was revoked')
     end
 
-    it 'returns 403 Forbidden when the token lacks the read scope, since default_scopes requires read' do
+    it 'rejects a request when the token has the endpoint-specific permission but is missing the default read scope' do
       @user = create(:user)
       @client = create(:oauth_application, scopes: 'write')
       token = mock_authorization_code_token(oauth_application: @client, user: @user).plaintext_token
@@ -134,9 +134,10 @@ RSpec.describe Api::V2::BaseApiController do
         Authorization: "Bearer #{token}"
       }
 
-      get(api_v2_plans_path, headers: headers)
+      post(api_v2_plans_path, params: { title: 'Example plan' }, headers: headers)
 
       expect(response).to have_http_status(:forbidden)
+      expect(response.body).to be_empty
     end
 
     it 'does not require any scope on heartbeat' do
