@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe ExternalApis::DoiPublisherService, type: :service do
+RSpec.describe DoiPublisherService, type: :service do
   let!(:datacite_scheme) { create(:identifier_scheme, name: 'datacite', identifier_prefix: nil) }
   let(:plan) { create(:plan, :snapshot_ready) }
   let(:snapshot) { create(:plan_snapshot, plan: plan, version: 2, created_at: 1.day.ago) }

@@ -149,11 +149,11 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
       before do
         authorize_as(:administrator)
         plan.update(visibility: :publicly_visible)
-        ExternalApis::DoiPublisherService.stubs(:publish_snapshot)
+        DoiPublisherService.stubs(:publish_snapshot)
       end
 
       it 'mints a DOI and sets the DOI notice' do
-        ExternalApis::DoiPublisherService.expects(:publish_snapshot).once
+        DoiPublisherService.expects(:publish_snapshot).once
 
         subject
 
@@ -163,7 +163,7 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
 
       context 'when DOI minting fails with an exception' do
         before do
-          ExternalApis::DoiPublisherService
+          DoiPublisherService
             .stubs(:publish_snapshot)
             .raises(StandardError, 'DataCite API Timeout')
         end
@@ -188,7 +188,7 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
       end
 
       it 'does not mint a DOI and sets the standard notice' do
-        ExternalApis::DoiPublisherService.expects(:publish_snapshot).never
+        DoiPublisherService.expects(:publish_snapshot).never
 
         subject
 

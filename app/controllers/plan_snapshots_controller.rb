@@ -64,7 +64,7 @@ class PlanSnapshotsController < ApplicationController
   def mint_doi_if_needed(snapshot)
     return unless snapshot.persisted? && @plan.publicly_visible?
 
-    ExternalApis::DoiPublisherService.publish_snapshot(snapshot)
+    DoiPublisherService.publish_snapshot(snapshot)
   end
 
   def success_notice
