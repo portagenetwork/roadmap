@@ -29,6 +29,10 @@ module Api
         end
       end
 
+      def handle_deactivated_resource_owner
+        render_error(errors: _('User account has been deactivated.'), status: :unauthorized)
+      end
+
       def handle_internal_server_error(exception)
         # log server errors
         Rails.logger.error "Exception message: #{exception.message}"

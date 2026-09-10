@@ -37,6 +37,10 @@ module Api
         end
       end
 
+      def handle_deactivated_resource_owner
+        insufficient_permissions_error
+      end
+
       def handle_internal_server_error(exception)
         Rails.logger.error "Exception message: #{exception.message}"
         Rails.logger.error exception.backtrace.join("\n") if exception.backtrace.present?

@@ -6,70 +6,22 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
   include ApiHelper
   include Api::CommonMadmp::Helpers
 
+  it_behaves_like 'default API controller token validation',
+                  request_method: :get,
+                  request_path: -> { dmps_path },
+                  invalid_token_expectation: -> { expect_authentication_required_error },
+                  expired_token_expectation: -> { expect_authentication_required_error },
+                  revoked_token_expectation: -> { expect_authentication_required_error }
+
+  it_behaves_like 'default API controller default-scope enforcement',
+                  request_method: :delete,
+                  request_path: -> { dmp_path(@plan) },
+                  request_setup: lambda {
+                                   @plan = create(:plan, org: @user.org)
+                                   @plan.add_user!(@user.id, :creator)
+                                 }
+
   describe 'token validation (doorkeeper_authorize!)' do
-    it 'returns 401 Unauthorized when the token is malformed/invalid' do
-      headers = {
-        Accept: 'application/json',
-        Authorization: 'Bearer not-a-real-token'
-      }
-
-      get(dmps_path, headers: headers)
-
-      expect_authentication_required_error
-    end
-
-    it 'returns 401 Unauthorized when the token has expired' do
-      @user = create(:user)
-      @client = create(:oauth_application)
-      token = mock_authorization_code_token(
-        oauth_application: @client, user: @user, expires_in: -1
-      ).plaintext_token
-
-      headers = {
-        Accept: 'application/json',
-        Authorization: "Bearer #{token}"
-      }
-
-      get(dmps_path, headers: headers)
-
-      expect_authentication_required_error
-    end
-
-    it 'returns 401 Unauthorized when the token has been revoked' do
-      @user = create(:user)
-      @client = create(:oauth_application)
-      access_token = mock_authorization_code_token(oauth_application: @client, user: @user)
-      access_token.revoke
-      token = access_token.plaintext_token
-
-      headers = {
-        Accept: 'application/json',
-        Authorization: "Bearer #{token}"
-      }
-
-      get(dmps_path, headers: headers)
-
-      expect_authentication_required_error
-    end
-
-    it 'rejects a request when the token has the endpoint-specific permission but is missing the default read scope' do
-      @user = create(:user)
-      @client = create(:oauth_application, scopes: 'write')
-      token = mock_authorization_code_token(oauth_application: @client, user: @user).plaintext_token
-      plan = create(:plan, org: @user.org)
-      plan.add_user!(@user.id, :creator)
-
-      headers = {
-        Accept: 'application/json',
-        Authorization: "Bearer #{token}"
-      }
-
-      delete(dmp_path(plan), headers: headers)
-
-      expect(response).to have_http_status(:forbidden)
-      expect(response.body).to be_empty
-    end
-
     it 'returns 403 Forbidden when the resource owner account is inactive' do
       @user = create(:user)
       @client = create(:oauth_application)
