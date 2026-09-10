@@ -1,11 +1,14 @@
 <%# locals: plan, snapshot_blockers %>
 <% disabled = snapshot_blockers.any? %>
+<% confirm_message = plan.publicly_visible? ? _('You are about to publish your DMP and mint a DOI. This action cannot be undone, and creates a permanent public record of this DMP. Do you wish to proceed?') : nil %>
+
 <div class="mt-3">
   <%= form_with url: plan_snapshots_path(plan), method: :post, local: true do |f| %>
-    <%= hidden_field_tag 'plan_snapshot[visibility]', 'privately_visible' %>
+    <%= hidden_field_tag 'plan_snapshot[visibility]', plan.visibility %>
     <%= f.submit _('Create a version of this DMP'),
         class: 'btn btn-primary',
-        disabled: disabled %>
+        disabled: disabled,
+        data: (confirm_message.present? ? { confirm: confirm_message } : {}) %>
     <% if disabled %>
       <div class="alert alert-warning mt-3">
         <p>
