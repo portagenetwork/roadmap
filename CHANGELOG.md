@@ -6,6 +6,8 @@
 
  - chore(deps): bump hono from 4.13.1 to 4.13.7 [#1419](https://github.com/portagenetwork/roadmap/pull/1419)
 
+ - chore(deps): bump js-yaml from 4.3.1 to 4.3.2 [#1420](https://github.com/portagenetwork/roadmap/pull/1420)
+
 ## [4.1.1+portage-4.10.1]
 
 ### Fixed
