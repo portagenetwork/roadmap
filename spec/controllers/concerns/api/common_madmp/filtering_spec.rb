@@ -42,6 +42,10 @@ RSpec.describe Api::CommonMadmp::Filtering do
         @join_calls << args
         self
       end
+
+      def distinct
+        self
+      end
     end
   end
 
@@ -67,6 +71,18 @@ RSpec.describe Api::CommonMadmp::Filtering do
 
         expect(scope.where_calls).to include(['LOWER(plans.title) LIKE ?', '%alpha%'])
         expect(result).to eq(scope)
+      end
+    end
+
+    context 'with a query search across human-readable fields' do
+      let(:params) { { query: %w[climate biodiversity] } }
+
+      it 'matches the plan and dataset title/description fields case-insensitively' do
+        instance.send(:apply_filters, scope)
+
+        expect(scope.where_calls).not_to be_empty
+        expect(scope.where_calls.last.first).to include('LOWER(plans.title) LIKE ?')
+        expect(scope.where_calls.last.first).to include('LOWER(research_outputs.description) LIKE ?')
       end
     end
 
