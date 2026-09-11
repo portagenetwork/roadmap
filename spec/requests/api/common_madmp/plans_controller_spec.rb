@@ -281,6 +281,28 @@ RSpec.describe Api::CommonMadmp::PlansController do
           expect(json[:items].map { |item| item[:id] }).to eq([matching.id])
         end
 
+        it 'filters plans by query across plan and dataset text fields' do
+          matching_title = create(:plan, org: @user.org, title: 'Climate resilience plan',
+                                         description: 'A plan for climate adaptation and biodiversity research.')
+          matching_dataset = create(:plan, org: @user.org, title: 'Unrelated project',
+                                           description: 'General operations')
+          matching_dataset.research_outputs.create!(
+            title: 'Biodiversity atlas',
+            description: 'A dataset about climate adaptation.',
+            output_type: :dataset,
+            access: :open
+          )
+          other = create(:plan, org: @user.org, title: 'Finance report',
+                                description: 'Everything else is finance and policy.')
+          [matching_title, matching_dataset, other].each { |plan| plan.add_user!(@user.id, :creator) }
+
+          get(dmps_path, params: { query: %w[climate biodiversity] }, headers: @headers)
+
+          expect(response).to have_http_status(:ok)
+          json = JSON.parse(response.body).with_indifferent_access
+          expect(json[:items].map { |item| item[:id] }).to include(matching_title.id, matching_dataset.id)
+        end
+
         it 'filters plans by created_after when requested' do
           older = create(:plan, org: @user.org, title: 'Older', created_at: 3.days.ago)
           newer = create(:plan, org: @user.org, title: 'Newer', created_at: 1.day.ago)

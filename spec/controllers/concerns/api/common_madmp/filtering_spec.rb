@@ -42,6 +42,10 @@ RSpec.describe Api::CommonMadmp::Filtering do
         @join_calls << args
         self
       end
+
+      def distinct
+        self
+      end
     end
   end
 
@@ -178,36 +182,6 @@ RSpec.describe Api::CommonMadmp::Filtering do
       end
     end
 
-    context 'with an unsupported filter key' do
-      let(:params) { { foo: 'bar' } }
-
-      it 'ignores the key, applies no filter, and records no error' do
-        result = instance.send(:apply_filters, scope)
-
-        expect(instance.errors).to be_empty
-        expect(scope.where_calls).to be_empty
-        expect(result).to eq(scope)
-      end
-    end
-
-    context 'when the instance was already performed before filtering starts' do
-      let(:params) { { title: 'Alpha', created_after: '2024-01-01' } }
-
-      it 'still applies the first filter, then stops after it flips performed? again' do
-        instance.send(:invalid_query_string_error, error_message: 'previous error')
-
-        result = instance.send(:apply_filters, scope)
-
-        # performed? is already true going in, but apply_filters only checks
-        # performed? *after* each iteration, so the first supported filter in
-        # allow-list order (title, since it precedes created_after in
-        # ALLOWED_FILTER_KEYS) is still applied before the loop returns early.
-        expect(scope.where_calls).to include(['LOWER(plans.title) LIKE ?', '%alpha%'])
-        expect(scope.where_calls.map(&:first)).not_to include('plans.created_at >= ?')
-        expect(result).to eq(scope)
-      end
-    end
-
     context 'with a scalar-only key passed as an array' do
       let(:params) { { title: %w[Alpha Beta] } }
 
@@ -251,6 +225,36 @@ RSpec.describe Api::CommonMadmp::Filtering do
 
         expect(instance.errors).to eq(['The query string contained invalid filter parameters.'])
         expect(scope.where_calls).to be_empty
+      end
+    end
+
+    context 'with an unsupported filter key' do
+      let(:params) { { foo: 'bar' } }
+
+      it 'ignores the key, applies no filter, and records no error' do
+        result = instance.send(:apply_filters, scope)
+
+        expect(instance.errors).to be_empty
+        expect(scope.where_calls).to be_empty
+        expect(result).to eq(scope)
+      end
+    end
+
+    context 'when the instance was already performed before filtering starts' do
+      let(:params) { { title: 'Alpha', created_after: '2024-01-01' } }
+
+      it 'still applies the first filter, then stops after it flips performed? again' do
+        instance.send(:invalid_query_string_error, error_message: 'previous error')
+
+        result = instance.send(:apply_filters, scope)
+
+        # performed? is already true going in, but apply_filters only checks
+        # performed? *after* each iteration, so the first supported filter in
+        # allow-list order (title, since it precedes created_after in
+        # ALLOWED_FILTER_KEYS) is still applied before the loop returns early.
+        expect(scope.where_calls).to include(['LOWER(plans.title) LIKE ?', '%alpha%'])
+        expect(scope.where_calls.map(&:first)).not_to include('plans.created_at >= ?')
+        expect(result).to eq(scope)
       end
     end
   end
