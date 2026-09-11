@@ -2,23 +2,13 @@
 
 module Api
   module V2
-    # Helper class for genewric API V2 pagination
+    # Helper class for generic API V2 pagination
     class PaginationPresenter
       def initialize(current_url:, per_page:, total_items:, current_page: 1)
         @url = current_url
         @per_page = per_page
         @total_items = total_items
         @page = current_page
-      end
-
-      def url_without_pagination
-        return nil unless @url.present? && @url.is_a?(String)
-
-        url = @url.gsub(/per_page=\d+/, '')
-                  .gsub(/page=\d+/, '')
-                  .gsub(/(&)+$/, '').gsub(/\?$/, '')
-
-        (url.include?('?') ? "#{url}&" : "#{url}?")
       end
 
       def prev_page?
@@ -38,6 +28,16 @@ module Api
       end
 
       private
+
+      def url_without_pagination
+        return nil unless @url.present? && @url.is_a?(String)
+
+        url = @url.gsub(/per_page=\d+/, '')
+                  .gsub(/page=\d+/, '')
+                  .gsub(/(&)+$/, '').gsub(/\?$/, '')
+
+        (url.include?('?') ? "#{url}&" : "#{url}?")
+      end
 
       def total_pages
         return 1 unless @total_items.present? && @per_page.present? &&

@@ -14,8 +14,7 @@ module Api
       def show
         @plan = plans_scope.find_by(id: params[:id])
 
-        plans_policy = PlansPolicy.new(@resource_owner, @plan)
-        return render_error(errors: [_('Plan not found')], status: :not_found) unless plans_policy.show?
+        return render_error(errors: [_('Plan not found')], status: :not_found) unless plans_policy(@plan).show?
 
         @items = [@plan]
         @total_items = 1
@@ -44,15 +43,13 @@ module Api
 
       # PUT api/v2/plans/:id
       def update # rubocop:disable Metrics/AbcSize
-        plan = Plan.joins(:roles)
-                   .where(roles: { user_id: @resource_owner.id, active: true })
+        plan = Plan.with_active_role_for(@resource_owner.id)
                    .preload(:roles)
                    .find_by(id: params[:id])
 
         return render_error(errors: [_('Plan not found')], status: :not_found) unless plan
 
-        plans_policy = PlansPolicy.new(@resource_owner, plan)
-        raise Pundit::NotAuthorizedError unless plans_policy.update?
+        raise Pundit::NotAuthorizedError unless plans_policy(plan).update?
 
         answers_payload = validate_answers_payload
         return if performed? # Halts execution if render_error was called
@@ -74,6 +71,10 @@ module Api
       end
 
       private
+
+      def plans_policy(plan)
+        PlansPolicy.new(@resource_owner, plan)
+      end
 
       # GET /api/v2/plans?complete=true and  /api/v2/plans/:id?complete=true
       def set_complete_param

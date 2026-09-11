@@ -612,7 +612,7 @@ RSpec.describe Api::V2::PlansController do
 
           expect(response.code).to eql('403')
           json = JSON.parse(response.body).with_indifferent_access
-          expect(json[:message]).to eq(['The client is not authorized to perform this action.'])
+          expect(json[:errors]).to eq('The client is not authorized to perform this action.')
         end
 
         it 'returns a 400 if the question format is not a text field' do

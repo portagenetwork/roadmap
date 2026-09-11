@@ -12,12 +12,23 @@ module Api
       end
 
       def show?
-        # The show action uses the resolve method, so only a presence check
-        # is needed here (see the resolve method comment for more).
-        @plan.present?
+        @plan.present? && Plan.with_active_role_for(@resource_owner.id)
+                              .exists?(id: @plan.id)
       end
 
       def update?
+        can_edit?
+      end
+
+      # TODO: Refactoring may be best here as only the Common-MaDMP API
+      # includes a `destroy` action
+      def destroy?
+        can_edit?
+      end
+
+      private
+
+      def can_edit?
         @plan&.editable_by?(@resource_owner.id)
       end
 
