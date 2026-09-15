@@ -321,6 +321,12 @@ class Plan < ApplicationRecord
   # = Public instance methods =
   # ===========================
 
+  # Returns the canonical DataCite DOI identifier for the plan
+  def dmp_id
+    identifiers.joins(:identifier_scheme)
+               .find_by(identifier_schemes: { name: 'datacite' })
+  end
+
   ##
   # Proxy through to the template settings (or defaults if this plan doesn't
   # have an associated template) if there are no settings stored for this plan.
