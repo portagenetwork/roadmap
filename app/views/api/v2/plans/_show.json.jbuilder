@@ -30,6 +30,9 @@ if id.present?
   end
 end
 
+# NOTE: contact is a required field in the Common-MaDMP DMPData schema.
+# The app currently only emits it when a data contact is present, which means
+# we are relying on an application-level lookup to satisfy a required contract.
 if presenter.data_contact.present?
   json.contact do
     json.partial! 'api/v2/contributors/show', contributor: presenter.data_contact,
@@ -45,6 +48,9 @@ unless @minimal
     end
   end
 
+  # NOTE: This branch never emits a cost array.
+  # presenter.costs is currently always empty because
+  # there is no "Cost" Theme in the DB.
   if presenter.costs.any?
     json.cost presenter.costs do |cost|
       json.partial! 'api/v2/plans/cost', cost: cost
@@ -61,5 +67,11 @@ unless @minimal
     json.partial! "api/v2/datasets/show", output: output
   end
 
+  # NOTE: This is a DMPRoadmap extension and it is not part of the Common-
+  # MaDMP schema-defined core payload. There is an open RDA discussion about how
+  # extension fields should be represented in the standard; for now we keep this
+  # application-specific data attached to the DMP document but separate from the
+  # schema-defined core payload.
+  # See: https://github.com/RDA-DMP-Common/RDA-DMP-Common-Standard/issues/27
   json.partial! 'api/v2/plans/extension', plan: plan, presenter: presenter unless @rda_only
 end
