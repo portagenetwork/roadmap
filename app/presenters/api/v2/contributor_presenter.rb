@@ -13,6 +13,12 @@ module Api
           "#{Contributor::ONTOLOGY_BASE_URL}#{role.to_s.downcase.tr('_', '-')}"
         end
 
+        # NOTE: This currently assumes ORCID is the canonical identifier for a
+        # contributor/contact, but the Common-MaDMP schema allows other identifier
+        # types and the app may not have ORCID for every person. For records with
+        # no ORCID, we may need a fallback strategy such as email/mbox, but this
+        # should be treated as an app compatibility fallback rather than a schema-
+        # compliant identifier type.
         def contributor_id(identifiers:)
           identifiers.find { |id| id.identifier_scheme.name == 'orcid' }
         end
