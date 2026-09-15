@@ -12,8 +12,7 @@ class DoiPublisherService
       return snapshot.doi if snapshot.doi.present?
 
       # 1. Fetch or mint Canonical DOI
-      canonical_identifier = plan.identifiers.find_by(identifier_scheme: datacite_scheme)
-      canonical_identifier = mint_canonical_doi(plan, snapshot, datacite_scheme) if canonical_identifier.blank?
+      canonical_identifier = plan.dmp_id || mint_canonical_doi(plan, snapshot, datacite_scheme)
 
       # 2. Find prior snapshot DOI
       previous_identifier = Identifier.where(
