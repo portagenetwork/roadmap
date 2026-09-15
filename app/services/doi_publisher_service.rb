@@ -33,7 +33,6 @@ class DoiPublisherService
       update_canonical_doi(
         plan: plan,
         snapshot: snapshot,
-        datacite_scheme: datacite_scheme,
         canonical_doi_url: canonical_identifier.value
       )
     end
@@ -83,16 +82,12 @@ class DoiPublisherService
       )
     end
 
-    def update_canonical_doi(plan:, snapshot:, datacite_scheme:, canonical_doi_url:) # rubocop:disable Metrics/MethodLength
+    def update_canonical_doi(plan:, snapshot:, canonical_doi_url:)
       clean_canonical_id = canonical_doi_url.gsub(%r{^https?://doi\.org/}, '')
 
       # Collect all snapshot DOIs for this plan
-      snapshot_ids = plan.snapshots.pluck(:id)
-      has_version_dois = Identifier.where(
-        identifiable_type: 'PlanSnapshot',
-        identifiable_id: snapshot_ids,
-        identifier_scheme_id: datacite_scheme.id
-      ).pluck(:value)
+      has_version_dois = Identifier.for_plan_snapshot
+                                   .where(identifiable_id: plan.snapshots)
 
       json_output = ApplicationController.renderer.render(
         template: 'datacite/_plan',
