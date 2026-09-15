@@ -23,6 +23,9 @@ if output.is_a?(ResearchOutput)
   json.distribution output.repositories do |repository|
     json.title "Anticipated distribution for #{output.title}"
     json.byte_size output.byte_size
+    # TODO: Common-MaDMP allows `open`, `shared`, or `closed`; the app's
+    # ResearchOutput enum includes `embargoed` and `restricted`, so this value
+    # needs to be normalized before it can be considered API-spec compliant.
     json.data_access output.access
 
     json.host do

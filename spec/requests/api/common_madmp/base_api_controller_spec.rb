@@ -9,9 +9,9 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
   it_behaves_like 'default API controller token validation',
                   request_method: :get,
                   request_path: -> { dmps_path },
-                  invalid_token_expectation: -> { expect_authentication_required_error },
-                  expired_token_expectation: -> { expect_authentication_required_error },
-                  revoked_token_expectation: -> { expect_authentication_required_error }
+                  invalid_token_expectation: -> { expect_authentication_required_response },
+                  expired_token_expectation: -> { expect_authentication_required_response },
+                  revoked_token_expectation: -> { expect_authentication_required_response }
 
   it_behaves_like 'default API controller default-scope enforcement',
                   request_method: :delete,
