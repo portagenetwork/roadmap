@@ -147,25 +147,28 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
 
     context 'when the plan is publicly visible' do
       before do
+        clear_enqueued_jobs
         authorize_as(:administrator)
         plan.update(visibility: :publicly_visible)
-        DoiPublisherService.stubs(:publish_snapshot)
       end
 
-      it 'mints a DOI and sets the DOI notice' do
-        DoiPublisherService.expects(:publish_snapshot).once
+      it 'enqueues PublishDoiJob and sets the queued notice' do
+        expect do
+          subject
+        end.to change { ActiveJob::Base.queue_adapter.enqueued_jobs.size }.by(1)
 
-        subject
+        enqueued_job = ActiveJob::Base.queue_adapter.enqueued_jobs.last
+        expect(enqueued_job[:job]).to eq(PublishDoiJob)
 
         expect(response).to redirect_to(plan_snapshots_path(plan))
-        expect(flash[:notice]).to eq('New version published and DOI minted.')
+        expect(flash[:notice]).to eq('New version published. DOI minting has been queued and will complete shortly.')
       end
 
       context 'when DOI minting fails with an exception' do
         before do
-          DoiPublisherService
-            .stubs(:publish_snapshot)
-            .raises(StandardError, 'DataCite API Timeout')
+          authorize_as(:administrator)
+          plan.update(visibility: :publicly_visible)
+          PublishDoiJob.stubs(:perform_later).raises(StandardError, 'Queue connection error')
         end
 
         it 'logs the error and redirects with an alert' do

@@ -39,7 +39,6 @@ class PlanSnapshotsController < ApplicationController
   # POST /plans/:plan_id/versions
   def create
     snapshot = create_snapshot_in_transaction
-
     if snapshot&.persisted?
       redirect_to plan_snapshots_path(@plan), notice: success_notice
     else
@@ -64,12 +63,13 @@ class PlanSnapshotsController < ApplicationController
   def mint_doi_if_needed(snapshot)
     return unless snapshot.persisted? && @plan.publicly_visible?
 
-    DoiPublisherService.publish_snapshot(snapshot)
+    # Enqueue background job to mint and link DOIs asynchronously
+    PublishDoiJob.perform_later(snapshot)
   end
 
   def success_notice
     if @plan.publicly_visible?
-      _('New version published and DOI minted.')
+      _('New version published. DOI minting has been queued and will complete shortly.')
     else
       _('New version published.')
     end
