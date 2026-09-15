@@ -43,7 +43,7 @@ class DoiPublisherService
 
     def mint_canonical_doi(plan, snapshot, datacite_scheme)
       json_output = ApplicationController.renderer.render(
-        template: 'datacite/_plan_snapshot',
+        template: 'datacite/_plan',
         formats: [:json],
         locals: { plan: plan, snapshot: snapshot, is_canonical: true }
       )
@@ -60,7 +60,7 @@ class DoiPublisherService
 
     def mint_snapshot_doi(plan:, snapshot:, datacite_scheme:, canonical_doi:, previous_doi:)
       json_output = ApplicationController.renderer.render(
-        template: 'datacite/_plan_snapshot',
+        template: 'datacite/_plan',
         formats: [:json],
         locals: {
           plan: plan,
@@ -96,7 +96,7 @@ class DoiPublisherService
       ).pluck(:value)
 
       json_output = ApplicationController.renderer.render(
-        template: 'datacite/_plan_snapshot',
+        template: 'datacite/_plan',
         formats: [:json],
         locals: {
           plan: plan,

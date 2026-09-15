@@ -51,10 +51,9 @@ class PlanSnapshotsController < ApplicationController
   private
 
   def create_snapshot_in_transaction
-    ActiveRecord::Base.transaction do
+    @plan.with_lock do
       visibility = plan_snapshot_params[:visibility] || 'privately_visible'
       snapshot = PlanSnapshot.create_from_plan(plan: @plan, visibility: visibility)
-
       mint_doi_if_needed(snapshot)
       snapshot
     end

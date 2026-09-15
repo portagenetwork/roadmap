@@ -46,14 +46,14 @@ json.data do # rubocop:disable Metrics/BlockLength
     end
 
     # 3. Titles & Core Metadata
-    json.titles [{ title: is_canonical ? plan.title : snapshot.title }]
+    json.titles [{ title: plan.title }]
     json.publisher ApplicationService.application_name
     json.publicationYear Time.current.year
 
     # 4. Timestamps
     json.dates [
-      { type: 'Created', date: snapshot.created_at.iso8601 },
-      { type: 'Updated', date: snapshot.updated_at.iso8601 }
+      { date: snapshot.created_at.iso8601, dateType: "Created" },
+      { date: snapshot.created_at.iso8601, dateType: "Issued" }
     ] do |hash|
       json.date hash[:date]
       json.dateType hash[:type]
