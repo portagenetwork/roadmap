@@ -31,19 +31,32 @@ module Api
         end
         return doi.first if doi.first.present?
 
-        # if no DOI then use the URL for the API's 'show' method
+        # If no DOI is present, fall back to a URL for the plan itself.
+        # TODO: This should eventually use the canonical app-level plan URL
+        # (for example `plan_url(@plan)` or the shared plan route), not always the
+        # API v2 endpoint, because the identifier may be used outside the v2 API
+        # context and should point to the underlying plan resource instead.
         Identifier.new(value: Rails.application.routes.url_helpers.api_v2_plan_url(@plan))
       end
 
       private
 
-      # Retrieve the answers that have the Budget theme
+      # Retrieve the answers that have the Budget theme.
+      #
+      # NOTE: The DB currently has no "Cost" theme, so this lookup always
+      # returns nil and the cost payload is never populated.
+      #
+      # TODO: align this with the Common-MaDMP contract. The current mapping is
+      # not schema-compatible:
+      # - value is derived from freeform answer text instead of a numeric field
+      # - currency_code is effectively hardcoded and not validated against ISO 4217
+      # - the output can violate the schema contract by type/value even when present
       def plan_costs(plan:)
         theme = Theme.where(title: 'Cost').first
         return [] unless theme.present?
 
         # TODO: define a new 'Currency' question type that includes a float field
-        #       any currency type selector (e.g GBP or USD)
+        #       and a currency type selector (e.g. GBP or USD)
         answers = plan.answers
                       .joins(question: :themes)
                       .where(themes: { id: theme.id })
