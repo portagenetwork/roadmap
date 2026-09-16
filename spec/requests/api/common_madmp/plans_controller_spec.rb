@@ -461,7 +461,7 @@ RSpec.describe Api::CommonMadmp::PlansController do
           expect(json[:dmp]).to be_a(Hash)
           identifier = json.dig(:dmp, :dmp_id, :identifier)
           expect(identifier).to be_present
-          expect(URI(identifier).path).to eq(api_v2_plan_path(plan))
+          expect(URI(identifier).path).to eq(dmp_path(plan))
         end
 
         context 'when the user does not have an active role on the plan' do
