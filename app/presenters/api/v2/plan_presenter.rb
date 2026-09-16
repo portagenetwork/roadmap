@@ -33,11 +33,13 @@ module Api
         return doi.first if doi.first.present?
 
         # If no DOI is present, fall back to a URL for the plan itself.
-        # TODO: This should eventually use the canonical app-level plan URL
-        # (for example `plan_url(@plan)` or the shared plan route), not always the
-        # API v2 endpoint, because the identifier may be used outside the v2 API
-        # context and should point to the underlying plan resource instead.
-        Identifier.new(value: Rails.application.routes.url_helpers.api_v2_plan_url(@plan))
+        api_url = if @for_common_madmp_api
+                    Rails.application.routes.url_helpers.dmp_url(@plan)
+                  else
+                    Rails.application.routes.url_helpers.api_v2_plan_url(@plan)
+                  end
+
+        Identifier.new(value: api_url)
       end
 
       private
