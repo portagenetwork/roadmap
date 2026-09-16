@@ -6,11 +6,12 @@ module Api
     class PlanPresenter
       attr_reader :data_contact, :contributors, :costs, :complete_plan_data
 
-      def initialize(plan:, complete: false)
+      def initialize(plan:, complete: false, for_common_madmp_api: false)
         @contributors = []
         return unless plan.present?
 
         @plan = plan
+        @for_common_madmp_api = for_common_madmp_api
 
         # Use owner or first data_curation role as the data_contact
         @data_contact = @plan.owner || @plan.contributors.find(&:data_curation?)
