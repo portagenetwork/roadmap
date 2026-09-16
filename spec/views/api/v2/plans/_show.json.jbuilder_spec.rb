@@ -22,6 +22,28 @@ describe 'api/v2/plans/_show.json.jbuilder' do
     @presenter = Api::V2::PlanPresenter.new(plan: @plan)
   end
 
+  describe 'for_common_madmp_api flag' do
+    it 'passes the flag through when rendered by the Common MaDMP partial' do
+      Api::V2::PlanPresenter.stubs(:new).with do |kwargs|
+        kwargs[:plan] == @plan && kwargs[:for_common_madmp_api] == true
+      end.returns(@presenter)
+
+      render partial: 'api/common_madmp/dmps/dmp', locals: { plan: @plan }
+
+      expect(rendered).to include('"dmp"')
+    end
+
+    it 'leaves the flag unset when rendered directly as the v2 API partial' do
+      Api::V2::PlanPresenter.stubs(:new).with do |kwargs|
+        kwargs[:plan] == @plan && kwargs[:for_common_madmp_api].nil?
+      end.returns(@presenter)
+
+      render partial: 'api/v2/plans/show', locals: { client: @client, plan: @plan }
+
+      expect(rendered).to include(@plan.title)
+    end
+  end
+
   describe 'includes all of the DMP attributes' do
     before do
       render partial: 'api/v2/plans/show', locals: { client: @client, plan: @plan }
