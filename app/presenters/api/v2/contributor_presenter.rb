@@ -19,8 +19,13 @@ module Api
         # no ORCID, we may need a fallback strategy such as email/mbox, but this
         # should be treated as an app compatibility fallback rather than a schema-
         # compliant identifier type.
-        def contributor_id(contributor)
-          contributor.identifier_for_scheme(scheme: 'orcid')
+        def contributor_id(contributor, for_common_madmp_api: false)
+          orcid = contributor.identifier_for_scheme(scheme: 'orcid')
+          return orcid if orcid.present?
+
+          return unless for_common_madmp_api && contributor.email.present?
+
+          Struct.new(:identifier_format, :value).new('email', contributor.email)
         end
       end
     end
