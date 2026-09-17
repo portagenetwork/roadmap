@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-# locals: contributor, is_contact
+# locals: contributor, is_contact, for_common_madmp_api
 
 is_contact ||= false
+for_common_madmp_api ||= false
 
 name = contributor.is_a?(User) ? contributor.name(false) : contributor.name
 json.name sanitize(name)
@@ -22,11 +23,12 @@ if contributor.org.present?
 end
 
 # NOTE: The Common-MaDMP schema treats contact_id and contributor_id as
-# required identifier objects. In practice we only populate them when ORCID is
-# present, so records without ORCID currently omit a required field.
-# If we need a fallback, email/mbox may be the only available app-level value,
-# but that is a compatibility fallback rather than a true identifier type.
-id = Api::V2::ContributorPresenter.contributor_id(contributor)
+# required identifier objects. For the Common-MaDMP Contract we use the
+# contributor email as a compatibility fallback when ORCID is absent.
+id = Api::V2::ContributorPresenter.contributor_id(
+  contributor,
+  for_common_madmp_api: for_common_madmp_api
+)
 if id.present?
   if is_contact
     json.contact_id do

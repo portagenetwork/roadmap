@@ -45,7 +45,8 @@ end
 if presenter.data_contact.present?
   json.contact do
     json.partial! 'api/v2/contributors/show', contributor: presenter.data_contact,
-                                              is_contact: true
+                                              is_contact: true,
+                                              for_common_madmp_api: for_common_madmp_api
   end
 end
 
@@ -53,7 +54,8 @@ unless @minimal
   if presenter.contributors.any?
     json.contributor presenter.contributors do |contributor|
       json.partial! 'api/v2/contributors/show', contributor: contributor,
-                                                is_contact: false
+                                                is_contact: false,
+                                                for_common_madmp_api: for_common_madmp_api
     end
   end
 
