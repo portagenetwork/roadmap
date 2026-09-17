@@ -53,6 +53,101 @@ RSpec.describe Template, type: :model do
     it { is_expected.to have_many :annotations }
   end
 
+  describe '.for_translation_sync' do
+    subject(:translation_strings) { Template.for_translation_sync }
+
+    let(:default_funder) { create(:org, :funder) }
+    let(:other_org) { create(:org) }
+
+    before do
+      Rails.application.secrets.stubs(:default_funder_id).returns(default_funder.id)
+    end
+
+    context 'when the template belongs to the default funder and is published' do
+      let!(:template) do
+        create(:template,
+               org: default_funder,
+               published: true,
+               title: 'Template title',
+               description: 'Template description')
+      end
+
+      let!(:phase) do
+        create(:phase,
+               template: template,
+               title: 'Phase title',
+               description: 'Phase description')
+      end
+
+      let!(:section) do
+        create(:section,
+               phase: phase,
+               title: 'Section title',
+               description: 'Section description')
+      end
+
+      let!(:question) do
+        create(:question,
+               section: section,
+               text: 'Question text',
+               default_value: 'Question default value')
+      end
+
+      let!(:annotation) do
+        create(:annotation,
+               question: question,
+               org: default_funder,
+               text: 'Annotation text')
+      end
+
+      let!(:question_option) do
+        create(:question_option,
+               question: question,
+               text: 'Option text')
+      end
+
+      it 'returns template and nested translation strings' do
+        expect(translation_strings).to match_array(
+          [
+            template.title, template.description,
+            phase.title, phase.description,
+            section.title, section.description,
+            question.text, question.default_value,
+            annotation.text,
+            question_option.text
+          ]
+        )
+      end
+    end
+
+    context 'when the template is unpublished or belongs to another org' do
+      let!(:published_other_template) do
+        create(:template,
+               org: other_org,
+               published: true,
+               title: 'Other org title',
+               description: 'Other org description')
+      end
+
+      let!(:unpublished_default_funder_template) do
+        create(:template,
+               org: default_funder,
+               published: false,
+               title: 'Unpublished title',
+               description: 'Unpublished description')
+      end
+
+      it 'does not include their strings' do
+        expect(translation_strings).not_to include(
+          published_other_template.title,
+          published_other_template.description,
+          unpublished_default_funder_template.title,
+          unpublished_default_funder_template.description
+        )
+      end
+    end
+  end
+
   describe '.archived' do
     subject { Template.archived }
 
