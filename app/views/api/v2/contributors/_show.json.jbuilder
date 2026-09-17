@@ -26,11 +26,8 @@ end
 # present, so records without ORCID currently omit a required field.
 # If we need a fallback, email/mbox may be the only available app-level value,
 # but that is a compatibility fallback rather than a true identifier type.
-orcid = contributor.identifier_for_scheme(scheme: 'orcid')
-if orcid.present?
-  id = Api::V2::ContributorPresenter.contributor_id(
-    identifiers: contributor.identifiers
-  )
+id = Api::V2::ContributorPresenter.contributor_id(contributor)
+if id.present?
   if is_contact
     json.contact_id do
       json.partial! 'api/v2/identifiers/show', identifier: id
