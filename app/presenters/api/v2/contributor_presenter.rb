@@ -19,8 +19,8 @@ module Api
         # no ORCID, we may need a fallback strategy such as email/mbox, but this
         # should be treated as an app compatibility fallback rather than a schema-
         # compliant identifier type.
-        def contributor_id(identifiers:)
-          identifiers.find { |id| id.identifier_scheme.name == 'orcid' }
+        def contributor_id(contributor)
+          contributor.identifier_for_scheme(scheme: 'orcid')
         end
       end
     end
