@@ -81,4 +81,14 @@ class Perm < ApplicationRecord
   def self.manage_oauth_apps
     lazy_load('manage_oauth_apps')
   end
+
+  def self.super_admin_names
+    %w[add_organisations grant_api_to_orgs change_org_affiliation]
+  end
+
+  def self.org_admin_names(include_super_admin_names: true)
+    names = %w[grant_permissions modify_templates modify_guidance change_org_details]
+    names += super_admin_perm_names if include_super_admin_names
+    names
+  end
 end
