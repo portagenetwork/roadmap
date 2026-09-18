@@ -6,14 +6,17 @@ module Api
     class ResearchOutputPresenter
       include ActionView::Helpers::SanitizeHelper
       attr_reader :dataset_id, :preservation_statement, :security_and_privacy, :license_start_date,
-                  :data_quality_assurance, :distributions, :metadata, :technical_resources
+                  :data_quality_assurance, :distributions, :metadata, :technical_resources,
+                  :data_access
 
-      def initialize(output:)
+      def initialize(output:, for_common_madmp_api: false)
         @research_output = output
+        @for_common_madmp_api = for_common_madmp_api
         return unless output.is_a?(ResearchOutput)
 
         @plan = output.plan
         @dataset_id = identifier
+        @data_access = normalize_access
 
         load_narrative_content
 
@@ -24,6 +27,22 @@ module Api
 
       def identifier
         Identifier.new(identifiable: @research_output, value: @research_output.id)
+      end
+
+      def normalize_access
+        return @research_output.access.to_s unless @for_common_madmp_api
+
+        # Common-MaDMP allows `open`, `shared`, or `closed`; the app's
+        # ResearchOutput enum includes `embargoed` and `restricted`, so this value
+        # needs to be normalized before it can be considered API-spec compliant.
+        #
+        # NOTE: https://github.com/RDA-DMP-Common/common-madmp-api/pull/29 describes
+        # `shared` as an interim value that may eventually be replaced by `restricted`
+        # in the API and DMP-Common-Standard.
+        case @research_output.access.to_s
+        when 'open' then 'open'
+        else 'closed'
+        end
       end
 
       def determine_license_start_date(output:)

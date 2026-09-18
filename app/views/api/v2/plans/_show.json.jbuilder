@@ -75,7 +75,8 @@ unless @minimal
   outputs = plan.research_outputs.any? ? plan.research_outputs : [plan]
 
   json.dataset outputs do |output|
-    json.partial! "api/v2/datasets/show", output: output
+    json.partial! "api/v2/datasets/show", output: output,
+                                          for_common_madmp_api: for_common_madmp_api
   end
 
   # NOTE: This is a DMPRoadmap extension and it is not part of the Common-
