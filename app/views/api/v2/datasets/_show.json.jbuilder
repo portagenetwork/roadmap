@@ -1,9 +1,14 @@
 # frozen_string_literal: true
 
-# locals: output
+# locals: output, for_common_madmp_api
+
+for_common_madmp_api ||= false
 
 if output.is_a?(ResearchOutput)
-  presenter = Api::V2::ResearchOutputPresenter.new(output: output)
+  presenter = Api::V2::ResearchOutputPresenter.new(
+    output: output,
+    for_common_madmp_api: for_common_madmp_api
+  )
 
   json.type output.output_type
   json.title strip_tags(output.title)
@@ -23,10 +28,7 @@ if output.is_a?(ResearchOutput)
   json.distribution output.repositories do |repository|
     json.title "Anticipated distribution for #{output.title}"
     json.byte_size output.byte_size
-    # TODO: Common-MaDMP allows `open`, `shared`, or `closed`; the app's
-    # ResearchOutput enum includes `embargoed` and `restricted`, so this value
-    # needs to be normalized before it can be considered API-spec compliant.
-    json.data_access output.access
+    json.data_access presenter.data_access
 
     json.host do
       json.title repository.name
