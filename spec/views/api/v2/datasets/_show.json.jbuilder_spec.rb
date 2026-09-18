@@ -79,7 +79,29 @@ describe 'api/v2/datasets/_show.json.jbuilder' do
         end
 
         it 'includes :data_access' do
-          expect(@json[:distribution].first[:data_access]).to eql(@research_output.access)
+          expect(@json[:distribution].first[:data_access]).to eql(@presenter.data_access)
+        end
+
+        it 'normalizes restricted to the Common-MaDMP closed fallback' do
+          @research_output.access = 'restricted'
+
+          presenter = Api::V2::ResearchOutputPresenter.new(
+            output: @research_output,
+            for_common_madmp_api: true
+          )
+
+          expect(presenter.data_access).to eql('closed')
+        end
+
+        it 'normalizes embargoed to the Common-MaDMP closed fallback' do
+          @research_output.access = 'embargoed'
+
+          presenter = Api::V2::ResearchOutputPresenter.new(
+            output: @research_output,
+            for_common_madmp_api: true
+          )
+
+          expect(presenter.data_access).to eql('closed')
         end
 
         it 'includes host[:title]' do
