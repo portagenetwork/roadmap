@@ -33,6 +33,7 @@ class DoiPublisherService
       update_canonical_doi(
         plan: plan,
         snapshot: snapshot,
+        datacite_scheme: datacite_scheme,
         canonical_doi_url: canonical_identifier.value
       )
     end
@@ -43,7 +44,7 @@ class DoiPublisherService
       payload = datacite_payload(plan: plan, snapshot: snapshot, is_canonical: true)
 
       response = ExternalApis::DataciteService.mint_doi(payload: payload)
-      doi_url = "https://doi.org/#{response.dig('data', 'id')}"
+      doi_url = "#{datacite_scheme.identifier_prefix}#{response.dig('data', 'id')}"
 
       plan.identifiers.create!(identifier_scheme: datacite_scheme, value: doi_url)
     end
@@ -58,7 +59,7 @@ class DoiPublisherService
       )
 
       response = ExternalApis::DataciteService.mint_doi(payload: payload)
-      doi_url = "https://doi.org/#{response.dig('data', 'id')}"
+      doi_url = "#{datacite_scheme.identifier_prefix}#{response.dig('data', 'id')}"
 
       Identifier.create!(
         identifiable: snapshot,
@@ -67,8 +68,8 @@ class DoiPublisherService
       )
     end
 
-    def update_canonical_doi(plan:, snapshot:, canonical_doi_url:)
-      clean_canonical_id = canonical_doi_url.gsub(%r{^https?://doi\.org/}, '')
+    def update_canonical_doi(plan:, snapshot:, datacite_scheme:, canonical_doi_url:)
+      clean_canonical_id = canonical_doi_url.delete_prefix(datacite_scheme.identifier_prefix)
 
       # Collect all snapshot DOIs for this plan
       has_version_dois = Identifier.for_plan_snapshot
