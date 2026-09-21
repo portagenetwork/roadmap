@@ -28,6 +28,10 @@ describe 'api/v2/plans/_show.json.jbuilder' do
       @json = JSON.parse(rendered).with_indifferent_access
     end
 
+    it 'includes the RDA schema version' do
+      expect(@json[:schema]).to eql('https://github.com/RDA-DMP-Common/RDA-DMP-Common-Standard/tree/master/examples/JSON/JSON-schema/1.2')
+    end
+
     it 'includes the :title' do
       expect(@json[:title]).to eql(@plan.title)
     end
