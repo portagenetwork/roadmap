@@ -2,7 +2,7 @@
 
 # locals: plan
 
-json.schema 'https://github.com/RDA-DMP-Common/RDA-DMP-Common-Standard/tree/master/examples/JSON/JSON-schema/1.0'
+json.schema 'https://github.com/RDA-DMP-Common/RDA-DMP-Common-Standard/tree/master/examples/JSON/JSON-schema/1.2'
 
 presenter = Api::V2::PlanPresenter.new(plan: plan, complete: @complete)
 
