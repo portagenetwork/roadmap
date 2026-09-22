@@ -150,6 +150,7 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
         clear_enqueued_jobs
         authorize_as(:administrator)
         plan.update(visibility: :publicly_visible)
+        DoiPublisherService.stubs(:publish_snapshot_doi).returns('https://doi.org/10.83996/snapshot-1')
       end
 
       it 'enqueues PublishDoiJob and sets the queued notice' do
@@ -168,12 +169,12 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
         before do
           authorize_as(:administrator)
           plan.update(visibility: :publicly_visible)
-          PublishDoiJob.stubs(:perform_later).raises(StandardError, 'Queue connection error')
+          DoiPublisherService.stubs(:publish_snapshot_doi).raises(StandardError, 'DataCite API error')
         end
 
         it 'logs the error and redirects with an alert' do
           Rails.logger.expects(:error).with(
-            regexp_matches(/Version publishing cancelled — DOI minting failed for Plan/)
+            "Version publishing cancelled — DOI minting failed for Plan ##{plan.id}: DataCite API error"
           )
 
           subject
@@ -191,7 +192,7 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
       end
 
       it 'does not mint a DOI and sets the standard notice' do
-        DoiPublisherService.expects(:publish_snapshot).never
+        DoiPublisherService.expects(:publish_snapshot_doi).never
 
         subject
 

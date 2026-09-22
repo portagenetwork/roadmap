@@ -39,7 +39,9 @@ class PlanSnapshotsController < ApplicationController
   # POST /plans/:plan_id/versions
   def create
     snapshot = create_snapshot_in_transaction
+
     if snapshot&.persisted?
+      PublishDoiJob.perform_later(snapshot) if @plan.publicly_visible?
       redirect_to plan_snapshots_path(@plan), notice: success_notice
     else
       redirect_to plan_snapshots_path(@plan), alert: create_failure_alert(snapshot)
@@ -54,16 +56,11 @@ class PlanSnapshotsController < ApplicationController
     @plan.with_lock do
       visibility = plan_snapshot_params[:visibility] || 'privately_visible'
       snapshot = PlanSnapshot.create_from_plan(plan: @plan, visibility: visibility)
-      mint_doi_if_needed(snapshot)
+
+      DoiPublisherService.publish_snapshot_doi(snapshot) if snapshot.persisted? && @plan.publicly_visible?
+
       snapshot
     end
-  end
-
-  def mint_doi_if_needed(snapshot)
-    return unless snapshot.persisted? && @plan.publicly_visible?
-
-    # Enqueue background job to mint and link DOIs asynchronously
-    PublishDoiJob.perform_later(snapshot)
   end
 
   def success_notice
