@@ -10,17 +10,12 @@ class DoiPublisherService
 
       return snapshot.doi if snapshot.doi.present?
 
-      previous_identifier = Identifier.for_plan_snapshot
-                                      .where(identifiable_id: plan.snapshots.where('created_at < ?',
-                                                                                   snapshot.created_at).pluck(:id))
-                                      .order(created_at: :desc).first
-
       mint_snapshot_doi(
         plan: plan,
         snapshot: snapshot,
         datacite_scheme: datacite_scheme,
         canonical_doi: plan.dmp_id&.value,
-        previous_doi: previous_identifier&.value
+        previous_doi: snapshot.previous_doi&.value
       )
     end
 
@@ -114,17 +109,12 @@ class DoiPublisherService
 
       clean_snapshot_id = snapshot_identifier.value.delete_prefix(datacite_scheme.identifier_prefix)
 
-      previous_identifier = Identifier.for_plan_snapshot
-                                      .where(identifiable_id: plan.snapshots.where('created_at < ?',
-                                                                                   snapshot.created_at).pluck(:id))
-                                      .order(created_at: :desc).first
-
       payload = datacite_payload(
         plan: plan,
         snapshot: snapshot,
         is_canonical: false,
         canonical_doi: canonical_doi_url,
-        previous_doi: previous_identifier&.value
+        previous_doi: snapshot.previous_doi&.value
       )
       payload['data']['id'] = clean_snapshot_id
 

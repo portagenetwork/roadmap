@@ -94,6 +94,16 @@ class PlanSnapshot < ApplicationRecord
     identifier&.value
   end
 
+  def previous_doi
+    datacite_scheme = IdentifierScheme.find_by(name: 'datacite')
+    return nil if datacite_scheme.blank?
+
+    Identifier.for_plan_snapshot
+              .where(identifiable_id: plan.snapshots.where('created_at < ?', created_at).pluck(:id))
+              .order(created_at: :desc)
+              .first
+  end
+
   def recalculated_checksum
     PlanSnapshotChecksum.calculate(rda_json, extension_json)
   end
