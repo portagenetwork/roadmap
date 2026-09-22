@@ -24,9 +24,11 @@ module Api
       end
 
       def paginate_response(results:)
-        results = results.page(@offset).per(@count)
-        @total_count = results.total_count
-        results
+        # Preserve total_count from the full relation before applying the
+        # offset/limit window, since `limit/offset` does not provide the
+        # Kaminari-style `total_count` helper on its own.
+        @total_count = results.count
+        results.offset(@offset).limit(@count)
       end
 
       def parse_integer_param(key, default)

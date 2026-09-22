@@ -360,6 +360,25 @@ RSpec.describe Api::CommonMadmp::PlansController do
           Rails.configuration.x.application.api_max_page_size = original_page_size
         end
 
+        it 'returns the requested record window for the given offset and count' do
+          original_page_size = Rails.configuration.x.application.api_max_page_size
+          Rails.configuration.x.application.api_max_page_size = 10
+
+          create_list(:plan, 25, :publicly_visible) do |plan|
+            plan.add_user!(@user.id, :commenter)
+          end
+
+          expected_ids = Plan.order(created_at: :desc).offset(10).limit(10).pluck(:id)
+
+          get(dmps_path, params: { offset: '10', count: '10' }, headers: @headers)
+          expect(response).to have_http_status(:ok)
+
+          json = JSON.parse(response.body).with_indifferent_access
+          expect(json[:items].map { |item| item[:id] }).to eq(expected_ids)
+
+          Rails.configuration.x.application.api_max_page_size = original_page_size
+        end
+
         it 'generates correct offset and count pagination links' do
           original_page_size = Rails.configuration.x.application.api_max_page_size
           Rails.configuration.x.application.api_max_page_size = 10
