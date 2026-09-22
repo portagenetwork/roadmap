@@ -282,6 +282,32 @@ RSpec.describe Api::CommonMadmp::PlansController do
           expect(json[:items].map { |item| item[:id] }).to eq([matching.id])
         end
 
+        it 'preserves filter and sort params in pagination links' do
+          original_page_size = Rails.configuration.x.application.api_max_page_size
+          Rails.configuration.x.application.api_max_page_size = 2
+
+          begin
+            3.times do |index|
+              plan = create(:plan, org: @user.org, title: "Alpha Project #{index}")
+              plan.add_user!(@user.id, :creator)
+            end
+
+            get(dmps_path, params: { title: 'Alpha', sort: 'created,desc', count: 2 }, headers: @headers)
+            expect(response).to have_http_status(:ok)
+
+            json = JSON.parse(response.body).with_indifferent_access
+            expect(json[:next]).to be_present
+
+            next_query = Rack::Utils.parse_nested_query(URI.parse(json[:next]).query)
+            expect(next_query['title']).to eq('Alpha')
+            expect(next_query['sort']).to eq('created,desc')
+            expect(next_query['count']).to eq('2')
+            expect(next_query['offset']).to eq('2')
+          ensure
+            Rails.configuration.x.application.api_max_page_size = original_page_size
+          end
+        end
+
         it 'filters plans by query across plan and dataset text fields' do
           matching_title = create(:plan, org: @user.org, title: 'Climate resilience plan',
                                          description: 'A plan for climate adaptation and biodiversity research.')

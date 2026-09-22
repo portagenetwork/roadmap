@@ -4,7 +4,7 @@
 
 total_count ||= 0
 
-paginator = Api::CommonMadmp::PaginationPresenter.new(current_url: request.path,
+paginator = Api::CommonMadmp::PaginationPresenter.new(current_url: request.fullpath,
                                                       count: @count,
                                                       total_count: total_count,
                                                       offset: @offset)
