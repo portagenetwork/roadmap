@@ -31,7 +31,6 @@ class DoiPublisherService
       update_canonical_doi(
         plan: plan,
         snapshot: snapshot,
-        datacite_scheme: datacite_scheme,
         canonical_doi_url: canonical_identifier.value
       )
 
@@ -39,7 +38,6 @@ class DoiPublisherService
       update_snapshot_doi(
         plan: plan,
         snapshot: snapshot,
-        datacite_scheme: datacite_scheme,
         canonical_doi_url: canonical_identifier.value
       )
     end
@@ -57,7 +55,10 @@ class DoiPublisherService
       payload = datacite_payload(plan: plan, snapshot: snapshot, is_canonical: true)
 
       response = ExternalApis::DataciteService.mint_doi(payload: payload)
-      doi_url = "#{datacite_scheme.identifier_prefix}#{response.dig('data', 'id')}"
+      doi_url = DoiNormalizerService.full_url(
+        response.dig('data', 'id'),
+        scheme_prefix: datacite_scheme.identifier_prefix
+      )
 
       plan.identifiers.create!(identifier_scheme: datacite_scheme, value: doi_url)
     end
@@ -72,7 +73,10 @@ class DoiPublisherService
       )
 
       response = ExternalApis::DataciteService.mint_doi(payload: payload)
-      doi_url = "#{datacite_scheme.identifier_prefix}#{response.dig('data', 'id')}"
+      doi_url = DoiNormalizerService.full_url(
+        response.dig('data', 'id'),
+        scheme_prefix: datacite_scheme.identifier_prefix
+      )
 
       Identifier.create!(
         identifiable: snapshot,
@@ -81,8 +85,8 @@ class DoiPublisherService
       )
     end
 
-    def update_canonical_doi(plan:, snapshot:, datacite_scheme:, canonical_doi_url:)
-      clean_canonical_id = canonical_doi_url.delete_prefix(datacite_scheme.identifier_prefix)
+    def update_canonical_doi(plan:, snapshot:, canonical_doi_url:)
+      clean_canonical_id = DoiNormalizerService.bare_doi(canonical_doi_url)
 
       # Pluck DOI string values so Jbuilder receives array of URL strings
       has_version_dois = Identifier.for_plan_snapshot
@@ -103,11 +107,11 @@ class DoiPublisherService
       )
     end
 
-    def update_snapshot_doi(plan:, snapshot:, datacite_scheme:, canonical_doi_url:)
+    def update_snapshot_doi(plan:, snapshot:, canonical_doi_url:)
       snapshot_identifier = snapshot.identifier
       return if snapshot_identifier.blank?
 
-      clean_snapshot_id = snapshot_identifier.value.delete_prefix(datacite_scheme.identifier_prefix)
+      clean_snapshot_id = DoiNormalizerService.bare_doi(snapshot_identifier.value)
 
       payload = datacite_payload(
         plan: plan,
