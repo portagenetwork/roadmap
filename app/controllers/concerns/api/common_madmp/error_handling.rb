@@ -2,6 +2,7 @@
 
 module Api
   module CommonMadmp
+    # Handles errors raised by the API and renders them as API error responses.
     module ErrorHandling
       extend ActiveSupport::Concern
 
@@ -10,6 +11,22 @@ module Api
       end
 
       private
+
+      # The Common MaDMP base controller overrides doorkeeper_render_error to
+      # customize only the authentication-required response. Other Doorkeeper errors
+      # continue to use the default behavior from the gem.
+      def authentication_required_error
+        response.headers['WWW-Authenticate'] =
+          "Bearer realm=\"Doorkeeper\", error=\"invalid_token\", error_description=\"#{doorkeeper_error_description}\""
+
+        render_error(error_code: 'authentication_required',
+                     error_message: 'Authentication required to perform the specified request.',
+                     status: :unauthorized)
+      end
+
+      def doorkeeper_error_description
+        doorkeeper_error&.description || 'The access token is invalid'
+      end
 
       def render_error(error_code:, error_message:, status:)
         @error_code = error_code
