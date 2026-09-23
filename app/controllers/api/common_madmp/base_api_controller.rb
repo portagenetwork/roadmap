@@ -28,6 +28,15 @@ module Api
 
       private
 
+      # Doorkeeper exposes this hook so controllers can override the default rendering
+      # behavior. We keep the default Doorkeeper response for non-auth failures, but
+      # customize the authentication-required case to match the Common MaDMP API contract.
+      def doorkeeper_render_error
+        return authentication_required_error if doorkeeper_error.is_a?(Doorkeeper::OAuth::InvalidTokenResponse)
+
+        super
+      end
+
       # define instance variable json and associated getter and setter methods
       attr_accessor :json
 

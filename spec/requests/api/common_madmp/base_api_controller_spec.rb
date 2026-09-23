@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::CommonMadmp::BaseApiController do
   include ApiHelper
+  include Api::CommonMadmp::Helpers
 
   describe 'token validation (doorkeeper_authorize!)' do
     it 'returns 401 Unauthorized when the token is malformed/invalid' do
@@ -14,7 +15,7 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
 
       get(dmps_path, headers: headers)
 
-      expect_doorkeeper_unauthorized
+      expect_authentication_required_response
     end
 
     it 'returns 401 Unauthorized when the token has expired' do
@@ -31,7 +32,7 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
 
       get(dmps_path, headers: headers)
 
-      expect_doorkeeper_unauthorized
+      expect_authentication_required_response
     end
 
     it 'returns 401 Unauthorized when the token has been revoked' do
@@ -48,7 +49,7 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
 
       get(dmps_path, headers: headers)
 
-      expect_doorkeeper_unauthorized
+      expect_authentication_required_response
     end
 
     it 'does not require any scope on heartbeat' do
