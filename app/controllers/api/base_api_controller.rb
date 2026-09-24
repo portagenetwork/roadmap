@@ -12,7 +12,7 @@ module Api
 
     respond_to :json
 
-    before_action :pagination_params, except: %i[heartbeat]
+    before_action :pagination_params, only: %i[index]
     before_action :parse_request, only: %i[create update]
 
     private
