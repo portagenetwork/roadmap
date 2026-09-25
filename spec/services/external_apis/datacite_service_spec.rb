@@ -4,10 +4,9 @@ require 'rails_helper'
 
 RSpec.describe ExternalApis::DataciteService, type: :service do
   let(:doi) { '10.5281/zenodo.4884775' }
-
-  before do
-    Rails.configuration.x.datacite.active = true
-  end
+  let(:api_base_url) { Rails.configuration.x.datacite.test_api_base_url.presence || 'https://api.test.datacite.org' }
+  let(:repository_id) { Rails.configuration.x.datacite.repository_id.presence || 'MY_REPO' }
+  let(:password) { Rails.configuration.x.datacite.password.presence || 'SECRET' }
 
   describe '.parse_attributes' do
     context 'when given a valid JSON payload' do
@@ -124,6 +123,72 @@ RSpec.describe ExternalApis::DataciteService, type: :service do
         expect(described_class.parse_attributes(dataset_json, doi)[:output_type]).to eq(:dataset)
         expect(described_class.parse_attributes(text_json, doi)[:output_type]).to eq(:text)
       end
+    end
+  end
+
+  describe '.mint_doi' do
+    let(:payload) { { data: { type: 'dois', attributes: { prefix: '10.83996' } } } }
+    let(:response_body) { { data: { id: '10.83996/1234', type: 'dois' } }.to_json }
+
+    context 'when integration is disabled' do
+      before { Rails.configuration.x.datacite.active = false }
+      after { Rails.configuration.x.datacite.active = true }
+
+      it 'raises an error before sending a request' do
+        expect { described_class.mint_doi(payload: payload) }
+          .to raise_error(StandardError, /disabled or credentials missing/)
+      end
+    end
+
+    context 'when integration is enabled' do
+      it 'sends a POST request with basic auth and payload' do
+        datacite_stub = stub_request(:post, "#{api_base_url}/dois")
+                        .with(
+                          body: payload.to_json,
+                          headers: {
+                            'Content-Type' => 'application/vnd.api+json',
+                            'Accept' => 'application/vnd.api+json'
+                          },
+                          basic_auth: [repository_id, password]
+                        )
+                        .to_return(status: 201, body: response_body)
+
+        result = described_class.mint_doi(payload: payload)
+
+        expect(datacite_stub).to have_been_requested
+        expect(result).to eq({ 'data' => { 'id' => '10.83996/1234', 'type' => 'dois' } })
+      end
+
+      context 'when DataCite returns an error status' do
+        before do
+          stub_request(:post, "#{api_base_url}/dois")
+            .to_return(status: 422, body: 'Unprocessable Entity')
+        end
+
+        it 're-raises the API error response' do
+          expect { described_class.mint_doi(payload: payload) }
+            .to raise_error(StandardError, /DataCite API Error \[422\]/)
+        end
+      end
+    end
+  end
+
+  describe '.update_doi' do
+    let(:raw_doi_id) { 'https://doi.org/10.83996/1234' }
+    let(:payload) { { data: { type: 'dois', attributes: { event: 'publish' } } } }
+    let(:response_body) { { data: { id: '10.83996/1234', type: 'dois' } }.to_json }
+
+    it 'strips the DOI prefix, CGI escapes the ID, and sends a PUT request' do
+      put_stub = stub_request(:put, "#{api_base_url}/dois/10.83996%2F1234")
+                 .with(
+                   body: payload.to_json,
+                   basic_auth: [repository_id, password]
+                 )
+                 .to_return(status: 200, body: response_body)
+
+      described_class.update_doi(doi_id: raw_doi_id, payload: payload)
+
+      expect(put_stub).to have_been_requested
     end
   end
 end
