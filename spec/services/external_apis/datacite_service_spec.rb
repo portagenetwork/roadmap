@@ -4,14 +4,9 @@ require 'rails_helper'
 
 RSpec.describe ExternalApis::DataciteService, type: :service do
   let(:doi) { '10.5281/zenodo.4884775' }
-
-  before do
-    Rails.configuration.x.datacite.active = true
-    Rails.configuration.x.datacite.repository_id = 'MY_REPO'
-    Rails.configuration.x.datacite.password = 'SECRET'
-    Rails.configuration.x.datacite.api_base_url = 'https://api.datacite.org'
-    Rails.configuration.x.datacite.test_api_base_url = 'https://api.test.datacite.org'
-  end
+  let(:api_base_url) { Rails.configuration.x.datacite.test_api_base_url.presence || 'https://api.test.datacite.org' }
+  let(:repository_id) { Rails.configuration.x.datacite.repository_id.presence || 'MY_REPO' }
+  let(:password) { Rails.configuration.x.datacite.password.presence || 'SECRET' }
 
   describe '.parse_attributes' do
     context 'when given a valid JSON payload' do
@@ -137,6 +132,7 @@ RSpec.describe ExternalApis::DataciteService, type: :service do
 
     context 'when integration is disabled' do
       before { Rails.configuration.x.datacite.active = false }
+      after { Rails.configuration.x.datacite.active = true }
 
       it 'raises an error before sending a request' do
         expect { described_class.mint_doi(payload: payload) }
@@ -146,14 +142,14 @@ RSpec.describe ExternalApis::DataciteService, type: :service do
 
     context 'when integration is enabled' do
       it 'sends a POST request with basic auth and payload' do
-        datacite_stub = stub_request(:post, 'https://api.test.datacite.org/dois')
+        datacite_stub = stub_request(:post, "#{api_base_url}/dois")
                         .with(
                           body: payload.to_json,
                           headers: {
                             'Content-Type' => 'application/vnd.api+json',
                             'Accept' => 'application/vnd.api+json'
                           },
-                          basic_auth: %w[MY_REPO SECRET]
+                          basic_auth: [repository_id, password]
                         )
                         .to_return(status: 201, body: response_body)
 
@@ -165,7 +161,7 @@ RSpec.describe ExternalApis::DataciteService, type: :service do
 
       context 'when DataCite returns an error status' do
         before do
-          stub_request(:post, 'https://api.test.datacite.org/dois')
+          stub_request(:post, "#{api_base_url}/dois")
             .to_return(status: 422, body: 'Unprocessable Entity')
         end
 
@@ -183,10 +179,10 @@ RSpec.describe ExternalApis::DataciteService, type: :service do
     let(:response_body) { { data: { id: '10.83996/1234', type: 'dois' } }.to_json }
 
     it 'strips the DOI prefix, CGI escapes the ID, and sends a PUT request' do
-      put_stub = stub_request(:put, 'https://api.test.datacite.org/dois/10.83996%2F1234')
+      put_stub = stub_request(:put, "#{api_base_url}/dois/10.83996%2F1234")
                  .with(
                    body: payload.to_json,
-                   basic_auth: %w[MY_REPO SECRET]
+                   basic_auth: [repository_id, password]
                  )
                  .to_return(status: 200, body: response_body)
 
