@@ -20,7 +20,7 @@ RSpec.describe Api::V2::PlanPresenter do
 
   describe '#identifier' do
     context 'when the plan has a canonical DMP DOI identifier' do
-      let(:datacite_scheme) { create(:identifier_scheme, name: 'datacite') }
+      let(:datacite_scheme) { create(:identifier_scheme, :datacite) }
       let!(:doi_identifier) do
         create(:identifier, identifiable: plan, identifier_scheme: datacite_scheme, value: '10.83996/1234')
       end

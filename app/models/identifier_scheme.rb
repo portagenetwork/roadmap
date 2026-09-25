@@ -67,6 +67,6 @@ class IdentifierScheme < ApplicationRecord
   end
 
   def self.datacite
-    find_by(name: 'datacite')
+    find_by!(name: 'datacite')
   end
 end

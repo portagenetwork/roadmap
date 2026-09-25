@@ -17,11 +17,11 @@ RSpec.describe DoiPublisherService, type: :service do
 
   describe '.publish_snapshot_doi' do
     context 'when datacite IdentifierScheme is missing' do
-      before { IdentifierScheme.datacite&.destroy }
+      before { IdentifierScheme.find_by(name: 'datacite')&.destroy }
 
-      it 'raises an error' do
+      it 'raises an ActiveRecord::RecordNotFound error' do
         expect { described_class.publish_snapshot_doi(snapshot) }
-          .to raise_error(StandardError, 'DataCite IdentifierScheme missing')
+          .to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 

@@ -323,8 +323,7 @@ class Plan < ApplicationRecord
 
   # Returns the canonical DataCite DOI identifier for the plan
   def dmp_id
-    identifiers.joins(:identifier_scheme)
-               .find_by(identifier_schemes: { name: 'datacite' })
+    identifiers.find_by(identifier_scheme: IdentifierScheme.datacite)
   end
 
   ##

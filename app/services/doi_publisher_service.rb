@@ -6,14 +6,12 @@ class DoiPublisherService
     # 1. SYNCHRONOUS (Controller): Mints snapshot DOI inside database transaction
     def publish_snapshot_doi(snapshot)
       plan = snapshot.plan
-      datacite_scheme = fetch_datacite_scheme
 
       return snapshot.doi if snapshot.doi.present?
 
       mint_snapshot_doi(
         plan: plan,
         snapshot: snapshot,
-        datacite_scheme: datacite_scheme,
         canonical_doi: plan.dmp_id&.value,
         previous_doi: snapshot.previous_doi&.value
       )
@@ -22,10 +20,9 @@ class DoiPublisherService
     # 2. ASYNCHRONOUS (PublishDoiJob): Mints canonical DOI & syncs bidirectional DataCite relationships
     def publish_canonical_and_relationships(snapshot)
       plan = snapshot.plan
-      datacite_scheme = fetch_datacite_scheme
 
       # Fetch or mint Canonical DMP DOI
-      canonical_identifier = plan.dmp_id || mint_canonical_doi(plan, snapshot, datacite_scheme)
+      canonical_identifier = plan.dmp_id || mint_canonical_doi(plan, snapshot)
 
       # Update Canonical DMP metadata at DataCite (HasVersion -> snapshot DOIs)
       update_canonical_doi(
@@ -44,14 +41,8 @@ class DoiPublisherService
 
     private
 
-    def fetch_datacite_scheme
+    def mint_canonical_doi(plan, snapshot)
       datacite_scheme = IdentifierScheme.datacite
-      raise 'DataCite IdentifierScheme missing' if datacite_scheme.blank?
-
-      datacite_scheme
-    end
-
-    def mint_canonical_doi(plan, snapshot, datacite_scheme)
       payload = datacite_payload(plan: plan, snapshot: snapshot, is_canonical: true)
 
       response = ExternalApis::DataciteService.mint_doi(payload: payload)
@@ -63,7 +54,8 @@ class DoiPublisherService
       plan.identifiers.create!(identifier_scheme: datacite_scheme, value: doi_url)
     end
 
-    def mint_snapshot_doi(plan:, snapshot:, datacite_scheme:, canonical_doi:, previous_doi:)
+    def mint_snapshot_doi(plan:, snapshot:, canonical_doi:, previous_doi:)
+      datacite_scheme = IdentifierScheme.datacite
       payload = datacite_payload(
         plan: plan,
         snapshot: snapshot,

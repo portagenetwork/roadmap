@@ -95,7 +95,7 @@ class PlanSnapshot < ApplicationRecord
   end
 
   def previous_doi
-    datacite_scheme = IdentifierScheme.find_by(name: 'datacite')
+    datacite_scheme = IdentifierScheme.datacite
     return nil if datacite_scheme.blank?
 
     Identifier.for_plan_snapshot
