@@ -20,10 +20,11 @@ module ApiHelper
   end
 
   # API V2+ - Oauth authorization_code grant flow (on behalf of a user)
-  def mock_authorization_code_token(oauth_application: create(:oauth_application), user: create(:user))
+  def mock_authorization_code_token(oauth_application: create(:oauth_application), user: create(:user), expires_in: nil)
     scopes = oauth_application.scopes
     create(:oauth_access_grant, application_id: oauth_application.id, resource_owner_id: user.id, scopes: scopes)
-    create(:oauth_access_token, application: oauth_application, resource_owner_id: user.id, scopes: scopes)
+    create(:oauth_access_token, application: oauth_application, resource_owner_id: user.id, scopes: scopes,
+                                expires_in: expires_in)
   end
 
   # Tests the standard pagination functionality
@@ -58,4 +59,11 @@ module ApiHelper
     end
   end
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+
+  def expect_doorkeeper_unauthorized(description: 'The access token is invalid')
+    expect(response).to have_http_status(:unauthorized)
+    expect(response.headers['WWW-Authenticate']).to eq(
+      "Bearer realm=\"Doorkeeper\", error=\"invalid_token\", error_description=\"#{description}\""
+    )
+  end
 end

@@ -160,13 +160,15 @@ class Plan < ApplicationRecord
   # = Scopes =
   # ==========
 
-  # Retrieves any plan in which the user has an active role and
-  # is not a reviewer
-  scope :active, lambda { |user|
-    plan_ids = Role.where(active: true, user_id: user.id).pluck(:plan_id)
+  scope :with_active_role_for, lambda { |user_id|
+                                 joins(:roles)
+                                   .where(roles: { user_id: user_id, active: true })
+                                   .distinct
+                               }
 
-    includes(:template, :roles)
-      .where(id: plan_ids)
+  # Retrieves any plan in which the user has an active role
+  scope :active, lambda { |user|
+    with_active_role_for(user.id).includes(:template, :roles)
   }
 
   scope :search, lambda { |term|
@@ -201,10 +203,8 @@ class Plan < ApplicationRecord
 
   # Restricts to plans where the user_id has an active role.
   scope :for_api_v2, lambda { |user_id|
-    joins(:roles)
+    with_active_role_for(user_id)
       .with_api_v2_associations
-      .where(roles: { user_id: user_id, active: true })
-      .distinct
   }
 
   ##
