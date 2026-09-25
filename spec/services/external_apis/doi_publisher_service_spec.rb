@@ -3,11 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe DoiPublisherService, type: :service do
-  let!(:datacite_scheme) { create(:identifier_scheme, name: 'datacite', identifier_prefix: 'https://doi.org/') }
   let(:plan) { create(:plan, :snapshot_ready) }
   let(:snapshot) { create(:plan_snapshot, plan: plan, version: 2, created_at: 1.day.ago) }
 
   before do
+    create(:identifier_scheme, :datacite)
     Rails.configuration.x.datacite.active = true
     Rails.configuration.x.datacite.repository_id = 'MY_REPO'
     Rails.configuration.x.datacite.password = 'SECRET'
@@ -17,7 +17,7 @@ RSpec.describe DoiPublisherService, type: :service do
 
   describe '.publish_snapshot_doi' do
     context 'when datacite IdentifierScheme is missing' do
-      before { datacite_scheme.destroy }
+      before { IdentifierScheme.datacite&.destroy }
 
       it 'raises an error' do
         expect { described_class.publish_snapshot_doi(snapshot) }
@@ -27,7 +27,7 @@ RSpec.describe DoiPublisherService, type: :service do
 
     context 'when the snapshot has already been published' do
       let!(:existing_doi) do
-        create(:identifier, identifiable: snapshot, identifier_scheme: datacite_scheme, value: 'https://doi.org/10.83996/existing-snapshot')
+        create(:identifier, identifiable: snapshot, identifier_scheme: IdentifierScheme.datacite, value: 'https://doi.org/10.83996/existing-snapshot')
       end
 
       it 'returns the existing DOI value without making API requests' do
@@ -62,7 +62,7 @@ RSpec.describe DoiPublisherService, type: :service do
       it 'mints a canonical DOI for the plan and updates its relationships' do
         described_class.publish_canonical_and_relationships(snapshot)
 
-        canonical_identifier = plan.reload.identifiers.find_by(identifier_scheme: datacite_scheme)
+        canonical_identifier = plan.reload.identifiers.find_by(identifier_scheme: IdentifierScheme.datacite)
         expect(canonical_identifier.value).to eq('https://doi.org/10.83996/canonical-1')
         expect(a_request(:put, %r{/dois/10.83996%2Fcanonical-1})).to have_been_made
       end
@@ -70,7 +70,7 @@ RSpec.describe DoiPublisherService, type: :service do
 
     context 'when the plan already has a canonical DOI' do
       let!(:canonical_doi) do
-        create(:identifier, identifiable: plan, identifier_scheme: datacite_scheme, value: 'https://doi.org/10.83996/canonical-1')
+        create(:identifier, identifiable: plan, identifier_scheme: IdentifierScheme.datacite, value: 'https://doi.org/10.83996/canonical-1')
       end
 
       before do
@@ -80,7 +80,7 @@ RSpec.describe DoiPublisherService, type: :service do
 
       it 'reuses the existing canonical DOI and updates its relationships' do
         expect { described_class.publish_canonical_and_relationships(snapshot) }
-          .not_to change { plan.identifiers.where(identifier_scheme: datacite_scheme).count }
+          .not_to change { plan.identifiers.where(identifier_scheme: IdentifierScheme.datacite).count }
 
         expect(a_request(:put, %r{/dois/10.83996%2Fcanonical-1})).to have_been_made
       end

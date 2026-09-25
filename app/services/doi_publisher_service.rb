@@ -45,7 +45,7 @@ class DoiPublisherService
     private
 
     def fetch_datacite_scheme
-      datacite_scheme = IdentifierScheme.find_by(name: 'datacite')
+      datacite_scheme = IdentifierScheme.datacite
       raise 'DataCite IdentifierScheme missing' if datacite_scheme.blank?
 
       datacite_scheme

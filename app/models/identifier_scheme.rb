@@ -65,4 +65,8 @@ class IdentifierScheme < ApplicationRecord
   def name=(value)
     super(value&.downcase&.gsub(/[^a-z|_]/, ''))
   end
+
+  def self.datacite
+    find_by(name: 'datacite')
+  end
 end
