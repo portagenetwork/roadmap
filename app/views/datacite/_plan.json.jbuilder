@@ -56,7 +56,7 @@ json.data do # rubocop:disable Metrics/BlockLength
       { date: snapshot.created_at.iso8601, dateType: "Issued" }
     ] do |hash|
       json.date hash[:date]
-      json.dateType hash[:type]
+      json.dateType hash[:dateType]
     end
 
     # 5. Abstract / Description

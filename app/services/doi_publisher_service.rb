@@ -70,8 +70,7 @@ class DoiPublisherService
         scheme_prefix: datacite_scheme.identifier_prefix
       )
 
-      Identifier.create!(
-        identifiable: snapshot,
+      snapshot.create_identifier!(
         identifier_scheme: datacite_scheme,
         value: doi_url
       )
