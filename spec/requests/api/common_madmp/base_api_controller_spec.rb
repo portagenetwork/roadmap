@@ -7,9 +7,11 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
   include Api::CommonMadmp::Helpers
 
   describe 'token validation (doorkeeper_authorize!)' do
-    it 'returns 401 Unauthorized when the token is malformed/invalid' do
+    let(:vendor_type) { 'application/vnd.org.rd-alliance.dmp-common.v1.2+json' }
+
+    it 'returns 401 Unauthorized with the negotiated vendor content type for invalid tokens' do
       headers = {
-        Accept: 'application/json',
+        Accept: vendor_type,
         Authorization: 'Bearer not-a-real-token'
       }
 
@@ -71,23 +73,26 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
       expect(response.body).to be_empty
     end
 
-    it 'returns 403 Forbidden when the resource owner account is inactive' do
+    it 'returns 403 Forbidden with the negotiated vendor content type when the resource owner account is inactive' do
       @user = create(:user)
       @client = create(:oauth_application)
       token = mock_authorization_code_token(oauth_application: @client, user: @user).plaintext_token
       @user.update(active: false)
 
       headers = {
-        Accept: 'application/json',
+        Accept: vendor_type,
         Authorization: "Bearer #{token}"
       }
 
       get(dmps_path, headers: headers)
 
       expect(response).to have_http_status(:forbidden)
-      expect(response.parsed_body).to eq(
-        'error_code' => 'insufficient_permissions',
-        'error_message' => 'The authenticated client does not have permission to access the requested resource.'
+      expect(response.headers['Content-Type']).to start_with(vendor_type)
+
+      json = JSON.parse(response.body)
+      expect(json['error_code']).to eq('insufficient_permissions')
+      expect(json['error_message']).to eq(
+        'The authenticated client does not have permission to access the requested resource.'
       )
     end
   end
