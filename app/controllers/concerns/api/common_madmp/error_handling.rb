@@ -82,6 +82,9 @@ module Api
         @error_code = error_code
         @error_message = error_message
 
+        # Errors should preserve the negotiated API response format, falling back to JSON if none was requested.
+        apply_negotiated_content_type
+
         render '/api/common_madmp/error', status: status
       end
     end
