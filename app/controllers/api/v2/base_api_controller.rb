@@ -6,6 +6,9 @@ module Api
       include Api::V2::ErrorHandling
       include Api::V2::Pagination
 
+      # get details of server (e.g. DMPonline) and client app
+      before_action :base_response_content
+
       # GET /api/v2/heartbeat
       def heartbeat
         render '/api/v2/heartbeat'
@@ -17,6 +20,14 @@ module Api
           organisation: @resource_owner.org.name,
           language: @resource_owner.language&.name
         )
+      end
+
+      private
+
+      def base_response_content
+        @application = ApplicationService.application_name
+        @client = doorkeeper_token&.application
+        @caller = @client&.name || request.remote_ip
       end
     end
   end
