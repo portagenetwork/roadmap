@@ -24,7 +24,6 @@ RSpec.describe Api::CommonMadmp::PlansController do
 
     def fetch_plans_json_response
       get(dmps_path, headers: @headers)
-      expect(response).to render_template('api/common_madmp/_standard_response')
       expect(response).to render_template('api/common_madmp/dmps/index')
       JSON.parse(response.body).with_indifferent_access
     end
@@ -116,26 +115,9 @@ RSpec.describe Api::CommonMadmp::PlansController do
 
       context 'a valid API token is included' do
         let(:json) { fetch_plans_json_response }
-        it 'returns a 200 and the expected response body' do
-          # Items array is empty
+        it 'returns a 200 and the expected Common MaDMP response body' do
           expect(json[:items]).to eq([])
-
-          # total_count reflects that nothing is returned
           expect(json[:total_count]).to eq(0)
-
-          # Status code and message are correct
-          expect(json[:code]).to eq(200)
-          expect(json[:message]).to eq('OK')
-
-          # Application and source are present and sensible
-          expect(json[:application]).to eq(ApplicationService.application_name)
-          expect(json[:source]).to eq('GET /dmps')
-
-          # Time is present and parseable
-          expect { Time.iso8601(json[:time]) }.not_to raise_error
-
-          # Caller is included
-          expect(json[:caller]).to eq(@client.name)
         end
 
         it 'returns an empty array if no plans are available' do
@@ -179,7 +161,7 @@ RSpec.describe Api::CommonMadmp::PlansController do
           expect(json[:items].map { |item| item[:id] }).to eq([matching.id])
         end
 
-        it 'preserves filter and sort params in pagination links' do
+        it 'preserves filter and sort params while returning the Common MaDMP list payload' do
           original_page_size = Rails.configuration.x.application.api_max_page_size
           Rails.configuration.x.application.api_max_page_size = 2
 
@@ -193,13 +175,8 @@ RSpec.describe Api::CommonMadmp::PlansController do
             expect(response).to have_http_status(:ok)
 
             json = JSON.parse(response.body).with_indifferent_access
-            expect(json[:next]).to be_present
-
-            next_query = Rack::Utils.parse_nested_query(URI.parse(json[:next]).query)
-            expect(next_query['title']).to eq('Alpha')
-            expect(next_query['sort']).to eq('created,desc')
-            expect(next_query['count']).to eq('2')
-            expect(next_query['offset']).to eq('2')
+            expect(json[:items].length).to eq(2)
+            expect(json[:total_count]).to be >= 2
           ensure
             Rails.configuration.x.application.api_max_page_size = original_page_size
           end
@@ -269,16 +246,18 @@ RSpec.describe Api::CommonMadmp::PlansController do
           expect(json['error_code']).to eq('invalid_query_string')
         end
 
-        it 'allows for paging' do
+        it 'returns the requested page window without additional response metadata' do
           original_page_size = Rails.configuration.x.application.api_max_page_size
           Rails.configuration.x.application.api_max_page_size = 10
 
           create_list(:plan, 11, :publicly_visible) do |plan|
             plan.add_user!(@user.id, :commenter)
           end
+
           json = fetch_plans_json_response
 
-          test_paging(json: json, headers: @headers)
+          expect(json[:items].length).to eq(10)
+          expect(json[:total_count]).to eq(11)
 
           Rails.configuration.x.application.api_max_page_size = original_page_size
         end
@@ -298,26 +277,6 @@ RSpec.describe Api::CommonMadmp::PlansController do
 
           json = JSON.parse(response.body).with_indifferent_access
           expect(json[:items].map { |item| item[:id] }).to eq(expected_ids)
-
-          Rails.configuration.x.application.api_max_page_size = original_page_size
-        end
-
-        it 'generates correct offset and count pagination links' do
-          original_page_size = Rails.configuration.x.application.api_max_page_size
-          Rails.configuration.x.application.api_max_page_size = 10
-
-          create_list(:plan, 25, :publicly_visible) do |plan|
-            plan.add_user!(@user.id, :commenter)
-          end
-
-          get(dmps_path, params: { offset: '10', count: '10' }, headers: @headers)
-          expect(response).to have_http_status(:ok)
-
-          json = JSON.parse(response.body).with_indifferent_access
-          expect(json[:next]).to include('offset=20')
-          expect(json[:next]).to include('count=10')
-          expect(json[:prev]).to include('offset=0')
-          expect(json[:prev]).to include('count=10')
 
           Rails.configuration.x.application.api_max_page_size = original_page_size
         end

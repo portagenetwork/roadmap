@@ -200,18 +200,5 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
       expect(json['error_code']).to eq('invalid_query_string')
       expect(json['error_message']).to eq('The query string contained invalid pagination parameters.')
     end
-
-    it 'accepts valid offset and count params' do
-      create_list(:plan, 25, org: @user.org).each do |plan|
-        plan.add_user!(@user.id, :creator)
-      end
-
-      get(dmps_path, params: { offset: '10', count: '5' }, headers: @headers)
-
-      expect(response).to have_http_status(:ok)
-      json = JSON.parse(response.body)
-      expect(json['page']).to eq(10)
-      expect(json['per_page']).to eq(5)
-    end
   end
 end

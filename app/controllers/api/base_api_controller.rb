@@ -6,8 +6,6 @@ module Api
     skip_before_action :verify_authenticity_token
     before_action :doorkeeper_authorize!, except: %i[heartbeat]
     before_action :authorize_resource_owner, except: %i[heartbeat]
-    # get details of server (e.g. DMPonline) and client app
-    before_action :base_response_content
     before_action :log_access
 
     respond_to :json
@@ -29,16 +27,12 @@ module Api
       handle_deactivated_resource_owner
     end
 
-    def base_response_content
-      @application = ApplicationService.application_name
-      @client = doorkeeper_token&.application
-      @caller = @client&.name || request.remote_ip
-    end
-
     def log_access
-      if @client.present?
-        Rails.logger.info "Client (OAuth) application name: #{@client.name}"
-        Rails.logger.info "Client (OAuth) application uid: #{@client.uid}"
+      client = doorkeeper_token&.application
+
+      if client.present?
+        Rails.logger.info "Client (OAuth) application name: #{client.name}"
+        Rails.logger.info "Client (OAuth) application uid: #{client.uid}"
       end
       Rails.logger.info "Resource owner id: #{@resource_owner.id}" if @resource_owner
     end
