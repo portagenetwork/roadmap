@@ -2,7 +2,7 @@
 
 module Api
   module CommonMadmp
-    # Helper class for generic API V2 pagination
+    # Helper class for Common MaDMP pagination links.
     class PaginationPresenter
       def initialize(current_url:, count:, total_count:, offset: 0)
         @url = current_url
