@@ -14,7 +14,9 @@ RSpec.describe ExternalApis::DoiResolutionService, type: :service do
       titles: [{ title: 'DataCite Document' }],
       descriptions: [{ description: 'DataCite Abstract' }],
       types: { resourceTypeGeneral: 'Dataset' },
-      registered: '2021-05-12'
+      dates: [
+        { date: '2021-05-12', dateType: 'Issued' }
+      ]
     } } }.to_json
   end
 

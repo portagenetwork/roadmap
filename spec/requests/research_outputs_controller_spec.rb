@@ -31,7 +31,9 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
                 { description: 'Abstract description text...', descriptionType: 'Abstract' }
               ],
               types: { resourceTypeGeneral: 'Dataset' },
-              registered: '2021-05-12'
+              dates: [
+                { date: '2021-05-12', dateType: 'Issued' }
+              ]
             }
           }
         }.to_json

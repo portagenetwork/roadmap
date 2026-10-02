@@ -43,9 +43,8 @@ module ExternalApis
           title: attributes.dig(:titles, 0, :title),
           description: extract_description(attributes),
           output_type: ResearchOutput.output_type_from_datacite(attributes.dig(:types, :resourceTypeGeneral)),
-          # There are various types of release dates available, but few return full dates (YYYY-MM-DD)
-          # registered release dates provide the exact date the DOI became findable
-          release_date: attributes[:registered],
+          # Strictly use the 'Issued' date type. If unavailable, leave release_date nil
+          release_date: extract_issued_date(attributes),
           doi: clean_doi
         }
       end
@@ -56,6 +55,14 @@ module ExternalApis
         # External error tracking to notify the team
         Rollbar.error(error, "DataCite Service Error [fetch_metadata] for DOI: #{doi}")
         nil
+      end
+
+      private
+
+      def extract_issued_date(attributes)
+        dates = attributes[:dates] || []
+        issued_entry = dates.find { |d| d[:dateType]&.casecmp?('issued') }
+        issued_entry&.dig(:date)
       end
     end
   end
