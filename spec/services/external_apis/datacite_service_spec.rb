@@ -21,7 +21,9 @@ RSpec.describe ExternalApis::DataciteService, type: :service do
                 { descriptionType: 'Abstract', description: 'Explicit abstract text.' }
               ],
               types: { resourceTypeGeneral: 'Software' },
-              registered: '2023-05-12'
+              dates: [
+                { date: '2023-05-12', dateType: 'Issued' }
+              ]
             }
           }
         }.to_json
@@ -45,6 +47,50 @@ RSpec.describe ExternalApis::DataciteService, type: :service do
         empty_json = { data: {} }.to_json
 
         expect(described_class.parse_attributes(empty_json, doi)).to be_nil
+      end
+    end
+  end
+
+  describe 'release_date extraction' do
+    context 'when an Issued date is present in the dates array' do
+      let(:issued_date_json) do
+        {
+          data: {
+            attributes: {
+              titles: [{ title: 'Issued Date Test' }],
+              dates: [
+                { date: '2021-01-01', dateType: 'Created' },
+                { date: '2022-03-15', dateType: 'Issued' }
+              ]
+            }
+          }
+        }.to_json
+      end
+
+      it 'extracts the Issued date for release_date' do
+        result = described_class.parse_attributes(issued_date_json, doi)
+
+        expect(result[:release_date]).to eq('2022-03-15')
+      end
+    end
+
+    context 'when no Issued date is present in dates or dates array is missing' do
+      let(:no_issued_date_json) do
+        {
+          data: {
+            attributes: {
+              titles: [{ title: 'No Issued Date Test' }],
+              dates: [{ date: '2021-01-01', dateType: 'Created' }],
+              registered: '2023-05-12'
+            }
+          }
+        }.to_json
+      end
+
+      it 'returns nil for release_date without falling back to another date' do
+        result = described_class.parse_attributes(no_issued_date_json, doi)
+
+        expect(result[:release_date]).to be_nil
       end
     end
   end
