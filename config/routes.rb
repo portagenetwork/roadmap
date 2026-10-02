@@ -236,6 +236,10 @@ Rails.application.routes.draw do
     end
   end
 
+  scope defaults: { format: :json } do
+    resources :dmps, only: %i[index show], controller: 'api/common_madmp/plans'
+  end
+
   namespace :paginable do
     resources :orgs, only: [] do
       get 'index/:page', action: :index, on: :collection, as: :index
