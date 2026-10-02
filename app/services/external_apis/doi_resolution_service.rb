@@ -5,10 +5,10 @@ module ExternalApis
   class DoiResolutionService
     class << self
       # Matches ~99% of modern Crossref DOIs
-      MODERN_DOI_REGEX = %r{10\.\d{4,9}/[-._;()/:A-Z0-9]+}i
+      MODERN_DOI_REGEX = %r{\A10\.\d{4,9}/[-._;()/:A-Z0-9]+\z}i
 
       # Catch-all for early DOIs with complex/opaque formatting
-      OLD_DOI_REGEX = %r{10\.1002/[^\s]+}i
+      OLD_DOI_REGEX = %r{\A10\.1002/[^\s]+\z}i
 
       def active?
         Rails.configuration.x.datacite&.active || Rails.configuration.x.crossref&.active
