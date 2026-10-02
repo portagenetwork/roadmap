@@ -30,10 +30,8 @@ class ResearchOutputsController < ApplicationController
 
     return unless result[:status] == :ok && result[:metadata].present?
 
-    metadata = result[:metadata]
-
     @research_output.assign_attributes(
-      metadata.slice(:title, :description, :output_type, :release_date)
+      result[:metadata].slice(:title, :description, :output_type, :release_date)
     )
   end
 
@@ -159,26 +157,32 @@ class ResearchOutputsController < ApplicationController
   def fetch_doi
     authorize ResearchOutput.new(plan_id: params[:plan_id])
 
-    # Obtain research output metadata from DataCite or Crossref service
-    result = ExternalApis::DoiResolutionService.fetch_metadata(
-      doi: params[:doi]
-    )
+    # Obtain research output metadata from DOI Resolution Service
+    result = ExternalApis::DoiResolutionService.fetch_metadata(doi: params[:doi])
+    return render json: result[:metadata] if result[:status] == :ok
 
-    case result[:status]
-    when :ok
-      render json: result[:metadata]
-    when :blank
-      render json: { error: 'DOI is required.' }, status: :bad_request
-    when :invalid
-      render json: { error: 'Does not appear to be a valid DOI.' }, status: :bad_request
-    when :not_found
-      render json: { error: 'Could not find metadata for the provided DOI.' }, status: :not_found
-    else
-      render json: { error: 'An unexpected error occurred.' }, status: :internal_server_error
-    end
+    render_doi_error(result[:status])
   end
 
   private
+
+  def render_doi_error(status)
+    message, http_status = case status
+                           when :blank
+                             [_('DOI is required.'), :bad_request]
+                           when :invalid
+                             [_('Does not appear to be a valid DOI.'), :bad_request]
+                           when :not_found
+                             [_('Could not find metadata for the provided DOI.'), :not_found]
+                           when :service_unavailable
+                             [_('DOI lookup service is currently unavailable. Please enter details manually.'),
+                              :service_unavailable]
+                           else
+                             [_('An unexpected error occurred.'), :internal_server_error]
+                           end
+
+    render json: { error: message }, status: http_status
+  end
 
   def output_params
     params.require(:research_output)
