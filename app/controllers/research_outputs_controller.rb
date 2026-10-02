@@ -19,7 +19,7 @@ class ResearchOutputsController < ApplicationController
 
   # GET /plans/:plan_id/research_outputs/new
   def new
-    @research_output = ResearchOutput.new(plan_id: @plan.id)
+    @research_output = ResearchOutput.new(plan_id: @plan.id, output_type: nil)
     authorize @research_output
 
     # Check if a DOI parameter was carried over in the redirect URL query string
