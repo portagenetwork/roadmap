@@ -3,6 +3,10 @@
 module ExternalApis
   # This service calls DataCite and Crossref services accordingly when parsing DOIs
   class DoiResolutionService
+    SERVICES = [
+      [ExternalApis::DataciteService, 'datacite'],
+      [ExternalApis::CrossrefService, 'crossref']
+    ]
     class << self
       # Matches ~99% of modern Crossref DOIs
       MODERN_DOI_REGEX = %r{\A10\.\d{4,9}/[-._;()/:A-Z0-9]+\z}i
@@ -25,34 +29,74 @@ module ExternalApis
         # See https://www.crossref.org/blog/dois-and-matching-regular-expressions/ for more
         return { status: :invalid } unless clean_doi.match?(MODERN_DOI_REGEX) || clean_doi.match?(OLD_DOI_REGEX)
 
-        metadata = execute_fetch(ExternalApis::DataciteService, 'datacite', clean_doi)
-        # Fall back to Crossref if DataCite does not return anything
-        metadata ||= execute_fetch(ExternalApis::CrossrefService, 'crossref', clean_doi)
+        # Check top-level metadata cache first to prevent duplicate resolutions
+        cache_key = "doi_resolution/metadata/#{clean_doi.downcase}"
+        cached_result = Rails.cache.read(cache_key)
+        return cached_result if cached_result.present?
 
-        if metadata.present?
-          { status: :ok, metadata: metadata }
-        else
-          { status: :not_found }
-        end
+        resolve_from_providers(clean_doi, cache_key)
       end
 
       private
 
+      def resolve_from_providers(clean_doi, cache_key)
+        statuses = []
+
+        # Check datacite first, fall back to crossref
+        SERVICES.each do |service_module, service_name|
+          res = execute_fetch(service_module, service_name, clean_doi)
+          if res.is_a?(Hash)
+            result = { status: :ok, metadata: res }
+            Rails.cache.write(cache_key, result, expires_in: 5.minutes)
+            return result
+          end
+
+          statuses << res
+        end
+
+        evaluate_statuses(statuses)
+      end
+
+      def evaluate_statuses(statuses)
+        active_statuses = statuses.reject { |s| s == :inactive }
+
+        if active_statuses.present? && active_statuses.all?(:not_found)
+          { status: :not_found }
+        else
+          { status: :service_unavailable }
+        end
+      end
+
       def execute_fetch(service_module, service_name, clean_doi)
-        return nil unless service_module.active?
+        return :inactive unless service_module.active?
 
         cache_key = "#{service_name}/metadata/#{clean_doi}"
 
-        # Cache the result for 5 minutes. If this DOI is requested again within 5 minutes
-        # Rails returns the cached hash instantly.
-        Rails.cache.fetch(cache_key, expires_in: 5.minutes, skip_nil: true) do
-          response = service_module.execute_api_get(clean_doi)
-          return nil unless response&.code == 200
+        return Rails.cache.read(cache_key) if Rails.cache.exist?(cache_key)
 
-          service_module.parse_attributes(response.body, clean_doi)
-        end
+        result = fetch_and_parse(service_module, clean_doi)
+        Rails.cache.write(cache_key, result, expires_in: 5.minutes) if cacheable_result?(result)
+        result
       rescue SocketError, HTTParty::Error, Timeout::Error, JSON::ParserError => e
         service_module.log_and_notify_error(e, clean_doi)
+        :error
+      end
+
+      def fetch_and_parse(service_module, clean_doi)
+        response = service_module.execute_api_get(clean_doi)
+        case response&.code
+        when 200
+          service_module.parse_attributes(response.body, clean_doi) || :error
+        when 404
+          :not_found
+        else
+          :error
+        end
+      end
+
+      def cacheable_result?(result)
+        result.is_a?(Hash) || result == :not_found
+      end
       end
     end
   end

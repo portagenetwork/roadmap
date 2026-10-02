@@ -94,30 +94,46 @@ RSpec.describe ExternalApis::DoiResolutionService, type: :service do
         expect(described_class.fetch_metadata(doi: doi)).to eq({ status: :not_found })
       end
     end
+
+    context 'when a provider times out or encounters an error' do
+      it 'returns status :service_unavailable when one provider times out and the other returns 404' do
+        stub_request(:get, /api.datacite.org/).to_raise(Timeout::Error)
+        stub_request(:get, /api.crossref.org/).to_return(status: 404)
+
+        expect(described_class.fetch_metadata(doi: doi)).to eq({ status: :service_unavailable })
+      end
+
+      it 'returns status :service_unavailable when all providers are inactive' do
+        Rails.configuration.x.datacite.active = false
+        Rails.configuration.x.crossref.active = false
+
+        expect(described_class.fetch_metadata(doi: doi)).to eq({ status: :service_unavailable })
+      end
+    end
   end
 
   describe '.execute_fetch' do
     context 'when a service is explicitly deactivated in the configuration' do
-      it 'short-circuits instantly and returns nil without making network calls' do
+      it 'short-circuits instantly and returns inactive status without making network calls' do
         Rails.configuration.x.datacite.active = false
 
         dc_stub = stub_request(:get, /api.datacite.org/)
 
         result = described_class.send(:execute_fetch, ExternalApis::DataciteService, 'datacite', doi)
 
-        expect(result).to be_nil
+        expect(result).to eq(:inactive)
         expect(dc_stub).not_to have_been_requested
       end
     end
 
     context 'when the network layer encounters an error' do
-      it 'gracefully intercepts HTTP timeouts and returns nil instead of crashing' do
+      it 'gracefully intercepts HTTP timeouts and returns error status instead of crashing' do
         stub_request(:get, "#{datacite_base_url}/dois/10.5281%2Fzenodo.4884775")
           .to_raise(Timeout::Error)
 
         result = described_class.send(:execute_fetch, ExternalApis::DataciteService, 'datacite', doi)
 
-        expect(result).to be_nil
+        expect(result).to eq(:error)
       end
 
       it 'gracefully intercepts JSON response parsing exceptions' do
@@ -126,7 +142,7 @@ RSpec.describe ExternalApis::DoiResolutionService, type: :service do
 
         result = described_class.send(:execute_fetch, ExternalApis::DataciteService, 'datacite', doi)
 
-        expect(result).to be_nil
+        expect(result).to eq(:error)
       end
     end
   end
