@@ -6,7 +6,7 @@ module ExternalApis
     SERVICES = [
       [ExternalApis::DataciteService, 'datacite'],
       [ExternalApis::CrossrefService, 'crossref']
-    ]
+    ].freeze
 
     ALLOWED_TAGS = %w[p br strong em ul ol li blockquote a].freeze
     ALLOWED_ATTRIBUTES = %w[href title].freeze
@@ -20,7 +20,7 @@ module ExternalApis
       %r{</?jats:list>}i => 'ul',
       %r{</?jats:sub>}i => '', # strips tag, preserves inner text
       %r{</?jats:sup>}i => ''
-    }
+    }.freeze
 
     class << self
       # Matches ~99% of modern Crossref DOIs
