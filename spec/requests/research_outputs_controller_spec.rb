@@ -31,7 +31,9 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
                 { description: 'Abstract description text...', descriptionType: 'Abstract' }
               ],
               types: { resourceTypeGeneral: 'Dataset' },
-              registered: '2021-05-12'
+              dates: [
+                { date: '2021-05-12', dateType: 'Issued' }
+              ]
             }
           }
         }.to_json
@@ -71,6 +73,20 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
       it 'returns a 404 Not Found JSON response' do
         get fetch_doi_plan_research_outputs_path(plan, doi: '10.5281/not-found')
         expect(response.code).to eql('404')
+      end
+    end
+
+    context 'when providers encounter a timeout or outage' do
+      before do
+        stub_datacite_request(status: 500)
+        stub_crossref_request(status: 500)
+      end
+
+      it 'returns a 503 Service Unavailable status' do
+        get fetch_doi_plan_research_outputs_path(plan, doi: doi)
+
+        expect(response.code).to eql('503')
+        expect(JSON.parse(response.body)['error']).to include('service is currently unavailable')
       end
     end
   end
