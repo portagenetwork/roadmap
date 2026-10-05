@@ -13,7 +13,7 @@ class DoiPublisherService
         plan: plan,
         snapshot: snapshot,
         canonical_doi: plan.dmp_id&.value,
-        previous_doi: snapshot.previous_doi&.value
+        previous_doi: previous_snapshot_doi(snapshot)&.value
       )
     end
 
@@ -40,6 +40,13 @@ class DoiPublisherService
     end
 
     private
+
+    def previous_snapshot_doi(snapshot)
+      snapshot.plan.snapshots
+              .where('version < ?', snapshot.version)
+              .order(:version)
+              .last&.identifier
+    end
 
     def mint_canonical_doi(plan, snapshot)
       datacite_scheme = IdentifierScheme.datacite
@@ -100,7 +107,7 @@ class DoiPublisherService
         doi_url: snapshot_identifier.value,
         is_canonical: false,
         canonical_doi: canonical_doi_url,
-        previous_doi: snapshot.previous_doi&.value
+        previous_doi: previous_snapshot_doi(snapshot)&.value
       )
     end
 
