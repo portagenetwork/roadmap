@@ -37,7 +37,7 @@ module ExternalApis
       # Updates an existing DOI record via DataCite REST API (PUT /dois/:id)
       # Used to update canonical DOIs to include all snapshot DOIs
       def update_doi(doi_id:, payload:)
-        clean_id = doi_id.gsub(%r{^https?://doi\.org/}, '')
+        clean_id = DoiNormalizerService.bare_doi(doi_id)
         endpoint = "/dois/#{CGI.escape(clean_id)}"
         perform_request(:put, endpoint, payload)
       end
