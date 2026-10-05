@@ -77,24 +77,16 @@ class DoiPublisherService
     end
 
     def update_canonical_doi(plan:, snapshot:, canonical_doi_url:)
-      clean_canonical_id = DoiNormalizerService.bare_doi(canonical_doi_url)
-
-      # Pluck DOI string values so Jbuilder receives array of URL strings
       has_version_dois = Identifier.for_plan_snapshot
                                    .where(identifiable_id: plan.snapshots.pluck(:id))
                                    .pluck(:value)
 
-      payload = datacite_payload(
+      update_doi_record(
         plan: plan,
         snapshot: snapshot,
+        doi_url: canonical_doi_url,
         is_canonical: true,
         has_version_dois: has_version_dois
-      )
-      payload['data']['id'] = clean_canonical_id
-
-      ExternalApis::DataciteService.update_doi(
-        doi_id: clean_canonical_id,
-        payload: payload
       )
     end
 
@@ -102,19 +94,29 @@ class DoiPublisherService
       snapshot_identifier = snapshot.identifier
       return if snapshot_identifier.blank?
 
-      clean_snapshot_id = DoiNormalizerService.bare_doi(snapshot_identifier.value)
-
-      payload = datacite_payload(
+      update_doi_record(
         plan: plan,
         snapshot: snapshot,
+        doi_url: snapshot_identifier.value,
         is_canonical: false,
         canonical_doi: canonical_doi_url,
         previous_doi: snapshot.previous_doi&.value
       )
-      payload['data']['id'] = clean_snapshot_id
+    end
+
+    def update_doi_record(plan:, snapshot:, doi_url:, is_canonical:, **extra_locals)
+      clean_id = DoiNormalizerService.bare_doi(doi_url)
+
+      payload = datacite_payload(
+        plan: plan,
+        snapshot: snapshot,
+        is_canonical: is_canonical,
+        **extra_locals
+      )
+      payload['data']['id'] = clean_id
 
       ExternalApis::DataciteService.update_doi(
-        doi_id: clean_snapshot_id,
+        doi_id: clean_id,
         payload: payload
       )
     end
