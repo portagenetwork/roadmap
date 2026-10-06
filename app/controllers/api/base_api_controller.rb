@@ -7,7 +7,6 @@ module Api
     before_action :doorkeeper_authorize!, except: %i[heartbeat]
     before_action :authorize_resource_owner, except: %i[heartbeat]
     before_action :log_access
-    before_action :require_read_scope, except: %i[heartbeat me]
 
     respond_to :json
 
@@ -36,10 +35,6 @@ module Api
         Rails.logger.info "Client (OAuth) application uid: #{client.uid}"
       end
       Rails.logger.info "Resource owner id: #{@resource_owner.id}" if @resource_owner
-    end
-
-    def require_read_scope
-      raise Pundit::NotAuthorizedError unless doorkeeper_token.scopes.include?('read')
     end
 
     def parse_request
