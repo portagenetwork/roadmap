@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+<<<<<<< HEAD
+=======
+# Object that represents a Google Analytics tracker code
+>>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
 # == Schema Information
 #
 # Table name: trackers

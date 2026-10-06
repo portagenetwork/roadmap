@@ -85,4 +85,42 @@ RSpec.feature 'ModalSearchDialog', type: :feature do
     expect(research_output.repositories).to include(@model)
     expect(research_output.plan).to eq(@plan)
   end
+<<<<<<< HEAD
+=======
+
+  private
+
+  # handles opening + closing of the modal, as well as the actions performed within the modal
+  def perform_modal_actions
+    open_modal
+
+    within('#modal-search-repositories') do
+      search_and_select_repository_within_modal
+      close_modal
+    end
+    # Verify that the selection was added to the main page's dom
+    expect(page).to have_no_css('#modal-search-repositories', visible: true)
+    expect(page).to have_text(@model.description)
+  end
+
+  def open_modal
+    # Open the modal
+    click_button 'Add a repository'
+    expect(page).to have_text('Repository search')
+  end
+
+  def search_and_select_repository_within_modal
+    # Search for the Repository
+    fill_in 'research_output_search_term',	with: @model.name
+    click_button 'Apply filter(s)'
+    expect(page).to have_text(@model.description)
+    # Select the repository and make sure it no longer appears in the search results
+    click_link 'Select'
+    expect(page).not_to have_text(@model.description)
+  end
+
+  def close_modal
+    find('.modal-header button.btn-close').click
+  end
+>>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
 end

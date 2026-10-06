@@ -26,9 +26,15 @@ RSpec.describe 'Registrations', type: :feature do
     click_button 'Create account'
 
     # Expectations
+<<<<<<< HEAD
     expect(current_path).to eql(root_path)
     expect(page).to have_text('A message with a confirmation link has been sent to your email address.')
     expect(User.count).to eq(1)
+=======
+    expect(page).to have_current_path(plans_path)
+    expect(page).to have_text(user_attributes[:firstname])
+    expect(page).to have_text(user_attributes[:surname])
+>>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
   end
 
   scenario 'User attempts to create a new acccount with invalid atts', :js do
@@ -49,7 +55,7 @@ RSpec.describe 'Registrations', type: :feature do
     click_button 'Create account'
 
     # Expectations
-    expect(current_path).to eql(root_path)
+    expect(page).to have_current_path(root_path)
     expect(User.count).to be_zero
   end
 

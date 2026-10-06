@@ -9,7 +9,7 @@ jobs:
     services:
       # Postgres installation
       db:
-        image: postgres
+        image: postgres:16
         env:
           # Latest version of Postgres has increased security. We can use the default
           # user/password in this testing scenario though so use the following env
@@ -27,12 +27,19 @@ jobs:
     env:
       RAILS_ENV: test
       DATABASE_URL: postgres://postgres:@localhost:5432/roadmap_test
+<<<<<<< HEAD
       SECRET_KEY_BASE_DUMMY: 1
       SECRET_KEY_BASE: foo
 
     steps:
     # Checkout the repo
     - uses: actions/checkout@v7
+=======
+
+    steps:
+      # Checkout the repo
+      - uses: actions/checkout@v5
+>>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
 
     # Install Ruby and run bundler
     - uses: ruby/setup-ruby@v1
@@ -42,11 +49,19 @@ jobs:
     ## - run: echo 'NODE_OPTIONS="--openssl-legacy-provider"' >> $GITHUB_ENV
     ## /home/runner/runners/2.301.1/externals/node12/bin/node: --openssl-legacy-provider is not allowed in NODE_OPTIONS
 
+<<<<<<< HEAD
     # Install Node
     - uses: actions/setup-node@v7
       with:
         node-version: '24.22.3'
         cache: 'yarn'
+=======
+      # Install Node
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: "yarn"
+>>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
 
     # Install the Postgres developer packages
     - name: 'Install Postgresql Packages'
@@ -94,6 +109,7 @@ jobs:
         install-chromedriver: true
         install-dependencies: true
 
+<<<<<<< HEAD
     # Initialize the DB
     - name: 'Setup Test DB'
       run: |
@@ -103,6 +119,25 @@ jobs:
     # Prebuild the CSS, JS and image assets
     - name: 'Compile Assets'
       run: bundle exec rails assets:precompile
+=======
+      # Run yarn install for JS dependencies
+      - name: "Yarn Install"
+        run: |
+          yarn install --frozen-lockfile
+
+      # TEMPORARY WORKAROUND FOR THE FOLLOWING ISSUE: https://github.com/DMPRoadmap/roadmap/issues/3485
+      # Remove this once our tests are compatible with the new version of Chrome
+      # Source: https://github.com/teamcapybara/capybara/issues/2800#issuecomment-2731100953
+      - name: Remove image-bundled Chrome
+        run: sudo apt-get purge google-chrome-stable
+      - name: Setup Chrome 128
+        id: setup-chrome
+        uses: browser-actions/setup-chrome@v2
+        with:
+          chrome-version: 128
+          install-chromedriver: true
+          install-dependencies: true
+>>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
 
     # Run  the unit and functional tests
     - name: 'Run Rspec Unit and Functional Tests'
@@ -111,8 +146,36 @@ jobs:
         bundle exec rspec spec/controllers/ spec/presenters/ spec/requests/ spec/views
         bundle exec rspec spec/mailers/ spec/mixins/
 
+<<<<<<< HEAD
     # Run the time consuming integration tests (using Chrome headless browser)
     - name: 'Run Integration Tests'
       run: |
         bundle exec rspec spec/features/
         bundle exec rspec spec/integration/
+=======
+      # PostgreSQL is the canonical source of the shared schema.rb.
+      - name: "Check schema drift"
+        run: |
+          bundle exec rails db:schema:dump
+          git diff --exit-code -- db/schema.rb
+
+      # Prebuild the CSS, JS and image assets
+      - name: "Compile Assets"
+        run: bundle exec rails assets:precompile
+
+      # Run  the unit and functional tests
+      - name: "Run Rspec Unit and Functional Tests"
+        run: |
+          bundle exec rspec spec/models/ spec/policies/ spec/services/ spec/helpers/
+          bundle exec rspec spec/controllers/ spec/presenters/ spec/requests/ spec/views
+          bundle exec rspec spec/mixins/
+
+      # Run the time consuming integration tests (using Chrome headless browser)
+      - name: "Run Integration Tests"
+        env:
+          CHROME_BIN: ${{ steps.setup-chrome.outputs.chrome-path }}
+        run: |
+          "$CHROME_BIN" --version
+          chromedriver --version
+          bundle exec rspec spec/features/
+>>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))

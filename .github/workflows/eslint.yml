@@ -8,15 +8,33 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
+<<<<<<< HEAD
     - uses: actions/checkout@v7
     - uses: actions/setup-node@v7
+=======
+    # Checkout the repo
+    - uses: actions/checkout@v5
+
+    # Install Node
+    - uses: actions/setup-node@v5
+>>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
       with:
         node-version: '24.22.3'
         cache: 'yarn'
+<<<<<<< HEAD
+=======
+        node-version: 24
+>>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
 
     # Run yarn install for JS dependencies
     - name: 'Yarn Install'
-      run: yarn install
+      run: yarn install --frozen-lockfile
 
     - name: 'Run ESLint'
-      run: yarn run eslint app/javascript/**/*.js --ext .js
+      run: yarn lint
+
+    - name: 'Run JavaScript tests'
+      run: yarn test --reporters dots
+
+    - name: 'Build CSS'
+      run: yarn build:css

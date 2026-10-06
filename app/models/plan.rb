@@ -19,9 +19,16 @@
 #  identifier                 :string
 #  start_date                 :datetime
 #  title                      :string
+<<<<<<< HEAD
 #  visibility                 :integer          default("privately_visible"), not null
 #  created_at                 :datetime
 #  updated_at                 :datetime
+=======
+#  visibility                 :integer          default(3), not null
+#  created_at                 :datetime
+#  updated_at                 :datetime
+#  api_client_id              :integer
+>>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
 #  funder_id                  :integer
 #  grant_id                   :integer
 #  org_id                     :integer
@@ -30,11 +37,20 @@
 #
 # Indexes
 #
+<<<<<<< HEAD
 #  index_plans_on_funder_id           (funder_id)
 #  index_plans_on_grant_id            (grant_id)
 #  index_plans_on_org_id              (org_id)
 #  index_plans_on_research_domain_id  (research_domain_id)
 #  index_plans_on_template_id         (template_id)
+=======
+#  index_plans_on_api_client_id  (api_client_id)
+#  index_plans_on_fos_id         (research_domain_id)
+#  index_plans_on_funder_id      (funder_id)
+#  index_plans_on_grant_id       (grant_id)
+#  index_plans_on_org_id         (org_id)
+#  index_plans_on_template_id    (template_id)
+>>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
 #
 # Foreign Keys
 #
@@ -76,10 +92,10 @@ class Plan < ApplicationRecord
   # ==============
 
   # public is a Ruby keyword so using publicly
-  enum visibility: %i[organisationally_visible publicly_visible
-                      is_test privately_visible]
+  enum :visibility, %i[organisationally_visible publicly_visible
+                       is_test privately_visible]
 
-  enum funding_status: %i[planned funded denied]
+  enum :funding_status, %i[planned funded denied]
 
   alias_attribute :name, :title
 

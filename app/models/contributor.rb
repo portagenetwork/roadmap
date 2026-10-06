@@ -16,6 +16,10 @@
 #
 # Indexes
 #
+<<<<<<< HEAD
+=======
+#  index_contrib_id_and_org_id    (name,id,org_id)
+>>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
 #  index_contributors_on_email    (email)
 #  index_contributors_on_org_id   (org_id)
 #  index_contributors_on_plan_id  (plan_id)

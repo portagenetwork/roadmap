@@ -40,6 +40,7 @@ RSpec.describe 'Plans', type: :feature do
     click_button 'Create plan'
 
     # Expectations
+<<<<<<< HEAD
     expect(find('#notification-area')).to have_text(
       "Notice: Successfully created the plan.\nThis plan is based on the default template."
     )
@@ -47,6 +48,12 @@ RSpec.describe 'Plans', type: :feature do
     expect(@user.plans).to be_one
     expect(current_path).to eql(plan_path(@plan))
     expect(page).to have_css("input[type=text][value='#{@plan.title}']")
+=======
+    expect(page).to have_css("input[type=text][value='My test plan']")
+    expect(@user.plans).to be_one
+    @plan = Plan.last
+    expect(page).to have_current_path(plan_path(@plan))
+>>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
     expect(@plan.title).to eql('My test plan')
     expect(@plan.org_id).to eql(@org.id)
     expect(@plan.template_id).to eql(@default_template.id)

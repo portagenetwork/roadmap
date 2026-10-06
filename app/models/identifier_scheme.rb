@@ -8,8 +8,14 @@
 #  active            :boolean
 #  context           :integer
 #  description       :string
+<<<<<<< HEAD
 #  identifier_prefix :text
 #  logo_url          :text
+=======
+#  external_service  :string
+#  identifier_prefix :string
+#  logo_url          :string
+>>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
 #  name              :string
 #  created_at        :datetime
 #  updated_at        :datetime
