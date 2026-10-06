@@ -12,26 +12,28 @@
   </div>
 
   <div class="form-control row mb-3">
-    <%= f.label "Scope(s)", class: 'col-sm-2 col-form-label font-weight-bold' %>
-    <div class="col-sm-10">
-      <%= f.text_field :scopes, class: "form-control #{ 'has-error' if application.errors[:scopes].present? }", style: "border: 1px solid #ced4da;" %>
-      <%= doorkeeper_errors_for application, :scopes %>
-      <span class="form-text text-secondary">
-        <%= "Separate multiple scopes with spaces." %>
-        <br>
-        <%= _('Available scopes are') %> 
-        [<%= safe_join(Doorkeeper.configuration.scopes.to_a.map { |s| content_tag(:strong, s) }, ' ') %>]
-      </span>
+    <%= f.label _('Scope(s)'), class: 'col-sm-2 col-form-label font-weight-bold' %>
+    <div class="col-sm-10 ps-4">
+        <% scope_options.each do |label, value| %>
+        <div class="form-check">
+            <%= f.radio_button :scopes, value,
+                checked: scope_option_checked?(application, value),
+                class: "form-check-input #{'is-invalid' if application.errors[:scopes].present?}" %>
+            <%= f.label :scopes, label, value: value, class: 'form-check-label' %>
+        </div>
+        <% end %>
+
+        <%= doorkeeper_errors_for application, :scopes %>
     </div>
   </div>
 
   <div class="form-control row mb-3">
-    <%= f.label nil, 'Redirect URI(s)'.html_safe, class: 'col-sm-2 col-form-label font-weight-bold' %>
+    <%= f.label nil, _('Redirect URI(s)'), class: 'col-sm-2 col-form-label font-weight-bold' %>
     <div class="col-sm-10">
       <%= f.text_area :redirect_uri, class: "form-control #{ 'is-invalid' if application.errors[:redirect_uri].present? }", style: "border: 1px solid #ced4da;" %>
       <%= doorkeeper_errors_for application, :redirect_uri %>
       <span class="form-text text-secondary">
-        <%= "Separate multiple URIs with spaces." %>
+        <%= _('Separate multiple URIs with spaces.') %>
       </span>
     </div>
   </div>
