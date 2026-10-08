@@ -13,8 +13,8 @@ module ExternalApis
         Rails.configuration.x.datacite&.test_api_base_url || super
       end
 
-      def current_api_base_url
-        Rails.env.production? ? api_base_url : test_api_base_url
+      def minting_base_url
+        Rails.configuration.x.datacite&.minting_base_url.presence || test_api_base_url
       end
 
       def auth_repository_id
@@ -92,7 +92,7 @@ module ExternalApis
       def perform_request(http_method, endpoint, payload)
         raise 'DataCite integration is disabled or credentials missing.' unless active?
 
-        url = "#{current_api_base_url}#{endpoint}"
+        url = "#{minting_base_url}#{endpoint}"
         response = HTTParty.public_send(http_method, url, request_body(payload))
 
         raise "DataCite API Error [#{response.code}]: #{response.body}" unless response.success?
