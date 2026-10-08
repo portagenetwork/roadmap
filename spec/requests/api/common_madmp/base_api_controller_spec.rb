@@ -1,0 +1,191 @@
+# frozen_string_literal: true
+
+require 'rails_helper'
+
+RSpec.describe Api::CommonMadmp::BaseApiController do
+  include ApiHelper
+  include Api::CommonMadmp::Helpers
+
+  describe 'token validation (doorkeeper_authorize!)' do
+    let(:vendor_type) { 'application/vnd.org.rd-alliance.dmp-common.v1.2+json' }
+
+    it 'returns 401 Unauthorized with the negotiated vendor content type for invalid tokens' do
+      headers = {
+        Accept: vendor_type,
+        Authorization: 'Bearer not-a-real-token'
+      }
+
+      get(dmps_path, headers: headers)
+
+      expect_authentication_required_response
+    end
+
+    it 'returns 401 Unauthorized when the token has expired' do
+      @user = create(:user)
+      @client = create(:oauth_application)
+      token = mock_authorization_code_token(
+        oauth_application: @client, user: @user, expires_in: -1
+      ).plaintext_token
+
+      headers = {
+        Accept: 'application/json',
+        Authorization: "Bearer #{token}"
+      }
+
+      get(dmps_path, headers: headers)
+
+      expect_authentication_required_response
+    end
+
+    it 'returns 401 Unauthorized when the token has been revoked' do
+      @user = create(:user)
+      @client = create(:oauth_application)
+      access_token = mock_authorization_code_token(oauth_application: @client, user: @user)
+      access_token.revoke
+      token = access_token.plaintext_token
+
+      headers = {
+        Accept: 'application/json',
+        Authorization: "Bearer #{token}"
+      }
+
+      get(dmps_path, headers: headers)
+
+      expect_authentication_required_response
+    end
+
+    it 'does not require any scope on heartbeat' do
+      get(api_v2_heartbeat_path, headers: { Accept: 'application/json' })
+
+      expect(response).not_to have_http_status(:forbidden)
+    end
+
+    it 'returns 403 Forbidden with the negotiated vendor content type when the resource owner account is inactive' do
+      @user = create(:user)
+      @client = create(:oauth_application)
+      token = mock_authorization_code_token(oauth_application: @client, user: @user).plaintext_token
+      @user.update(active: false)
+
+      headers = {
+        Accept: vendor_type,
+        Authorization: "Bearer #{token}"
+      }
+
+      get(dmps_path, headers: headers)
+
+      expect(response).to have_http_status(:forbidden)
+      expect(response.headers['Content-Type']).to start_with(vendor_type)
+
+      json = JSON.parse(response.body)
+      expect(json['error_code']).to eq('insufficient_permissions')
+      expect(json['error_message']).to eq(
+        'The authenticated client does not have permission to access the requested resource.'
+      )
+    end
+  end
+
+  describe 'request body parsing (parse_request)',
+           skip: 'The Common MADMP API controller does not yet have any create or update actions' do
+    before do
+      @user = create(:user)
+      @client = create(:oauth_application)
+      token = mock_authorization_code_token(oauth_application: @client, user: @user).plaintext_token
+
+      @headers = {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: "Bearer #{token}"
+      }
+    end
+
+    it 'returns 400 Bad Request with a helpful hint when the JSON is malformed' do
+      post(dmps_path, params: '{invalid json', headers: @headers)
+
+      expect(response).to have_http_status(:bad_request)
+
+      json = JSON.parse(response.body)
+      expect(json['errors']).to include('Invalid JSON format')
+    end
+
+    it 'returns 400 Bad Request when the body is a JSON array rather than an object' do
+      post(dmps_path, params: '[1, 2, 3]', headers: @headers)
+
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'returns 400 Bad Request when the body is empty' do
+      post(dmps_path, params: '', headers: @headers)
+
+      expect(response).to have_http_status(:bad_request)
+    end
+  end
+
+  describe 'error handling' do
+    before do
+      @user = create(:user)
+      @client = create(:oauth_application)
+      token = mock_authorization_code_token(oauth_application: @client, user: @user).plaintext_token
+
+      @headers = {
+        Accept: 'application/json',
+        Authorization: "Bearer #{token}"
+      }
+    end
+
+    it 'returns an internal_server_error payload when an unexpected exception is raised' do
+      described_class.any_instance.stubs(:pagination_params).raises(StandardError, 'boom')
+
+      get(dmps_path, headers: @headers)
+
+      expect(response).to have_http_status(:internal_server_error)
+
+      json = JSON.parse(response.body)
+      expect(json['error_code']).to eq('internal_server_error')
+      expect(json['error_message']).to eq('There was a problem in the server.')
+    end
+  end
+
+  describe 'pagination (pagination_params)' do
+    before do
+      @user = create(:user)
+      @client = create(:oauth_application)
+      token = mock_authorization_code_token(oauth_application: @client, user: @user).plaintext_token
+
+      @headers = {
+        Accept: 'application/json',
+        Authorization: "Bearer #{token}"
+      }
+    end
+
+    it 'caps count at the configured maximum' do
+      max = Rails.configuration.x.application.api_max_page_size
+
+      get(dmps_path, params: { count: max + 1000 }, headers: @headers)
+
+      expect(response).to have_http_status(:bad_request)
+
+      json = JSON.parse(response.body)
+      expect(json['error_code']).to eq('invalid_query_string')
+    end
+
+    it 'rejects invalid offset and count values' do
+      get(dmps_path, params: { offset: '-1', count: '0' }, headers: @headers)
+
+      expect(response).to have_http_status(:bad_request)
+
+      json = JSON.parse(response.body)
+      expect(json['error_code']).to eq('invalid_query_string')
+      expect(json['error_message']).to eq('The query string contained invalid pagination parameters.')
+    end
+
+    it 'returns an invalid_query_string error for malformed numeric params' do
+      get(dmps_path, params: { offset: 'abc', count: '5' }, headers: @headers)
+
+      expect(response).to have_http_status(:bad_request)
+
+      json = JSON.parse(response.body)
+      expect(json['error_code']).to eq('invalid_query_string')
+      expect(json['error_message']).to eq('The query string contained invalid pagination parameters.')
+    end
+  end
+end
