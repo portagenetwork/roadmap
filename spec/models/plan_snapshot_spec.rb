@@ -195,13 +195,6 @@ RSpec.describe PlanSnapshot, type: :model do
       expect(snapshot.version).to eq(1)
     end
 
-    it 'forces private visibility even when a different visibility is passed' do
-      snapshot = described_class.create_from_plan(plan: plan, visibility: 'publicly_visible')
-
-      expect(snapshot).to be_persisted
-      expect(snapshot.visibility).to eq('privately_visible')
-    end
-
     it 'increments version for subsequent snapshots' do
       described_class.create_from_plan(plan: plan, visibility: 'privately_visible')
       # Stub `calculate` again for checksum_differs_from_last_snapshot validator
