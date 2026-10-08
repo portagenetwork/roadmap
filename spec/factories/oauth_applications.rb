@@ -20,7 +20,7 @@ FactoryBot.define do
     uid { SecureRandom.uuid }
     secret { SecureRandom.uuid }
     redirect_uri { "https://#{Faker::Internet.unique.domain_name}/callback" }
-    scopes { 'read write' }
+    scopes { 'v2_read v2_write' }
     user_id { create(:user).id }
   end
 end

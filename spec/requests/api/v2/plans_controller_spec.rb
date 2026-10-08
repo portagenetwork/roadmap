@@ -11,7 +11,7 @@ RSpec.describe Api::V2::PlansController do
   context 'OAuth (authorization_code grant type) — on behalf of a user' do
     before do
       @user = create(:user)
-      @client = create(:oauth_application)
+      @client = create(:oauth_application, scopes: 'v2_read v2_write')
       token = mock_authorization_code_token(oauth_application: @client, user: @user).plaintext_token
 
       @headers = {
@@ -47,7 +47,7 @@ RSpec.describe Api::V2::PlansController do
     end
 
     def expect_insufficient_scope_response
-      read_only_client = create(:oauth_application, scopes: 'read')
+      read_only_client = create(:oauth_application, scopes: 'common_madmp_read')
       token = mock_authorization_code_token(oauth_application: read_only_client, user: @user).plaintext_token
       headers = @headers.merge('Authorization' => "Bearer #{token}")
       yield(headers)

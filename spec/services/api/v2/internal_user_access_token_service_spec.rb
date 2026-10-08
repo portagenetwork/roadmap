@@ -8,7 +8,7 @@ RSpec.describe Api::V2::InternalUserAccessTokenService do
   let!(:oauth_app) { create(:oauth_application, name: app_name) }
 
   def create_internal_user_access_token
-    create(:oauth_access_token, application: oauth_app, resource_owner_id: user.id, scopes: 'read')
+    create(:oauth_access_token, application: oauth_app, resource_owner_id: user.id, scopes: 'v2_read')
   end
 
   describe '#rotate!' do
@@ -19,7 +19,7 @@ RSpec.describe Api::V2::InternalUserAccessTokenService do
       expect(new_token).to be_present
       expect(new_token.resource_owner_id).to eq(user.id)
       expect(new_token.revoked_at).to be_nil
-      expect(new_token.scopes.to_s).to include('read')
+      expect(new_token.scopes.to_s).to include('v2_read')
       # Verify new_token expires in 24 hours
       expected_expires_at = new_token.created_at + 24.hours
       actual_expires_at = new_token.created_at + new_token.expires_in.seconds
