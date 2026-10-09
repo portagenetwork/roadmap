@@ -6,6 +6,8 @@ module Api
       include Api::V2::ErrorHandling
       include Api::V2::Pagination
 
+      before_action -> { doorkeeper_authorize! :v2_read }, except: %i[heartbeat]
+
       # get details of server (e.g. DMPonline) and client app
       before_action :base_response_content
 

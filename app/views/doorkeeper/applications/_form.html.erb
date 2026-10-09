@@ -12,26 +12,77 @@
   </div>
 
   <div class="form-control row mb-3">
-    <%= f.label "Scope(s)", class: 'col-sm-2 col-form-label font-weight-bold' %>
+    <%= f.label _('API'), class: 'col-sm-2 col-form-label font-weight-bold' %>
     <div class="col-sm-10">
-      <%= f.text_field :scopes, class: "form-control #{ 'has-error' if application.errors[:scopes].present? }", style: "border: 1px solid #ced4da;" %>
+      <% selection = application_api_selection(application) %>
+      <% selected_api = selection[:api_version] %>
+      <% selected_scope = selection[:scope] %>
+
+      <div class="mb-3">
+        <div class="fw-bold mb-1"><%= _('API Version') %></div>
+        <div class="small text-muted mb-2"><%= _('Select the API this application will use.') %></div>
+        <div class="d-flex flex-wrap gap-3">
+          <% api_versions.each do |api_key| %>
+            <div class="form-check form-check-inline ps-4">
+              <%= radio_button_tag(
+                    :api_version,
+                    api_key,
+                    selected_api == api_key,
+                    class: 'form-check-input api-version-toggle',
+                    id: "api_version_#{api_key}"
+                  ) %>
+              <%= label_tag(
+                    "api_version_#{api_key}",
+                    api_version_label(api_key),
+                    class: 'form-check-label'
+                  ) %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div>
+        <div class="fw-bold mb-1"><%= _('Scopes') %></div>
+        <div class="small text-muted mb-2"><%= _('Choose the access level for the selected API.') %></div>
+        <% api_versions.each do |api_key| %>
+          <div class="api-scope-group ml-3 <%= 'd-none' unless selected_api == api_key %>"
+               data-api-scope-group="<%= api_key %>"
+               data-default-scope="<%= api_default_scope_for(api_key) %>">
+            <div class="d-flex flex-wrap gap-3 ml-3">
+              <% api_scope_options_for(api_key).each do |label, backend_scope| %>
+                <div class="form-check form-check-inline ps-4">
+                  <%= radio_button_tag(
+                        "api_scope_#{api_key}",
+                        backend_scope,
+                        selected_scope == backend_scope,
+                        class: 'form-check-input api-scope-radio',
+                        data: { api_version: api_key },
+                        id: "api_scope_#{api_key}_#{backend_scope}"
+                      ) %>
+                  <%= label_tag(
+                        "api_scope_#{api_key}_#{backend_scope}",
+                        label,
+                        class: 'form-check-label'
+                      ) %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <%= f.hidden_field :scopes, value: selected_scope, id: 'doorkeeper_application_scopes' %>
       <%= doorkeeper_errors_for application, :scopes %>
-      <span class="form-text text-secondary">
-        <%= "Separate multiple scopes with spaces." %>
-        <br>
-        <%= _('Available scopes are') %> 
-        [<%= safe_join(Doorkeeper.configuration.scopes.to_a.map { |s| content_tag(:strong, s) }, ' ') %>]
-      </span>
     </div>
   </div>
 
   <div class="form-control row mb-3">
-    <%= f.label nil, 'Redirect URI(s)'.html_safe, class: 'col-sm-2 col-form-label font-weight-bold' %>
+    <%= f.label nil, _('Redirect URI(s)'), class: 'col-sm-2 col-form-label font-weight-bold' %>
     <div class="col-sm-10">
       <%= f.text_area :redirect_uri, class: "form-control #{ 'is-invalid' if application.errors[:redirect_uri].present? }", style: "border: 1px solid #ced4da;" %>
       <%= doorkeeper_errors_for application, :redirect_uri %>
       <span class="form-text text-secondary">
-        <%= "Separate multiple URIs with spaces." %>
+        <%= _('Separate multiple URIs with spaces.') %>
       </span>
     </div>
   </div>

@@ -20,7 +20,7 @@ module Api
     #
     # This service does NOT support third-party OAuth clients or delegated consent flows.
     class InternalUserAccessTokenService
-      READ_SCOPE = 'read'
+      READ_SCOPE = 'v2_read'
       INTERNAL_OAUTH_APP_NAME = Rails.application.config.x.application.internal_oauth_app_name
 
       class << self
