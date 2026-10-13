@@ -20,4 +20,12 @@ namespace :doorkeeper do
       puts "#{type.to_s.humanize}: #{count} migrated"
     end
   end
+
+  desc 'Revoke access tokens (and their refresh tokens) that expired over 3 months ago'
+  task revoke_stale_tokens: :environment do
+    puts "Revoked #{Api::StaleAccessTokenRevoker.new.call} stale access token(s)"
+  end
+
+  desc 'Revoke stale tokens, then run the standard Doorkeeper cleanup'
+  task stale_cleanup: ['doorkeeper:revoke_stale_tokens', 'doorkeeper:db:cleanup']
 end
