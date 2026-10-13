@@ -2,8 +2,6 @@
 
 # locals: plan
 
-json.schema 'https://github.com/RDA-DMP-Common/RDA-DMP-Common-Standard/tree/master/examples/JSON/JSON-schema/1.2'
-
 # This flag lets the Common-MaDMP render path opt into its own contract
 # without altering the legacy v2 API behavior. We keep the root v2 payload
 # shared and vary only the small set of differences we need at render time.
@@ -14,6 +12,8 @@ presenter = Api::V2::PlanPresenter.new(
   complete: @complete,
   for_common_madmp_api: for_common_madmp_api
 )
+
+json.schema presenter.schema
 
 # Note the symbol of the dmproadmap json object
 # nested in extensions which is the container for the json template object, etc.
