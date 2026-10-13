@@ -4,6 +4,10 @@ module Api
   module V2
     # Helper class for the API V2 project / DMP
     class PlanPresenter
+      SCHEMA_BASE_URL = 'https://github.com/RDA-DMP-Common/RDA-DMP-Common-Standard/tree/master/examples/JSON/JSON-schema'
+      LEGACY_SCHEMA_VERSION = '1.0'
+      COMMON_MADMP_SCHEMA_VERSION = '1.2'
+
       attr_reader :data_contact, :contributors, :costs, :complete_plan_data
 
       def initialize(plan:, complete: false, for_common_madmp_api: false)
@@ -20,6 +24,13 @@ module Api
         @costs = plan_costs(plan: @plan)
 
         @complete_plan_data = fetch_all_q_and_a if complete
+      end
+
+      # Inspect the release notes to determine which schema version corresponds
+      # to the payload we output: https://github.com/RDA-DMP-Common/RDA-DMP-Common-Standard/releases/
+      def schema
+        version = @for_common_madmp_api ? COMMON_MADMP_SCHEMA_VERSION : LEGACY_SCHEMA_VERSION
+        "#{SCHEMA_BASE_URL}/#{version}"
       end
 
       # Extract the canonical ARK or DOI for the DMP OR use its URL if none exists

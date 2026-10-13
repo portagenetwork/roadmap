@@ -42,6 +42,13 @@ describe 'api/v2/plans/_show.json.jbuilder' do
 
       expect(rendered).to include(@plan.title)
     end
+
+    it 'references schema 1.2 when the flag is true' do
+      render partial: 'api/v2/plans/show',
+             locals: { client: @client, plan: @plan, for_common_madmp_api: true }
+
+      expect(JSON.parse(rendered)['schema']).to end_with('JSON-schema/1.2')
+    end
   end
 
   describe 'includes all of the DMP attributes' do
@@ -51,7 +58,7 @@ describe 'api/v2/plans/_show.json.jbuilder' do
     end
 
     it 'includes the RDA schema version' do
-      expect(@json[:schema]).to eql('https://github.com/RDA-DMP-Common/RDA-DMP-Common-Standard/tree/master/examples/JSON/JSON-schema/1.2')
+      expect(@json[:schema]).to eql('https://github.com/RDA-DMP-Common/RDA-DMP-Common-Standard/tree/master/examples/JSON/JSON-schema/1.0')
     end
 
     it 'includes the :title' do
