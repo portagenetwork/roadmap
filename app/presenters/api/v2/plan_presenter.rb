@@ -6,7 +6,7 @@ module Api
     class PlanPresenter
       SCHEMA_BASE_URL = 'https://github.com/RDA-DMP-Common/RDA-DMP-Common-Standard/tree/master/examples/JSON/JSON-schema'
       LEGACY_SCHEMA_VERSION = '1.0'
-      COMMON_MADMP_SCHEMA_VERSION = '1.2'
+      COMMON_MADMP_SCHEMA_VERSION = '1.3'
 
       attr_reader :data_contact, :contributors, :costs, :complete_plan_data
 

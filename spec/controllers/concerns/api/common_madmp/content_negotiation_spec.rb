@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::CommonMadmp::ContentNegotiation do
-  let(:vendor_type) { 'application/vnd.org.rd-alliance.dmp-common.v1.2+json' }
+  let(:vendor_type) { Api::CommonMadmp::ContentNegotiation::RDA_DMP_CONTENT_TYPE }
 
   let(:dummy_class) do
     Class.new(ActionController::Base) do
