@@ -2,7 +2,7 @@
 
 Rails.configuration.x.datacite.active = true
 Rails.configuration.x.datacite.api_base_url = 'https://api.datacite.org'
-Rails.configuration.x.datacite.test_api_base_url = 'https://api.test.datacite.org'
+Rails.configuration.x.datacite.minting_base_url = ENV.fetch('DATACITE_MINTING_BASE_URL', 'https://api.test.datacite.org')
 
 # Define an organization as the hosting institution for the DataCite record.
 # Datacite defines this as:
@@ -11,6 +11,7 @@ Rails.configuration.x.datacite.test_api_base_url = 'https://api.test.datacite.or
 Rails.configuration.x.datacite.hosting_institution = 'Digital Research Alliance of Canada'
 Rails.configuration.x.datacite.hosting_institution_identifier = 'https://ror.org/010r6td27'
 
+# Sensitive credentials managed strictly via Rails application secrets (Sealed Secrets in K8s)
 Rails.configuration.x.datacite.repository_id = Rails.application.secrets.datacite_repository_id
 Rails.configuration.x.datacite.password      = Rails.application.secrets.datacite_password
 Rails.configuration.x.datacite.shoulder      = Rails.application.secrets.datacite_shoulder

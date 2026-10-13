@@ -9,12 +9,8 @@ module ExternalApis
         Rails.configuration.x.datacite&.api_base_url || super
       end
 
-      def test_api_base_url
-        Rails.configuration.x.datacite&.test_api_base_url || super
-      end
-
       def minting_base_url
-        Rails.configuration.x.datacite&.minting_base_url.presence || test_api_base_url
+        Rails.configuration.x.datacite&.minting_base_url || 'https://api.test.datacite.org'
       end
 
       def auth_repository_id
