@@ -58,7 +58,7 @@ RSpec.describe Api::CommonMadmp::PlansController do
         plan
       end
 
-      let(:vendor_type) { 'application/vnd.org.rd-alliance.dmp-common.v1.2+json' }
+      let(:vendor_type) { Api::CommonMadmp::ContentNegotiation::RDA_DMP_CONTENT_TYPE }
 
       context 'when no Accept header is included' do
         it 'defaults to the stock JSON response' do
@@ -70,8 +70,8 @@ RSpec.describe Api::CommonMadmp::PlansController do
         end
       end
 
-      context 'when the RDA DMP v1.2 MIME type is requested' do
-        it 'returns the RDA DMP v1.2 content type' do
+      context 'when the RDA DMP v1.3 MIME type is requested' do
+        it 'returns the RDA DMP v1.3 content type' do
           get(dmps_path, headers: @headers.merge(Accept: vendor_type))
 
           expect(response).to have_http_status(:ok)

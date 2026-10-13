@@ -7,7 +7,7 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
   include Api::CommonMadmp::Helpers
 
   describe 'token validation (doorkeeper_authorize!)' do
-    let(:vendor_type) { 'application/vnd.org.rd-alliance.dmp-common.v1.2+json' }
+    let(:vendor_type) { Api::CommonMadmp::ContentNegotiation::RDA_DMP_CONTENT_TYPE }
 
     it 'returns 401 Unauthorized with the negotiated vendor content type for invalid tokens' do
       headers = {

@@ -3,12 +3,12 @@
 module Api
   module CommonMadmp
     # Negotiates the response media type for Common MADMP API requests.
-    # - This intentionally supports only standard JSON and the vendor-specific DMP Common v1.2 media type.
+    # - This intentionally supports only standard JSON and the vendor-specific DMP Common v1.3 media type.
     module ContentNegotiation
       extend ActiveSupport::Concern
 
       JSON_CONTENT_TYPE = Mime[:json].to_s
-      RDA_DMP_CONTENT_TYPE = Mime[:rda_dmp_v12].to_s
+      RDA_DMP_CONTENT_TYPE = Mime[:rda_dmp_common].to_s
       SUPPORTED_TYPES = [RDA_DMP_CONTENT_TYPE, JSON_CONTENT_TYPE].freeze
       # Wildcards are valid fallback matches, but they must not override a concrete
       # supported subtype when that subtype is explicitly excluded with q=0.
