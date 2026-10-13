@@ -19,22 +19,21 @@ class ResearchOutputsController < ApplicationController
 
   # GET /plans/:plan_id/research_outputs/new
   def new
-    @research_output = ResearchOutput.new(plan_id: @plan.id)
+    @research_output = ResearchOutput.new(plan_id: @plan.id, output_type: nil)
     authorize @research_output
 
     # Check if a DOI parameter was carried over in the redirect URL query string
     return unless params[:prefill_doi].present?
 
-    # Call DataCite or Crossref service using the DOI string found in the URL parameters
-    result = ExternalApis::DoiResolutionService.fetch_metadata(doi: params[:prefill_doi])
+    prefill_metadata = find_prefill_metadata(params[:prefill_doi])
 
-    return unless result[:status] == :ok && result[:metadata].present?
-
-    metadata = result[:metadata]
-
-    @research_output.assign_attributes(
-      metadata.slice(:title, :description, :output_type, :release_date)
-    )
+    if prefill_metadata.present?
+      @research_output.assign_attributes(
+        prefill_metadata.slice(:title, :description, :output_type, :release_date)
+      )
+    else
+      flash.now[:alert] = _('Unable to fetch metadata for the provided DOI. Showing empty form.')
+    end
   end
 
   # GET /plans/:plan_id/research_outputs/:id/edit
@@ -159,26 +158,60 @@ class ResearchOutputsController < ApplicationController
   def fetch_doi
     authorize ResearchOutput.new(plan_id: params[:plan_id])
 
-    # Obtain research output metadata from DataCite or Crossref service
-    result = ExternalApis::DoiResolutionService.fetch_metadata(
-      doi: params[:doi]
-    )
+    result = ExternalApis::DoiResolutionService.fetch_metadata(doi: params[:doi])
+    return store_and_render_doi(result[:metadata]) if result[:status] == :ok
 
-    case result[:status]
-    when :ok
-      render json: result[:metadata]
-    when :blank
-      render json: { error: 'DOI is required.' }, status: :bad_request
-    when :invalid
-      render json: { error: 'Does not appear to be a valid DOI.' }, status: :bad_request
-    when :not_found
-      render json: { error: 'Could not find metadata for the provided DOI.' }, status: :not_found
-    else
-      render json: { error: 'An unexpected error occurred.' }, status: :internal_server_error
-    end
+    render_doi_error(result[:status])
   end
 
   private
+
+  def find_prefill_metadata(doi_param)
+    clean_doi = clean_doi_str(doi_param)
+
+    session_metadata = extract_session_prefill_metadata(clean_doi)
+    return session_metadata if session_metadata.present?
+
+    result = ExternalApis::DoiResolutionService.fetch_metadata(doi: doi_param)
+    result[:status] == :ok ? result[:metadata] : nil
+  end
+
+  def store_and_render_doi(metadata)
+    session[:doi_prefill_data] = {
+      'doi' => clean_doi_str(params[:doi]),
+      'metadata' => metadata
+    }
+    render json: metadata
+  end
+
+  def extract_session_prefill_metadata(clean_doi)
+    session_data = session[:doi_prefill_data]
+    return nil unless session_data.is_a?(Hash) && session_data['doi'] == clean_doi && session_data['metadata'].present?
+
+    session.delete(:doi_prefill_data)['metadata'].symbolize_keys
+  end
+
+  def clean_doi_str(doi_param)
+    doi_param.to_s.strip.downcase.gsub(%r{^https?://doi.org/}, '')
+  end
+
+  def render_doi_error(status)
+    message, http_status = case status
+                           when :blank
+                             [_('DOI is required.'), :bad_request]
+                           when :invalid
+                             [_('Does not appear to be a valid DOI.'), :bad_request]
+                           when :not_found
+                             [_('Could not find metadata for the provided DOI.'), :not_found]
+                           when :service_unavailable
+                             [_('DOI lookup service is currently unavailable. Please enter details manually.'),
+                              :service_unavailable]
+                           else
+                             [_('An unexpected error occurred.'), :internal_server_error]
+                           end
+
+    render json: { error: message }, status: http_status
+  end
 
   def output_params
     params.require(:research_output)
