@@ -141,8 +141,17 @@ class DoiPublisherService
       )
 
       payload = JSON.parse(json_output)
-      payload['data']['attributes']['event'] = 'draft'
+      payload['data']['attributes']['event'] = datacite_event
       payload
+    end
+
+    def datacite_event
+      # Publish DOIs when pointing to production, keep as draft in test environments
+      if Rails.configuration.x.datacite.minting_base_url == 'https://api.datacite.org'
+        'publish'
+      else
+        'draft'
+      end
     end
   end
 end
