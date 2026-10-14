@@ -13,6 +13,18 @@ module ExternalApis
         Rails.configuration.x.datacite&.active || false
       end
 
+      def minting_base_url
+        Rails.configuration.x.datacite&.minting_base_url || 'https://api.test.datacite.org'
+      end
+
+      def auth_repository_id
+        Rails.configuration.x.datacite&.repository_id
+      end
+
+      def auth_password
+        Rails.configuration.x.datacite&.password
+      end
+
       def extract_description(attrs)
         descriptions = attrs[:descriptions]
         return nil if descriptions.blank?
