@@ -6,6 +6,8 @@
 
  - Remove organisational visibility from plan snapshots [#1452](https://github.com/portagenetwork/roadmap/pull/1452)
 
+ - Resolve DOI metadata once when pre-filling research outputs, with specific lookup errors and retry [#1427](https://github.com/portagenetwork/roadmap/pull/1427)
+
 ### Dependency Updates
 
  - chore(deps): bump nginx from 1.31.6-alpine to 1.31.7-alpine [#1441](https://github.com/portagenetwork/roadmap/pull/1441)
