@@ -145,6 +145,62 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
       end
     end
 
+    context 'when the plan is publicly visible' do
+      before do
+        clear_enqueued_jobs
+        authorize_as(:administrator)
+        plan.update(visibility: :publicly_visible)
+        DoiPublisherService.stubs(:publish_snapshot_doi).returns('https://doi.org/10.83996/snapshot-1')
+      end
+
+      it 'enqueues PublishDoiJob and sets the queued notice' do
+        expect do
+          subject
+        end.to change { ActiveJob::Base.queue_adapter.enqueued_jobs.size }.by(1)
+
+        enqueued_job = ActiveJob::Base.queue_adapter.enqueued_jobs.last
+        expect(enqueued_job[:job]).to eq(PublishDoiJob)
+
+        expect(response).to redirect_to(plan_snapshots_path(plan))
+        expect(flash[:notice]).to eq('New version published. DOI minting has been queued and will complete shortly.')
+      end
+
+      context 'when DOI minting fails with an exception' do
+        before do
+          authorize_as(:administrator)
+          plan.update(visibility: :publicly_visible)
+          DoiPublisherService.stubs(:publish_snapshot_doi).raises(StandardError, 'DataCite API error')
+        end
+
+        it 'logs the error and redirects with an alert' do
+          Rails.logger.expects(:error).with(
+            "Version publishing cancelled — DOI minting failed for Plan ##{plan.id}: DataCite API error"
+          )
+
+          subject
+
+          expect(response).to redirect_to(plan_snapshots_path(plan))
+          expect(flash[:alert]).to eq('Unable to publish version because DOI minting failed.')
+        end
+      end
+    end
+
+    context 'when the plan is not publicly visible' do
+      before do
+        authorize_as(:administrator)
+        plan.update(visibility: :privately_visible)
+      end
+
+      it 'does not mint a DOI and sets the standard notice' do
+        DoiPublisherService.expects(:publish_snapshot_doi).never
+
+        subject
+
+        expect(response).to redirect_to(plan_snapshots_path(plan))
+        expect(flash[:notice]).to eq('New version published.')
+      end
+    end
+
     context 'when the plan is not ready for snapshot creation' do
       let(:invalid_snapshot) do
         snapshot = PlanSnapshot.new
