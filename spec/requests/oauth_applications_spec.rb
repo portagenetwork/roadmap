@@ -151,7 +151,7 @@ RSpec.describe 'OauthApplications', type: :request do
         sign_in(authorized_user)
       end
 
-      it 'renders the expected form fields and default scopes' do
+      it 'renders the expected form fields and API scope choices' do
         get new_oauth_application_path
 
         expect(response).to have_http_status(:ok)
@@ -163,6 +163,18 @@ RSpec.describe 'OauthApplications', type: :request do
 
         scopes_input = html.at_css('#doorkeeper_application_scopes')
         expect(scopes_input['name']).to eq('doorkeeper_application[scopes]')
+
+        expect(html.at_css("input[name='api_scope_v2'][value='v2_read']")).not_to be_nil
+        expect(html.at_css("input[name='api_scope_v2'][value='v2_read v2_write']")).not_to be_nil
+        expect(html.at_css("input[name='api_scope_common_madmp'][value='common_madmp_read']")).not_to be_nil
+        expect(
+          html.at_css("input[name='api_scope_common_madmp'][value='common_madmp_read common_madmp_write']")
+        ).not_to be_nil
+
+        v2_group = html.at_css(".api-scope-group[data-api-scope-group='v2']")
+        common_group = html.at_css(".api-scope-group[data-api-scope-group='common_madmp']")
+        expect(v2_group['data-default-scope']).to eq('v2_read')
+        expect(common_group['data-default-scope']).to eq('common_madmp_read')
 
         redirect_uri_input = html.at_css('#doorkeeper_application_redirect_uri')
         expect(redirect_uri_input['name']).to eq('doorkeeper_application[redirect_uri]')
