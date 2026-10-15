@@ -1480,6 +1480,209 @@
       "additionalProperties": false,
       "description": "Scheduled tasks for the application",
       "properties": {
+        "planSnapshotsFixityChecks": {
+          "additionalProperties": false,
+          "description": "Plan Snapshots Fixity Checks CronJob configuration",
+          "properties": {
+            "affinity": {
+              "additionalProperties": false,
+              "description": "Affinity rules for the CronJob",
+              "required": [],
+              "title": "affinity",
+              "type": "object"
+            },
+            "concurrencyPolicy": {
+              "default": "Forbid",
+              "description": "Concurrency policy for CronJob (Allow, Forbid, Replace)",
+              "required": [],
+              "title": "concurrencyPolicy",
+              "type": "string"
+            },
+            "enabled": {
+              "default": true,
+              "description": "Enable or disable the plan snapshots fixity checks CronJob",
+              "required": [],
+              "title": "enabled",
+              "type": "boolean"
+            },
+            "env": {
+              "description": "Additional environment variables for the CronJob",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "env",
+              "type": "array"
+            },
+            "failedJobsHistoryLimit": {
+              "default": 1,
+              "description": "Number of failed job history to keep",
+              "required": [],
+              "title": "failedJobsHistoryLimit",
+              "type": "integer"
+            },
+            "nodeSelector": {
+              "additionalProperties": false,
+              "description": "Node selector for the CronJob",
+              "required": [],
+              "title": "nodeSelector",
+              "type": "object"
+            },
+            "podAnnotations": {
+              "additionalProperties": true,
+              "description": "Pod annotations for the CronJob pods",
+              "required": [],
+              "title": "podAnnotations",
+              "type": "object"
+            },
+            "podLabels": {
+              "additionalProperties": true,
+              "description": "Pod labels for the CronJob pods",
+              "required": [],
+              "title": "podLabels",
+              "type": "object"
+            },
+            "priorityClassName": {
+              "default": "",
+              "description": "Priority class name for the CronJob",
+              "required": [],
+              "title": "priorityClassName",
+              "type": "string"
+            },
+            "resources": {
+              "additionalProperties": false,
+              "description": "Resource limits and requests for the CronJob",
+              "properties": {
+                "limits": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "cpu": {
+                      "default": "200m",
+                      "required": [],
+                      "title": "cpu",
+                      "type": "string"
+                    },
+                    "memory": {
+                      "default": "512Mi",
+                      "required": [],
+                      "title": "memory",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "cpu",
+                    "memory"
+                  ],
+                  "title": "limits",
+                  "type": "object"
+                },
+                "requests": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "cpu": {
+                      "default": "100m",
+                      "required": [],
+                      "title": "cpu",
+                      "type": "string"
+                    },
+                    "memory": {
+                      "default": "256Mi",
+                      "required": [],
+                      "title": "memory",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "cpu",
+                    "memory"
+                  ],
+                  "title": "requests",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "requests",
+                "limits"
+              ],
+              "title": "resources",
+              "type": "object"
+            },
+            "restartPolicy": {
+              "default": "OnFailure",
+              "description": "Restart policy for the job pods",
+              "required": [],
+              "title": "restartPolicy",
+              "type": "string"
+            },
+            "schedule": {
+              "default": "0 2 * * 1",
+              "description": "Schedule for the CronJob (cron format)",
+              "required": [],
+              "title": "schedule",
+              "type": "string"
+            },
+            "successfulJobsHistoryLimit": {
+              "default": 3,
+              "description": "Number of successful job history to keep",
+              "required": [],
+              "title": "successfulJobsHistoryLimit",
+              "type": "integer"
+            },
+            "suspend": {
+              "default": false,
+              "description": "Whether to suspend the job execution",
+              "required": [],
+              "title": "suspend",
+              "type": "boolean"
+            },
+            "tolerations": {
+              "description": "Tolerations for the CronJob",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "tolerations",
+              "type": "array"
+            },
+            "volumeMounts": {
+              "description": "Additional volume mounts for the CronJob",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "volumeMounts",
+              "type": "array"
+            },
+            "volumes": {
+              "description": "Additional volumes for the CronJob",
+              "items": {
+                "required": []
+              },
+              "required": [],
+              "title": "volumes",
+              "type": "array"
+            }
+          },
+          "required": [
+            "enabled",
+            "schedule",
+            "concurrencyPolicy",
+            "successfulJobsHistoryLimit",
+            "failedJobsHistoryLimit",
+            "suspend",
+            "restartPolicy",
+            "priorityClassName",
+            "env",
+            "volumeMounts",
+            "volumes",
+            "resources",
+            "nodeSelector",
+            "affinity",
+            "tolerations"
+          ],
+          "title": "planSnapshotsFixityChecks",
+          "type": "object"
+        },
         "researchDataOutput": {
           "additionalProperties": false,
           "description": "Research Data Output CronJob configuration",
@@ -2093,7 +2296,8 @@
       "required": [
         "translationSync",
         "researchDataOutput",
-        "statBuild"
+        "statBuild",
+        "planSnapshotsFixityChecks"
       ],
       "title": "cronjobs",
       "type": "object"
