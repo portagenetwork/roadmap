@@ -4,6 +4,8 @@
 
 ### Dependency Updates
 
+ - chore(deps): bump fast-uri from 3.1.7 to 3.1.8 [#1439](https://github.com/portagenetwork/roadmap/pull/1439)
+
  - chore(deps): bump proxy-addr from 2.0.7 to 2.0.8 [#1440](https://github.com/portagenetwork/roadmap/pull/1440)
 
  - chore(deps): bump @modelcontextprotocol/sdk from 1.27.1 to 1.32.1 [#1436](http://github.com/portagenetwork/roadmap/pull/1436)
