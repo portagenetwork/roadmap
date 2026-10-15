@@ -4,6 +4,8 @@
 
 ### Dependency Updates
 
+ - chore(deps): bump @modelcontextprotocol/sdk from 1.27.1 to 1.32.1 [#1436](http://github.com/portagenetwork/roadmap/pull/1436)
+
  - chore(deps): bump source-map-js from 1.0.2 to 1.2.2 [#1437](https://github.com/portagenetwork/roadmap/pull/1437)
 
  - chore(deps): bump hono from 4.13.1 to 4.13.7 [#1419](https://github.com/portagenetwork/roadmap/pull/1419)
