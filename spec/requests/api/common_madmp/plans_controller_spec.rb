@@ -23,13 +23,13 @@ RSpec.describe Api::CommonMadmp::PlansController do
     end
 
     def fetch_plans_json_response
-      get(dmps_path, headers: @headers)
+      get(api_madmp_dmps_path, headers: @headers)
       expect(response).to render_template('api/common_madmp/dmps/index')
       JSON.parse(response.body).with_indifferent_access
     end
 
     def fetch_plan_json_response(plan)
-      get(dmp_path(plan), headers: @headers)
+      get(api_madmp_dmp_path(plan), headers: @headers)
       expect(response).to render_template('api/common_madmp/dmps/show')
       JSON.parse(response.body).with_indifferent_access
     end
@@ -62,7 +62,7 @@ RSpec.describe Api::CommonMadmp::PlansController do
 
       context 'when no Accept header is included' do
         it 'defaults to the stock JSON response' do
-          get(dmps_path, headers: @headers.except(:Accept))
+          get(api_madmp_dmps_path, headers: @headers.except(:Accept))
 
           expect(response).to have_http_status(:ok)
           expect(response.headers['Content-Type']).to start_with('application/json')
@@ -72,7 +72,7 @@ RSpec.describe Api::CommonMadmp::PlansController do
 
       context 'when the RDA DMP v1.3 MIME type is requested' do
         it 'returns the RDA DMP v1.3 content type' do
-          get(dmps_path, headers: @headers.merge(Accept: vendor_type))
+          get(api_madmp_dmps_path, headers: @headers.merge(Accept: vendor_type))
 
           expect(response).to have_http_status(:ok)
           expect(response.headers['Content-Type']).to start_with(vendor_type)
@@ -84,20 +84,20 @@ RSpec.describe Api::CommonMadmp::PlansController do
         let(:bogus_type) { 'application/vnd.org.rd-alliance.dmp-common.v1.999+json' }
 
         it 'returns 406 Not Acceptable' do
-          get(dmps_path, headers: @headers.merge(Accept: bogus_type))
+          get(api_madmp_dmps_path, headers: @headers.merge(Accept: bogus_type))
 
           expect(response).to have_http_status(:not_acceptable)
           expect(response).to render_template('api/common_madmp/error')
         end
 
         it 'does not echo the unsupported type back as Content-Type' do
-          get(dmps_path, headers: @headers.merge(Accept: bogus_type))
+          get(api_madmp_dmps_path, headers: @headers.merge(Accept: bogus_type))
 
           expect(response.headers['Content-Type']).not_to start_with(bogus_type)
         end
 
         it 'returns the expected error_code in the body' do
-          get(dmps_path, headers: @headers.merge(Accept: bogus_type))
+          get(api_madmp_dmps_path, headers: @headers.merge(Accept: bogus_type))
 
           json = JSON.parse(response.body)
           expect(json['error_code']).to eq('not_acceptable')
@@ -109,7 +109,7 @@ RSpec.describe Api::CommonMadmp::PlansController do
     describe 'GET /dmps (index)' do
       context 'an invalid API token is included' do
         it 'returns a 401 and the expected Oauth 2.0 headers' do
-          expect_invalid_token_response { |headers| get(dmps_path, headers: headers) }
+          expect_invalid_token_response { |headers| get(api_madmp_dmps_path, headers: headers) }
         end
       end
 
@@ -153,8 +153,7 @@ RSpec.describe Api::CommonMadmp::PlansController do
           other = create(:plan, org: @user.org, title: 'Beta Project')
           matching.add_user!(@user.id, :creator)
           other.add_user!(@user.id, :creator)
-
-          get(dmps_path, params: { title: 'Alpha' }, headers: @headers)
+          get(api_madmp_dmps_path, params: { title: 'Alpha' }, headers: @headers)
 
           expect(response).to have_http_status(:ok)
           json = JSON.parse(response.body).with_indifferent_access
@@ -171,7 +170,7 @@ RSpec.describe Api::CommonMadmp::PlansController do
               plan.add_user!(@user.id, :creator)
             end
 
-            get(dmps_path, params: { title: 'Alpha', sort: 'created,desc', count: 2 }, headers: @headers)
+            get(api_madmp_dmps_path, params: { title: 'Alpha', sort: 'created,desc', count: 2 }, headers: @headers)
             expect(response).to have_http_status(:ok)
 
             json = JSON.parse(response.body).with_indifferent_access
@@ -197,7 +196,7 @@ RSpec.describe Api::CommonMadmp::PlansController do
                                 description: 'Everything else is finance and policy.')
           [matching_title, matching_dataset, other].each { |plan| plan.add_user!(@user.id, :creator) }
 
-          get(dmps_path, params: { query: %w[climate biodiversity] }, headers: @headers)
+          get(api_madmp_dmps_path, params: { query: %w[climate biodiversity] }, headers: @headers)
 
           expect(response).to have_http_status(:ok)
           json = JSON.parse(response.body).with_indifferent_access
@@ -210,7 +209,7 @@ RSpec.describe Api::CommonMadmp::PlansController do
           older.add_user!(@user.id, :creator)
           newer.add_user!(@user.id, :creator)
 
-          get(dmps_path, params: { created_after: 2.days.ago.to_date.iso8601 }, headers: @headers)
+          get(api_madmp_dmps_path, params: { created_after: 2.days.ago.to_date.iso8601 }, headers: @headers)
 
           expect(response).to have_http_status(:ok)
           json = JSON.parse(response.body).with_indifferent_access
@@ -219,7 +218,7 @@ RSpec.describe Api::CommonMadmp::PlansController do
         end
 
         it 'rejects an unparseable created_after value with an invalid_query_string error' do
-          get(dmps_path, params: { created_after: 'not-a-date' }, headers: @headers)
+          get(api_madmp_dmps_path, params: { created_after: 'not-a-date' }, headers: @headers)
           expect(response).to have_http_status(:bad_request)
           json = JSON.parse(response.body)
           expect(json['error_code']).to eq('invalid_query_string')
@@ -231,7 +230,7 @@ RSpec.describe Api::CommonMadmp::PlansController do
           older.add_user!(@user.id, :creator)
           newer.add_user!(@user.id, :creator)
 
-          get(dmps_path, headers: @headers)
+          get(api_madmp_dmps_path, headers: @headers)
 
           expect(response).to have_http_status(:ok)
           json = JSON.parse(response.body).with_indifferent_access
@@ -239,7 +238,7 @@ RSpec.describe Api::CommonMadmp::PlansController do
         end
 
         it 'rejects unsupported sort values with an invalid_query_string error' do
-          get(dmps_path, params: { sort: ['x,asc'] }, headers: @headers)
+          get(api_madmp_dmps_path, params: { sort: ['x,asc'] }, headers: @headers)
 
           expect(response).to have_http_status(:bad_request)
           json = JSON.parse(response.body)
@@ -272,7 +271,7 @@ RSpec.describe Api::CommonMadmp::PlansController do
 
           expected_ids = Plan.order(created_at: :desc).offset(10).limit(10).pluck(:id)
 
-          get(dmps_path, params: { offset: '10', count: '10' }, headers: @headers)
+          get(api_madmp_dmps_path, params: { offset: '10', count: '10' }, headers: @headers)
           expect(response).to have_http_status(:ok)
 
           json = JSON.parse(response.body).with_indifferent_access
@@ -287,7 +286,7 @@ RSpec.describe Api::CommonMadmp::PlansController do
       context 'an invalid API token is included' do
         it 'returns a 401 and the expected Oauth 2.0 headers' do
           plan = create(:plan)
-          expect_invalid_token_response { |headers| get(dmp_path(plan), headers: headers) }
+          expect_invalid_token_response { |headers| get(api_madmp_dmp_path(plan), headers: headers) }
         end
       end
 
@@ -317,20 +316,20 @@ RSpec.describe Api::CommonMadmp::PlansController do
           expect(json[:dmp]).to be_a(Hash)
           identifier = json.dig(:dmp, :dmp_id, :identifier)
           expect(identifier).to be_present
-          expect(URI(identifier).path).to eq(dmp_path(plan))
+          expect(URI(identifier).path).to eq(api_madmp_dmp_path(plan))
         end
 
         context 'when the user does not have an active role on the plan' do
           before do
             other_plan = create(:plan)
-            get(dmp_path(other_plan), headers: @headers)
+            get(api_madmp_dmp_path(other_plan), headers: @headers)
           end
 
           it_behaves_like 'returns a 404 Plan not found for show'
         end
 
         context 'when the plan does not exist' do
-          before { get(dmp_path(id: 0), headers: @headers) }
+          before { get(api_madmp_dmp_path(id: 0), headers: @headers) }
 
           it_behaves_like 'returns a 404 Plan not found for show'
         end

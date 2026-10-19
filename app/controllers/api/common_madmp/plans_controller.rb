@@ -9,7 +9,7 @@ module Api
 
       POLICY = Api::V2::PlansPolicy
 
-      # GET /dmps/:id
+      # GET /api/madmp/dmps/:id
       def show
         @plan = plans_scope.find_by(id: params[:id])
 
@@ -20,7 +20,7 @@ module Api
         render '/api/common_madmp/dmps/show', status: :ok
       end
 
-      # GET /dmps
+      # GET /api/madmp/dmps
       def index
         @plans = plans_scope
         @plans = apply_filters(@plans)

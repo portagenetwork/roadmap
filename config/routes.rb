@@ -234,10 +234,10 @@ Rails.application.routes.draw do
       resources :templates, only: %i[index show]
       resource :internal_user_access_token, only: :create, defaults: { format: :js }
     end
-  end
 
-  scope defaults: { format: :json } do
-    resources :dmps, only: %i[index show], controller: 'api/common_madmp/plans'
+    namespace :madmp, module: :common_madmp do
+      resources :dmps, only: %i[index show], controller: 'plans'
+    end
   end
 
   namespace :paginable do
