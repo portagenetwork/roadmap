@@ -55,7 +55,7 @@ RSpec.describe Api::V2::PlanPresenter do
 
       presenter = described_class.new(plan: plan, for_common_madmp_api: true)
 
-      expect(presenter.identifier.value).to eq(Rails.application.routes.url_helpers.dmp_url(plan))
+      expect(presenter.identifier.value).to eq(Rails.application.routes.url_helpers.api_madmp_dmp_url(plan))
     end
   end
 end

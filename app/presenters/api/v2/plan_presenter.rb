@@ -45,7 +45,7 @@ module Api
 
         # If no DOI is present, fall back to a URL for the plan itself.
         api_url = if @for_common_madmp_api
-                    Rails.application.routes.url_helpers.dmp_url(@plan)
+                    Rails.application.routes.url_helpers.api_madmp_dmp_url(@plan)
                   else
                     Rails.application.routes.url_helpers.api_v2_plan_url(@plan)
                   end

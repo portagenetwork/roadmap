@@ -15,7 +15,7 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
         Authorization: 'Bearer not-a-real-token'
       }
 
-      get(dmps_path, headers: headers)
+      get(api_madmp_dmps_path, headers: headers)
 
       expect_authentication_required_response
     end
@@ -32,7 +32,7 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
         Authorization: "Bearer #{token}"
       }
 
-      get(dmps_path, headers: headers)
+      get(api_madmp_dmps_path, headers: headers)
 
       expect_authentication_required_response
     end
@@ -49,7 +49,7 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
         Authorization: "Bearer #{token}"
       }
 
-      get(dmps_path, headers: headers)
+      get(api_madmp_dmps_path, headers: headers)
 
       expect_authentication_required_response
     end
@@ -71,7 +71,7 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
         Authorization: "Bearer #{token}"
       }
 
-      get(dmps_path, headers: headers)
+      get(api_madmp_dmps_path, headers: headers)
 
       expect(response).to have_http_status(:forbidden)
       expect(response.headers['Content-Type']).to start_with(vendor_type)
@@ -99,7 +99,7 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
     end
 
     it 'returns 400 Bad Request with a helpful hint when the JSON is malformed' do
-      post(dmps_path, params: '{invalid json', headers: @headers)
+      post(api_madmp_dmps_path, params: '{invalid json', headers: @headers)
 
       expect(response).to have_http_status(:bad_request)
 
@@ -108,13 +108,13 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
     end
 
     it 'returns 400 Bad Request when the body is a JSON array rather than an object' do
-      post(dmps_path, params: '[1, 2, 3]', headers: @headers)
+      post(api_madmp_dmps_path, params: '[1, 2, 3]', headers: @headers)
 
       expect(response).to have_http_status(:bad_request)
     end
 
     it 'returns 400 Bad Request when the body is empty' do
-      post(dmps_path, params: '', headers: @headers)
+      post(api_madmp_dmps_path, params: '', headers: @headers)
 
       expect(response).to have_http_status(:bad_request)
     end
@@ -135,7 +135,7 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
     it 'returns an internal_server_error payload when an unexpected exception is raised' do
       described_class.any_instance.stubs(:pagination_params).raises(StandardError, 'boom')
 
-      get(dmps_path, headers: @headers)
+      get(api_madmp_dmps_path, headers: @headers)
 
       expect(response).to have_http_status(:internal_server_error)
 
@@ -160,7 +160,7 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
     it 'caps count at the configured maximum' do
       max = Rails.configuration.x.application.api_max_page_size
 
-      get(dmps_path, params: { count: max + 1000 }, headers: @headers)
+      get(api_madmp_dmps_path, params: { count: max + 1000 }, headers: @headers)
 
       expect(response).to have_http_status(:bad_request)
 
@@ -169,7 +169,7 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
     end
 
     it 'rejects invalid offset and count values' do
-      get(dmps_path, params: { offset: '-1', count: '0' }, headers: @headers)
+      get(api_madmp_dmps_path, params: { offset: '-1', count: '0' }, headers: @headers)
 
       expect(response).to have_http_status(:bad_request)
 
@@ -179,7 +179,7 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
     end
 
     it 'returns an invalid_query_string error for malformed numeric params' do
-      get(dmps_path, params: { offset: 'abc', count: '5' }, headers: @headers)
+      get(api_madmp_dmps_path, params: { offset: 'abc', count: '5' }, headers: @headers)
 
       expect(response).to have_http_status(:bad_request)
 
