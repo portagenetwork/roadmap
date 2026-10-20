@@ -240,6 +240,11 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :well_known, path: '.well-known', defaults: { format: :json } do
+    get 'api-catalog', to: 'api_catalog#show'
+    match 'api-catalog', to: 'api_catalog#head_catalog', via: :head
+  end
+
   namespace :paginable do
     resources :orgs, only: [] do
       get 'index/:page', action: :index, on: :collection, as: :index
