@@ -1,0 +1,92 @@
+{{- if .Values.cronjobs.planSnapshotsFixityChecks.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "dmp-roadmap.fullname" . }}-plan-snapshots-fixity-checks
+  labels:
+    {{- $_ := set . "component" "cronjob-plan-snapshots-fixity-checks" }}
+    {{- include "dmp-roadmap.labels" . | nindent 4 }}
+spec:
+  schedule: "{{ .Values.cronjobs.planSnapshotsFixityChecks.schedule }}"
+  concurrencyPolicy: {{ .Values.cronjobs.planSnapshotsFixityChecks.concurrencyPolicy }}
+  successfulJobsHistoryLimit: {{ .Values.cronjobs.planSnapshotsFixityChecks.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.cronjobs.planSnapshotsFixityChecks.failedJobsHistoryLimit }}
+  suspend: {{ .Values.cronjobs.planSnapshotsFixityChecks.suspend }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          annotations:
+            checksum/config: {{ include (print $.Template.BasePath "/app/configmap.yaml") . | sha256sum }}
+            {{- with .Values.cronjobs.planSnapshotsFixityChecks.podAnnotations }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          labels:
+            {{- $_ := set . "component" "cronjob-plan-snapshots-fixity-checks" }}
+            {{- include "dmp-roadmap.labels" . | nindent 12 }}
+            app.kubernetes.io/part-of: cronjob
+            {{- with .Values.cronjobs.planSnapshotsFixityChecks.podLabels }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+        spec:
+          {{- with .Values.app.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.cronjobs.planSnapshotsFixityChecks.priorityClassName | default .Values.app.priorityClassName | default .Values.global.priorityClassName }}
+          priorityClassName: {{ . }}
+          {{- end }}
+          serviceAccountName: {{ include "dmp-roadmap.serviceAccountName" . }}
+          securityContext:
+            {{- toYaml .Values.app.podSecurityContext | nindent 12 }}
+          restartPolicy: {{ .Values.cronjobs.planSnapshotsFixityChecks.restartPolicy }}
+          containers:
+            - name: {{ .Chart.Name }}-plan-snapshots-fixity-checks
+              image: "{{ .Values.app.image.repository | default .Values.global.image.repository }}:{{ .Values.app.image.tag | default .Chart.AppVersion }}"
+              imagePullPolicy: {{ default .Values.global.image.imagePullPolicy .Values.app.image.imagePullPolicy }}
+              env:
+                {{- with (concat .Values.global.env .Values.app.env .Values.cronjobs.planSnapshotsFixityChecks.env) }}
+                  {{- toYaml . | nindent 16 }}
+                {{- end }}
+              envFrom:
+                - configMapRef:
+                    name: {{ include "dmp-roadmap.fullname" . }}-app-config
+                {{- with .Values.app.envFrom }}
+                {{- toYaml . | nindent 16 }}
+                {{- end }}
+              securityContext:
+                {{- toYaml .Values.app.securityContext | nindent 16 }}
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  time bundle exec rake plan_snapshots:fixity_checks
+              resources:
+                {{- toYaml .Values.cronjobs.planSnapshotsFixityChecks.resources | nindent 16 }}
+              volumeMounts:
+                # Required tmp directories for Rails
+                - name: rails-tmp
+                  mountPath: /usr/src/app/tmp
+                {{- with .Values.cronjobs.planSnapshotsFixityChecks.volumeMounts }}
+                {{- toYaml . | nindent 16 }}
+                {{- end }}
+          volumes:
+            # Tmp directories required for Rails
+            - name: rails-tmp
+              emptyDir: {}
+            {{- with .Values.cronjobs.planSnapshotsFixityChecks.volumes }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- with .Values.cronjobs.planSnapshotsFixityChecks.nodeSelector | default .Values.app.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.cronjobs.planSnapshotsFixityChecks.affinity | default .Values.app.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.cronjobs.planSnapshotsFixityChecks.tolerations | default .Values.app.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+{{- end }}

@@ -1411,6 +1411,79 @@ cronjobs:
     # @section -- CronJobs Configuration
     tolerations: []
 
+  # -- Plan Snapshots Fixity Checks CronJob configuration
+  # @section -- CronJobs Configuration
+  planSnapshotsFixityChecks:
+    # -- Enable or disable the plan snapshots fixity checks CronJob
+    # @section -- CronJobs Configuration
+    enabled: true
+    # -- Schedule for the CronJob (cron format)
+    # @section -- CronJobs Configuration
+    schedule: '0 2 * * 1'
+    # -- Concurrency policy for CronJob (Allow, Forbid, Replace)
+    # @section -- CronJobs Configuration
+    concurrencyPolicy: Forbid
+    # -- Number of successful job history to keep
+    # @section -- CronJobs Configuration
+    successfulJobsHistoryLimit: 3
+    # -- Number of failed job history to keep
+    # @section -- CronJobs Configuration
+    failedJobsHistoryLimit: 1
+    # -- Whether to suspend the job execution
+    # @section -- CronJobs Configuration
+    suspend: false
+    # -- Restart policy for the job pods
+    # @section -- CronJobs Configuration
+    restartPolicy: OnFailure
+    # @schema
+    # type: object
+    # additionalProperties: true
+    # @schema
+    # -- Pod annotations for the CronJob pods
+    # @section -- CronJobs Configuration
+    podAnnotations: {}
+    # @schema
+    # type: object
+    # additionalProperties: true
+    # @schema
+    # -- Pod labels for the CronJob pods
+    # @section -- CronJobs Configuration
+    podLabels: {}
+    # -- Priority class name for the CronJob
+    # @default -- app.priorityClassName or global.priorityClassName
+    # @section -- CronJobs Configuration
+    priorityClassName: ''
+    # -- Additional environment variables for the CronJob
+    # @section -- CronJobs Configuration
+    env: []
+    # -- Additional volume mounts for the CronJob
+    # @section -- CronJobs Configuration
+    volumeMounts: []
+    # -- Additional volumes for the CronJob
+    # @section -- CronJobs Configuration
+    volumes: []
+    # -- Resource limits and requests for the CronJob
+    # @section -- CronJobs Configuration
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 200m
+        memory: 512Mi
+    # -- Node selector for the CronJob
+    # @default -- app.nodeSelector
+    # @section -- CronJobs Configuration
+    nodeSelector: {}
+    # -- Affinity rules for the CronJob
+    # @default -- app.affinity
+    # @section -- CronJobs Configuration
+    affinity: {}
+    # -- Tolerations for the CronJob
+    # @default -- app.tolerations
+    # @section -- CronJobs Configuration
+    tolerations: []
+
 ## @section Additional Configuration
 
 # -- Extra Kubernetes objects to deploy
