@@ -4,6 +4,8 @@
 
 ### Dependency Updates
 
+ - chore(deps): bump follow-redirects from 1.16.0 to 1.16.1 [#1442](https://github.com/portagenetwork/roadmap/pull/1442)
+
  - chore(deps): bump brace-expansion from 1.1.18 to 1.1.21 [#1438](https://github.com/portagenetwork/roadmap/pull/1438)
 
  - chore(deps): bump fast-uri from 3.1.7 to 3.1.8 [#1439](https://github.com/portagenetwork/roadmap/pull/1439)
