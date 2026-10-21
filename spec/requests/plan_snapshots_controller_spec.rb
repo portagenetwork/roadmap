@@ -145,11 +145,12 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
       end
     end
 
-    context 'when the plan is publicly visible' do
+    context 'when the plan snapshot is publicly_visible' do
+      let(:visibility) { 'publicly_visible' }
+
       before do
         clear_enqueued_jobs
         authorize_as(:administrator)
-        plan.update(visibility: :publicly_visible)
         DoiPublisherService.stubs(:publish_snapshot_doi).returns('https://doi.org/10.83996/snapshot-1')
       end
 
@@ -168,7 +169,6 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
       context 'when DOI minting fails with an exception' do
         before do
           authorize_as(:administrator)
-          plan.update(visibility: :publicly_visible)
           DoiPublisherService.stubs(:publish_snapshot_doi).raises(StandardError, 'DataCite API error')
         end
 
@@ -185,10 +185,11 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
       end
     end
 
-    context 'when the plan is not publicly visible' do
+    context 'when the plan snapshot is privately_visible' do
+      let(:visibility) { 'privately_visible' }
+
       before do
         authorize_as(:administrator)
-        plan.update(visibility: :privately_visible)
       end
 
       it 'does not mint a DOI and sets the standard notice' do
@@ -198,6 +199,49 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
 
         expect(response).to redirect_to(plan_snapshots_path(plan))
         expect(flash[:notice]).to eq('New version published.')
+      end
+    end
+
+    context 'when the plan is public but snapshot visibility is private' do
+      let(:visibility) { 'privately_visible' }
+
+      before do
+        plan.update(visibility: 'publicly_visible')
+        authorize_as(:administrator)
+      end
+
+      it 'does not mint a DOI and creates a privately visible snapshot' do
+        DoiPublisherService.expects(:publish_snapshot_doi).never
+
+        expect { subject }.to change(plan.snapshots, :count).by(1)
+
+        expect(response).to redirect_to(plan_snapshots_path(plan))
+        expect(flash[:notice]).to eq('New version published.')
+        expect(plan.snapshots.order(:version).last.visibility).to eq('privately_visible')
+      end
+    end
+
+    context 'when the plan is private but snapshot visibility is public' do
+      let(:visibility) { 'publicly_visible' }
+
+      before do
+        plan.update(visibility: 'privately_visible')
+        clear_enqueued_jobs
+        authorize_as(:administrator)
+        DoiPublisherService.stubs(:publish_snapshot_doi).returns('https://doi.org/10.83996/snapshot-1')
+      end
+
+      it 'mints a DOI and creates a publicly visible snapshot' do
+        expect do
+          subject
+        end.to change { ActiveJob::Base.queue_adapter.enqueued_jobs.size }.by(1)
+
+        enqueued_job = ActiveJob::Base.queue_adapter.enqueued_jobs.last
+        expect(enqueued_job[:job]).to eq(PublishDoiJob)
+
+        expect(response).to redirect_to(plan_snapshots_path(plan))
+        expect(flash[:notice]).to eq('New version published. DOI minting has been queued and will complete shortly.')
+        expect(plan.snapshots.order(:version).last.visibility).to eq('publicly_visible')
       end
     end
 
