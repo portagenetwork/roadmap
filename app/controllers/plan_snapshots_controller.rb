@@ -43,8 +43,8 @@ class PlanSnapshotsController < ApplicationController
     snapshot = create_snapshot_in_transaction
 
     if snapshot&.persisted?
-      PublishDoiJob.perform_later(snapshot) if @plan.publicly_visible?
-      redirect_to plan_snapshots_path(@plan), notice: success_notice
+      PublishDoiJob.perform_later(snapshot) if snapshot.publicly_visible?
+      redirect_to plan_snapshots_path(@plan), notice: success_notice(snapshot)
     else
       redirect_to plan_snapshots_path(@plan), alert: create_failure_alert(snapshot)
     end
@@ -59,7 +59,7 @@ class PlanSnapshotsController < ApplicationController
       visibility = plan_snapshot_params[:visibility] || 'privately_visible'
       snapshot = PlanSnapshot.create_from_plan(plan: @plan, visibility: visibility)
 
-      mint_snapshot_doi(snapshot) if snapshot.persisted? && @plan.publicly_visible?
+      mint_snapshot_doi(snapshot) if snapshot.persisted? && snapshot.publicly_visible?
 
       snapshot
     end
@@ -71,8 +71,8 @@ class PlanSnapshotsController < ApplicationController
     raise DoiMintingError, e.message
   end
 
-  def success_notice
-    if @plan.publicly_visible?
+  def success_notice(snapshot)
+    if snapshot.publicly_visible?
       _('New version published. DOI minting has been queued and will complete shortly.')
     else
       _('New version published.')
