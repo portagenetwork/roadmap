@@ -145,11 +145,12 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
       end
     end
 
-    context 'when the plan is publicly visible' do
+    context 'when the plan snapshot is publicly_visible' do
+      let(:visibility) { 'publicly_visible' }
+
       before do
         clear_enqueued_jobs
         authorize_as(:administrator)
-        plan.update(visibility: :publicly_visible)
         DoiPublisherService.stubs(:publish_snapshot_doi).returns('https://doi.org/10.83996/snapshot-1')
       end
 
@@ -168,7 +169,6 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
       context 'when DOI minting fails with an exception' do
         before do
           authorize_as(:administrator)
-          plan.update(visibility: :publicly_visible)
           DoiPublisherService.stubs(:publish_snapshot_doi).raises(StandardError, 'DataCite API error')
         end
 
@@ -185,10 +185,11 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
       end
     end
 
-    context 'when the plan is not publicly visible' do
+    context 'when the plan snapshot is privately_visible' do
+      let(:visibility) { 'privately_visible' }
+
       before do
         authorize_as(:administrator)
-        plan.update(visibility: :privately_visible)
       end
 
       it 'does not mint a DOI and sets the standard notice' do
