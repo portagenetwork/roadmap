@@ -7,7 +7,7 @@ class PublishDoiJob < ApplicationJob
   retry_on HTTParty::Error, StandardError, wait: :exponentially_longer, attempts: 3
 
   def perform(snapshot)
-    return unless snapshot&.persisted? && snapshot.plan&.publicly_visible?
+    return unless snapshot&.persisted? && snapshot&.publicly_visible?
 
     DoiPublisherService.publish_canonical_and_relationships(snapshot)
   rescue StandardError => e
