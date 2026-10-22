@@ -14,7 +14,7 @@ module ExternalApis
       end
 
       def minting_base_url
-        Rails.configuration.x.datacite&.minting_base_url || 'https://api.test.datacite.org'
+        Rails.configuration.x.datacite&.minting_base_url
       end
 
       def auth_repository_id
