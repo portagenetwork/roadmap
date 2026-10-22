@@ -3,22 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe ExternalApis::DataciteService, type: :service do
+  include_context 'with datacite configuration'
+
   let(:doi) { '10.5281/zenodo.4884775' }
   let(:minting_base_url) { Rails.configuration.x.datacite.minting_base_url }
   let(:repository_id) { Rails.configuration.x.datacite.repository_id }
   let(:password) { Rails.configuration.x.datacite.password }
-
-  before do
-    Rails.configuration.x.datacite.active = true
-    Rails.configuration.x.datacite.repository_id = 'MY_REPO' if Rails.configuration.x.datacite.repository_id.blank?
-    Rails.configuration.x.datacite.password = 'SECRET' if Rails.configuration.x.datacite.password.blank?
-    if Rails.configuration.x.datacite.api_base_url.blank?
-      Rails.configuration.x.datacite.api_base_url = 'https://api.datacite.org'
-    end
-    if Rails.configuration.x.datacite.minting_base_url.blank?
-      Rails.configuration.x.datacite.minting_base_url = 'https://api.test.datacite.org'
-    end
-  end
 
   describe '.parse_attributes' do
     context 'when given a valid JSON payload' do
