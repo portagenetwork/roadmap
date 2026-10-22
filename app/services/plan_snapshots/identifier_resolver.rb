@@ -17,9 +17,11 @@ module PlanSnapshots
     end
 
     def call
-      # TODO: Once snapshot DOI minting is implemented, resolve persisted
-      #       snapshot identifiers (and type) before falling back to URL.
-      Result.new(identifier: version_url, type: 'url')
+      if snapshot.doi.present?
+        Result.new(identifier: snapshot.doi, type: 'doi')
+      else
+        Result.new(identifier: version_url, type: 'url')
+      end
     end
 
     private
