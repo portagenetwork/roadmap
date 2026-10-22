@@ -140,8 +140,11 @@ class PlanSnapshot < ApplicationRecord
   def checksum_differs_from_last_snapshot
     return unless checksum.present?
 
-    last_checksum = self.class.for_plan(plan).pick(:checksum)
-    return unless last_checksum == checksum
+    last_snapshot = self.class.for_plan(plan).first
+    return unless last_snapshot.present? && last_snapshot.checksum == checksum
+
+    # Allow publishing a public version if the previous version was private even if unchanged
+    return if last_snapshot.privately_visible? && publicly_visible?
 
     errors.add(:base, _('A new version cannot be published because the plan has not changed since the last version'))
   end
