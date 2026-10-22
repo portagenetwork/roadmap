@@ -147,7 +147,7 @@ class DoiPublisherService
 
     def datacite_event
       # Publish DOIs when pointing to production, keep as draft in test environments
-      if Rails.configuration.x.datacite.minting_base_url == 'https://api.datacite.org'
+      if Rails.configuration.x.datacite.minting_base_url == Rails.configuration.x.datacite.api_base_url
         'publish'
       else
         'draft'

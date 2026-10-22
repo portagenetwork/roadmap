@@ -3,16 +3,13 @@
 require 'rails_helper'
 
 RSpec.describe DoiPublisherService, type: :service do
+  include_context 'with datacite configuration'
+
   let(:plan) { create(:plan, :snapshot_ready) }
   let(:snapshot) { create(:plan_snapshot, plan: plan, version: 2, created_at: 1.day.ago) }
 
   before do
     create(:identifier_scheme, :datacite)
-    Rails.configuration.x.datacite.active = true
-    Rails.configuration.x.datacite.repository_id = 'MY_REPO'
-    Rails.configuration.x.datacite.password = 'SECRET'
-    Rails.configuration.x.datacite.api_base_url = 'https://api.datacite.org'
-    Rails.configuration.x.datacite.test_api_base_url = 'https://api.test.datacite.org'
   end
 
   describe '.publish_snapshot_doi' do
