@@ -234,6 +234,10 @@ Rails.application.routes.draw do
       resources :templates, only: %i[index show]
       resource :internal_user_access_token, only: :create, defaults: { format: :js }
     end
+
+    namespace :madmp, module: :common_madmp do
+      resources :dmps, only: %i[index show], controller: 'plans'
+    end
   end
 
   namespace :paginable do
