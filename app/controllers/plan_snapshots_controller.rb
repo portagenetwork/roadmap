@@ -4,6 +4,8 @@
 class PlanSnapshotsController < ApplicationController
   include PdfExportable
 
+  class DoiMintingError < StandardError; end
+
   JSON_GENERATION_ERROR_ATTRIBUTES = %i[rda_json extension_json].freeze
 
   before_action :set_plan
@@ -46,7 +48,7 @@ class PlanSnapshotsController < ApplicationController
     else
       redirect_to plan_snapshots_path(@plan), alert: create_failure_alert(snapshot)
     end
-  rescue StandardError => e
+  rescue DoiMintingError => e
     handle_doi_error(e)
   end
 
@@ -57,10 +59,16 @@ class PlanSnapshotsController < ApplicationController
       visibility = plan_snapshot_params[:visibility] || 'privately_visible'
       snapshot = PlanSnapshot.create_from_plan(plan: @plan, visibility: visibility)
 
-      DoiPublisherService.publish_snapshot_doi(snapshot) if snapshot.persisted? && @plan.publicly_visible?
+      mint_snapshot_doi(snapshot) if snapshot.persisted? && @plan.publicly_visible?
 
       snapshot
     end
+  end
+
+  def mint_snapshot_doi(snapshot)
+    DoiPublisherService.publish_snapshot_doi(snapshot)
+  rescue StandardError => e
+    raise DoiMintingError, e.message
   end
 
   def success_notice
@@ -128,8 +136,10 @@ class PlanSnapshotsController < ApplicationController
       notify_json_generation_failure(snapshot)
       _('An error was detected and a new version cannot be published at this time. ' \
         'The administrators of the repository have been alerted.')
+    elsif snapshot&.errors&.any?
+      _("Unable to create the version. #{snapshot.errors.full_messages.join(', ')}")
     else
-      failure_message(snapshot, _('create'))
+      _('Unable to create the version.')
     end
   end
 
