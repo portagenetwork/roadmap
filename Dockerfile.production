@@ -26,7 +26,12 @@ RUN apk update && apk add --no-cache \
     nodejs=20.15.1-r0 \
     yarn \
     shared-mime-info \
-    tzdata
+    tzdata \
+    ca-certificates
+
+RUN apk upgrade --no-cache \
+    ca-certificates \
+    ca-certificates-bundle
 
 WORKDIR $INSTALL_PATH
 
@@ -73,7 +78,6 @@ RUN apk update && apk add --no-cache \
     imagemagick \
     libjpeg-turbo \
     wget \
-    nodejs=20.15.1-r0 \
     # Install dependencies for wkhtmltopdf
     # (See https://github.com/Surnet/docker-wkhtmltopdf/pkgs/container/alpine-wkhtmltopdf#other-images)
     libstdc++ \
@@ -96,7 +100,11 @@ RUN apk update && apk add --no-cache \
   && fc-cache -f \
   # Clean up when done
   && rm -rf /tmp/* \
-  && apk del .build-deps 
+  && apk del .build-deps
+
+RUN apk upgrade --no-cache \
+    ca-certificates \
+    ca-certificates-bundle
 
 WORKDIR $INSTALL_PATH
 

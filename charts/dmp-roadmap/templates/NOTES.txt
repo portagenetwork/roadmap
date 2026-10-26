@@ -65,6 +65,9 @@
 {{- if .Values.cronjobs.statBuild.enabled }}
   - Stat Build: {{ .Values.cronjobs.statBuild.schedule }}
 {{- end }}
+{{- if .Values.cronjobs.planSnapshotsFixityChecks.enabled }}
+  - Plan Snapshots Fixity Checks: {{ .Values.cronjobs.planSnapshotsFixityChecks.schedule }}
+{{- end }}
 
 5. Important Notes:
   - Configure your domain in global.domain.name: {{ .Values.global.domain.name }}

@@ -14,6 +14,36 @@
 
  - chore(deps): bump nginx from 1.31.5-alpine to 1.31.6-alpine [#1422](https://github.com/portagenetwork/roadmap/pull/1422)
 
+## [4.1.1+portage-4.10.3]
+
+### Changed
+
+ - build(docker): remove nodejs from runtime image [#1451](https://github.com/portagenetwork/roadmap/pull/1451)
+
+## [4.1.1+portage-4.10.2]
+
+### Dependency Updates
+
+ - chore(deps): bump hono from 4.13.7 to 4.13.13 [#1444](https://github.com/portagenetwork/roadmap/pull/1444)
+
+ - chore(deps): bump follow-redirects from 1.16.0 to 1.16.1 [#1442](https://github.com/portagenetwork/roadmap/pull/1442)
+
+ - chore(deps): bump brace-expansion from 1.1.18 to 1.1.21 [#1438](https://github.com/portagenetwork/roadmap/pull/1438)
+
+ - chore(deps): bump fast-uri from 3.1.7 to 3.1.8 [#1439](https://github.com/portagenetwork/roadmap/pull/1439)
+
+ - chore(deps): bump proxy-addr from 2.0.7 to 2.0.8 [#1440](https://github.com/portagenetwork/roadmap/pull/1440)
+
+ - chore(deps): bump @modelcontextprotocol/sdk from 1.27.1 to 1.32.1 [#1436](http://github.com/portagenetwork/roadmap/pull/1436)
+
+ - chore(deps): bump source-map-js from 1.0.2 to 1.2.2 [#1437](https://github.com/portagenetwork/roadmap/pull/1437)
+
+ - chore(deps): bump hono from 4.13.1 to 4.13.7 [#1419](https://github.com/portagenetwork/roadmap/pull/1419)
+
+ - chore(deps): bump js-yaml from 4.3.1 to 4.3.2 [#1420](https://github.com/portagenetwork/roadmap/pull/1420)
+
+ - fix(docker): update CA certificates to address eMudhra compromise [#1447](https://github.com/portagenetwork/roadmap/pull/1447)
+
 ## [4.1.1+portage-4.10.1]
 
 ### Fixed
