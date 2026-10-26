@@ -75,7 +75,7 @@ namespace :migrate do
         name: 'grant_api_to_orgs'
       }
     }
-    roles.each do |_r, details|
+    roles.each_value do |details|
       next unless Role.where(name: details[:name]).empty?
 
       role = Role.new
@@ -141,7 +141,7 @@ namespace :migrate do
       }
     }
 
-    languages.each do |_l, details|
+    languages.each_value do |details|
       next unless Language.where(name: details[:name]).empty?
 
       language = Language.new
@@ -171,7 +171,7 @@ namespace :migrate do
       }
     }
 
-    regions.each do |_l, details|
+    regions.each_value do |details|
       next unless Region.where(name: details[:name]).empty?
 
       region = Region.new
@@ -330,18 +330,16 @@ namespace :migrate do
 
         scheme = IdentifierScheme.find_by(name: 'shibboleth')
 
-        # rubocop:disable Metrics/BlockNesting
-        unless scheme.nil?
-          users.each do |u|
-            schemes = u.user_identifiers.collect(&:identifier_scheme_id)
+                unless scheme.nil?
+                  users.each do |u|
+                    schemes = u.user_identifiers.collect(&:identifier_scheme_id)
 
-            next if schemes.include?(scheme.id)
-            # TODO: Add logic to move shib identifiers over
-            #              UserIdentifier.create(user: u, identifier_scheme: scheme,
-            #                                    identifier: u.orcid_id.gsub('orcid.org/', ''))
-          end
-        end
-        # rubocop:enable Metrics/BlockNesting
+                    next if schemes.include?(scheme.id)
+                    # TODO: Add logic to move shib identifiers over
+                    #              UserIdentifier.create(user: u, identifier_scheme: scheme,
+                    #                                    identifier: u.orcid_id.gsub('orcid.org/', ''))
+                  end
+                end
       end
     end
   end
