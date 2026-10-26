@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Changed
+ - Remove organisational visibility from plan snapshots [#1452](https://github.com/portagenetwork/roadmap/pull/1452)
+
 ### Dependency Updates
 
  - chore(deps): bump nginx from 1.31.6-alpine to 1.31.7-alpine [#1441](https://github.com/portagenetwork/roadmap/pull/1441)
