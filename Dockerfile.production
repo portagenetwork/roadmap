@@ -78,7 +78,6 @@ RUN apk update && apk add --no-cache \
     imagemagick \
     libjpeg-turbo \
     wget \
-    nodejs=20.15.1-r0 \
     # Install dependencies for wkhtmltopdf
     # (See https://github.com/Surnet/docker-wkhtmltopdf/pkgs/container/alpine-wkhtmltopdf#other-images)
     libstdc++ \
