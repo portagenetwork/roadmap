@@ -1,5 +1,19 @@
 # Changelog
 
+## [Unreleased]
+
+### Dependency Updates
+
+ - chore(deps): bump nginx from 1.31.6-alpine to 1.31.7-alpine [#1441](https://github.com/portagenetwork/roadmap/pull/1441)
+
+ - chore(deps): bump docker/login-action from 4.4.0 to 4.6.0 [#1396](https://github.com/portagenetwork/roadmap/pull/1396)
+
+ - chore(deps): bump nginx from 1.31.3-alpine to 1.31.5-alpine [#1415](https://github.com/portagenetwork/roadmap/pull/1415)
+
+ - chore(deps): bump docker/build-push-action from 7.3.0 to 7.4.0 [#1424](https://github.com/portagenetwork/roadmap/pull/1424)
+
+ - chore(deps): bump nginx from 1.31.5-alpine to 1.31.6-alpine [#1422](https://github.com/portagenetwork/roadmap/pull/1422)
+
 ## [4.1.1+portage-4.10.3]
 
 ### Changed
