@@ -20,8 +20,7 @@ RSpec.describe PlanSnapshot, type: :model do
     it 'defines the correct enum values for visibility' do
       expect(described_class.visibilities).to eq({
                                                    'privately_visible' => 0,
-                                                   'organisationally_visible' => 1,
-                                                   'publicly_visible' => 2
+                                                   'publicly_visible' => 1
                                                  })
     end
 
@@ -271,7 +270,6 @@ RSpec.describe PlanSnapshot, type: :model do
   describe '#visibility_label' do
     it 'maps enum values to concise labels' do
       expect(build(:plan_snapshot, visibility: 'privately_visible').visibility_label).to eq('private')
-      expect(build(:plan_snapshot, visibility: 'organisationally_visible').visibility_label).to eq('organizational')
       expect(build(:plan_snapshot, visibility: 'publicly_visible').visibility_label).to eq('public')
     end
 
