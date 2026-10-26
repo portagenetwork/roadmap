@@ -109,7 +109,7 @@ class Template < ApplicationRecord
   # overwriting the accessors.  We want to ensure this template is published
   # before we remove the published_version
   # That being said, there's a potential race_condition where we have multiple-published-versions
-  after_update :reconcile_published, if: ->(template) { template.published? }
+  after_update :reconcile_published, if: lambda(&:published?)
 
   # ==========
   # = Scopes =
@@ -305,7 +305,7 @@ class Template < ApplicationRecord
     copy = dup
     if attributes.respond_to?(:each_pair)
       attributes.each_pair do |attribute, value|
-        copy.send("#{attribute}=".to_sym, value) if copy.respond_to?("#{attribute}=".to_sym)
+        copy.send(:"#{attribute}=", value) if copy.respond_to?(:"#{attribute}=")
       end
     end
     copy.save! if options.fetch(:save, false)

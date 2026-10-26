@@ -55,7 +55,7 @@ class ApplicationController < ActionController::Base
     unless ['/users/sign_in',
             '/users/sign_up',
             '/users/password',
-            '/users/invitation/accept'].any? { |ur| request.fullpath.include?(ur) } \
+            '/users/invitation/accept'].any? { |ur| request.fullpath.include?(ur) } 
     || request.xhr? # don't store ajax calls
       session[:previous_url] = request.fullpath
     end

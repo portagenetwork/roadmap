@@ -178,7 +178,7 @@ namespace :data_cleanup do
   # rubocop:disable Metrics/AbcSize
   def check_uniqueness(klass, filter)
     instance = klass.new
-    group = [filter.attributes.map { |a| instance.respond_to?("#{a}_id") ? "#{a}_id".to_sym : a }]
+    group = [filter.attributes.map { |a| instance.respond_to?("#{a}_id") ? :"#{a}_id" : a }]
 
     group << filter.options[:scope] if filter.options[:scope].present?
     group = group.flatten.uniq
@@ -260,30 +260,28 @@ namespace :data_cleanup do
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def check_numericality(klass, filter)
     filter.attributes.each do |attr|
-      qry = ''
-      shoulda = ''
-      if filter.options[:only_integer].present?
-        qry = "CEIL(#{attr}) != #{attr}"
-        shoulda = 'been an integer'
-      end
-      if filter.options[:greater_than].present?
-        qry += qry.blank? ? '' : ' OR '
-        shoulda += shoulda.blank? ? '' : ' and '
-        qry += "#{attr} <= #{filter.options[:greater_than]}"
-        shoulda += " length > #{filter.options[:greater_than]}"
-      end
-      if filter.options[:less_than].present?
-        qry += qry.blank? ? '' : ' OR '
-        shoulda += shoulda.blank? ? '' : ' and '
-        qry += "#{attr} >= #{filter.options[:less_than]}"
-        shoulda += " length < #{filter.options[:less_than]}"
-      end
+            qry = ''
+            shoulda = ''
+            if filter.options[:only_integer].present?
+              qry = "CEIL(#{attr}) != #{attr}"
+              shoulda = 'been an integer'
+            end
+            if filter.options[:greater_than].present?
+              qry += qry.blank? ? '' : ' OR '
+              shoulda += shoulda.blank? ? '' : ' and '
+              qry += "#{attr} <= #{filter.options[:greater_than]}"
+              shoulda += " length > #{filter.options[:greater_than]}"
+            end
+            if filter.options[:less_than].present?
+              qry += qry.blank? ? '' : ' OR '
+              shoulda += shoulda.blank? ? '' : ' and '
+              qry += "#{attr} >= #{filter.options[:less_than]}"
+              shoulda += " length < #{filter.options[:less_than]}"
+            end
 
-      ids = klass.where(qry).pluck(:id)
-      msg = "  #{ids.count} records that are an invalid #{filter.attributes} because it should #{shoulda}"
-      # rubocop:disable Lint/Void
-      [ids, msg]
-      # rubocop:enable Lint/Void
+            ids = klass.where(qry).pluck(:id)
+            msg = "  #{ids.count} records that are an invalid #{filter.attributes} because it should #{shoulda}"
+            [ids, msg]
     end
   end
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
