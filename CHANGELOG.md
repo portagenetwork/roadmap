@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.1.1+portage-4.10.3]
+
+### Changed
+
+ - build(docker): remove nodejs from runtime image [#1451](https://github.com/portagenetwork/roadmap/pull/1451)
+
 ## [4.1.1+portage-4.10.2]
 
 ### Dependency Updates
