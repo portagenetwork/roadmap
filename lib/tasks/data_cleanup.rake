@@ -260,28 +260,28 @@ namespace :data_cleanup do
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
   def check_numericality(klass, filter)
     filter.attributes.each do |attr|
-            qry = ''
-            shoulda = ''
-            if filter.options[:only_integer].present?
-              qry = "CEIL(#{attr}) != #{attr}"
-              shoulda = 'been an integer'
-            end
-            if filter.options[:greater_than].present?
-              qry += qry.blank? ? '' : ' OR '
-              shoulda += shoulda.blank? ? '' : ' and '
-              qry += "#{attr} <= #{filter.options[:greater_than]}"
-              shoulda += " length > #{filter.options[:greater_than]}"
-            end
-            if filter.options[:less_than].present?
-              qry += qry.blank? ? '' : ' OR '
-              shoulda += shoulda.blank? ? '' : ' and '
-              qry += "#{attr} >= #{filter.options[:less_than]}"
-              shoulda += " length < #{filter.options[:less_than]}"
-            end
+      qry = ''
+      shoulda = ''
+      if filter.options[:only_integer].present?
+        qry = "CEIL(#{attr}) != #{attr}"
+        shoulda = 'been an integer'
+      end
+      if filter.options[:greater_than].present?
+        qry += qry.blank? ? '' : ' OR '
+        shoulda += shoulda.blank? ? '' : ' and '
+        qry += "#{attr} <= #{filter.options[:greater_than]}"
+        shoulda += " length > #{filter.options[:greater_than]}"
+      end
+      if filter.options[:less_than].present?
+        qry += qry.blank? ? '' : ' OR '
+        shoulda += shoulda.blank? ? '' : ' and '
+        qry += "#{attr} >= #{filter.options[:less_than]}"
+        shoulda += " length < #{filter.options[:less_than]}"
+      end
 
-            ids = klass.where(qry).pluck(:id)
-            msg = "  #{ids.count} records that are an invalid #{filter.attributes} because it should #{shoulda}"
-            [ids, msg]
+      ids = klass.where(qry).pluck(:id)
+      msg = "  #{ids.count} records that are an invalid #{filter.attributes} because it should #{shoulda}"
+      [ids, msg]
     end
   end
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength

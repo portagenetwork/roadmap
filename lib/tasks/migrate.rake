@@ -330,16 +330,16 @@ namespace :migrate do
 
         scheme = IdentifierScheme.find_by(name: 'shibboleth')
 
-                unless scheme.nil?
-                  users.each do |u|
-                    schemes = u.user_identifiers.collect(&:identifier_scheme_id)
+        unless scheme.nil?
+          users.each do |u|
+            schemes = u.user_identifiers.collect(&:identifier_scheme_id)
 
-                    next if schemes.include?(scheme.id)
-                    # TODO: Add logic to move shib identifiers over
-                    #              UserIdentifier.create(user: u, identifier_scheme: scheme,
-                    #                                    identifier: u.orcid_id.gsub('orcid.org/', ''))
-                  end
-                end
+            next if schemes.include?(scheme.id)
+            # TODO: Add logic to move shib identifiers over
+            #              UserIdentifier.create(user: u, identifier_scheme: scheme,
+            #                                    identifier: u.orcid_id.gsub('orcid.org/', ''))
+          end
+        end
       end
     end
   end
