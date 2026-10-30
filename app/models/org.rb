@@ -61,7 +61,7 @@ class Org < ApplicationRecord
   # The links are validated against custom validator allocated at
   # validators/template_links_validator.rb
   attribute :links, :text, default: { org: [] }
-  serialize :links, JSON
+  serialize :links, coder: JSON
 
   # ================
   # = Associations =
@@ -154,7 +154,7 @@ class Org < ApplicationRecord
   before_validation :check_for_missing_logo_file
 
   # This gives all managed orgs api access whenever saved or updated.
-  before_save :ensure_api_access, if: ->(org) { org.managed? }
+  before_save :ensure_api_access, if: -> { managed? }
 
   before_validation lambda { |data|
     data.sanitize_fields(:name)

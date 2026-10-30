@@ -282,7 +282,7 @@ module ExportablePlan
       ep.format = format
       plan_settings = settings(:export)
 
-      Settings::Template::DEFAULT_SETTINGS.each do |key, _value|
+      Settings::Template::DEFAULT_SETTINGS.each_key do |key|
         ep.settings(:export).send("#{key}=", plan_settings.send(key))
       end
     end

@@ -9,7 +9,7 @@ ruby '3.1.4'
 # ===========#
 
 # Full-stack web application framework. (http://rubyonrails.org)
-gem 'rails', '~> 6.1'
+gem 'rails', '~> 7.1.0'
 
 # TODO: Remove this once Rails addresses the issue with its dependency on mimemagic. Mimemagic had
 #       an MIT license but was using some incompatible GPL license code.
@@ -46,6 +46,14 @@ gem 'jbuilder'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', require: false
+
+# The ultimate text progress bar library for Ruby!
+# (https://github.com/jfelchner/ruby-progressbar)
+gem 'ruby-progressbar'
+
+# Provides Sprockets implementation for Rails 4.x (and beyond) Asset Pipeline.
+# https://github.com/rails/sprockets-rails
+gem 'sprockets-rails'
 
 # ============== #
 # ERROR HANDLING #
@@ -120,7 +128,7 @@ gem 'jwt'
 gem 'pundit'
 
 # Gem for throttling malicious attacks
-gem 'rack-attack', '~> 6.6', '>= 6.6.1'
+gem 'rack-attack'
 
 # ========== #
 # UI / VIEWS #
@@ -291,7 +299,7 @@ group :ci, :development do
   # RuboCop is a Ruby code style checking and code formatting tool. It aims to enforce
   # the community-driven Ruby Style Guide.
   # Pinned by DMP Assistant so its offences align with DMPRoadmap
-  gem 'rubocop', '1.57.1' # Pinned to match DMPRoadmap release v4.1.1
+  gem 'rubocop', '1.66.1' # Pinned to match DMPRoadmap release v4.1.1
 
   # RuboCop rules for detecting and autocorrecting undecorated strings for i18n
   # (gettext and rails-i18n)
