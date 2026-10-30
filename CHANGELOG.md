@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Dependency Updates
+
+ - chore(deps): bump fast-uri from 3.1.8 to 3.1.9 [#1457](https://github.com/portagenetwork/roadmap/pull/1457)
+
 ## [4.1.1+portage-4.10.3]
 
 ### Changed
