@@ -128,7 +128,7 @@ gem 'jwt'
 gem 'pundit'
 
 # Gem for throttling malicious attacks
-gem 'rack-attack', '~> 6.6', '>= 6.6.1'
+gem 'rack-attack'
 
 # ========== #
 # UI / VIEWS #
