@@ -10,7 +10,7 @@ class PublishDoiJob < ApplicationJob
   def perform(snapshot)
     return unless snapshot&.persisted? && snapshot&.publicly_visible?
 
-    DoiPublisherService.publish_canonical_and_relationships(snapshot)
+    DoiPublisherService.update_canonical_and_relationships(snapshot)
   rescue StandardError => e
     Rails.logger.error("PublishDoiJob failed for PlanSnapshot ##{snapshot&.id}: #{e.message}")
     Rollbar.error(e, "PublishDoiJob failed for PlanSnapshot ##{snapshot&.id}") if defined?(Rollbar)

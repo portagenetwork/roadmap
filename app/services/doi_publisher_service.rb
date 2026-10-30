@@ -3,39 +3,42 @@
 # This service handles DOI minting for DMPs by connecting to DataCiteService
 class DoiPublisherService
   class << self
-    # 1. SYNCHRONOUS (Controller): Mints snapshot DOI inside database transaction
+    # 1. SYNCHRONOUS (Controller): Mints canonical DOI (if missing) & snapshot DOI inside database transaction
     def publish_snapshot_doi(snapshot)
       plan = snapshot.plan
 
       return snapshot.doi if snapshot.doi.present?
 
+      # Ensure canonical DOI is minted synchronously to avoid race conditions across concurrent jobs
+      canonical_identifier = plan.dmp_id || mint_canonical_doi(plan, snapshot)
+
       mint_snapshot_doi(
         plan: plan,
         snapshot: snapshot,
-        canonical_doi: plan.dmp_id&.value,
+        canonical_doi: canonical_identifier.value,
         previous_doi: previous_snapshot_doi(snapshot)&.value
       )
     end
 
-    # 2. ASYNCHRONOUS (PublishDoiJob): Mints canonical DOI & syncs bidirectional DataCite relationships
-    def publish_canonical_and_relationships(snapshot)
+    # 2. ASYNCHRONOUS (PublishDoiJob): Syncs bidirectional DataCite relationships
+    def update_canonical_and_relationships(snapshot)
       plan = snapshot.plan
 
-      # Fetch or mint Canonical DMP DOI
-      canonical_identifier = plan.dmp_id || mint_canonical_doi(plan, snapshot)
+      # Fetch Canonical DMP DOI
+      canonical_identifier = plan.dmp_id.value
 
       # Update Canonical DMP metadata at DataCite (HasVersion -> snapshot DOIs)
       update_canonical_doi(
         plan: plan,
         snapshot: snapshot,
-        canonical_doi_url: canonical_identifier.value
+        canonical_doi_url: canonical_identifier
       )
 
       # Update Snapshot metadata at DataCite (IsVersionOf -> canonical DOI)
       update_snapshot_doi(
         plan: plan,
         snapshot: snapshot,
-        canonical_doi_url: canonical_identifier.value
+        canonical_doi_url: canonical_identifier
       )
     end
 

@@ -46,25 +46,7 @@ RSpec.describe DoiPublisherService, type: :service do
     end
   end
 
-  describe '.publish_canonical_and_relationships' do
-    context 'when the plan does not have a canonical DOI yet' do
-      before do
-        stub_request(:post, %r{/dois\z})
-          .to_return(status: 201, body: { data: { id: '10.83996/canonical-1', type: 'dois' } }.to_json)
-
-        stub_request(:put, %r{/dois/10.83996%2Fcanonical-1})
-          .to_return(status: 200, body: { data: { id: '10.83996/canonical-1', type: 'dois' } }.to_json)
-      end
-
-      it 'mints a canonical DOI for the plan and updates its relationships' do
-        described_class.publish_canonical_and_relationships(snapshot)
-
-        canonical_identifier = plan.reload.identifiers.find_by(identifier_scheme: IdentifierScheme.datacite)
-        expect(canonical_identifier.value).to eq('https://doi.org/10.83996/canonical-1')
-        expect(a_request(:put, %r{/dois/10.83996%2Fcanonical-1})).to have_been_made
-      end
-    end
-
+  describe '.update_canonical_and_relationships' do
     context 'when the plan already has a canonical DOI' do
       let!(:canonical_doi) do
         create(:identifier, identifiable: plan, identifier_scheme: IdentifierScheme.datacite, value: 'https://doi.org/10.83996/canonical-1')
@@ -76,7 +58,7 @@ RSpec.describe DoiPublisherService, type: :service do
       end
 
       it 'reuses the existing canonical DOI and updates its relationships' do
-        expect { described_class.publish_canonical_and_relationships(snapshot) }
+        expect { described_class.update_canonical_and_relationships(snapshot) }
           .not_to change { plan.identifiers.where(identifier_scheme: IdentifierScheme.datacite).count }
 
         expect(a_request(:put, %r{/dois/10.83996%2Fcanonical-1})).to have_been_made
