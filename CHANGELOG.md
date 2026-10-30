@@ -6,6 +6,8 @@
 
  - chore(deps): bump fast-uri from 3.1.8 to 3.1.9 [#1457](https://github.com/portagenetwork/roadmap/pull/1457)
 
+ - chore(deps): bump tinymce from 7.9.3 to 8.9.3 [#1458](https://github.com/portagenetwork/roadmap/pull/1458)
+
 ## [4.1.1+portage-4.10.3]
 
 ### Changed
