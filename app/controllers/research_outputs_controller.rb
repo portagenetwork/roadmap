@@ -19,27 +19,23 @@ class ResearchOutputsController < ApplicationController
 
   # GET /plans/:plan_id/research_outputs/new
   def new
-    @research_output = ResearchOutput.new(plan_id: @plan.id)
+    @research_output = ResearchOutput.new(plan_id: @plan.id, output_type: nil)
     authorize @research_output
 
-    # Check if a DOI parameter was carried over in the redirect URL query string
+    # Pre-fill from a DOI supplied in the query string
     return unless params[:prefill_doi].present?
 
-    # Call DataCite or Crossref service using the DOI string found in the URL parameters
-    result = ExternalApis::DoiResolutionService.fetch_metadata(doi: params[:prefill_doi])
+    @prefill_doi = params[:prefill_doi].presence
 
-    return unless result[:status] == :ok && result[:metadata].present?
-
-    metadata = result[:metadata]
-
-    @research_output.assign_attributes(
-      metadata.slice(:title, :description, :output_type, :release_date)
-    )
+    prefill_from_doi(params[:prefill_doi])
   end
 
   # GET /plans/:plan_id/research_outputs/:id/edit
   def edit
     authorize @research_output
+    @prefill_doi = params[:prefill_doi].presence ||
+                   @research_output.identifier_for_scheme(scheme: 'doi')&.value_without_scheme_prefix
+    prefill_from_doi(params[:prefill_doi]) if params[:prefill_doi].present?
   end
 
   # POST /plans/:plan_id/research_outputs
@@ -50,6 +46,7 @@ class ResearchOutputsController < ApplicationController
     authorize @research_output
 
     if @research_output.save
+      persist_doi_identifier
       redirect_to plan_research_outputs_path(@plan),
                   notice: success_message(@research_output, _('added'))
     else
@@ -70,6 +67,7 @@ class ResearchOutputsController < ApplicationController
     @research_output.metadata_standards.clear
 
     if @research_output.update(args)
+      persist_doi_identifier
       redirect_to plan_research_outputs_path(@plan),
                   notice: success_message(@research_output, _('saved'))
     else
@@ -90,6 +88,19 @@ class ResearchOutputsController < ApplicationController
       redirect_to plan_research_outputs_path(@plan),
                   alert: failure_message(@research_output, _('remove'))
     end
+  end
+
+  def persist_doi_identifier
+    doi = @prefill_doi.presence || params[:prefill_doi].presence
+    return if doi.blank?
+
+    scheme = IdentifierScheme.by_name('doi').first
+    return if scheme.blank?
+
+    identifier = @research_output.identifier_for_scheme(scheme: scheme) ||
+                 @research_output.identifiers.build(identifier_scheme: scheme)
+    identifier.value = doi
+    identifier.save!
   end
 
   # ============================
@@ -156,29 +167,36 @@ class ResearchOutputsController < ApplicationController
                                       .page(params[:page])
   end
 
-  def fetch_doi
-    authorize ResearchOutput.new(plan_id: params[:plan_id])
+  private
 
-    # Obtain research output metadata from DataCite or Crossref service
-    result = ExternalApis::DoiResolutionService.fetch_metadata(
-      doi: params[:doi]
-    )
-
-    case result[:status]
-    when :ok
-      render json: result[:metadata]
-    when :blank
-      render json: { error: 'DOI is required.' }, status: :bad_request
-    when :invalid
-      render json: { error: 'Does not appear to be a valid DOI.' }, status: :bad_request
-    when :not_found
-      render json: { error: 'Could not find metadata for the provided DOI.' }, status: :not_found
+  def prefill_from_doi(doi)
+    result = ExternalApis::DoiResolutionService.fetch_metadata(doi: doi)
+    if result[:status] == :ok
+      @research_output.assign_attributes(
+        result[:metadata].slice(:title, :description, :output_type, :release_date)
+      )
+    elsif %i[invalid not_found].include?(result[:status])
+      redirect_to plan_research_outputs_path(@plan, prefill_doi: doi),
+                  alert: doi_error_message(result[:status])
     else
-      render json: { error: 'An unexpected error occurred.' }, status: :internal_server_error
+      flash.now[:alert] = doi_error_message(result[:status])
     end
   end
 
-  private
+  def doi_error_message(status)
+    case status
+    when :blank
+      _('DOI is required.')
+    when :invalid
+      _('Does not appear to be a valid DOI.')
+    when :not_found
+      _('Could not find metadata for the provided DOI. Please check the DOI and try again, or enter details manually.')
+    when :service_unavailable
+      _('DOI lookup service is currently unavailable. Please enter details manually.')
+    else
+      _('An unexpected error occurred.')
+    end
+  end
 
   def output_params
     params.require(:research_output)

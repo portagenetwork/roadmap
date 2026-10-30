@@ -1,6 +1,6 @@
 import getConstant from '../utils/constants';
 import { isUndefined, isObject } from '../utils/isType';
-import { Tinymce } from '../utils/tinymce.js';
+import { Tinymce } from '../utils/tinymce';
 
 const STATUS_CLASSES = 'd-none text-muted text-danger text-success';
 
@@ -11,29 +11,39 @@ $(() => {
     Tinymce.init({ selector: '#research_output_description' });
   }
 
+  // Browsers can preserve the disabled button when restoring this page from
+  // the back-forward cache, so reset it when the page is shown again.
+  window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+      $('#btn_prefill_doi')
+        .prop('disabled', false)
+        .text(getConstant('DOI_BUTTON_TEXT_DEFAULT'));
+    }
+  });
+
   // Toggle DOI form visibility
   $('body').on('click', '#btn_toggle_doi_form', (e) => {
     e.preventDefault();
     const panel = $('#doi_lookup_panel');
 
     panel.toggleClass('d-none');
-    
+
     if (!panel.hasClass('d-none')) {
       $('#doi_lookup_input').focus();
     }
   });
 
-  // DOI Verification & Redirect to New Form
-  $('body').on('click', '#btn_fetch_doi', (e) => {
+  // Resolve the DOI in the new form request to avoid a second provider lookup.
+  $('body').on('click', '#btn_prefill_doi', (e) => {
     e.preventDefault();
     const button = $(e.currentTarget);
     const inputField = $('#doi_lookup_input');
     const statusText = $('#doi_lookup_status');
-    
+
     const doi = inputField.val().trim();
-    
-    const fetchDoiPath = button.data('fetch-doi-path');
-    const newResearchOutputPath = button.data('new-research-output-path');
+    const cleanDoi = doi.replace(/^https?:\/\/doi\.org\//i, '');
+
+    const prefillPath = button.data('prefill-path');
 
     // Helper for DRY-ing state updates
     const setLookupStatus = (type, message) => {
@@ -45,27 +55,17 @@ $(() => {
       return;
     }
 
+    const modernDoiPattern = new RegExp(`^(?:${getConstant('DOI_MODERN_PATTERN')})$`, 'i');
+    const oldDoiPattern = new RegExp(`^(?:${getConstant('DOI_OLD_PATTERN')})$`, 'i');
+
+    if (!modernDoiPattern.test(cleanDoi) && !oldDoiPattern.test(cleanDoi)) {
+      setLookupStatus('text-danger', getConstant('DOI_VALIDATION_INVALID'));
+      return;
+    }
+
     button.prop('disabled', true).text(getConstant('DOI_VALIDATION_VERIFYING'));
-    setLookupStatus('text-muted', getConstant('DOI_VALIDATION_FETCHING'));
-
-    $.ajax({
-      url: fetchDoiPath,
-      method: 'GET',
-      data: { doi },
-      dataType: 'json'
-    }).done(() => {
-      setLookupStatus('text-success', getConstant('DOI_VALIDATION_SUCCESS'));
-      
-      // Dynamic browser redirection to the standard "New" view layout route
-      window.location.href = `${newResearchOutputPath}?prefill_doi=${encodeURIComponent(doi)}`;
-    }).fail((xhr) => {
-      button.prop('disabled', false).text(getConstant('DOI_BUTTON_TEXT_DEFAULT'));
-      const response = xhr.responseJSON;
-      const errorMsg = response && response.error ? response.error : getConstant('DOI_VALIDATION_FALLBACK_ERROR');
-      setLookupStatus('text-danger', errorMsg);
-    });
+    window.location.href = `${prefillPath}?prefill_doi=${encodeURIComponent(doi)}`;
   });
-
 
   // Expands/Collapses the search results 'More info'/'Less info' section
   $('body').on('click', '.modal-search-result .more-info a.more-info-link', (e) => {
