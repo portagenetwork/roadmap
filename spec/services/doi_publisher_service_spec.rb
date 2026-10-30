@@ -65,4 +65,24 @@ RSpec.describe DoiPublisherService, type: :service do
       end
     end
   end
+
+  describe '.previous_snapshot_doi' do
+    let(:datacite_scheme) { IdentifierScheme.datacite }
+    let!(:snapshot_v1) { create(:plan_snapshot, plan: plan, version: 1) }
+    let!(:snapshot_v1_doi) do
+      create(:identifier, identifiable: snapshot_v1, identifier_scheme: datacite_scheme, value: 'https://doi.org/10.83996/v1')
+    end
+    let!(:snapshot_v2) { create(:plan_snapshot, plan: plan, version: 2) } # Private, no DOI
+    let!(:snapshot_v3) { create(:plan_snapshot, plan: plan, version: 3) }
+
+    it 'returns the identifier of the latest preceding snapshot that has a DOI' do
+      result = described_class.send(:previous_snapshot_doi, snapshot_v3)
+      expect(result).to eq(snapshot_v1_doi)
+    end
+
+    it 'returns nil when no prior snapshots have a DOI' do
+      result = described_class.send(:previous_snapshot_doi, snapshot_v1)
+      expect(result).to be_nil
+    end
+  end
 end

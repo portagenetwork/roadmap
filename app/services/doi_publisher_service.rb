@@ -45,7 +45,9 @@ class DoiPublisherService
     private
 
     def previous_snapshot_doi(snapshot)
+      # INNER JOIN against identifiers table filters out private snapshots without DOIs
       snapshot.plan.snapshots
+              .joins(:identifier)
               .where('version < ?', snapshot.version)
               .order(:version)
               .last&.identifier
