@@ -1,4 +1,4 @@
-FROM surnet/alpine-wkhtmltopdf:3.23.4-0.12.6-small AS wkhtmltopdf
+FROM surnet/alpine-wkhtmltopdf:3.24.3-0.12.6-small AS wkhtmltopdf
 
 FROM ruby:3.1.4-alpine AS builder
 
@@ -26,7 +26,12 @@ RUN apk update && apk add --no-cache \
     nodejs=20.15.1-r0 \
     yarn \
     shared-mime-info \
-    tzdata
+    tzdata \
+    ca-certificates
+
+RUN apk upgrade --no-cache \
+    ca-certificates \
+    ca-certificates-bundle
 
 WORKDIR $INSTALL_PATH
 
@@ -73,7 +78,6 @@ RUN apk update && apk add --no-cache \
     imagemagick \
     libjpeg-turbo \
     wget \
-    nodejs=20.15.1-r0 \
     # Install dependencies for wkhtmltopdf
     # (See https://github.com/Surnet/docker-wkhtmltopdf/pkgs/container/alpine-wkhtmltopdf#other-images)
     libstdc++ \
@@ -96,7 +100,11 @@ RUN apk update && apk add --no-cache \
   && fc-cache -f \
   # Clean up when done
   && rm -rf /tmp/* \
-  && apk del .build-deps 
+  && apk del .build-deps
+
+RUN apk upgrade --no-cache \
+    ca-certificates \
+    ca-certificates-bundle
 
 WORKDIR $INSTALL_PATH
 
@@ -139,7 +147,7 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]
 
 # nginx stage to serve static assets
-FROM nginx:1.31.6-alpine AS assets
+FROM nginx:1.31.8-alpine AS assets
 
 ENV INSTALL_PATH=/usr/src/app
 

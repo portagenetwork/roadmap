@@ -6,7 +6,6 @@ class PlanSnapshot < ApplicationRecord
   MISSING_REQUIRED_JSON_FIELDS_MESSAGE = 'Required fields are missing from the generated JSON'
   IMMUTABLE_SNAPSHOT_FIELDS = %w[plan_id version visibility rda_json extension_json checksum].freeze
   VISIBILITY_MESSAGE = {
-    organisationally_visible: _('organizational'),
     publicly_visible: _('public'),
     privately_visible: _('private')
   }.freeze
@@ -15,7 +14,7 @@ class PlanSnapshot < ApplicationRecord
   # = Attributes =
   # ==============
 
-  enum visibility: %i[privately_visible organisationally_visible publicly_visible]
+  enum visibility: %i[privately_visible publicly_visible]
 
   # ================
   # = Associations =

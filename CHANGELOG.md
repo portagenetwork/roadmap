@@ -3,10 +3,14 @@
 ## [Unreleased]
 
 ### Fixed
-
  - Resolve DOI metadata once when pre-filling research outputs, with specific lookup errors and retry [#1427](https://github.com/portagenetwork/roadmap/pull/1427)
 
+### Changed
+ - Remove organisational visibility from plan snapshots [#1452](https://github.com/portagenetwork/roadmap/pull/1452)
+
 ### Dependency Updates
+
+ - chore(deps): bump nginx from 1.31.6-alpine to 1.31.7-alpine [#1441](https://github.com/portagenetwork/roadmap/pull/1441)
 
  - chore(deps): bump docker/login-action from 4.4.0 to 4.6.0 [#1396](https://github.com/portagenetwork/roadmap/pull/1396)
 
@@ -15,6 +19,42 @@
  - chore(deps): bump docker/build-push-action from 7.3.0 to 7.4.0 [#1424](https://github.com/portagenetwork/roadmap/pull/1424)
 
  - chore(deps): bump nginx from 1.31.5-alpine to 1.31.6-alpine [#1422](https://github.com/portagenetwork/roadmap/pull/1422)
+
+ - chore(deps): bump docker/login-action from 4.6.0 to 4.7.0 [#1450](https://github.com/portagenetwork/roadmap/pull/1450)
+
+ - chore(deps): bump nginx from 1.31.7-alpine to 1.31.8-alpine [#1449](https://github.com/portagenetwork/roadmap/pull/1449)
+
+  - chore(deps): bump surnet/alpine-wkhtmltopdf from 3.23.4-0.12.6-small to 3.24.3-0.12.6-small [#1448](https://github.com/portagenetwork/roadmap/pull/1448)
+
+## [4.1.1+portage-4.10.3]
+
+### Changed
+
+ - build(docker): remove nodejs from runtime image [#1451](https://github.com/portagenetwork/roadmap/pull/1451)
+
+## [4.1.1+portage-4.10.2]
+
+### Dependency Updates
+
+ - chore(deps): bump hono from 4.13.7 to 4.13.13 [#1444](https://github.com/portagenetwork/roadmap/pull/1444)
+
+ - chore(deps): bump follow-redirects from 1.16.0 to 1.16.1 [#1442](https://github.com/portagenetwork/roadmap/pull/1442)
+
+ - chore(deps): bump brace-expansion from 1.1.18 to 1.1.21 [#1438](https://github.com/portagenetwork/roadmap/pull/1438)
+
+ - chore(deps): bump fast-uri from 3.1.7 to 3.1.8 [#1439](https://github.com/portagenetwork/roadmap/pull/1439)
+
+ - chore(deps): bump proxy-addr from 2.0.7 to 2.0.8 [#1440](https://github.com/portagenetwork/roadmap/pull/1440)
+
+ - chore(deps): bump @modelcontextprotocol/sdk from 1.27.1 to 1.32.1 [#1436](http://github.com/portagenetwork/roadmap/pull/1436)
+
+ - chore(deps): bump source-map-js from 1.0.2 to 1.2.2 [#1437](https://github.com/portagenetwork/roadmap/pull/1437)
+
+ - chore(deps): bump hono from 4.13.1 to 4.13.7 [#1419](https://github.com/portagenetwork/roadmap/pull/1419)
+
+ - chore(deps): bump js-yaml from 4.3.1 to 4.3.2 [#1420](https://github.com/portagenetwork/roadmap/pull/1420)
+
+ - fix(docker): update CA certificates to address eMudhra compromise [#1447](https://github.com/portagenetwork/roadmap/pull/1447)
 
 ## [4.1.1+portage-4.10.1]
 
