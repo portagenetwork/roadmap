@@ -26,9 +26,15 @@
 # Object that represents a condition of a conditional question
 class Condition < ApplicationRecord
   belongs_to :question
+<<<<<<< HEAD
   enum action_type: %i[remove add_webhook]
   serialize :option_list, type: Array, coder: YAML
   serialize :remove_data, type: Array, coder: YAML
+=======
+  enum :action_type, { remove: 0, add_webhook: 1 }
+  serialize :option_list, type: Array, coder: JSON
+  serialize :remove_data, type: Array, coder: JSON
+>>>>>>> 9572e01da (Merge pull request #3497 from DMPRoadmap/johnpinto1-updated-port-of-dmptool-conditional-questions-fix-for-rails7)
   serialize :webhook_data, coder: JSON
 
   # Sort order: Number ASC

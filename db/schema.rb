@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema[7.1].define(version: 2026_10_26_193912) do
+=======
+ActiveRecord::Schema[7.1].define(version: 2025_01_15_102816) do
+>>>>>>> 9572e01da (Merge pull request #3497 from DMPRoadmap/johnpinto1-updated-port-of-dmptool-conditional-questions-fix-for-rails7)
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 

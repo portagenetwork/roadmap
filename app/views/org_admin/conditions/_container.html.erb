@@ -4,13 +4,19 @@
       <div class="col-md-3 mb-2 bold">
         <%= label(:text, _('Option'), class: "form-label")%>
       </div>
+<<<<<<< HEAD
       <div class="col-md-3 mb-2">
         <%= label(:text, _('Action'), class: "form-label") %>
+=======
+      <div class="col-md-3 mb-2 bold">
+        <%= label(:text, _('Action'), class: "control-label") %>
+>>>>>>> 9572e01da (Merge pull request #3497 from DMPRoadmap/johnpinto1-updated-port-of-dmptool-conditional-questions-fix-for-rails7)
       </div>
       <div class="col-md-3 mb-2 bold">
-        <%= _('Remove')%>
+        <%= label(:text, _('Target'), class: "control-label") %>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-3 mb-2 bold">
+        <%= label(:text, _('Remove'), class: "control-label") %>
       </div>
     </div>
     <% conditions_params =  conditions_to_param_form(conditions).sort_by { |key| key }.to_h %>
