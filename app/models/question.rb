@@ -225,34 +225,13 @@ class Question < ApplicationRecord
     end
   end
 
-<<<<<<< HEAD
-  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-=======
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
->>>>>>> 9572e01da (Merge pull request #3497 from DMPRoadmap/johnpinto1-updated-port-of-dmptool-conditional-questions-fix-for-rails7)
   def save_condition(value, opt_map, question_id_map)
     c = conditions.build
     c.action_type = value['action_type']
     c.number = value['number']
 
     # question options may have changed so rewrite them
-<<<<<<< HEAD
-    c.option_list = value['question_option']
-    unless opt_map.blank?
-      new_question_options = c.option_list.map do |qopt|
-        opt_map[qopt]
-      end
-      c.option_list = new_question_options
-    end
-
-    if value['action_type'] == 'remove'
-      c.remove_data = value['remove_question_id']
-      unless question_id_map.blank?
-        new_question_ids = c.remove_data.map do |qid|
-          question_id_map[qid]
-        end
-        c.remove_data = new_question_ids
-=======
     c.option_list = handle_option_list(value, opt_map)
     # Do not save the condition if the option_list is empty
     if c.option_list.empty?
@@ -266,7 +245,6 @@ class Question < ApplicationRecord
       if c.remove_data.empty?
         c.destroy
         return
->>>>>>> 9572e01da (Merge pull request #3497 from DMPRoadmap/johnpinto1-updated-port-of-dmptool-conditional-questions-fix-for-rails7)
       end
     else
       c.webhook_data = handle_webhook_data(value)
@@ -278,11 +256,7 @@ class Question < ApplicationRecord
     end
     c.save
   end
-<<<<<<< HEAD
-  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
-=======
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
->>>>>>> 9572e01da (Merge pull request #3497 from DMPRoadmap/johnpinto1-updated-port-of-dmptool-conditional-questions-fix-for-rails7)
 
   private
 
