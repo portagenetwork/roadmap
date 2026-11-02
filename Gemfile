@@ -91,7 +91,7 @@ gem 'flag_shih_tzu' # , "~> 0.3.23"
 
 # Flexible authentication solution for Rails with Warden
 # (https://github.com/plataformatec/devise)
-gem 'devise'
+gem 'devise', '< 5'
 
 # An invitation strategy for Devise (https://github.com/scambra/devise_invitable)
 gem 'devise_invitable'
