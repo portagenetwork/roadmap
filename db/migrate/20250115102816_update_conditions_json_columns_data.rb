@@ -1,40 +1,9 @@
-# This migration runs SQL for MySQL databases or POSTGRESQL database (default).
+# This migration converts YAML-serialized columns to JSON on PostgreSQL only.
 class UpdateConditionsJsonColumnsData < ActiveRecord::Migration[7.1]
   # rubocop:disable Metrics/MethodLength
   def change
     if ActiveRecord::Base.connection.adapter_name.downcase.include?('mysql')
-      # MySQL sql
-      execute <<-SQL
-        UPDATE conditions
-        SET
-          option_list = CONCAT(
-            '[',
-            REPLACE(
-              REPLACE(
-                REPLACE(option_list, '---\r\n-', ''),
-                '\r\n-',
-                ','
-              ),
-              '\r\n',
-              ''
-            ),
-            ']'
-          ),
-          remove_data = CONCAT(
-            '[',
-            REPLACE(
-              REPLACE(
-                REPLACE(remove_data, '---\r\n-', ''),
-                '\r\n-',
-                ','
-              ),
-              '\r\n',
-              ''
-            ),
-            ']'
-          )
-        WHERE option_list LIKE '---%';
-      SQL
+      raise 'UpdateConditionsJsonColumnsData is not supported on MySQL.'
     else
       # POSTGRES SQL
       execute <<-SQL
