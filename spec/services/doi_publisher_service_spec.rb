@@ -33,15 +33,36 @@ RSpec.describe DoiPublisherService, type: :service do
     end
 
     context 'when minting a snapshot DOI' do
+      let(:shoulder) { Rails.configuration.x.datacite.shoulder }
+
       before do
         stub_request(:post, %r{/dois\z})
-          .to_return(status: 201, body: { data: { id: '10.83996/snapshot-1', type: 'dois' } }.to_json)
+          .to_return do |req|
+            body = JSON.parse(req.body)
+            requested_doi = body.dig('data', 'attributes', 'doi')
+            { status: 201, body: { data: { id: requested_doi, type: 'dois' } }.to_json }
+          end
       end
 
       it 'mints a snapshot DOI for the snapshot' do
         described_class.publish_snapshot_doi(snapshot)
 
-        expect(snapshot.reload.identifier.value).to eq('https://doi.org/10.83996/snapshot-1')
+        expect(snapshot.reload.identifier.value).to eq("https://doi.org/#{shoulder}/dmp.#{plan.id}.v2")
+      end
+    end
+
+    context 'when DataCite returns 409 Conflict (DOI already minted on previous failed attempt)' do
+      let(:shoulder) { Rails.configuration.x.datacite.shoulder }
+
+      before do
+        stub_request(:post, %r{/dois\z})
+          .to_return(status: 409, body: { errors: [{ title: 'DOI already exists' }] }.to_json)
+      end
+
+      it 'rescues the 409 and successfully creates the local Identifier record' do
+        described_class.publish_snapshot_doi(snapshot)
+
+        expect(snapshot.reload.identifier.value).to eq("https://doi.org/#{shoulder}/dmp.#{plan.id}.v2")
       end
     end
   end

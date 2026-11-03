@@ -28,6 +28,24 @@ module ExternalApis
       # Mints a new DOI via DataCite REST API (POST /dois)
       def mint_doi(payload:)
         perform_request(:post, '/dois', payload)
+      rescue StandardError => e
+        # Rescue 409 / already exists errors from prior timed-out attempts
+        # to prevent minting again and instead save bare doi from payload to DB
+        if e.message.include?('409')
+          payload_hash = if payload.is_a?(Hash)
+                           payload
+                         else
+                           begin
+                             JSON.parse(payload)
+                           rescue StandardError # rubocop:disable Metrics/BlockNesting
+                             {}
+                           end
+                         end
+          bare_doi = payload_hash.dig('data', 'attributes', 'doi')
+          return { 'data' => { 'id' => bare_doi, 'type' => 'dois' } } if bare_doi.present?
+        end
+
+        raise
       end
 
       # Updates an existing DOI record via DataCite REST API (PUT /dois/:id)

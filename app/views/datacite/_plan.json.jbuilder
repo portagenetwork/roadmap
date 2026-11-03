@@ -6,7 +6,12 @@ json.data do # rubocop:disable Metrics/BlockLength
   json.type 'dois'
 
   json.attributes do # rubocop:disable Metrics/BlockLength
-    json.prefix Rails.configuration.x.datacite.shoulder.to_s
+    if local_assigns[:client_assigned_doi].present?
+      json.doi DoiNormalizerService.bare_doi(local_assigns[:client_assigned_doi])
+    else
+      json.prefix Rails.configuration.x.datacite.shoulder.to_s
+    end
+
     json.schemaVersion 'http://datacite.org/schema/kernel-4'
     json.event 'publish'
 

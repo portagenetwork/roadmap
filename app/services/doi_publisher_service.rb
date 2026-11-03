@@ -55,37 +55,77 @@ class DoiPublisherService
 
     def mint_canonical_doi(plan, snapshot)
       datacite_scheme = IdentifierScheme.datacite
-      payload = datacite_payload(plan: plan, snapshot: snapshot, is_canonical: true)
+      doi_url = canonical_doi_url_for(plan)
 
-      response = ExternalApis::DataciteService.mint_doi(payload: payload)
-      doi_url = DoiNormalizerService.full_url(
-        response.dig('data', 'id'),
-        scheme_prefix: datacite_scheme.identifier_prefix
+      # Return if local record already exists
+      existing_id = plan.identifiers.find_by(identifier_scheme: datacite_scheme, value: doi_url)
+      return existing_id if existing_id.present?
+
+      payload = datacite_payload(
+        plan: plan,
+        snapshot: snapshot,
+        is_canonical: true,
+        client_assigned_doi: doi_url
       )
 
-      plan.identifiers.create!(identifier_scheme: datacite_scheme, value: doi_url)
+      final_doi_url = mint_and_normalize_doi(
+        payload: payload,
+        explicit_doi_url: doi_url,
+        scheme: datacite_scheme
+      )
+
+      plan.identifiers.find_or_create_by!(
+        identifier_scheme: datacite_scheme,
+        value: final_doi_url
+      )
     end
 
     def mint_snapshot_doi(plan:, snapshot:, canonical_doi:, previous_doi:)
       datacite_scheme = IdentifierScheme.datacite
+      doi_url = snapshot_doi_url_for(snapshot)
+
+      return snapshot.identifier if snapshot.identifier.present? && snapshot.identifier.value == doi_url
+
       payload = datacite_payload(
         plan: plan,
         snapshot: snapshot,
         is_canonical: false,
         canonical_doi: canonical_doi,
-        previous_doi: previous_doi
+        previous_doi: previous_doi,
+        client_assigned_doi: doi_url
       )
 
-      response = ExternalApis::DataciteService.mint_doi(payload: payload)
-      doi_url = DoiNormalizerService.full_url(
-        response.dig('data', 'id'),
-        scheme_prefix: datacite_scheme.identifier_prefix
+      final_doi_url = mint_and_normalize_doi(
+        payload: payload,
+        explicit_doi_url: doi_url,
+        scheme: datacite_scheme
       )
 
-      snapshot.create_identifier!(
+      snapshot.identifier || snapshot.create_identifier!(
         identifier_scheme: datacite_scheme,
-        value: doi_url
+        value: final_doi_url
       )
+    end
+
+    def mint_and_normalize_doi(payload:, explicit_doi_url:, scheme:)
+      response = ExternalApis::DataciteService.mint_doi(payload: payload)
+      minted_id = response.dig('data', 'id') || DoiNormalizerService.bare_doi(explicit_doi_url)
+
+      DoiNormalizerService.full_url(
+        minted_id,
+        scheme_prefix: scheme.identifier_prefix
+      )
+    end
+
+    # Build explicit DOIs to allow for checking if version is already published before saving to DB
+    def canonical_doi_url_for(plan)
+      prefix = Rails.configuration.x.datacite.shoulder
+      DoiNormalizerService.full_url("#{prefix}/dmp.#{plan.id}")
+    end
+
+    def snapshot_doi_url_for(snapshot)
+      prefix = Rails.configuration.x.datacite.shoulder
+      DoiNormalizerService.full_url("#{prefix}/dmp.#{snapshot.plan_id}.v#{snapshot.version}")
     end
 
     def update_canonical_doi(plan:, snapshot:, canonical_doi_url:)
