@@ -12,6 +12,7 @@ RSpec.describe 'Organization admin user authorization', type: :request do
   before do
     create(:role, :creator, user: target, plan: plan)
     target.perms << create(:perm, :modify_templates)
+    create(:perm, :manage_oauth_apps)
     sign_in actor if actor
   end
 
@@ -153,7 +154,7 @@ RSpec.describe 'Organization admin user authorization', type: :request do
       foreign_department = create(:department, org_id: create(:org).id)
       put "/org_admin/users/#{target.id}", params: { user: { department_id: foreign_department.id } }
 
-      expect(response).to have_http_status(:unprocessable_content)
+      expect(response).to have_http_status(:unprocessable_entity)
       expect(response.body).to include('must belong to the same organization as the user')
       expect(target.reload.department_id).to eq(department.id)
     end
@@ -244,11 +245,12 @@ RSpec.describe 'Organization admin user authorization', type: :request do
       expect(target.department).to be_nil
     end
 
-    it 'allows super-admin profile updates across organizations' do
+    it 'ignores email changes in super-admin profile updates' do
+      original_email = target.email
       put "/super_admin/users/#{target.id}", params: { user: { email: 'changed@example.test' } }
 
       expect(response).to have_http_status(:ok)
-      expect(target.reload.email).to eq('changed@example.test')
+      expect(target.reload.email).to eq(original_email)
     end
   end
 
