@@ -68,6 +68,51 @@ RSpec.describe User, 'department membership', type: :model do
     expect(user.department).to eq(department)
   end
 
+  it 'clears the old department when an organization change skips validation' do
+    user.update!(department: department)
+    user.org = create(:org)
+    user.save!(validate: false)
+
+    expect(user.reload.department).to be_nil
+  end
+
+  it 'clears the old department when update_attribute changes organization' do
+    user.update!(department: department)
+    user.update_attribute(:org_id, create(:org).id)
+
+    expect(user.reload.department).to be_nil
+  end
+
+  context 'with a legacy department from another organization' do
+    before do
+      foreign_department = create(:department, org_id: create(:org).id)
+      user.update_column(:department_id, foreign_department.id)
+      user.reload
+    end
+
+    it 'allows unrelated profile changes without changing department membership' do
+      expect(user.update(firstname: 'Updated')).to be(true)
+      expect(user.reload.firstname).to eq('Updated')
+    end
+
+    it 'allows password resets' do
+      expect(user.reset_password('New-password-601!', 'New-password-601!')).to be(true)
+      expect(user.reload.valid_password?('New-password-601!')).to be(true)
+    end
+
+    it 'allows correcting the legacy department assignment' do
+      expect(user.update(department: department)).to be(true)
+      expect(user.reload.department).to eq(department)
+    end
+
+    it 'still rejects assigning a different foreign department' do
+      foreign_department = create(:department, org_id: create(:org).id)
+
+      expect(user.update(department: foreign_department)).to be(false)
+      expect(user.errors[:department]).to be_present
+    end
+  end
+
   it 'rejects a mismatched department when creating a user' do
     new_user = build(:user, org: create(:org), department: department)
 

@@ -22,7 +22,12 @@ RSpec.describe 'Organization admin user authorization', type: :request do
       [:get, '/org_admin/users/%s/edit', {}],
       [:put, '/org_admin/users/%s', { user: { department_id: '' } }],
       [:get, '/org_admin/users/%s/user_plans', {}],
-      [:get, '/paginable/users/%s/plans', {}]
+      [:get, '/paginable/users/%s/plans', {}],
+      [:get, '/super_admin/users/%s/edit', {}],
+      [:put, '/super_admin/users/%s', { user: { email: 'changed@example.test' } }],
+      [:put, '/super_admin/users/%s/merge', {}],
+      [:put, '/super_admin/users/%s/archive', {}],
+      [:get, '/super_admin/users/%s/search', {}]
     ].each do |verb, path, parameters|
       it "denies #{verb.upcase} #{path}" do
         permissions = target.perm_ids.sort
@@ -88,6 +93,17 @@ RSpec.describe 'Organization admin user authorization', type: :request do
       expect(response.body).to include(target.email, plan.title)
     end
 
+    it 'links to the profile editor appropriate for the caller' do
+      get '/org/admin/users/admin_index'
+
+      expected_path = actor.can_super_admin? ? edit_super_admin_user_path(target) : edit_org_admin_user_path(target)
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("href=\"#{expected_path}\"")
+      unless actor.can_super_admin?
+        expect(response.body).not_to include("href=\"#{edit_super_admin_user_path(target)}\"")
+      end
+    end
+
     it 'renders the user plan page' do
       get "/org_admin/users/#{target.id}/user_plans"
 
@@ -137,6 +153,8 @@ RSpec.describe 'Organization admin user authorization', type: :request do
       foreign_department = create(:department, org_id: create(:org).id)
       put "/org_admin/users/#{target.id}", params: { user: { department_id: foreign_department.id } }
 
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(response.body).to include('must belong to the same organization as the user')
       expect(target.reload.department_id).to eq(department.id)
     end
   end
@@ -164,11 +182,42 @@ RSpec.describe 'Organization admin user authorization', type: :request do
       extra_permission = create(:perm, :add_organisations)
       put "/org/admin/users/#{target.id}/admin_update_permissions",
           params: { perm_ids: [extra_permission.id] }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body.fetch('code')).to eq(1)
       expect(target.reload.perms).not_to include(extra_permission)
 
       target.perms << extra_permission
       put "/org/admin/users/#{target.id}/admin_update_permissions", params: { perm_ids: [] }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body.fetch('code')).to eq(1)
       expect(target.reload.perms).to include(extra_permission)
+    end
+
+    it 'ignores organization, email, and permission parameters for a same-organization user' do
+      original_email = target.email
+      original_permissions = target.perm_ids.sort
+      put "/org_admin/users/#{target.id}",
+          params: { user: { department_id: department.id, org_id: create(:org).id,
+                            email: 'changed@example.test', perm_ids: [Perm.grant_permissions.id] } }
+
+      expect(response).to have_http_status(:ok)
+      expect(target.reload.department_id).to eq(department.id)
+      expect(target.org_id).to eq(org.id)
+      expect(target.email).to eq(original_email)
+      expect(target.perm_ids.sort).to eq(original_permissions)
+    end
+
+    %w[merge archive search].each do |action|
+      it "denies the super-admin #{action} action for a same-organization user" do
+        verb = action == 'search' ? :get : :put
+        public_send(verb, "/super_admin/users/#{target.id}/#{action}",
+                    params: { merge_id: actor.id, email: target.email },
+                    headers: { 'ACCEPT' => 'application/json' })
+
+        expect(response).to have_http_status(:forbidden)
+        expect(User.exists?(actor.id)).to be(true)
+        expect(target.reload.active).to be(true)
+      end
     end
   end
 

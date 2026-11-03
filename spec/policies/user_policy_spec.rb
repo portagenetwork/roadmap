@@ -71,6 +71,18 @@ RSpec.describe UserPolicy, type: :policy do
     end
   end
 
+  context 'when a record-level check receives the User class' do
+    let(:target) { User }
+
+    it { is_expected.to forbid_actions(record_actions) }
+  end
+
+  context 'when the caller is the managed record' do
+    let(:target) { actor }
+
+    it { is_expected.to permit_actions(record_actions) }
+  end
+
   it 'continues to authorize the organization user index with a class record' do
     expect(described_class.new(actor, User).admin_index?).to be(true)
   end

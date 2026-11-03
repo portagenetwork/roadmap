@@ -87,7 +87,7 @@ class UserPolicy < ApplicationPolicy
   private
 
   def same_org?
-    @user.org_id.present? && @record.org_id == @user.org_id
+    @record.is_a?(User) && @user.org_id.present? && @record.org_id == @user.org_id
   end
 
   # returns the users for the org
