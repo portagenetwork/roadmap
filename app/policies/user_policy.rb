@@ -80,10 +80,6 @@ class UserPolicy < ApplicationPolicy
     @user.can_super_admin?
   end
 
-  def org_admin_other_user?
-    edit?
-  end
-
   private
 
   def same_org?

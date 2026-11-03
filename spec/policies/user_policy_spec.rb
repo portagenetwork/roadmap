@@ -9,7 +9,7 @@ RSpec.describe UserPolicy, type: :policy do
   let(:actor) { create(:user, :org_admin, org: org) }
   let(:target) { create(:user, org: org) }
   let(:record_actions) do
-    %i[admin_grant_permissions admin_update_permissions edit update user_plans org_admin_other_user]
+    %i[admin_grant_permissions admin_update_permissions edit update user_plans]
   end
 
   context 'when an organization admin manages a user in their organization' do
@@ -32,7 +32,7 @@ RSpec.describe UserPolicy, type: :policy do
   context 'when the caller only has template-management permission' do
     let(:actor) { create(:user, org: org, perms: [create(:perm, :modify_templates)]) }
 
-    it { is_expected.to permit_actions(%i[edit update user_plans org_admin_other_user]) }
+    it { is_expected.to permit_actions(%i[edit update user_plans]) }
     it { is_expected.to forbid_actions(%i[admin_grant_permissions admin_update_permissions]) }
 
     context 'when the target belongs to another organization' do
