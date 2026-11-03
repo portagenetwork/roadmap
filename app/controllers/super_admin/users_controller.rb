@@ -39,6 +39,7 @@ module SuperAdmin
       # Remove the extraneous Org Selector hidden fields
       attrs = remove_org_selection_params(params_in: attrs)
       attrs = handle_confirmed_at_param(attrs)
+      attrs[:org_id] = lookup.id if lookup.present?
 
       if @user.update(attrs)
         # If its a new Org create it
@@ -50,7 +51,8 @@ module SuperAdmin
           end
           lookup.reload
         end
-        @user.update(org_id: lookup.id) if lookup.present?
+        # Keep the rendered department selector in sync with the new organization.
+        @departments = @user.org.departments.order(:name)
 
         flash.now[:notice] = success_message(@user, _('updated'))
       else
