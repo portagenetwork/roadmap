@@ -39,7 +39,7 @@ class ResearchOutputsController < ApplicationController
   end
 
   # POST /plans/:plan_id/research_outputs
-  def create
+  def create # rubocop:disable Metrics/AbcSize
     args = process_byte_size.merge({ plan_id: @plan.id })
     args = process_nillable_values(args: args)
     @research_output = ResearchOutput.new(args)
