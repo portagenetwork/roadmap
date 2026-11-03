@@ -1,6 +1,10 @@
 # Changelog
 
-## [Unreleased]
+## [4.1.1+portage-4.10.4]
+
+### Fixed
+
+ - fix(policy): harden authorization for org admins [#1459](https://github.com/portagenetwork/roadmap/pull/1459)
 
 ### Dependency Updates
 
