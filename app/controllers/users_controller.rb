@@ -70,6 +70,8 @@ class UsersController < ApplicationController
     perms = Perm.where(id: perms_ids)
     privileges_changed = false
     current_user.perms.each do |perm|
+      next unless can_manage_permission?(perm)
+
       if @user.perms.include? perm
         unless perms.include? perm
           @user.perms.delete(perm)
@@ -189,6 +191,12 @@ class UsersController < ApplicationController
         owners_and_coowners: %i[visibility_changed]
       ]
     )
+  end
+
+  def can_manage_permission?(perm)
+    return false if perm.name == 'manage_oauth_apps' && !current_user.can_super_admin?
+
+    true
   end
 
   ##

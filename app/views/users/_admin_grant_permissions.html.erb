@@ -67,6 +67,7 @@
             <% end %>
           <% end %>
 
+      <% if current_user.can_super_admin? %>
         <!-- Developer / OAuth Apps Section -->
         <% perm = Perm.find_by(name: 'manage_oauth_apps') %>
         <%= label_tag :developer_privileges %>
@@ -75,6 +76,7 @@
             <%= check_box_tag "perm_ids[]", perm.id, user.perms.include?(perm), class: 'developer_privileges' %>
             <%= _('Manage OAuth apps') %>
         </li>
+      <% end %>
       </div>
       <div class="modal-footer">
         <%= submit_tag _('Save'), class: "btn btn-primary" %>
