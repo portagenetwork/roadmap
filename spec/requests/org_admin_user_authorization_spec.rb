@@ -171,7 +171,7 @@ RSpec.describe 'Organization admin user authorization', type: :request do
     end
 
     it 'does not let organization admins grant or revoke the OAuth apps permission' do
-      oauth_permission = Perm.find_by!(name: 'manage_oauth_apps')
+      oauth_permission = Perm.find_by!(name: Perm::MANAGE_OAUTH_APPS)
       actor.perms << oauth_permission
 
       put "/org/admin/users/#{target.id}/admin_update_permissions",
@@ -260,7 +260,7 @@ RSpec.describe 'Organization admin user authorization', type: :request do
     end
 
     it 'allows super admins to grant and revoke the OAuth apps permission' do
-      oauth_permission = Perm.find_by!(name: 'manage_oauth_apps')
+      oauth_permission = Perm.find_by!(name: Perm::MANAGE_OAUTH_APPS)
 
       put "/org/admin/users/#{target.id}/admin_update_permissions",
           params: { perm_ids: [oauth_permission.id] }

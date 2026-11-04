@@ -194,7 +194,7 @@ class UsersController < ApplicationController
   end
 
   def can_manage_permission?(perm)
-    return false if perm.name == 'manage_oauth_apps' && !current_user.can_super_admin?
+    return false if perm.name == Perm::MANAGE_OAUTH_APPS && !current_user.can_super_admin?
 
     true
   end
