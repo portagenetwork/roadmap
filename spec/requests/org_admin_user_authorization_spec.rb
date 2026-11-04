@@ -163,6 +163,31 @@ RSpec.describe 'Organization admin user authorization', type: :request do
   context 'when the caller administers the target organization' do
     include_examples 'authorized user management'
 
+    it 'does not show the OAuth apps permission to organization admins' do
+      get "/org/admin/users/#{target.id}/admin_grant_permissions"
+
+      html = response.parsed_body.fetch('user').fetch('html')
+      expect(html).not_to include('Manage OAuth apps')
+    end
+
+    it 'does not let organization admins grant or revoke the OAuth apps permission' do
+      oauth_permission = Perm.find_by!(name: 'manage_oauth_apps')
+      actor.perms << oauth_permission
+
+      put "/org/admin/users/#{target.id}/admin_update_permissions",
+          params: { perm_ids: actor.perm_ids }
+
+      expect(response).to have_http_status(:ok)
+      expect(target.reload.perms).not_to include(oauth_permission)
+
+      target.perms << oauth_permission
+      put "/org/admin/users/#{target.id}/admin_update_permissions",
+          params: { perm_ids: actor.perm_ids - [oauth_permission.id] }
+
+      expect(response).to have_http_status(:ok)
+      expect(target.reload.perms).to include(oauth_permission)
+    end
+
     it 'denies the super-admin profile editor for a user in the same organization' do
       get "/super_admin/users/#{target.id}/edit", headers: { 'ACCEPT' => 'application/json' }
 
@@ -226,6 +251,28 @@ RSpec.describe 'Organization admin user authorization', type: :request do
     let(:actor) { create(:user, :super_admin) }
 
     include_examples 'authorized user management'
+
+    it 'shows the OAuth apps permission to super admins' do
+      get "/org/admin/users/#{target.id}/admin_grant_permissions"
+
+      html = response.parsed_body.fetch('user').fetch('html')
+      expect(html).to include('Manage OAuth apps')
+    end
+
+    it 'allows super admins to grant and revoke the OAuth apps permission' do
+      oauth_permission = Perm.find_by!(name: 'manage_oauth_apps')
+
+      put "/org/admin/users/#{target.id}/admin_update_permissions",
+          params: { perm_ids: [oauth_permission.id] }
+
+      expect(response).to have_http_status(:ok)
+      expect(target.reload.perms).to include(oauth_permission)
+
+      put "/org/admin/users/#{target.id}/admin_update_permissions", params: { perm_ids: [] }
+
+      expect(response).to have_http_status(:ok)
+      expect(target.reload.perms).not_to include(oauth_permission)
+    end
 
     it 'allows the super-admin profile editor across organizations' do
       get "/super_admin/users/#{target.id}/edit"
