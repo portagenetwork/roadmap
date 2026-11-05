@@ -79,7 +79,7 @@ FactoryBot.define do
       after(:create) do |user, _evaluator|
         %w[change_org_affiliation add_organisations
            grant_permissions use_api change_org_details grant_api_to_orgs
-           modify_templates modify_guidance manage_oauth_apps].each do |perm_name|
+           modify_templates modify_guidance].push(Perm::MANAGE_OAUTH_APPS).each do |perm_name|
           user.perms << Perm.find_or_create_by(name: perm_name)
         end
       end

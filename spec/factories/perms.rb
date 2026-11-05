@@ -60,7 +60,7 @@ FactoryBot.define do
     end
 
     trait :manage_oauth_apps do
-      name { 'manage_oauth_apps' }
+      name { Perm::MANAGE_OAUTH_APPS }
       initialize_with { Perm.find_or_create_by(name: name) }
     end
   end

@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+
+ - fix(perms): restrict `manage_oauth_apps` management to super admins [#1460](https://github.com/portagenetwork/roadmap/pull/1460)
+
 ## [4.1.1+portage-4.10.4]
 
 ### Fixed
