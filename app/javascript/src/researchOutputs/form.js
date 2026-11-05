@@ -64,7 +64,7 @@ $(() => {
     }
 
     button.prop('disabled', true).text(getConstant('DOI_VALIDATION_VERIFYING'));
-    window.location.href = `${prefillPath}?prefill_doi=${encodeURIComponent(doi)}`;
+    window.location.href = `${prefillPath}?prefill_doi=${encodeURIComponent(cleanDoi)}`;
   });
 
   // Expands/Collapses the search results 'More info'/'Less info' section
