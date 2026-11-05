@@ -291,10 +291,11 @@ class Question < ApplicationRecord
   end
 
   def handle_remove_data(value, question_id_map)
+    remove_data = Array(value['remove_question_id'])
     if question_id_map.present?
-      value['remove_question_id'].map { |qid| question_id_map[qid] }
+      remove_data.map { |qid| question_id_map[qid] }
     else
-      value['remove_question_id']
+      remove_data
     end
   end
 
