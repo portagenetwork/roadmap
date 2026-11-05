@@ -15,6 +15,7 @@ class ResearchOutputsController < ApplicationController
     @research_outputs = ResearchOutput.includes(:repositories)
                                       .where(plan_id: @plan.id)
     authorize @research_outputs.first || ResearchOutput.new(plan_id: @plan.id)
+    @prefill_doi = params[:prefill_doi].presence
   end
 
   # GET /plans/:plan_id/research_outputs/new
