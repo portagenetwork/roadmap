@@ -23,6 +23,22 @@
 
   - chore(deps): bump surnet/alpine-wkhtmltopdf from 3.23.4-0.12.6-small to 3.24.3-0.12.6-small [#1448](https://github.com/portagenetwork/roadmap/pull/1448)
 
+### Fixed
+
+ - fix(perms): restrict `manage_oauth_apps` management to super admins [#1460](https://github.com/portagenetwork/roadmap/pull/1460)
+
+## [4.1.1+portage-4.10.4]
+
+### Fixed
+
+ - fix(policy): harden authorization for org admins [#1459](https://github.com/portagenetwork/roadmap/pull/1459)
+
+### Dependency Updates
+
+ - chore(deps): bump fast-uri from 3.1.8 to 3.1.9 [#1457](https://github.com/portagenetwork/roadmap/pull/1457)
+
+ - chore(deps): bump tinymce from 7.9.3 to 8.9.3 [#1458](https://github.com/portagenetwork/roadmap/pull/1458)
+
 ## [4.1.1+portage-4.10.3]
 
 ### Changed
