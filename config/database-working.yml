@@ -17,14 +17,6 @@ test:
   <<: *defaults
   database: 'test_db'
 
-uat:
-  encoding: utf8mb4
-  url: <%= Rails.application.secrets.database_url %>
-
-staging:
-  encoding: utf8mb4
-  url: <%= Rails.application.secrets.database_url %>
-
 production:
   encoding: utf8mb4
   url: <%= Rails.application.secrets.database_url %>

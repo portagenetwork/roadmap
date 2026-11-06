@@ -76,17 +76,5 @@ development:
 test:
   <<: *defaults
 
-stage:
-  <<: *defaults
-
-sandbox:
-  <<: *defaults
-
-staging:
-  <<: *defaults
-
-uat:
-  <<: *defaults
-
 production:
   <<: *defaults

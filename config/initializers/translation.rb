@@ -30,7 +30,7 @@ TranslationIO.configure do |config|
   # Uncomment this if you already use gettext or fast_gettext
   config.locales_path = File.join('config', 'locale')
 
-  unless Rails.env.in?(%w[test development uat])
+  unless Rails.env.in?(%w[test development])
     config.db_fields = {
       'Theme' => %w[title description],
       'QuestionFormat' => %w[title description],
