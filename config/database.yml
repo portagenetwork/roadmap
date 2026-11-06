@@ -17,20 +17,6 @@ test:
   <<: *defaults
   url: <%= Rails.application.secrets.database_test_url %>
 
-uat:
-  <<: *defaults
-  url: <%= Rails.application.secrets.database_url %>
-
-staging:
-  <<: *defaults
-  url: <%= Rails.application.secrets.database_url %>
-
-sandbox:
-  encoding: utf8mb4
-  url: <%= Rails.application.secrets.database_url %>
-  pool: 5
-  timeout: 5000
-
 production:
   <<: *defaults
   url: <%= Rails.application.secrets.database_url %>
