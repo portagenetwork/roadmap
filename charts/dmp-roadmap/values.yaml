@@ -1122,6 +1122,9 @@ config:
     # -- Rollbar environment
     # @section -- Application Settings
     rollbarEnv: production
+    # -- Base URL for DataCite DOI minting (leave blank to use the app's built-in default (i.e. test.api))
+    # @section -- Application Settings
+    dataciteMintingBaseUrl: ''
     # -- Rails log to stdout
     # @section -- Application Settings
     railsLogToStdout: 'true'

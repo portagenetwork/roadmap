@@ -21,10 +21,7 @@ module Api
         @complete_plan_data = fetch_all_q_and_a if complete
       end
 
-      # Extract the canonical ARK or DOI for the DMP OR use its URL if none exists
-      # TODO: When snapshot DOI minting is implemented, keep version-specific
-      #       identifiers in snapshot resolution flow and preserve this as the
-      #       canonical plan-level identifier.
+      # Extract the canonical DOI for the DMP OR use its URL if none exists
       def identifier
         doi = @plan.identifiers.select do |id|
           ::Plan::DMP_ID_TYPES.include?(id.identifier_format)

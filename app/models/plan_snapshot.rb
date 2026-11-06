@@ -21,6 +21,7 @@ class PlanSnapshot < ApplicationRecord
   # ================
 
   belongs_to :plan
+  has_one :identifier, as: :identifiable, dependent: :destroy
 
   # =============
   # = Callbacks =
@@ -62,15 +63,14 @@ class PlanSnapshot < ApplicationRecord
   # =================
 
   # Create a new snapshot from the given plan.
-  def self.create_from_plan(plan:, visibility:) # rubocop:disable  Lint/UnusedMethodArgument
+  def self.create_from_plan(plan:, visibility:)
     rda_json = Api::V2::Serialization::PlanSnapshots::RdaSerializer.call(plan: plan)
     extension_json = Api::V2::Serialization::PlanSnapshots::ExtensionSerializer.call(plan: plan)
 
     plan.with_lock do
       create(
         plan: plan,
-        # Enforce private visibility until DMP minting is implemented
-        visibility: :privately_visible,
+        visibility: visibility,
         version: next_version_for_plan(plan),
         rda_json: rda_json,
         extension_json: extension_json,
@@ -88,6 +88,10 @@ class PlanSnapshot < ApplicationRecord
   # ===========================
   # = Public Instance Methods =
   # ===========================
+
+  def doi
+    identifier&.value
+  end
 
   def recalculated_checksum
     PlanSnapshotChecksum.calculate(rda_json, extension_json)
@@ -135,8 +139,11 @@ class PlanSnapshot < ApplicationRecord
   def checksum_differs_from_last_snapshot
     return unless checksum.present?
 
-    last_checksum = self.class.for_plan(plan).pick(:checksum)
-    return unless last_checksum == checksum
+    last_snapshot = self.class.for_plan(plan).first
+    return unless last_snapshot.present? && last_snapshot.checksum == checksum
+
+    # Allow publishing a public version if the previous version was private even if unchanged
+    return if last_snapshot.privately_visible? && publicly_visible?
 
     errors.add(:base, _('A new version cannot be published because the plan has not changed since the last version'))
   end

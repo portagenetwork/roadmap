@@ -1256,6 +1256,13 @@
               "title": "bundleWithout",
               "type": "string"
             },
+            "dataciteMintingBaseUrl": {
+              "default": "",
+              "description": "Base URL for DataCite DOI minting (leave blank to use the app's built-in default (i.e. test.api))",
+              "required": [],
+              "title": "dataciteMintingBaseUrl",
+              "type": "string"
+            },
             "defaultFunderId": {
               "default": 8,
               "description": "Default funder ID",
@@ -1393,6 +1400,7 @@
             "bundleWithout",
             "baseUrl",
             "rollbarEnv",
+            "dataciteMintingBaseUrl",
             "railsLogToStdout",
             "railsServeStaticFiles",
             "railsSkipAssetCompilation",

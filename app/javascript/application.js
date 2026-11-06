@@ -50,6 +50,7 @@ import './src/guidances/newEdit';
 import './src/notes/index';
 import './src/orgs/adminEdit';
 import './src/orgs/shibbolethDs';
+import './src/planSnapshots/index';
 import './src/plans/download';
 import './src/plans/editDetails';
 import './src/plans/index.js.erb';

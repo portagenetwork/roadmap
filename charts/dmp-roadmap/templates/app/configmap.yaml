@@ -121,6 +121,10 @@ data:
   ROLLBAR_ENV: {{ .Values.config.environment.rollbarEnv | quote }}
   {{- end }}
 
+  {{- if .Values.config.environment.dataciteMintingBaseUrl }}
+  DATACITE_MINTING_BASE_URL: {{ .Values.config.environment.dataciteMintingBaseUrl | quote }}
+  {{- end }}
+
   {{- if .Values.config.environment.railsLogToStdout }}
   RAILS_LOG_TO_STDOUT: {{ .Values.config.environment.railsLogToStdout | quote }}
   {{- end }}

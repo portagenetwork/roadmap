@@ -61,6 +61,9 @@ class Identifier < ApplicationRecord
           identifiable_type: identifiable_type)
   end
 
+  scope :for_plan, -> { where(identifiable_type: 'Plan') }
+  scope :for_plan_snapshot, -> { where(identifiable_type: 'PlanSnapshot') }
+
   # =========================
   # = Custom Accessor Logic =
   # =========================
