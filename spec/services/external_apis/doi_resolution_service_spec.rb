@@ -14,7 +14,9 @@ RSpec.describe ExternalApis::DoiResolutionService, type: :service do
       titles: [{ title: 'DataCite Document' }],
       descriptions: [{ description: 'DataCite Abstract' }],
       types: { resourceTypeGeneral: 'Dataset' },
-      registered: '2021-05-12'
+      dates: [
+        { date: '2021-05-12', dateType: 'Issued' }
+      ]
     } } }.to_json
   end
 
@@ -94,30 +96,46 @@ RSpec.describe ExternalApis::DoiResolutionService, type: :service do
         expect(described_class.fetch_metadata(doi: doi)).to eq({ status: :not_found })
       end
     end
+
+    context 'when a provider times out or encounters an error' do
+      it 'returns status :service_unavailable when one provider times out and the other returns 404' do
+        stub_request(:get, /api.datacite.org/).to_raise(Timeout::Error)
+        stub_request(:get, /api.crossref.org/).to_return(status: 404)
+
+        expect(described_class.fetch_metadata(doi: doi)).to eq({ status: :service_unavailable })
+      end
+
+      it 'returns status :service_unavailable when all providers are inactive' do
+        Rails.configuration.x.datacite.active = false
+        Rails.configuration.x.crossref.active = false
+
+        expect(described_class.fetch_metadata(doi: doi)).to eq({ status: :service_unavailable })
+      end
+    end
   end
 
   describe '.execute_fetch' do
     context 'when a service is explicitly deactivated in the configuration' do
-      it 'short-circuits instantly and returns nil without making network calls' do
+      it 'short-circuits instantly and returns inactive status without making network calls' do
         Rails.configuration.x.datacite.active = false
 
         dc_stub = stub_request(:get, /api.datacite.org/)
 
         result = described_class.send(:execute_fetch, ExternalApis::DataciteService, 'datacite', doi)
 
-        expect(result).to be_nil
+        expect(result).to eq(:inactive)
         expect(dc_stub).not_to have_been_requested
       end
     end
 
     context 'when the network layer encounters an error' do
-      it 'gracefully intercepts HTTP timeouts and returns nil instead of crashing' do
+      it 'gracefully intercepts HTTP timeouts and returns error status instead of crashing' do
         stub_request(:get, "#{datacite_base_url}/dois/10.5281%2Fzenodo.4884775")
           .to_raise(Timeout::Error)
 
         result = described_class.send(:execute_fetch, ExternalApis::DataciteService, 'datacite', doi)
 
-        expect(result).to be_nil
+        expect(result).to eq(:error)
       end
 
       it 'gracefully intercepts JSON response parsing exceptions' do
@@ -126,8 +144,56 @@ RSpec.describe ExternalApis::DoiResolutionService, type: :service do
 
         result = described_class.send(:execute_fetch, ExternalApis::DataciteService, 'datacite', doi)
 
-        expect(result).to be_nil
+        expect(result).to eq(:error)
       end
+    end
+  end
+
+  describe '.sanitize_and_normalize_description' do
+    it 'preserves supported formatting tags and attributes' do
+      raw_html = '<p>This is <strong>bold</strong> and a <a href="https://my.org" title="Link">link</a>.</p>'
+      result = described_class.sanitize_and_normalize_description(raw_html)
+
+      expect(result).to eq('<p>This is <strong>bold</strong> and a <a href="https://my.org" title="Link">link</a>.</p>')
+    end
+
+    it 'converts known JATS XML elements into supported HTML' do
+      jats_xml =
+        '<jats:p>Abstract text with <jats:bold>bold</jats:bold> and <jats:italic>emphasis</jats:italic>.</jats:p>'
+      result = described_class.sanitize_and_normalize_description(jats_xml)
+
+      expect(result).to eq('<p>Abstract text with <strong>bold</strong> and <em>emphasis</em>.</p>')
+    end
+
+    it 'removes unknown/unsupported elements while retaining their text' do
+      unsupported_markup = '<custom-tag>Header</custom-tag><p>Paragraph <unknown>inner text</unknown></p>'
+      result = described_class.sanitize_and_normalize_description(unsupported_markup)
+
+      expect(result).to eq('Header<p>Paragraph inner text</p>')
+    end
+
+    it 'strips scripts, event-handler attributes, and unsafe URLs' do
+      malicious_input = <<~HTML
+        <p>Safe text</p>
+        <script>alert('XSS');</script>
+        <a href="javascript:alert('XSS')" onclick="doEvil()">Bad Link</a>
+        <img src="x" onerror="alert('XSS')">
+      HTML
+
+      result = described_class.sanitize_and_normalize_description(malicious_input)
+
+      expect(result).not_to include('<script>')
+      expect(result).not_to include('onclick')
+      expect(result).not_to include('onerror')
+      expect(result).not_to include('javascript:')
+      expect(result).to eq("<p>Safe text</p>\n\n<a>Bad Link</a>")
+    end
+
+    it 'leaves plain-text descriptions unchanged' do
+      plain_text = 'This is a simple plain text description without any HTML.'
+      result = described_class.sanitize_and_normalize_description(plain_text)
+
+      expect(result).to eq(plain_text)
     end
   end
 end
