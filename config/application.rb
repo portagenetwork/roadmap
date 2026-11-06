@@ -34,17 +34,10 @@ module DMPRoadmap
     # incompatible with the Rails module/class naming conventions
     Rails.autoloaders.main.ignore(config.root.join('lib/generators'))
 
-    # CVE-2022-32224: add some compatibility with YAML.safe_load
-    # Rails 5,6,7 are using YAML.safe_load as the default YAML deserializer
-    config.active_record.yaml_column_permitted_classes = [ActiveSupport::HashWithIndifferentAccess, Symbol, Date, Time]
-
     # HTML tags that are allowed to pass through `sanitize`.
     config.action_view.sanitized_allowed_tags = %w[
       p br strong em a table thead tbody tr td th tfoot caption ul ol li
     ]
-    # CVE-2022-32224: add some compatibility with YAML.safe_load
-    # Rails 5,6,7 are using YAML.safe_load as the default YAML deserializer
-    config.active_record.yaml_column_permitted_classes = [ActiveSupport::HashWithIndifferentAccess, Symbol, Date, Time]
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
