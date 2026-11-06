@@ -10,7 +10,7 @@ module SuperAdmin
     # GET /super_admin/users/:id/edit
     def edit
       @user = User.find(params[:id])
-      authorize @user
+      authorize @user, :super_admin_edit?
       @departments = @user.org.departments.order(:name)
       @plans = Plan.active(@user).page(1)
       render 'super_admin/users/edit',
@@ -27,7 +27,7 @@ module SuperAdmin
     # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def update
       @user = User.find(params[:id])
-      authorize @user
+      authorize @user, :super_admin_update?
       @departments = @user.org.departments.order(:name)
       @plans = Plan.active(@user).page(1)
       # See if the user selected a new Org via the Org Lookup and
@@ -39,9 +39,11 @@ module SuperAdmin
       # Remove the extraneous Org Selector hidden fields
       attrs = remove_org_selection_params(params_in: attrs)
       attrs = handle_confirmed_at_param(attrs)
+      attrs[:org_id] = lookup.id if lookup.present?
 
       if @user.update(attrs)
         # If its a new Org create it
+        # TODO: Confirm this fallback is still reachable; org_from_params may already save new orgs and identifiers.
         if lookup.present? && lookup.new_record?
           lookup.save
           identifiers.each do |identifier|
@@ -50,7 +52,8 @@ module SuperAdmin
           end
           lookup.reload
         end
-        @user.update(org_id: lookup.id) if lookup.present?
+        # Keep the rendered department selector in sync with the new organization.
+        @departments = @user.org.departments.order(:name)
 
         flash.now[:notice] = success_message(@user, _('updated'))
       else

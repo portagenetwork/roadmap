@@ -12,6 +12,9 @@
 
 # Object that represents a User permission
 class Perm < ApplicationRecord
+  MANAGE_OAUTH_APPS = 'manage_oauth_apps'
+  # TODO: Define the other permission names as class constants in the same way.
+
   class << self
     private
 
@@ -79,6 +82,6 @@ class Perm < ApplicationRecord
   end
 
   def self.manage_oauth_apps
-    lazy_load('manage_oauth_apps')
+    lazy_load(MANAGE_OAUTH_APPS)
   end
 end
