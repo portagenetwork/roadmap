@@ -51,6 +51,8 @@ module DMPRoadmap
     #       moving our helper methods into Presenters if it makes sense
     config.action_controller.include_all_helpers = true
 
+    config.x.application.on_sandbox = ENV.fetch('ON_SANDBOX', 'false') == 'true'
+
     # Set the default host for mailer URLs
     config.action_mailer.default_url_options = { host: Rails.application.secrets.mailer_default_host }
 
