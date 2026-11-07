@@ -52,6 +52,7 @@ module DMPRoadmap
     config.action_controller.include_all_helpers = true
 
     config.x.application.dmproadmap_host = ENV.fetch('DMPROADMAP_HOST', nil)
+    config.x.application.omniauth_full_host = ENV.fetch('OMNIAUTH_FULL_HOST', nil)
     config.x.application.on_sandbox = ENV.fetch('ON_SANDBOX', 'false') == 'true'
 
     # Set the default host for mailer URLs
