@@ -64,7 +64,7 @@ RSpec.describe Api::V1::PlansController, type: :request do
           expect(response).to render_template('api/v1/error')
         end
         it 'returns a 201 if the incoming JSON is valid' do
-          post api_v1_plans_path, params: @json.to_json
+          post api_v1_plans_path, params: @json, as: :json
           expect(response.code).to eql('201')
           expect(response).to render_template('api/v1/plans/index')
         end
@@ -76,7 +76,7 @@ RSpec.describe Api::V1::PlansController, type: :request do
         end
 
         it 'returns a 201 if the incoming JSON is valid' do
-          post api_v1_plans_path, params: @json.to_json
+          post api_v1_plans_path, params: @json, as: :json
           expect(response.code).to eql('201')
           expect(response).to render_template('api/v1/plans/index')
         end
