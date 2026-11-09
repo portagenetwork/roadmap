@@ -33,12 +33,6 @@ class Question < ApplicationRecord
   include ActsAsSortable
   include VersionableModel
 
-  # ==============
-  # = Attributes =
-  # ==============
-
-  alias_attribute :to_s, :text
-
   # include
   ##
   # Sort order: Number ASC
@@ -118,6 +112,10 @@ class Question < ApplicationRecord
   def text
     text = read_attribute(:text)
     _(text) unless text.blank?
+  end
+
+  def to_s
+    text
   end
 
   def default_value

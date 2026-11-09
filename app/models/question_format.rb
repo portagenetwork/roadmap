@@ -26,8 +26,6 @@ class QuestionFormat < ApplicationRecord
 
   enum formattype: FORMAT_TYPES
 
-  alias_attribute :to_s, :title
-
   alias_attribute :option_based?, :option_based
 
   # ================
@@ -61,6 +59,10 @@ class QuestionFormat < ApplicationRecord
   def description
     description = read_attribute(:description)
     _(description) unless description.blank?
+  end
+
+  def to_s
+    title
   end
 
   # =================
