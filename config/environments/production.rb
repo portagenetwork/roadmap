@@ -79,12 +79,12 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address: Rails.application.secrets.smtp_address,
-    port: Rails.application.secrets.smtp_port,
-    domain: Rails.application.secrets.smtp_domain,
+    address: ENV.fetch('SMTP_ADDRESS', nil),
+    port: ENV.fetch('SMTP_PORT', nil),
+    domain: ENV.fetch('SMTP_DOMAIN', nil),
     user_name: Rails.application.secrets.smtp_user_name,
     password: Rails.application.secrets.smtp_password,
-    authentication: Rails.application.secrets.smtp_authentication || 'plain',
+    authentication: ENV.fetch('SMTP_AUTHENTICATION', 'plain'),
     enable_starttls_auto: true
   }
 
