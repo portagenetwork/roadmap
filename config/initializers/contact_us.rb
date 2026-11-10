@@ -7,12 +7,10 @@ ContactUs.setup do |config|
   # Configure the e-mail address which email notifications should be sent from.
   # If emails must be sent from a verified email address you may set it here.
   # Example:
-  # config.mailer_from = "contact@please-change-me.com"
-  config.mailer_from = Rails.application.secrets.mailer_from
+  config.mailer_from = Rails.configuration.x.application.mailer_from
 
   # Configure the e-mail address which should receive the contact form email notifications.
-  config.mailer_to = Rails.application.secrets.mailer_to
-
+  config.mailer_to = Rails.configuration.x.application.mailer_to
   # ==> Form Configuration
 
   # Configure the form to ask for the users name.
