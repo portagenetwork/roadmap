@@ -52,6 +52,8 @@ module DMPRoadmap
     config.action_controller.include_all_helpers = true
 
     config.x.application.dmproadmap_host = ENV.fetch('DMPROADMAP_HOST', nil)
+    config.x.application.mailer_from = ENV.fetch('MAILER_FROM', nil)
+    config.x.application.mailer_to = ENV.fetch('MAILER_TO', nil)
     config.x.application.omniauth_full_host = ENV.fetch('OMNIAUTH_FULL_HOST', nil)
     config.x.application.on_sandbox = ENV.fetch('ON_SANDBOX', 'false') == 'true'
 
