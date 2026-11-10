@@ -80,12 +80,12 @@ RSpec.describe 'PlansController', type: :request do
     let(:other_org_template) { create(:template, :organisationally_visible, org: other_org, published: true) }
 
     before do
-      @original_default_funder_id = Rails.application.config.default_funder_id
-      Rails.application.config.default_funder_id = default_template.org.id
+      @original_default_funder_id = Rails.configuration.x.application.default_funder_id
+      Rails.configuration.x.application.default_funder_id = default_template.org.id
     end
 
     after do
-      Rails.application.config.default_funder_id = @original_default_funder_id
+      Rails.configuration.x.application.default_funder_id = @original_default_funder_id
     end
 
     # Our tests reference default_template, rather than Template.default

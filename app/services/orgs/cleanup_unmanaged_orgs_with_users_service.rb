@@ -49,7 +49,7 @@ module Orgs
     end
 
     def fetch_default_org
-      default_org = Org.find(Rails.application.config.default_funder_id)
+      default_org = Org.find(Rails.configuration.x.application.default_funder_id)
       puts '----------------------------------------------------------------------------------------------'
       puts "Using Org with id: '#{default_org.id}', name: '#{default_org.name}' for users/plans reassignment."
       default_org
