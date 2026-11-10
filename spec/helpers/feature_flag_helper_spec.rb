@@ -7,7 +7,7 @@ describe FeatureFlagHelper do
 
   describe '.enabled?' do
     it 'returns the configured sandbox flag' do
-      Rails.configuration.x.application.stubs(:on_sandbox).returns(true)
+      Rails.configuration.x.features.stubs(:sandbox).returns(true)
 
       expect(described_class.enabled?(:on_sandbox)).to be(true)
     end
