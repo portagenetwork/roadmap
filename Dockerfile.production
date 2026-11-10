@@ -8,7 +8,7 @@ ENV INSTALL_PATH=/usr/src/app \
     BUNDLE_WITHOUT='development:test:mysql:aws:sandbox:ci:wkhtmltopdf' \
     # Dummy values to enable `rake assets:precompile` without a real db
     DATABASE_URL=nulldb://nohost \
-    SECRET_KEY_BASE=foo
+    SECRET_KEY_BASE_DUMMY=1
 
 # Create non-root user early
 RUN addgroup -g 3000 -S dmpgroup && \
