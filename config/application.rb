@@ -58,6 +58,7 @@ module DMPRoadmap
     }
 
     # Application-level settings
+    config.x.application.default_funder_id = ENV.fetch('DEFAULT_FUNDER_ID', nil).to_i
     config.x.application.dmproadmap_host = ENV.fetch('DMPROADMAP_HOST', nil)
     config.x.application.mailer_from = ENV.fetch('MAILER_FROM', nil)
     config.x.application.mailer_to = ENV.fetch('MAILER_TO', nil)
@@ -107,9 +108,8 @@ module DMPRoadmap
     # DMP Assistant works with the assumption that the user will not use a
     # specific funder. The view for choosing a funder when creating a plan
     # removed the option for selecting a funder. A funder is needed to show the
-    # customized templates. For this reason we are specifying in the
-    # documentation the funder that
-    config.default_funder_id = ENV.fetch('DEFAULT_FUNDER_ID', nil).to_i
+    # customized templates.
+    # NOTE: This is now configured via config.x.application.default_funder_id
 
     # apply application styling to doorkeeper views
     config.to_prepare do
