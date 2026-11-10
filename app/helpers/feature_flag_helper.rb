@@ -6,7 +6,7 @@ module FeatureFlagHelper
     case feature.to_sym
 
     when :on_sandbox
-      Rails.configuration.x.application.on_sandbox
+      Rails.configuration.x.features.sandbox
     else
       false
     end

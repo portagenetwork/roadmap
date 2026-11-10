@@ -260,12 +260,12 @@ Devise.setup do |config|
 
   # Any entries here MUST match a corresponding entry in the identifier_schemes table as
   # well as an identifier_schemes.schemes section in each locale file!
-  OmniAuth.config.full_host = Rails.configuration.x.application.omniauth_full_host
+  OmniAuth.config.full_host = Rails.configuration.x.omniauth.full_host
 
   config.omniauth :orcid, Rails.application.secrets.orcid_client_id,
                   Rails.application.secrets.orcid_client_secret,
                   {
-                    member: Rails.configuration.x.application.orcid_client_member
+                    member: Rails.configuration.x.omniauth.orcid_client_member
                   }
 
   config.omniauth :shibboleth,
@@ -294,7 +294,7 @@ Devise.setup do |config|
       host: "cilogon.org",
       identifier: Rails.application.secrets.cilogon_client_id,
       secret: Rails.application.secrets.cilogon_secret_key,
-      redirect_uri: "#{Rails.configuration.x.application.omniauth_full_host}/users/auth/openid_connect/callback"
+      redirect_uri: "#{Rails.configuration.x.omniauth.full_host}/users/auth/openid_connect/callback"
     }
   }
 

@@ -51,18 +51,23 @@ module DMPRoadmap
     #       moving our helper methods into Presenters if it makes sense
     config.action_controller.include_all_helpers = true
 
-    config.x.application.dmproadmap_host = ENV.fetch('DMPROADMAP_HOST', nil)
-    config.x.application.mailer_from = ENV.fetch('MAILER_FROM', nil)
-    config.x.application.mailer_to = ENV.fetch('MAILER_TO', nil)
-    config.x.application.omniauth_full_host = ENV.fetch('OMNIAUTH_FULL_HOST', nil)
-    config.x.application.on_sandbox = ENV.fetch('ON_SANDBOX', 'false') == 'true'
-    config.x.application.orcid_client_member = ENV.fetch('ORCID_CLIENT_MEMBER', 'false') == 'true'
-
     config.action_mailer.default_url_options = {
       host: ENV.fetch('MAILER_DEFAULT_HOST') do
         Socket.gethostname if Rails.env.local?
       end
     }
+
+    # Application-level settings
+    config.x.application.dmproadmap_host = ENV.fetch('DMPROADMAP_HOST', nil)
+    config.x.application.mailer_from = ENV.fetch('MAILER_FROM', nil)
+    config.x.application.mailer_to = ENV.fetch('MAILER_TO', nil)
+
+    # OmniAuth settings
+    config.x.omniauth.full_host = ENV.fetch('OMNIAUTH_FULL_HOST', nil)
+    config.x.omniauth.orcid_client_member = ENV.fetch('ORCID_CLIENT_MEMBER', 'false') == 'true'
+
+    # Feature flags
+    config.x.features.sandbox = ENV.fetch('ON_SANDBOX', 'false') == 'true'
 
     # Enable shibboleth as an alternative authentication method
     # Requires server configuration and omniauth shibboleth provider configuration
