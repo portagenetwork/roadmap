@@ -103,7 +103,7 @@ module DMPRoadmap
     # removed the option for selecting a funder. A funder is needed to show the
     # customized templates. For this reason we are specifying in the
     # documentation the funder that
-    config.default_funder_id = Rails.application.secrets.default_funder_id.to_i
+    config.default_funder_id = ENV.fetch('DEFAULT_FUNDER_ID', nil).to_i
 
     # apply application styling to doorkeeper views
     config.to_prepare do
