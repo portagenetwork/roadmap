@@ -57,7 +57,7 @@ module DMPRoadmap
 
     config.action_mailer.default_url_options = {
       host: ENV.fetch('MAILER_DEFAULT_HOST') do
-        Socket.gethostname if Rails.env.test? || Rails.env.development?
+        Socket.gethostname if Rails.env.local?
       end
     }
 
