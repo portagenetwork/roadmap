@@ -55,8 +55,11 @@ module DMPRoadmap
     config.x.application.omniauth_full_host = ENV.fetch('OMNIAUTH_FULL_HOST', nil)
     config.x.application.on_sandbox = ENV.fetch('ON_SANDBOX', 'false') == 'true'
 
-    # Set the default host for mailer URLs
-    config.action_mailer.default_url_options = { host: Rails.application.secrets.mailer_default_host }
+    config.action_mailer.default_url_options = {
+      host: ENV.fetch('MAILER_DEFAULT_HOST') do
+        Socket.gethostname if Rails.env.test? || Rails.env.development?
+      end
+    }
 
     # Enable shibboleth as an alternative authentication method
     # Requires server configuration and omniauth shibboleth provider configuration
