@@ -265,7 +265,7 @@ Devise.setup do |config|
   config.omniauth :orcid, Rails.application.secrets.orcid_client_id,
                   Rails.application.secrets.orcid_client_secret,
                   {
-                    member: Rails.application.secrets.orcid_member
+                    member: Rails.configuration.x.application.orcid_client_member
                   }
 
   config.omniauth :shibboleth,

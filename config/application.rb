@@ -56,6 +56,7 @@ module DMPRoadmap
     config.x.application.mailer_to = ENV.fetch('MAILER_TO', nil)
     config.x.application.omniauth_full_host = ENV.fetch('OMNIAUTH_FULL_HOST', nil)
     config.x.application.on_sandbox = ENV.fetch('ON_SANDBOX', 'false') == 'true'
+    config.x.application.orcid_client_member = ENV.fetch('ORCID_CLIENT_MEMBER', 'false') == 'true'
 
     config.action_mailer.default_url_options = {
       host: ENV.fetch('MAILER_DEFAULT_HOST') do
