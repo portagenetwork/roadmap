@@ -19,4 +19,4 @@ test:
 
 production:
   encoding: utf8mb4
-  url: <%= Rails.application.secrets.database_url %>
+  url: <%= Rails.configuration.x.sealed_secrets.database_url %>

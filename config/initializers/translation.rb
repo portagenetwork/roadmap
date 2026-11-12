@@ -18,7 +18,7 @@ def ignore_paths
 end
 
 TranslationIO.configure do |config|
-  config.api_key        = Rails.application.secrets.translation_io_api_key
+  config.api_key        = Rails.configuration.x.sealed_secrets.translation_io_api_key
   config.source_locale  = 'en'
   config.target_locales = SUPPORTED_LOCALES
   config.ignored_source_paths = ignore_paths
