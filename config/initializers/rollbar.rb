@@ -73,10 +73,11 @@ if defined?(Rollbar)
     # The :host key is mandatory and must include the URL scheme (e.g. 'http://'), all other fields
     # are optional.
     #
-    if Rails.application.secrets.http_proxy.present?
+    proxy_host = ENV.fetch('HTTP_PROXY', nil)
+    if proxy_host.present?
       config.proxy = {
-        host: Rails.application.secrets.http_proxy,
-        port: Rails.application.secrets.http_proxy_port
+        host: proxy_host,
+        port: ENV.fetch('HTTP_PROXY_PORT', nil)
         # user: 'username_if_auth_required',
         # password: 'password_if_auth_required'
       }
