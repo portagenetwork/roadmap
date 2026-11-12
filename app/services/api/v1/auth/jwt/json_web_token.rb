@@ -10,7 +10,7 @@ module Api
             def encode(payload:, exp: 24.hours.from_now)
               payload[:exp] = exp.to_i
               # JWT.encode(payload, Rails.application.credentials.secret_key_base) # We are not using credential
-              JWT.encode(payload, Rails.application.secrets.secret_key_base)
+              JWT.encode(payload, Rails.configuration.x.sealed_secrets.secret_key_base)
             rescue JWT::EncodeError => e
               Rails.logger.error "Api::V1::Auth::Jwt::JsonWebToken.encode - #{e.message}"
               nil
@@ -18,7 +18,7 @@ module Api
 
             def decode(token:)
               # body = JWT.decode(token, Rails.application.credentials.secret_key_base)[0]
-              body = JWT.decode(token, Rails.application.secrets.secret_key_base)[0]
+              body = JWT.decode(token, Rails.configuration.x.sealed_secrets.secret_key_base)[0]
               ActiveSupport::HashWithIndifferentAccess.new body
             rescue JWT::ExpiredSignature => e
               raise e

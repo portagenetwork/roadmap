@@ -8,7 +8,7 @@ defaults: &defaults
 
 development:
   <<: *defaults
-  url: <%= Rails.application.secrets.database_url %>
+  url: <%= Rails.configuration.x.sealed_secrets.database_url %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -19,4 +19,4 @@ test:
 
 production:
   <<: *defaults
-  url: <%= Rails.application.secrets.database_url %>
+  url: <%= Rails.configuration.x.sealed_secrets.database_url %>

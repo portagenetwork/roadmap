@@ -5,6 +5,7 @@ require 'recaptcha/rails'
 require 'csv'
 require 'nulldb/rails'
 require_relative "boot"
+require_relative '../lib/sealed_secrets'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -69,6 +70,10 @@ module DMPRoadmap
 
     # Feature flags
     config.x.features.sandbox = ENV.fetch('ON_SANDBOX', 'false') == 'true'
+
+    # Store the sealed secrets in config.x.sealed_secrets, making them accessible
+    # throughout the application (e.g. config.x.sealed_secrets.database_url).
+    config.x.sealed_secrets = ActiveSupport::OrderedOptions.new.merge!(SealedSecrets.load)
 
     # Enable shibboleth as an alternative authentication method
     # Requires server configuration and omniauth shibboleth provider configuration

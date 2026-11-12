@@ -82,8 +82,8 @@ Rails.application.configure do
     address: ENV.fetch('SMTP_ADDRESS', nil),
     port: ENV.fetch('SMTP_PORT', nil),
     domain: ENV.fetch('SMTP_DOMAIN', nil),
-    user_name: Rails.application.secrets.smtp_user_name,
-    password: Rails.application.secrets.smtp_password,
+    user_name: Rails.configuration.x.sealed_secrets.smtp_user_name,
+    password: Rails.configuration.x.sealed_secrets.smtp_password,
     authentication: ENV.fetch('SMTP_AUTHENTICATION', 'plain'),
     enable_starttls_auto: true
   }
