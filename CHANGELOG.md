@@ -10,6 +10,8 @@
 
  - chore(deps): bump hono from 4.13.13 to 4.13.18 [#1469](https://github.com/portagenetwork/roadmap/pull/1469)
 
+ - chore(deps): bump @hono/node-server from 2.1.5 to 2.1.8 [#1468](https://github.com/portagenetwork/roadmap/pull/1468)
+
 ## [4.1.1+portage-4.10.4]
 
 ### Fixed
