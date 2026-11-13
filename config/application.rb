@@ -6,6 +6,7 @@ require 'csv'
 require 'nulldb/rails'
 require_relative "boot"
 require_relative '../lib/sealed_secrets'
+require_relative '../lib/env_vars'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -52,24 +53,20 @@ module DMPRoadmap
     #       moving our helper methods into Presenters if it makes sense
     config.action_controller.include_all_helpers = true
 
+    # Action mailer settings
+    action_mailer_config = EnvVars.load_action_mailer
     config.action_mailer.default_url_options = {
-      host: ENV.fetch('MAILER_DEFAULT_HOST') do
-        Socket.gethostname if Rails.env.local?
-      end
+      host: action_mailer_config[:host]
     }
 
     # Application-level settings
-    config.x.application.default_funder_id = ENV.fetch('DEFAULT_FUNDER_ID', nil).to_i
-    config.x.application.dmproadmap_host = ENV.fetch('DMPROADMAP_HOST', nil)
-    config.x.application.mailer_from = ENV.fetch('MAILER_FROM', nil)
-    config.x.application.mailer_to = ENV.fetch('MAILER_TO', nil)
+    config.x.application = ActiveSupport::OrderedOptions.new.merge!(EnvVars.load_application)
 
     # OmniAuth settings
-    config.x.omniauth.full_host = ENV.fetch('OMNIAUTH_FULL_HOST', nil)
-    config.x.omniauth.orcid_client_member = ENV.fetch('ORCID_CLIENT_MEMBER', 'false') == 'true'
+    config.x.omniauth = ActiveSupport::OrderedOptions.new.merge!(EnvVars.load_omniauth)
 
     # Feature flags
-    config.x.features.sandbox = ENV.fetch('ON_SANDBOX', 'false') == 'true'
+    config.x.features = ActiveSupport::OrderedOptions.new.merge!(EnvVars.load_features)
 
     # Store the sealed secrets in config.x.sealed_secrets, making them accessible
     # throughout the application (e.g. config.x.sealed_secrets.database_url).
