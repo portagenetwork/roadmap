@@ -8,6 +8,8 @@ module Api
       include Api::CommonMadmp::ErrorHandling
       include Api::CommonMadmp::Pagination
 
+      before_action -> { doorkeeper_authorize! :common_madmp_read }
+
       private
 
       # Doorkeeper exposes this hook so controllers can override the default rendering

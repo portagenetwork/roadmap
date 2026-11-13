@@ -56,7 +56,7 @@ RSpec.describe Api::V2::InternalUserAccessTokensController do
 
       context 'when a token already exists' do
         let!(:old_token) do
-          create(:oauth_access_token, application: oauth_app, resource_owner_id: user.id, scopes: 'read')
+          create(:oauth_access_token, application: oauth_app, resource_owner_id: user.id, scopes: 'v2_read')
         end
 
         it 'revokes the old token' do

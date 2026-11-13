@@ -22,7 +22,7 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
 
     it 'returns 401 Unauthorized when the token has expired' do
       @user = create(:user)
-      @client = create(:oauth_application)
+      @client = create(:oauth_application, scopes: 'common_madmp_read')
       token = mock_authorization_code_token(
         oauth_application: @client, user: @user, expires_in: -1
       ).plaintext_token
@@ -39,7 +39,7 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
 
     it 'returns 401 Unauthorized when the token has been revoked' do
       @user = create(:user)
-      @client = create(:oauth_application)
+      @client = create(:oauth_application, scopes: 'common_madmp_read')
       access_token = mock_authorization_code_token(oauth_application: @client, user: @user)
       access_token.revoke
       token = access_token.plaintext_token
@@ -62,7 +62,7 @@ RSpec.describe Api::CommonMadmp::BaseApiController do
 
     it 'returns 403 Forbidden with the negotiated vendor content type when the resource owner account is inactive' do
       @user = create(:user)
-      @client = create(:oauth_application)
+      @client = create(:oauth_application, scopes: 'common_madmp_read')
       token = mock_authorization_code_token(oauth_application: @client, user: @user).plaintext_token
       @user.update(active: false)
 
