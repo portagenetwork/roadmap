@@ -262,6 +262,38 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
       research_output.reload
       expect(research_output.identifier_for_scheme(scheme: 'doi')).to be_nil
     end
+
+    it 'ignores an invalid DOI on create without blocking save' do
+      expect do
+        post plan_research_outputs_path(plan),
+             params: { prefill_doi: 'bad-doi', research_output: research_output_params }
+      end.to change(ResearchOutput, :count).by(1)
+
+      expect(ResearchOutput.order(:id).last.identifier_for_scheme(scheme: 'doi')).to be_nil
+    end
+
+    it 'preserves the existing DOI when an invalid DOI is submitted on update' do
+      research_output = create(:research_output, plan: plan, repositories_count: 0, metadata_standards_count: 0)
+      research_output.identifiers.create!(identifier_scheme: doi_scheme, value: doi)
+
+      patch plan_research_output_path(plan, research_output), params: {
+        prefill_doi: 'bad-doi',
+        research_output: { title: 'Updated title', output_type: research_output.output_type,
+                           access: research_output.access }
+      }
+
+      expect(research_output.reload.identifier_for_scheme(scheme: 'doi')&.value_without_scheme_prefix).to eq(doi)
+    end
+
+    it 'normalizes a full DOI URL when saved without clicking Fetch & Add' do
+      post plan_research_outputs_path(plan), params: {
+        prefill_doi: "  https://doi.org/#{doi}  ",
+        research_output: research_output_params
+      }
+
+      identifier = ResearchOutput.order(:id).last.identifier_for_scheme(scheme: 'doi')
+      expect(identifier.value_without_scheme_prefix).to eq(doi)
+    end
   end
 
   private
