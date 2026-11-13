@@ -8,6 +8,8 @@
 
 ### Dependency Updates
 
+ - chore(deps): bump follow-redirects from 1.16.1 to 1.16.3 [#1471](https://github.com/portagenetwork/roadmap/pull/1471)
+
  - chore(deps): bump hono from 4.13.13 to 4.13.18 [#1469](https://github.com/portagenetwork/roadmap/pull/1469)
 
  - chore(deps): bump @hono/node-server from 2.1.5 to 2.1.8 [#1468](https://github.com/portagenetwork/roadmap/pull/1468)
