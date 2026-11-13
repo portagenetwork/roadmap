@@ -101,6 +101,9 @@ Devise.setup do |config|
   config.pepper = Rails.application.secrets.devise_pepper
 
   # ==> Configuration for :invitable
+  # Create a placeholder user record in the DB when an invitation is created
+  config.create_resource_on_invitation = true
+
   # The period the generated invitation token is valid, after
   # this period, the invited resource won't be able to accept the invitation.
   # When invite_for is 0 (the default), the invitation won't expire.
