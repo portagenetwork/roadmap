@@ -29,6 +29,15 @@ RSpec.describe ExternalApis::DoiResolutionService, type: :service do
     } }.to_json
   end
 
+  around do |example|
+    original_datacite_active = Rails.configuration.x.datacite.active
+    original_crossref_active = Rails.configuration.x.crossref.active
+    example.run
+  ensure
+    Rails.configuration.x.datacite.active = original_datacite_active
+    Rails.configuration.x.crossref.active = original_crossref_active
+  end
+
   before do
     create(:role, :creator, user: user, plan: plan)
 
