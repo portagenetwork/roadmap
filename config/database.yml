@@ -1,36 +1,22 @@
 defaults: &defaults
-  adapter: <%= ENV["DATABASE_ADAPTER"] || Rails.application.secrets.database_adapter %>
-  encoding: <%= ENV["DATABASE_ENCODING"] || Rails.application.secrets.database_encoding %>
+  adapter: <%= ENV["DATABASE_ADAPTER"] %>
+  encoding: <%= ENV["DATABASE_ENCODING"] %>
   pool: 16
-  username: <%= ENV["DATABASE_USER"] || Rails.application.secrets.database_user %>
-  password: <%= ENV["DATABASE_PASSWORD"] || Rails.application.secrets.database_password %>
+  username: <%= ENV["DATABASE_USER"] %>
+  password: <%= ENV["DATABASE_PASSWORD"] %>
   host: <%= ENV["DATABASE_URL"] || '127.0.0.1' %>
 
 development:
   <<: *defaults
-  url: <%= Rails.application.secrets.database_url %>
+  url: <%= Rails.configuration.x.sealed_secrets.database_url %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *defaults
-  url: <%= Rails.application.secrets.database_test_url %>
-
-uat:
-  <<: *defaults
-  url: <%= Rails.application.secrets.database_url %>
-
-staging:
-  <<: *defaults
-  url: <%= Rails.application.secrets.database_url %>
-
-sandbox:
-  encoding: utf8mb4
-  url: <%= Rails.application.secrets.database_url %>
-  pool: 5
-  timeout: 5000
+  url: <%= ENV['DATABASE_TEST_URL'] %>
 
 production:
   <<: *defaults
-  url: <%= Rails.application.secrets.database_url %>
+  url: <%= Rails.configuration.x.sealed_secrets.database_url %>

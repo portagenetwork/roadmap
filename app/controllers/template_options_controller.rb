@@ -41,7 +41,7 @@ class TemplateOptionsController < ApplicationController
   #   - other_templates: [All non-priority funder templates]
   # - total_templates: Count of all templates
   def build_templates_payload(templates)
-    funder_templates = templates.select { |t| t.org_id == Rails.application.config.default_funder_id }
+    funder_templates = templates.select { |t| t.org_id == Rails.configuration.x.application.default_funder_id }
     simplified = funder_templates.find { |t| t.title == _('Alliance Simplified Template (Funding Application Stage)') }
     default = funder_templates.find(&:is_default)
     priority_templates = [simplified, default].compact

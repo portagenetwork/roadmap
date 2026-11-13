@@ -4,8 +4,8 @@ module DMPRoadmap
   # wkhtmlpdf configurations
   class Application < Rails::Application
     WickedPdf.configure do |config|
-      config.exe_path = Rails.application.secrets.wicked_pdf_path || '/usr/bin/wkhtmltopdf'
-      config.proxy = Rails.application.secrets.wicked_pdf_proxy || ''
+      config.exe_path = ENV.fetch('WICKED_PDF_PATH', '/usr/bin/wkhtmltopdf')
+      config.proxy = ENV.fetch('WICKED_PDF_PROXY', '')
     end
   end
 end

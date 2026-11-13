@@ -49,7 +49,7 @@ Doorkeeper.configure do
 
   # enable ssl requirement for redirect url
   # - Allow HTTP in test and development environments
-  force_ssl_in_redirect_uri !(Rails.env.test? || Rails.env.development?)
+  force_ssl_in_redirect_uri !Rails.env.local?
 
   hash_application_secrets
   hash_token_secrets

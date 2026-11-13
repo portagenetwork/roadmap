@@ -18,7 +18,7 @@ def ignore_paths
 end
 
 TranslationIO.configure do |config|
-  config.api_key        = Rails.application.secrets.translation_io_api_key
+  config.api_key        = Rails.configuration.x.sealed_secrets.translation_io_api_key
   config.source_locale  = 'en'
   config.target_locales = SUPPORTED_LOCALES
   config.ignored_source_paths = ignore_paths
@@ -30,7 +30,7 @@ TranslationIO.configure do |config|
   # Uncomment this if you already use gettext or fast_gettext
   config.locales_path = File.join('config', 'locale')
 
-  unless Rails.env.in?(%w[test development uat])
+  unless Rails.env.in?(%w[test development])
     config.db_fields = {
       'Theme' => %w[title description],
       'QuestionFormat' => %w[title description],

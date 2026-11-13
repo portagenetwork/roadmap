@@ -6,7 +6,7 @@ namespace :templates do
   task update_unbc_templates: :environment do
     # Dry run by default
     apply = ENV['APPLY'] == 'true'
-    funder_id = Rails.application.config.default_funder_id
+    funder_id = Rails.configuration.x.application.default_funder_id
 
     # NOTE: Although `id` uniquely identifies these records, we intentionally
     # include additional constraints (name, org_id, title, published) as defensive
