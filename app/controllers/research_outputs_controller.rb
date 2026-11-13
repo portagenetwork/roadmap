@@ -15,7 +15,6 @@ class ResearchOutputsController < ApplicationController
     @research_outputs = ResearchOutput.includes(:repositories)
                                       .where(plan_id: @plan.id)
     authorize @research_outputs.first || ResearchOutput.new(plan_id: @plan.id)
-    @prefill_doi = params[:prefill_doi].presence
   end
 
   # GET /plans/:plan_id/research_outputs/new
@@ -91,19 +90,6 @@ class ResearchOutputsController < ApplicationController
     end
   end
 
-  def persist_doi_identifier
-    doi = @prefill_doi.presence || params[:prefill_doi].presence
-    return if doi.blank?
-
-    scheme = IdentifierScheme.by_name('doi').first
-    return if scheme.blank?
-
-    identifier = @research_output.identifier_for_scheme(scheme: scheme) ||
-                 @research_output.identifiers.build(identifier_scheme: scheme)
-    identifier.value = doi
-    identifier.save!
-  end
-
   # ============================
   # = Rails UJS remote methods =
   # ============================
@@ -170,15 +156,30 @@ class ResearchOutputsController < ApplicationController
 
   private
 
+  def persist_doi_identifier
+    scheme = IdentifierScheme.by_name('doi').first
+    return if scheme.blank?
+
+    doi = @prefill_doi.presence || params[:prefill_doi].presence
+    identifier = @research_output.identifier_for_scheme(scheme: scheme)
+
+    return remove_doi_identifier(identifier) if doi.blank?
+
+    identifier ||= @research_output.identifiers.build(identifier_scheme: scheme)
+    identifier.value = doi
+    identifier.save!
+  end
+
+  def remove_doi_identifier(identifier)
+    identifier&.destroy! if params.key?(:prefill_doi)
+  end
+
   def prefill_from_doi(doi)
     result = ExternalApis::DoiResolutionService.fetch_metadata(doi: doi)
     if result[:status] == :ok
       @research_output.assign_attributes(
         result[:metadata].slice(:title, :description, :output_type, :release_date)
       )
-    elsif %i[invalid not_found].include?(result[:status])
-      redirect_to plan_research_outputs_path(@plan, prefill_doi: doi),
-                  alert: doi_error_message(result[:status])
     else
       flash.now[:alert] = doi_error_message(result[:status])
     end

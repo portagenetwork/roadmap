@@ -27,6 +27,15 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
     }.to_json
   end
 
+  around do |example|
+    original_datacite_active = Rails.configuration.x.datacite.active
+    original_crossref_active = Rails.configuration.x.crossref.active
+    example.run
+  ensure
+    Rails.configuration.x.datacite.active = original_datacite_active
+    Rails.configuration.x.crossref.active = original_crossref_active
+  end
+
   before do
     create(:role, :creator, user: user, plan: plan)
 
@@ -73,20 +82,20 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
       expect(session[:doi_prefill_data]).to be_nil
     end
 
-    it 'rejects an invalid DOI without calling providers' do
+    it 'rejects an invalid DOI without calling providers and stays on the form' do
       invalid_doi = 'xxxx 10.1234/example'
       datacite_request = stub_request(:get, /api\.datacite\.org/)
       crossref_request = stub_request(:get, /api\.crossref\.org/)
 
       get new_plan_research_output_path(plan, prefill_doi: invalid_doi)
 
-      expect(response).to redirect_to(plan_research_outputs_path(plan, prefill_doi: invalid_doi))
+      expect(response).to have_http_status(:ok)
       expect(datacite_request).not_to have_been_requested
       expect(crossref_request).not_to have_been_requested
-
-      follow_redirect!
-
       expect(response.body).to include('Does not appear to be a valid DOI.')
+
+      document = Nokogiri::HTML(response.body)
+      expect(document.at_css('#doi_lookup_input')['value']).to eq(invalid_doi)
     end
 
     context 'when resolving the DOI fails' do
@@ -100,18 +109,34 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
         expect(response.body).to include('DOI lookup service is currently unavailable')
       end
 
-      it 'tells the user when metadata cannot be found' do
+      it 'tells the user when metadata cannot be found and preserves context on new' do
         missing_doi = '10.5281/not-found'
         stub_datacite_request(target_doi: missing_doi, status: 404)
         stub_crossref_request(target_doi: missing_doi, status: 404)
 
         get new_plan_research_output_path(plan, prefill_doi: missing_doi)
 
-        expect(response).to redirect_to(plan_research_outputs_path(plan, prefill_doi: missing_doi))
-
-        follow_redirect!
-
+        expect(response).to have_http_status(:ok)
         expect(response.body).to include('Could not find metadata for the provided DOI.')
+
+        document = Nokogiri::HTML(response.body)
+        expect(document.at_css('#doi_lookup_input')['value']).to eq(missing_doi)
+      end
+
+      it 'tells the user when metadata cannot be found and preserves context on edit' do
+        research_output = create(:research_output, plan: plan, title: 'Existing output')
+        missing_doi = '10.5281/not-found'
+        stub_datacite_request(target_doi: missing_doi, status: 404)
+        stub_crossref_request(target_doi: missing_doi, status: 404)
+
+        get edit_plan_research_output_path(plan, research_output, prefill_doi: missing_doi)
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include('Could not find metadata for the provided DOI.')
+
+        document = Nokogiri::HTML(response.body)
+        expect(document.at_css('#research_output_title')['value']).to eq('Existing output')
+        expect(document.at_css('#doi_lookup_input')['value']).to eq(missing_doi)
       end
     end
   end
@@ -126,7 +151,9 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
       }
     end
 
-    it 'persists the DOI identifier when creating a research output' do
+    it 'persists the DOI identifier using the active doi IdentifierScheme when creating a research output' do
+      expect(IdentifierScheme.by_name('doi').first).to eq(doi_scheme)
+
       post plan_research_outputs_path(plan), params: { prefill_doi: doi, research_output: research_output_params }
 
       expect(response).to redirect_to(plan_research_outputs_path(plan))
@@ -134,6 +161,7 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
       research_output = ResearchOutput.order(:id).last
       identifier = research_output.identifier_for_scheme(scheme: 'doi')
       expect(identifier).to be_present
+      expect(identifier.identifier_scheme).to eq(doi_scheme)
       expect(identifier.value_without_scheme_prefix).to eq(doi)
     end
 
@@ -214,6 +242,25 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
       expect(research_output.output_type).to eq('dataset')
       expect(research_output.release_date.to_date).to eq(Date.parse('2021-05-12'))
       expect(research_output.identifier_for_scheme(scheme: 'doi')&.value_without_scheme_prefix).to eq(doi)
+    end
+
+    it 'removes the DOI identifier when clearing the DOI field on update' do
+      research_output = create(:research_output, plan: plan, repositories_count: 0, metadata_standards_count: 0)
+      research_output.identifiers.create!(identifier_scheme: doi_scheme, value: doi)
+
+      patch plan_research_output_path(plan, research_output), params: {
+        prefill_doi: '',
+        research_output: {
+          title: research_output.title,
+          output_type: research_output.output_type,
+          access: research_output.access
+        }
+      }
+
+      expect(response).to redirect_to(plan_research_outputs_path(plan))
+
+      research_output.reload
+      expect(research_output.identifier_for_scheme(scheme: 'doi')).to be_nil
     end
   end
 
