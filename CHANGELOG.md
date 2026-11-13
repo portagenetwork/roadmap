@@ -6,6 +6,10 @@
 
  - fix(perms): restrict `manage_oauth_apps` management to super admins [#1460](https://github.com/portagenetwork/roadmap/pull/1460)
 
+### Dependency Updates
+
+ - chore(deps): bump hono from 4.13.13 to 4.13.18 [#1469](https://github.com/portagenetwork/roadmap/pull/1469)
+
 ## [4.1.1+portage-4.10.4]
 
 ### Fixed
