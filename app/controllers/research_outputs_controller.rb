@@ -156,22 +156,18 @@ class ResearchOutputsController < ApplicationController
 
   private
 
-  def persist_doi_identifier
+  def persist_doi_identifier # rubocop:disable Metrics/CyclomaticComplexity
     scheme = IdentifierScheme.by_name('doi').first
     return if scheme.blank?
 
-    doi = @prefill_doi.presence || params[:prefill_doi].presence
+    raw_doi = @prefill_doi || params[:prefill_doi]
     identifier = @research_output.identifier_for_scheme(scheme: scheme)
+    return identifier&.destroy! if raw_doi&.blank?
 
-    return remove_doi_identifier(identifier) if doi.blank?
+    clean_doi = ExternalApis::DoiResolutionService.normalize_doi(raw_doi)
+    return if clean_doi.blank?
 
-    identifier ||= @research_output.identifiers.build(identifier_scheme: scheme)
-    identifier.value = doi
-    identifier.save!
-  end
-
-  def remove_doi_identifier(identifier)
-    identifier&.destroy! if params.key?(:prefill_doi)
+    (identifier || @research_output.identifiers.build(identifier_scheme: scheme)).update!(value: clean_doi)
   end
 
   def prefill_from_doi(doi)

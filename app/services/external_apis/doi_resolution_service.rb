@@ -64,6 +64,11 @@ module ExternalApis
         resolve_from_providers(clean_doi, cache_key)
       end
 
+      def normalize_doi(doi)
+        cleaned = doi.to_s.strip.sub(%r{\Ahttps?://(?:dx\.)?doi\.org/}i, '')
+        cleaned if cleaned.match?(MODERN_DOI_REGEX) || cleaned.match?(OLD_DOI_REGEX)
+      end
+
       private
 
       def resolve_from_providers(clean_doi, cache_key)
