@@ -22,10 +22,43 @@ describe 'api/v2/plans/_show.json.jbuilder' do
     @presenter = Api::V2::PlanPresenter.new(plan: @plan)
   end
 
+  describe 'for_common_madmp_api flag' do
+    it 'passes the flag through when rendered by the Common MaDMP partial' do
+      Api::V2::PlanPresenter.stubs(:new).with do |kwargs|
+        kwargs[:plan] == @plan && kwargs[:for_common_madmp_api] == true
+      end.returns(@presenter)
+
+      render partial: 'api/common_madmp/dmps/dmp', locals: { plan: @plan }
+
+      expect(rendered).to include('"dmp"')
+    end
+
+    it 'leaves the flag unset when rendered directly as the v2 API partial' do
+      Api::V2::PlanPresenter.stubs(:new).with do |kwargs|
+        kwargs[:plan] == @plan && kwargs[:for_common_madmp_api].nil?
+      end.returns(@presenter)
+
+      render partial: 'api/v2/plans/show', locals: { client: @client, plan: @plan }
+
+      expect(rendered).to include(@plan.title)
+    end
+
+    it 'references schema 1.3 when the flag is true' do
+      render partial: 'api/v2/plans/show',
+             locals: { client: @client, plan: @plan, for_common_madmp_api: true }
+
+      expect(JSON.parse(rendered)['schema']).to end_with('JSON-schema/1.3')
+    end
+  end
+
   describe 'includes all of the DMP attributes' do
     before do
       render partial: 'api/v2/plans/show', locals: { client: @client, plan: @plan }
       @json = JSON.parse(rendered).with_indifferent_access
+    end
+
+    it 'includes the RDA schema version' do
+      expect(@json[:schema]).to eql('https://github.com/RDA-DMP-Common/RDA-DMP-Common-Standard/tree/master/examples/JSON/JSON-schema/1.0')
     end
 
     it 'includes the :title' do

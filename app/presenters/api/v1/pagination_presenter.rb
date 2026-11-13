@@ -11,16 +11,6 @@ module Api
         @page = current_page
       end
 
-      def url_without_pagination
-        return nil unless @url.present? && @url.is_a?(String)
-
-        url = @url.gsub(/per_page=\d+/, '')
-                  .gsub(/page=\d+/, '')
-                  .gsub(/(&)+$/, '').gsub(/\?$/, '')
-
-        (url.include?('?') ? "#{url}&" : "#{url}?")
-      end
-
       def prev_page?
         total_pages > 1 && @page != 1
       end
@@ -38,6 +28,16 @@ module Api
       end
 
       private
+
+      def url_without_pagination
+        return nil unless @url.present? && @url.is_a?(String)
+
+        url = @url.gsub(/per_page=\d+/, '')
+                  .gsub(/page=\d+/, '')
+                  .gsub(/(&)+$/, '').gsub(/\?$/, '')
+
+        (url.include?('?') ? "#{url}&" : "#{url}?")
+      end
 
       def total_pages
         return 1 unless @total_items.present? && @per_page.present? &&

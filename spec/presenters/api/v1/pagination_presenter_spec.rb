@@ -11,54 +11,54 @@ RSpec.describe Api::V1::PaginationPresenter do
     it 'returns nil if no url was specified' do
       presenter = described_class.new(current_url: nil, per_page: 2,
                                       total_items: 1, current_page: 1)
-      expect(presenter.url_without_pagination).to eql(nil)
+      expect(presenter.send(:url_without_pagination)).to eql(nil)
     end
     it 'removes per_page from the query string' do
       target = "#{@url}?per_page=2"
       presenter = described_class.new(current_url: target, per_page: 2,
                                       total_items: 1, current_page: 1)
-      rslt = presenter.url_without_pagination.include?('per_page=2')
+      rslt = presenter.send(:url_without_pagination).include?('per_page=2')
       expect(rslt).to eql(false)
     end
     it 'removes page from the query string' do
       target = "#{@url}?page=2"
       presenter = described_class.new(current_url: target, per_page: 2,
                                       total_items: 1, current_page: 1)
-      rslt = presenter.url_without_pagination.include?('page=2')
+      rslt = presenter.send(:url_without_pagination).include?('page=2')
       expect(rslt).to eql(false)
     end
     it 'retains other query string items if there were no pagination ones' do
       target = "#{@url}?other=true"
       presenter = described_class.new(current_url: target, per_page: 2,
                                       total_items: 1, current_page: 1)
-      rslt = presenter.url_without_pagination.include?('other=true')
+      rslt = presenter.send(:url_without_pagination).include?('other=true')
       expect(rslt).to eql(true)
     end
     it 'retains other query string items if it removed pagination ones' do
       target = "#{@url}?per_page=2&other=true"
       presenter = described_class.new(current_url: target, per_page: 2,
                                       total_items: 1, current_page: 1)
-      rslt = presenter.url_without_pagination.include?('other=true')
+      rslt = presenter.send(:url_without_pagination).include?('other=true')
       expect(rslt).to eql(true)
     end
     it "ends with a '&' if there were query string items" do
       target = "#{@url}?per_page=2&other=true"
       presenter = described_class.new(current_url: target, per_page: 2,
                                       total_items: 1, current_page: 1)
-      rslt = presenter.url_without_pagination.end_with?('&')
+      rslt = presenter.send(:url_without_pagination).end_with?('&')
       expect(rslt).to eql(true)
     end
     it "ends with a '?' if there were no query string items" do
       presenter = described_class.new(current_url: @url, per_page: 2,
                                       total_items: 1, current_page: 1)
-      rslt = presenter.url_without_pagination.end_with?('?')
+      rslt = presenter.send(:url_without_pagination).end_with?('?')
       expect(rslt).to eql(true)
     end
     it "ends with a '?' if there were only pagination items in query string" do
       target = "#{@url}?page=2"
       presenter = described_class.new(current_url: target, per_page: 2,
                                       total_items: 1, current_page: 1)
-      rslt = presenter.url_without_pagination.end_with?('?')
+      rslt = presenter.send(:url_without_pagination).end_with?('?')
       expect(rslt).to eql(true)
     end
   end

@@ -85,4 +85,48 @@ describe 'api/v2/contributors/_show.json.jbuilder' do
       expect(@json[:contact_id][:identifier]).to eql(@ident.value)
     end
   end
+
+  describe 'when rendered for the Common MaDMP API' do
+    it 'uses ORCID when present for contributor_id' do
+      render partial: 'api/v2/contributors/show',
+             locals: { contributor: @contact, is_contact: false, for_common_madmp_api: true }
+      json = JSON.parse(rendered).with_indifferent_access
+
+      expect(json[:contributor_id][:type]).to eql(@ident.identifier_format)
+      expect(json[:contributor_id][:identifier]).to eql(@ident.value)
+    end
+
+    it 'uses ORCID when present for contact_id' do
+      render partial: 'api/v2/contributors/show',
+             locals: { contributor: @contact, is_contact: true, for_common_madmp_api: true }
+      json = JSON.parse(rendered).with_indifferent_access
+
+      expect(json[:contact_id][:type]).to eql(@ident.identifier_format)
+      expect(json[:contact_id][:identifier]).to eql(@ident.value)
+    end
+
+    it 'falls back to the contributor email for contributor_id when ORCID is missing' do
+      @contact.identifiers.destroy_all
+      @contact.reload
+
+      render partial: 'api/v2/contributors/show',
+             locals: { contributor: @contact, is_contact: false, for_common_madmp_api: true }
+      json = JSON.parse(rendered).with_indifferent_access
+
+      expect(json[:contributor_id][:type]).to eql('email')
+      expect(json[:contributor_id][:identifier]).to eql(@contact.email)
+    end
+
+    it 'falls back to the contributor email for contact_id when ORCID is missing' do
+      @contact.identifiers.destroy_all
+      @contact.reload
+
+      render partial: 'api/v2/contributors/show',
+             locals: { contributor: @contact, is_contact: true, for_common_madmp_api: true }
+      json = JSON.parse(rendered).with_indifferent_access
+
+      expect(json[:contact_id][:type]).to eql('email')
+      expect(json[:contact_id][:identifier]).to eql(@contact.email)
+    end
+  end
 end
