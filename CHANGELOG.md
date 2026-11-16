@@ -8,6 +8,8 @@
 
  - fix(db-schema): correct schema version [#1473](https://github.com/portagenetwork/roadmap/pull/1473)
 
+ - fix(rails-7): fix rendering of `confirm_merge` partial [#1474](https://github.com/portagenetwork/roadmap/pull/1474)
+
 ### Dependency Updates
 
  - chore(deps): bump follow-redirects from 1.16.1 to 1.16.3 [#1471](https://github.com/portagenetwork/roadmap/pull/1471)
