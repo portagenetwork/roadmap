@@ -53,4 +53,29 @@ RSpec.describe SuperAdmin::UsersController, type: :controller do
       end
     end
   end
+
+  describe 'GET #search' do
+    let(:target_user) { create(:user) }
+    let(:found_user) { create(:user) }
+
+    context 'when users are found' do
+      it 'renders the confirm_merge partial successfully without raising an error' do
+        sign_in super_admin
+        get :search, params: { id: target_user.id, email: found_user.email }
+
+        expect(response).to have_http_status(:ok)
+        body = JSON.parse(response.body)
+        expect(body).to have_key('form')
+      end
+    end
+
+    context 'when no users are found' do
+      it 'sets an alert and renders the edit view' do
+        sign_in super_admin
+        get :search, params: { id: target_user.id, email: 'nonexistent@example.com' }
+        expect(response).to have_http_status(:ok)
+        expect(flash.now[:alert]).to include('Unable to find user')
+      end
+    end
+  end
 end
