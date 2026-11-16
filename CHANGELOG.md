@@ -14,6 +14,10 @@
 
  - chore(deps): bump @hono/node-server from 2.1.5 to 2.1.8 [#1468](https://github.com/portagenetwork/roadmap/pull/1468)
 
+ - chore(deps): bump rails from 6.1 to 7.1 [#1454⁠](https://github.com/portagenetwork/roadmap/pull/1454)
+   - fix(views): fix hidden_field_tag params for Rack 3 compatibility [#1455](https://github.com/portagenetwork/roadmap/pull/1455)
+   - fix(conditional-question): remedy conditional-questions bugs for Rails 7 upgrade [#1461](https://github.com/portagenetwork/roadmap/pull/1461)
+
 ## [4.1.1+portage-4.10.4]
 
 ### Fixed
