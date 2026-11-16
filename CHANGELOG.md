@@ -6,6 +6,8 @@
 
  - fix(perms): restrict `manage_oauth_apps` management to super admins [#1460](https://github.com/portagenetwork/roadmap/pull/1460)
 
+ - fix(db-schema): correct schema version [#1473](https://github.com/portagenetwork/roadmap/pull/1473)
+
 ### Dependency Updates
 
  - chore(deps): bump follow-redirects from 1.16.1 to 1.16.3 [#1471](https://github.com/portagenetwork/roadmap/pull/1471)
