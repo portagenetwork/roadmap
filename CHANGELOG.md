@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [5.0.0+portage-5.0.0]
 
 ### Fixed
 
@@ -19,6 +19,8 @@
  - chore(deps): bump rails from 6.1 to 7.1 [#1454⁠](https://github.com/portagenetwork/roadmap/pull/1454)
    - fix(views): fix hidden_field_tag params for Rack 3 compatibility [#1455](https://github.com/portagenetwork/roadmap/pull/1455)
    - fix(conditional-question): remedy conditional-questions bugs for Rails 7 upgrade [#1461](https://github.com/portagenetwork/roadmap/pull/1461)
+
+ - chore(deps): bump immutable from 4.3.6 to 4.3.9 [#1472](https://github.com/portagenetwork/roadmap/pull/1472)
 
 ## [4.1.1+portage-4.10.4]
 
