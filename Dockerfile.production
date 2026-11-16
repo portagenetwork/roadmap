@@ -6,9 +6,8 @@ ENV INSTALL_PATH=/usr/src/app \
     RAILS_ENV=production \
     NODE_ENV=production \
     BUNDLE_WITHOUT='development:test:mysql:aws:sandbox:ci:wkhtmltopdf' \
-    # Dummy values to enable `rake assets:precompile` without a real db
-    DATABASE_URL=nulldb://nohost \
-    SECRET_KEY_BASE=foo
+    # Dummy value to enable `rake assets:precompile` without a real db
+    DATABASE_URL=nulldb://nohost
 
 # Create non-root user early
 RUN addgroup -g 3000 -S dmpgroup && \
@@ -54,7 +53,7 @@ COPY --chown=dmpuser:dmpgroup . $INSTALL_PATH
 # (tmp directory with correct permissions is required)
 RUN mkdir -p $INSTALL_PATH/tmp && chown -R dmpuser:dmpgroup $INSTALL_PATH/tmp
 USER dmpuser
-RUN bundle exec rake assets:precompile
+RUN SKIP_YARN_INSTALL=1 SECRET_KEY_BASE_DUMMY=1 bundle exec rake assets:precompile
 
 # Temporarily switch back to root user to delete /node_modules and tmp/*
 USER root

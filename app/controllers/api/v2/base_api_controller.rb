@@ -103,13 +103,15 @@ module Api
       end
 
       def handle_json_parse_error(exception)
-        Rails.logger.error "Request parsing error: #{exception.message}"
-        details = if exception.message.include?('unexpected token')
+        original = exception.cause || exception
+        Rails.logger.error "Request parsing error: #{original.message}"
+        details = if exception.cause.is_a?(JSON::ParserError)
                     {
                       error_code: 'invalid_json',
                       hint: _('Check for malformed JSON (for example, unescaped quotes inside string values).')
                     }
                   end
+
         render_error(errors: _('Invalid JSON format'),
                      status: :bad_request,
                      details: details)

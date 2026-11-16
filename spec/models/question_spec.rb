@@ -186,6 +186,28 @@ RSpec.describe Question, type: :model do
     end
   end
 
+  describe '#update_conditions' do
+    let!(:question) { create(:question, :radiobuttons, options: 1) }
+
+    # A non-empty question_id_map (as after versioning) makes the missing
+    # target hit `.map`, which raised NoMethodError on nil before the fix
+    it 'skips a remove condition when no target question was submitted' do
+      option_id = question.question_options.first.id.to_s
+      conditions = {
+        '0' => {
+          'action_type' => 'remove',
+          'number' => '0',
+          'question_option' => [option_id]
+        }
+      }
+
+      expect do
+        question.update_conditions(conditions, {}, { '1' => '2' })
+      end.not_to raise_error
+      expect(question.conditions.reload).to be_empty
+    end
+  end
+
   describe '#example_answers' do
     subject { question.example_answers([org.id]) }
 

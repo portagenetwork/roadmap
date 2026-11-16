@@ -37,6 +37,8 @@ jobs:
     env:
       RAILS_ENV: test
       DATABASE_URL: postgres://postgres:@localhost:5432/roadmap_test
+      SECRET_KEY_BASE_DUMMY: 1
+      SECRET_KEY_BASE: foo
 
     steps:
     # Checkout the repo
@@ -93,7 +95,7 @@ jobs:
         install-dependencies: true
 
     - name: 'Setup Test DB'
-      run: bin/rails db:setup RAILS_ENV=test
+      run: DISABLE_SPRING=1 bin/rails db:setup RAILS_ENV=test
 
     - name: 'Migrate DB'
       run: bin/rails db:migrate RAILS_ENV=test
