@@ -2,6 +2,10 @@
 
 ## [5.0.0+portage-5.0.0]
 
+### Added
+
+ - chore(DMPRoadmap): add remaining changes from upstream release v5.0.0 [#1476](https://github.com/portagenetwork/roadmap/pull/1476)
+
 ### Fixed
 
  - fix(perms): restrict `manage_oauth_apps` management to super admins [#1460](https://github.com/portagenetwork/roadmap/pull/1460)
