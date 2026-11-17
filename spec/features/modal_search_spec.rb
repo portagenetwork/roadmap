@@ -20,6 +20,14 @@ RSpec.feature 'ModalSearchDialog', type: :feature do
     click_link @plan.title
     click_link 'Research Outputs'
     click_link 'Add a research output'
+    expect(page).to have_button('Add a repository')
+
+    # Disable Bootstrap modal transitions so hide() isn't ignored mid-animation on slow CI runners
+    page.execute_script(<<~JS)
+      const style = document.createElement('style');
+      style.innerHTML = '.fade, .modal-dialog, .modal-backdrop { transition: none !important; }';
+      document.head.appendChild(style);
+    JS
   end
 
   it 'Modal search opens and closes and allows user to search, select and remove items', :js do
@@ -35,14 +43,11 @@ RSpec.feature 'ModalSearchDialog', type: :feature do
       # Select the repository and make sure it no longer appears in the search results
       click_link 'Select'
       expect(page).not_to have_text(@model.description)
-
-      # Using JS to click on button, as click_button '.modal-header button.btn-close' did not work.
-      modal_close_button = find('.modal-header button.btn-close')
-      # Close the modal
-      execute_script('arguments[0].click();', modal_close_button)
+      find('.modal-header button.btn-close').click
     end
 
     # Verify that the selection was added to the main page's dom
+    expect(page).to have_no_css('#modal-search-repositories.show')
     expect(page).not_to have_text('Repository search')
     expect(page).to have_text(@model.description)
     # Verify that we can remove the selection
@@ -61,10 +66,10 @@ RSpec.feature 'ModalSearchDialog', type: :feature do
       fill_in 'research_output_search_term', with: @model.name
       click_button 'Apply filter(s)'
       click_link 'Select'
-      # (execute_script('arguments[0].click();', modal_close_button) works locally here, but not as GitHub Action)
-      find('[data-bs-dismiss="modal"]').click
+      find('.modal-header button.btn-close').click
     end
 
+    expect(page).to have_no_css('#modal-search-repositories.show')
     click_button 'Save'
 
     # Verify UI changes
