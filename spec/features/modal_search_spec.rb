@@ -85,8 +85,6 @@ RSpec.feature 'ModalSearchDialog', type: :feature do
     expect(research_output.repositories).to include(@model)
     expect(research_output.plan).to eq(@plan)
   end
-<<<<<<< HEAD
-=======
 
   private
 
@@ -122,5 +120,4 @@ RSpec.feature 'ModalSearchDialog', type: :feature do
   def close_modal
     find('.modal-header button.btn-close').click
   end
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
 end
