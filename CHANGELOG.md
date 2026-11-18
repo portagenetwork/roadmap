@@ -1,10 +1,14 @@
 # Changelog
 
-## [5.0.0+portage-5.0.0]
+## [Unreleased]
 
 ### Added
 
  - chore(DMPRoadmap): add remaining changes from upstream release v5.0.0 [#1476](https://github.com/portagenetwork/roadmap/pull/1476)
+
+ - chore(DMPRoadmap): add remaining changes from upstream release v5.0.1 [#1478](https://github.com/portagenetwork/roadmap/pull/1478)
+
+ - chore(DMPRoadmap): add remaining changes from upstream release v5.0.2 [#1480](https://github.com/portagenetwork/roadmap/pull/1480)
 
 ### Fixed
 
