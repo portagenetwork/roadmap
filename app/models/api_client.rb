@@ -4,24 +4,6 @@
 #
 # Table name: api_clients
 #
-<<<<<<< HEAD
-#  id            :integer          not null, primary key
-#  client_secret :string           not null
-#  contact_email :string           not null
-#  contact_name  :string
-#  description   :string
-#  homepage      :string
-#  last_access   :datetime
-#  name          :string           not null
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  client_id     :string           not null
-#  org_id        :integer
-#
-# Indexes
-#
-#  index_api_clients_on_name  (name)
-=======
 #  id              :integer          not null, primary key
 #  callback_method :integer
 #  callback_uri    :string
@@ -44,7 +26,6 @@
 # Indexes
 #
 #  index_oauth_applications_on_name  (name)
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
 #
 
 # Object that represents an external system
