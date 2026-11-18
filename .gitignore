@@ -117,13 +117,11 @@ yarn-debug.log*
 !/app/assets/builds/.keep
 !/app/assets/builds/.gitkeep
 
-<<<<<<< HEAD
 # Ignore staging files in db folder since they can be auto-generated
 /db/seeds/staging
-=======
+
 # Ignore briley AWS cloud9 script to start the application
 cloud9-start.sh
 
 # Ignore key files for decrypting credentials and more.
 /config/*.key
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
