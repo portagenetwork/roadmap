@@ -27,19 +27,12 @@ jobs:
     env:
       RAILS_ENV: test
       DATABASE_URL: postgres://postgres:@localhost:5432/roadmap_test
-<<<<<<< HEAD
       SECRET_KEY_BASE_DUMMY: 1
       SECRET_KEY_BASE: foo
 
     steps:
     # Checkout the repo
     - uses: actions/checkout@v7
-=======
-
-    steps:
-      # Checkout the repo
-      - uses: actions/checkout@v5
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
 
     # Install Ruby and run bundler
     - uses: ruby/setup-ruby@v1

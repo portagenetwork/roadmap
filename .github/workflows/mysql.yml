@@ -14,11 +14,7 @@ jobs:
 
     steps:
     # Checkout the repo
-<<<<<<< HEAD
     - uses: actions/checkout@v7
-=======
-    - uses: actions/checkout@v5
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
 
     # Install Ruby and run bundler
     - uses: ruby/setup-ruby@v1
