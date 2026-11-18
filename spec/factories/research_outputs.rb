@@ -6,20 +6,12 @@
 #
 #  id                      :bigint(8)        not null, primary key
 #  abbreviation            :string
-<<<<<<< HEAD
-#  access                  :integer          default("open"), not null
-=======
 #  access                  :integer          default(0), not null
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
 #  byte_size               :bigint(8)
 #  description             :text
 #  display_order           :integer
 #  is_default              :boolean
-<<<<<<< HEAD
-#  output_type             :integer          default("dataset"), not null
-=======
 #  output_type             :integer          default(3), not null
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
 #  output_type_description :string
 #  personal_data           :boolean
 #  release_date            :datetime

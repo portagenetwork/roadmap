@@ -25,11 +25,8 @@
 #  last_api_access        :datetime
 #  last_sign_in_at        :datetime
 #  last_sign_in_ip        :string
-<<<<<<< HEAD
-=======
 #  ldap_password          :string
 #  ldap_username          :string
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
 #  other_organisation     :string
 #  recovery_email         :string
 #  remember_created_at    :datetime
