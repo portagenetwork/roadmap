@@ -42,19 +42,11 @@ jobs:
     ## - run: echo 'NODE_OPTIONS="--openssl-legacy-provider"' >> $GITHUB_ENV
     ## /home/runner/runners/2.301.1/externals/node12/bin/node: --openssl-legacy-provider is not allowed in NODE_OPTIONS
 
-<<<<<<< HEAD
     # Install Node
     - uses: actions/setup-node@v7
       with:
-        node-version: '24.22.3'
+        node-version: 24
         cache: 'yarn'
-=======
-      # Install Node
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 24
-          cache: "yarn"
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
 
     # Install the Postgres developer packages
     - name: 'Install Postgresql Packages'
