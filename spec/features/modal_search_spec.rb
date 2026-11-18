@@ -31,25 +31,7 @@ RSpec.feature 'ModalSearchDialog', type: :feature do
   end
 
   it 'Modal search opens and closes and allows user to search, select and remove items', :js do
-    # Open the modal
-    click_button 'Add a repository'
-    expect(page).to have_text('Repository search')
-
-    within('#modal-search-repositories') do
-      # Search for the Repository
-      fill_in 'research_output_search_term',	with: @model.name
-      click_button 'Apply filter(s)'
-      expect(page).to have_text(@model.description)
-      # Select the repository and make sure it no longer appears in the search results
-      click_link 'Select'
-      expect(page).not_to have_text(@model.description)
-      find('.modal-header button.btn-close').click
-    end
-
-    # Verify that the selection was added to the main page's dom
-    expect(page).to have_no_css('#modal-search-repositories.show')
-    expect(page).not_to have_text('Repository search')
-    expect(page).to have_text(@model.description)
+    perform_modal_actions
     # Verify that we can remove the selection
     click_link 'Remove'
     expect(page).not_to have_text(@model.description)
@@ -60,16 +42,8 @@ RSpec.feature 'ModalSearchDialog', type: :feature do
     fill_in 'Title', with: 'Test Output'
     select 'Audiovisual', from: 'research_output_output_type'
 
-    # Open the modal and select repository
-    click_button 'Add a repository'
-    within('#modal-search-repositories') do
-      fill_in 'research_output_search_term', with: @model.name
-      click_button 'Apply filter(s)'
-      click_link 'Select'
-      find('.modal-header button.btn-close').click
-    end
+    perform_modal_actions
 
-    expect(page).to have_no_css('#modal-search-repositories.show')
     click_button 'Save'
 
     # Verify UI changes
@@ -97,7 +71,7 @@ RSpec.feature 'ModalSearchDialog', type: :feature do
       close_modal
     end
     # Verify that the selection was added to the main page's dom
-    expect(page).to have_no_css('#modal-search-repositories', visible: true)
+    expect(page).to have_no_css('#modal-search-repositories.show')
     expect(page).to have_text(@model.description)
   end
 
