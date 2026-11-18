@@ -15,7 +15,7 @@ class PlanSnapshot < ApplicationRecord
   # = Attributes =
   # ==============
 
-  enum visibility: %i[privately_visible organisationally_visible publicly_visible]
+  enum :visibility, %i[privately_visible organisationally_visible publicly_visible]
 
   # ================
   # = Associations =
