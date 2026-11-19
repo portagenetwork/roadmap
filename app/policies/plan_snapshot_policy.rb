@@ -17,6 +17,10 @@ class PlanSnapshotPolicy < ApplicationPolicy
     @record.administerable_by?(@user.id)
   end
 
+  def tombstone?
+    @user.present? && @user.can_super_admin?
+  end
+
   private
 
   # @record is the underlying plan

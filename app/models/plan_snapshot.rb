@@ -10,6 +10,13 @@ class PlanSnapshot < ApplicationRecord
     privately_visible: _('private')
   }.freeze
 
+  TOMBSTONE_REASONS = [
+    'Formal retraction',
+    'Erroneous registration',
+    'Sensitive data issue',
+    'Copyright or licensing issue'
+  ].freeze
+
   # ==============
   # = Attributes =
   # ==============
@@ -44,6 +51,7 @@ class PlanSnapshot < ApplicationRecord
   validate :rda_json_has_required_fields, on: :create, if: -> { plan&.snapshot_ready? }
   validate :extension_json_has_required_fields, on: :create, if: -> { plan&.snapshot_ready? }
   validate :snapshot_fields_immutable_after_create, on: :update
+  validates :removal_reason, inclusion: { in: TOMBSTONE_REASONS }, if: :tombstoned?
 
   # ==========
   # = Scopes =
@@ -91,6 +99,10 @@ class PlanSnapshot < ApplicationRecord
 
   def doi
     identifier&.value
+  end
+
+  def tombstoned?
+    tombstoned_at.present?
   end
 
   def recalculated_checksum
