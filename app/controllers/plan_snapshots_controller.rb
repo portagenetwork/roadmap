@@ -9,8 +9,8 @@ class PlanSnapshotsController < ApplicationController
   JSON_GENERATION_ERROR_ATTRIBUTES = %i[rda_json extension_json].freeze
 
   before_action :set_plan
-  before_action :authorize_plan
-  before_action :set_snapshot, only: [:show]
+  before_action :authorize_plan, except: [:tombstone_page]
+  before_action :set_snapshot, only: %i[show tombstone tombstone_page]
 
   # GET /plans/:plan_id/versions
   def index
@@ -24,6 +24,8 @@ class PlanSnapshotsController < ApplicationController
 
   # GET /plans/:plan_id/versions/:version
   def show
+    render :tombstone, formats: [:html] and return if @snapshot.tombstoned?
+
     result = PlanSnapshots::FixityCheckService.new(@snapshot).call
     if result[:status] == :failed
       render json: {
@@ -50,6 +52,12 @@ class PlanSnapshotsController < ApplicationController
     end
   rescue DoiMintingError => e
     handle_doi_error(e)
+  end
+
+  # GET /plans/:plan_id/versions/:version/tombstone
+  def tombstone_page
+    skip_authorization if respond_to?(:skip_authorization, true)
+    render :tombstone
   end
 
   private
