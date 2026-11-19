@@ -24,7 +24,7 @@ jobs:
     # Install Node
     - uses: actions/setup-node@v7
       with:
-        node-version: '20.15.1'
+        node-version: '24.22.3'
         cache: 'yarn'
 
     # Copy all of the example configs over

@@ -1,6 +1,6 @@
 FROM surnet/alpine-wkhtmltopdf:3.23.4-0.12.6-small AS wkhtmltopdf
 
-FROM ruby:3.1.4-alpine AS builder
+FROM ruby:3.3.14-alpine3.23 AS builder
 
 ENV INSTALL_PATH=/usr/src/app \
     RAILS_ENV=production \
@@ -21,8 +21,10 @@ RUN apk update && apk add --no-cache \
     build-base \
     musl-dev \
     postgresql16-dev \
+    yaml-dev \
+    libffi-dev \
     git \
-    nodejs=20.15.1-r0 \
+    nodejs=24.22.3-r0 \
     yarn \
     shared-mime-info \
     tzdata \
@@ -60,7 +62,7 @@ USER root
 RUN rm -rf ${INSTALL_PATH}/node_modules ${INSTALL_PATH}/tmp/*
 USER dmpuser
 
-FROM ruby:3.1.4-alpine AS app
+FROM ruby:3.3.14-alpine3.23 AS app
 
 ENV INSTALL_PATH=/usr/src/app
 
