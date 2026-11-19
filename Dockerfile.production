@@ -21,6 +21,8 @@ RUN apk update && apk add --no-cache \
     build-base \
     musl-dev \
     postgresql16-dev \
+    yaml-dev \
+    libffi-dev \
     git \
     nodejs=20.15.1-r0 \
     yarn \
