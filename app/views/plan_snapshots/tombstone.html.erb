@@ -1,0 +1,60 @@
+<%
+  snapshot_title = @snapshot.title.presence || @plan.title
+  contributors = @snapshot.contributors.to_a
+  contributor_names = contributors.filter_map { |c| c.respond_to?(:name) ? c.name.presence : c['name'].presence }
+
+  org_names = contributors.filter_map do |c|
+    org = if c.respond_to?(:org)
+            c.org
+          elsif c.respond_to?(:affiliation)
+            c.affiliation
+          elsif c.is_a?(Hash)
+            c['org'] || c['affiliation']
+          end
+
+    if org.respond_to?(:name)
+      org.name.presence
+    elsif org.is_a?(Hash)
+      (org['name'] || org[:name]).presence
+    else
+      org.presence
+    end
+  end
+
+  organization_names = ([@plan.org&.name.presence] + org_names).compact.uniq
+%>
+
+<% title "#{snapshot_title} - Version #{@snapshot.version}" %>
+
+<div class="row">
+  <div class="col-md-10 col-md-offset-1">
+    <div class="alert alert-warning" role="alert">
+      <h2><%= _('This version is no longer available') %></h2>
+      <p>
+        <strong><%= _('Reason for removal:') %></strong>
+        <%= @snapshot.removal_reason %>
+      </p>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= _('Plan Metadata') %></h3>
+      </div>
+      <div class="panel-body">
+        <dl class="dl-horizontal">
+          <dt><%= _('Title') %></dt>
+          <dd><%= snapshot_title %></dd>
+
+          <dt><%= _('Created Date') %></dt>
+          <dd><%= l(@snapshot.created_at.to_date, format: :long) %></dd>
+
+          <dt><%= _('Contributors') %></dt>
+          <dd><%= contributor_names.present? ? contributor_names.join(', ') : _('Not specified') %></dd>
+
+          <dt><%= _('Organizations') %></dt>
+          <dd><%= organization_names.present? ? organization_names.join(', ') : _('Not specified') %></dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
