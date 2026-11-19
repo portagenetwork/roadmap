@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [5.0.2+portage-5.0.0]
 
 ### Added
 
@@ -31,6 +31,8 @@
    - fix(conditional-question): remedy conditional-questions bugs for Rails 7 upgrade [#1461](https://github.com/portagenetwork/roadmap/pull/1461)
 
  - chore(deps): bump immutable from 4.3.6 to 4.3.9 [#1472](https://github.com/portagenetwork/roadmap/pull/1472)
+
+ - chore(deps): bump ruby from 3.1.4 to 3.3.14 [#1484](https://github.com/portagenetwork/roadmap/pull/1484)
 
 ## [4.1.1+portage-4.10.4]
 
