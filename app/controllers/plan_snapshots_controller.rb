@@ -54,6 +54,17 @@ class PlanSnapshotsController < ApplicationController
     handle_doi_error(e)
   end
 
+  # PUT /plans/:plan_id/versions/:version/tombstone
+  def tombstone
+    tombstone_snapshot_transaction
+    redirect_to plan_snapshots_path(@plan), notice: format(
+      _('Version %{version} has been tombstoned and its DOI status has been updated to registered.'),
+      version: @snapshot.version
+    )
+  rescue StandardError => e
+    handle_tombstone_error(e)
+  end
+
   # GET /plans/:plan_id/versions/:version/tombstone
   def tombstone_page
     skip_authorization if respond_to?(:skip_authorization, true)
@@ -91,6 +102,22 @@ class PlanSnapshotsController < ApplicationController
     Rails.logger.error("Version publishing cancelled — DOI minting failed for Plan ##{@plan.id}: #{error.message}")
     redirect_to plan_snapshots_path(@plan),
                 alert: _('Unable to publish version because DOI minting failed.')
+  end
+
+  def tombstone_snapshot_transaction
+    @snapshot.transaction do
+      @snapshot.update!(tombstoned_at: Time.current, removal_reason: params.require(:removal_reason))
+      DoiPublisherService.tombstone_snapshot_doi(
+        @snapshot,
+        tombstone_url: tombstone_plan_snapshot_url(@plan, @snapshot.version)
+      )
+    end
+  end
+
+  def handle_tombstone_error(error)
+    Rails.logger.error("Failed to tombstone snapshot ##{@snapshot.id}: #{error.message}")
+    redirect_to plan_snapshots_path(@plan),
+                alert: format(_('Unable to remove version: %{error}'), error: error.message)
   end
 
   def authorize_plan
