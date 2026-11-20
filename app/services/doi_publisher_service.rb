@@ -42,6 +42,29 @@ class DoiPublisherService
       )
     end
 
+    def tombstone_snapshot_doi(snapshot, tombstone_url:)
+      return if snapshot.identifier.blank?
+
+      clean_id = DoiNormalizerService.bare_doi(snapshot.identifier.value)
+
+      payload = {
+        'data' => {
+          'id' => clean_id,
+          'type' => 'dois',
+          'attributes' => {
+            # 'hide' event changes state from findable to registered
+            'event' => 'hide',
+            'url' => tombstone_url
+          }
+        }
+      }
+
+      ExternalApis::DataciteService.update_doi(
+        doi_id: clean_id,
+        payload: payload
+      )
+    end
+
     private
 
     def previous_snapshot_doi(snapshot)

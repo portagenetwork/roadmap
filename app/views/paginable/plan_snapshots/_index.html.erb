@@ -23,21 +23,76 @@
         <td><%= identifier.type %></td>
         <td><%= snapshot.version %></td>
         <td><%= snapshot.created_at.to_date %></td>
-        <td><%= snapshot.visibility_label %></td>
+        <td><%= snapshot.tombstoned? ? _('tombstoned') : snapshot.visibility_label %></td>
         <td>
-          <div class="dropdown">
-            <button class="btn btn-link dropdown-toggle" type="button"
-                    id="plan-snapshot-<%= snapshot.id %>-actions" data-bs-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="true">
-              <%= _('Actions') %>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="plan-snapshot-<%= snapshot.id %>-actions">
-              <li><%= link_to _('View PDF'), plan_snapshot_path(plan, snapshot, format: :pdf), class: 'dropdown-item  px-3' %></li>
-              <li><%= link_to _('View RDA JSON'), plan_snapshot_path(plan, snapshot, format: :json), class: 'dropdown-item  px-3' %></li>
-            </ul>
-          </div>
+          <% if snapshot.tombstoned? %>
+            <%= _('N/A') %>
+          <% else %>
+            <div class="dropdown">
+              <button class="btn btn-link dropdown-toggle" type="button"
+                      id="plan-snapshot-<%= snapshot.id %>-actions" data-bs-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="true">
+                <%= _('Actions') %>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="plan-snapshot-<%= snapshot.id %>-actions">
+                <li><%= link_to _('View PDF'), plan_snapshot_path(plan, snapshot, format: :pdf), class: 'dropdown-item  px-3' %></li>
+                <li><%= link_to _('View RDA JSON'), plan_snapshot_path(plan, snapshot, format: :json), class: 'dropdown-item  px-3' %></li>
+                <% if PlanSnapshotPolicy.new(current_user, plan).tombstone? && snapshot.identifier.present? %>
+                  <li><hr class="dropdown-divider"></li>
+                  <li>
+                    <button type="button"
+                            class="dropdown-item text-danger px-3"
+                            data-bs-toggle="modal"
+                            data-bs-target="#tombstone-snapshot-<%= snapshot.id %>">
+                      <%= _('Remove version') %>
+                    </button>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
+
+<% if current_user&.can_super_admin? %>
+  <% scope.each do |snapshot| %>
+    <% next if snapshot.tombstoned? || snapshot.identifier.blank? %>
+
+    <div class="modal fade" id="tombstone-snapshot-<%= snapshot.id %>" tabindex="-1"
+         aria-labelledby="tombstone-modal-label-<%= snapshot.id %>" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <%= form_with url: tombstone_plan_snapshot_path(plan, snapshot), method: :patch, local: true do |f| %>
+            <div class="modal-header">
+              <h5 class="modal-title" id="tombstone-modal-label-<%= snapshot.id %>">
+                <%= _('Remove Version %{version}') % { version: snapshot.version } %>
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<%= _('Close') %>"></button>
+            </div>
+
+            <div class="modal-body">
+              <p>
+                <%= _('This will update the DataCite DOI from findable to registered and redirect the DOI link to a tombstone landing page.') %>
+              </p>
+              <div class="mb-3">
+                <%= f.label :removal_reason, _('Reason for removal'), class: 'form-label' %>
+                <%= f.select :removal_reason,
+                             options_for_select(PlanSnapshot::TOMBSTONE_REASONS),
+                             { include_blank: _('Select a reason...') },
+                             { class: 'form-select', required: true } %>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><%= _('Cancel') %></button>
+              <%= f.submit _('Confirm Removal'), class: 'btn btn-danger' %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>

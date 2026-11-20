@@ -5,8 +5,12 @@ require 'rails_helper'
 RSpec.describe 'paginable/plan_snapshots/_index.html.erb', type: :view do
   let(:plan) { create(:plan, :snapshot_ready) }
   let(:snapshot) { create(:plan_snapshot, plan: plan) }
+  let(:user) { create(:user) }
 
   before do
+    current_user = user
+    view.singleton_class.define_method(:current_user) { current_user }
+
     view.extend(Paginable)
     view.instance_variable_set(:@args, {
                                  controller: 'paginable/plan_snapshots',

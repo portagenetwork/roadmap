@@ -9,8 +9,8 @@ class PlanSnapshotsController < ApplicationController
   JSON_GENERATION_ERROR_ATTRIBUTES = %i[rda_json extension_json].freeze
 
   before_action :set_plan
-  before_action :authorize_plan
-  before_action :set_snapshot, only: [:show]
+  before_action :authorize_plan, except: [:tombstone_page]
+  before_action :set_snapshot, only: %i[show tombstone tombstone_page]
 
   # GET /plans/:plan_id/versions
   def index
@@ -24,6 +24,8 @@ class PlanSnapshotsController < ApplicationController
 
   # GET /plans/:plan_id/versions/:version
   def show
+    render :tombstone, formats: [:html] and return if @snapshot.tombstoned?
+
     result = PlanSnapshots::FixityCheckService.new(@snapshot).call
     if result[:status] == :failed
       render json: {
@@ -50,6 +52,24 @@ class PlanSnapshotsController < ApplicationController
     end
   rescue DoiMintingError => e
     handle_doi_error(e)
+  end
+
+  # PUT /plans/:plan_id/versions/:version/tombstone
+  def tombstone
+    tombstone_snapshot_transaction
+    redirect_to plan_snapshots_path(@plan), notice: format(
+      _('Version %{version} has been tombstoned and its DOI status has been updated to registered.'),
+      version: @snapshot.version
+    )
+  rescue StandardError => e
+    handle_tombstone_error(e)
+  end
+
+  # GET /plans/:plan_id/versions/:version/tombstone
+  def tombstone_page
+    return head :not_found unless @snapshot.tombstoned?
+
+    render :tombstone
   end
 
   private
@@ -83,6 +103,22 @@ class PlanSnapshotsController < ApplicationController
     Rails.logger.error("Version publishing cancelled — DOI minting failed for Plan ##{@plan.id}: #{error.message}")
     redirect_to plan_snapshots_path(@plan),
                 alert: _('Unable to publish version because DOI minting failed.')
+  end
+
+  def tombstone_snapshot_transaction
+    @snapshot.transaction do
+      @snapshot.update!(tombstoned_at: Time.current, removal_reason: params.require(:removal_reason))
+      DoiPublisherService.tombstone_snapshot_doi(
+        @snapshot,
+        tombstone_url: tombstone_plan_snapshot_url(@plan, @snapshot.version)
+      )
+    end
+  end
+
+  def handle_tombstone_error(error)
+    Rails.logger.error("Failed to tombstone snapshot ##{@snapshot.id}: #{error.message}")
+    redirect_to plan_snapshots_path(@plan),
+                alert: format(_('Unable to remove version: %{error}'), error: error.message)
   end
 
   def authorize_plan

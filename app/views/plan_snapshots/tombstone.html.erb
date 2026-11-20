@@ -1,0 +1,40 @@
+<%
+  plan_contributors = @plan.contributors.to_a
+  contributor_names = plan_contributors.filter_map(&:name).map(&:strip).reject(&:blank?).uniq
+  contributor_org_names = plan_contributors.map { |c| c.org&.name }
+  all_org_names = [@plan.org&.name] + contributor_org_names
+  organization_names = all_org_names.compact.map(&:strip).reject(&:blank?).uniq
+%>
+
+<div class="row">
+  <div class="col-md-10 col-md-offset-1">
+    <div class="alert alert-warning" role="alert">
+      <h2><%= _('This version is no longer available') %></h2>
+      <p>
+        <strong><%= _('Reason for removal:') %></strong>
+        <%= @snapshot.removal_reason %>
+      </p>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= _('Plan Metadata') %></h3>
+      </div>
+      <div class="panel-body">
+        <dl class="dl-horizontal">
+          <dt><%= _('Title') %></dt>
+          <dd><%= @snapshot.title.presence || @plan.title %></dd>
+
+          <dt><%= _('Created Date') %></dt>
+          <dd><%= l(@snapshot.created_at.to_date, format: :long) %></dd>
+
+          <dt><%= _('Contributors') %></dt>
+          <dd><%= contributor_names.present? ? contributor_names.join(', ') : _('Not specified') %></dd>
+
+          <dt><%= _('Organizations') %></dt>
+          <dd><%= organization_names.present? ? organization_names.join(', ') : _('Not specified') %></dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>

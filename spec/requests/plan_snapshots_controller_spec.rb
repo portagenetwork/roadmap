@@ -105,6 +105,23 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
           expect(response.headers['Content-Disposition']).to include('_v')
         end
       end
+
+      context 'when snapshot is tombstoned' do
+        let(:snapshot) do
+          create(:plan_snapshot, plan: plan, tombstoned_at: Time.current, removal_reason: 'Erroneous registration')
+        end
+
+        it 'renders the HTML tombstone page without running fixity checks' do
+          PlanSnapshots::FixityCheckService.expects(:new).never
+
+          subject
+
+          expect(response).to have_http_status(:ok)
+          expect(response.media_type).to eq('text/html')
+          expect(response.body).to include('This version is no longer available')
+          expect(response.body).to include('Erroneous registration')
+        end
+      end
     end
 
     context 'when fixity check fails' do
@@ -300,6 +317,125 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
         expect { subject }.not_to change(plan.snapshots, :count)
 
         expect(response).to redirect_to(plans_url)
+      end
+    end
+  end
+
+  describe 'PUT /plans/:plan_id/versions/:version/tombstone' do
+    let(:snapshot) { create(:plan_snapshot, plan: plan, visibility: 'publicly_visible') }
+    let(:request_path) { tombstone_plan_snapshot_path(plan, snapshot) }
+    let(:removal_reason) { 'Formal retraction' }
+    let(:patch_params) { { removal_reason: removal_reason } }
+
+    subject { patch request_path, params: patch_params }
+
+    context 'when user is a super admin' do
+      let(:user) { create(:user, :super_admin) }
+
+      it 'tombstones the snapshot, updates the DOI via DataCite, and redirects with a notice' do
+        expected_path = tombstone_plan_snapshot_path(plan, snapshot)
+        DoiPublisherService.expects(:tombstone_snapshot_doi).with(
+          snapshot,
+          has_entry(:tombstone_url, regexp_matches(/#{Regexp.escape(expected_path)}\z/))
+        )
+
+        subject
+
+        snapshot.reload
+        expect(snapshot.tombstoned_at).to be_present
+        expect(snapshot.removal_reason).to eq('Formal retraction')
+        expect(response).to redirect_to(plan_snapshots_path(plan))
+        expect(flash[:notice]).to eq(
+          "Version #{snapshot.version} has been tombstoned and its DOI status has been updated to registered."
+        )
+      end
+
+      context 'when removal_reason is missing' do
+        let(:patch_params) { {} }
+
+        it 'does not tombstone the snapshot and redirects with an alert' do
+          DoiPublisherService.expects(:tombstone_snapshot_doi).never
+
+          subject
+
+          snapshot.reload
+          expect(snapshot.tombstoned_at).to be_nil
+          expect(response).to redirect_to(plan_snapshots_path(plan))
+          expect(flash[:alert]).to include('Unable to remove version:')
+        end
+      end
+
+      context 'when DoiPublisherService raises an error' do
+        before do
+          DoiPublisherService.stubs(:tombstone_snapshot_doi).raises(StandardError, 'DataCite timeout')
+        end
+
+        it 'rolls back the snapshot changes, logs the error, and redirects with an alert' do
+          Rails.logger.expects(:error).with(
+            "Failed to tombstone snapshot ##{snapshot.id}: DataCite timeout"
+          )
+
+          subject
+
+          snapshot.reload
+          expect(snapshot.tombstoned_at).to be_nil
+          expect(snapshot.removal_reason).to be_nil
+          expect(response).to redirect_to(plan_snapshots_path(plan))
+          expect(flash[:alert]).to eq('Unable to remove version: DataCite timeout')
+        end
+      end
+    end
+
+    context 'when user is a plan administrator but not a super admin' do
+      before { authorize_as(:administrator) }
+
+      it 'does not tombstone the snapshot' do
+        DoiPublisherService.expects(:tombstone_snapshot_doi).never
+
+        subject
+
+        expect(snapshot.reload.tombstoned_at).to be_nil
+      end
+
+      include_examples 'an unauthorized request'
+    end
+
+    context 'when unauthorized' do
+      it 'does not tombstone the snapshot' do
+        DoiPublisherService.expects(:tombstone_snapshot_doi).never
+
+        subject
+
+        expect(snapshot.reload.tombstoned_at).to be_nil
+      end
+
+      include_examples 'an unauthorized request'
+    end
+  end
+
+  describe 'GET /plans/:plan_id/versions/:version/tombstone' do
+    let(:snapshot) do
+      create(:plan_snapshot, plan: plan, tombstoned_at: Time.current, removal_reason: 'Sensitive data issue')
+    end
+    let(:request_path) { tombstone_plan_snapshot_path(plan, snapshot) }
+
+    subject { get request_path }
+
+    context 'when unauthenticated' do
+      before { sign_out(user) }
+
+      it 'renders the public tombstone landing page with metadata' do
+        org = create(:org, name: 'University of Alberta')
+        create(:contributor, plan: plan, name: 'Jane Doe', org: org)
+
+        subject
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include('This version is no longer available')
+        expect(response.body).to include('Sensitive data issue')
+        expect(response.body).to include(snapshot.title.presence || plan.title)
+        expect(response.body).to include('Jane Doe')
+        expect(response.body).to include('University of Alberta')
       end
     end
   end
