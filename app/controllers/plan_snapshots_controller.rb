@@ -67,7 +67,8 @@ class PlanSnapshotsController < ApplicationController
 
   # GET /plans/:plan_id/versions/:version/tombstone
   def tombstone_page
-    skip_authorization if respond_to?(:skip_authorization, true)
+    return head :not_found unless @snapshot.tombstoned?
+
     render :tombstone
   end
 
