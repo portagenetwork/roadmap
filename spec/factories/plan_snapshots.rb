@@ -3,31 +3,31 @@
 require_relative '../support/mocks/plan_snapshot_values'
 
 FactoryBot.define do
-# == Schema Information
-#
-# Table name: plan_snapshots
-#
-#  id                :bigint(8)        not null, primary key
-#  checksum          :string(32)       not null
-#  extension_json    :jsonb            not null
-#  fixity_checked_at :datetime
-#  rda_json          :jsonb            not null
-#  version           :integer          not null
-#  visibility        :integer          default(0), not null
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  plan_id           :bigint(8)        not null
-#
-# Indexes
-#
-#  index_plan_snapshots_on_fixity_checked_at    (fixity_checked_at)
-#  index_plan_snapshots_on_plan_id              (plan_id)
-#  index_plan_snapshots_on_plan_id_and_version  (plan_id,version) UNIQUE
-#
-# Foreign Keys
-#
-#  fk_rails_...  (plan_id => plans.id)
-#
+  # == Schema Information
+  #
+  # Table name: plan_snapshots
+  #
+  #  id                :bigint(8)        not null, primary key
+  #  checksum          :string(32)       not null
+  #  extension_json    :jsonb            not null
+  #  fixity_checked_at :datetime
+  #  rda_json          :jsonb            not null
+  #  version           :integer          not null
+  #  visibility        :integer          default(0), not null
+  #  created_at        :datetime         not null
+  #  updated_at        :datetime         not null
+  #  plan_id           :bigint(8)        not null
+  #
+  # Indexes
+  #
+  #  index_plan_snapshots_on_fixity_checked_at    (fixity_checked_at)
+  #  index_plan_snapshots_on_plan_id              (plan_id)
+  #  index_plan_snapshots_on_plan_id_and_version  (plan_id,version) UNIQUE
+  #
+  # Foreign Keys
+  #
+  #  fk_rails_...  (plan_id => plans.id)
+  #
   factory :plan_snapshot do
     association :plan, :snapshot_ready
     version { 1 }

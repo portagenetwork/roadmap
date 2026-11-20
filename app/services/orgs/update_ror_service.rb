@@ -90,7 +90,7 @@ module Orgs
     def best_match_from_results(results)
       # Find the best match
       # (See OrgSelection::SearchService#weigh for how weight is calculated.)
-      results.find { |r| (r[:weight]).zero? } || results.find { |r| r[:weight] == 1 }
+      results.find { |r| r[:weight].zero? } || results.find { |r| r[:weight] == 1 }
     end
 
     def handle_unmatched_result(org, csv)
