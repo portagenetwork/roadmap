@@ -6,12 +6,12 @@
 #
 #  id                      :bigint(8)        not null, primary key
 #  abbreviation            :string
-#  access                  :integer          default("open"), not null
+#  access                  :integer          default(0), not null
 #  byte_size               :bigint(8)
 #  description             :text
 #  display_order           :integer
 #  is_default              :boolean
-#  output_type             :integer          default("dataset"), not null
+#  output_type             :integer          default(3), not null
 #  output_type_description :string
 #  personal_data           :boolean
 #  release_date            :datetime
@@ -38,11 +38,11 @@ class ResearchOutput < ApplicationRecord
   include Identifiable
   include ValidationMessages
 
-  enum output_type: %i[audiovisual collection data_paper dataset event image
-                       interactive_resource model_representation physical_object
-                       service software sound text workflow other]
+  enum :output_type, %i[audiovisual collection data_paper dataset event image
+                        interactive_resource model_representation physical_object
+                        service software sound text workflow other]
 
-  enum access: %i[open embargoed restricted closed]
+  enum :access, %i[open embargoed restricted closed]
 
   # ================
   # = Associations =

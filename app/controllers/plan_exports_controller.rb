@@ -3,6 +3,7 @@
 # Controller for the Plan Download page
 class PlanExportsController < ApplicationController
   include PdfExportable
+
   after_action :verify_authorized
 
   include ConditionsHelper

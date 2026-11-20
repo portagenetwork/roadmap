@@ -20,5 +20,6 @@ module SessionsHelper
       fill_in 'Password', with: user.password.presence || 'StrongP@ssw0rd!@$%#'
       click_button 'Sign in'
     end
+    expect(page).to have_css("a[href='#{destroy_user_session_path}']", visible: :all)
   end
 end

@@ -29,6 +29,7 @@ require:
   - rubocop-performance
 
 AllCops:
+  TargetRubyVersion: 3.4
   # Show the name of the cops being voilated in the feedback
   DisplayCopNames: true
   DisplayStyleGuide: true
@@ -139,6 +140,17 @@ Metrics/BlockLength:
      - 'spec/**/*'
 
   AllowedMethods: ['describe', 'context', 'task', 'namespace']
+
+# ----------
+# - NAMING -
+# ----------
+# TODO: Temporarily disabled for release v5.0.2
+Naming/MethodName:
+  Enabled: false
+# TODO: Temporarily disabled for release v5.0.2
+Naming/PredicateMethod:
+  Enabled: false
+
 # ------------
 # - SECURITY -
 # ------------

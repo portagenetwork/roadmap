@@ -5,6 +5,7 @@ require_relative '../support/mocks/plan_snapshot_values'
 
 RSpec.describe PlanSnapshot, type: :model do
   include PlanSnapshotValues
+
   subject(:plan_snapshot) { described_class.new }
 
   describe 'associations' do

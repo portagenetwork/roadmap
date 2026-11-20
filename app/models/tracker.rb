@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Object that represents a Google Analytics tracker code
 # == Schema Information
 #
 # Table name: trackers

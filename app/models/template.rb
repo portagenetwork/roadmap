@@ -44,7 +44,7 @@ class Template < ApplicationRecord
   # that are meant for external use will be publicly visible. This allows a
   # funder to create 'funder' as well as organisational templates. The default
   # template should also always be publicly_visible.
-  enum visibility: %i[organisationally_visible publicly_visible]
+  enum :visibility, %i[organisationally_visible publicly_visible]
 
   # Stores links as an JSON object:
   # {funder: [{"link":"www.example.com","text":"foo"}, ...],
@@ -478,12 +478,12 @@ class Template < ApplicationRecord
       publishable = false
       # all phases must have atleast 1 section
     end
-    unless phases.map { |p| p.sections.count.positive? }.reduce(true) { |fin, val| fin && val }
+    unless phases.map { |p| p.sections.any? }.reduce(true) { |fin, val| fin && val }
       error += _('You can not publish a template without sections in a phase.  ')
       publishable = false
       # all sections must have atleast one question
     end
-    unless sections.map { |s| s.questions.count.positive? }.reduce(true) { |fin, val| fin && val }
+    unless sections.map { |s| s.questions.any? }.reduce(true) { |fin, val| fin && val }
       error += _('You can not publish a template without questions in a section.  ')
       publishable = false
     end

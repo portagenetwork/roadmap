@@ -6,7 +6,7 @@
 #
 #  id           :integer          not null, primary key
 #  description  :text
-#  formattype   :integer          default("textarea")
+#  formattype   :integer          default(0)
 #  option_based :boolean          default(FALSE)
 #  title        :string
 #  created_at   :datetime         not null
@@ -24,7 +24,7 @@ class QuestionFormat < ApplicationRecord
   # = Attributes =
   # ==============
 
-  enum formattype: FORMAT_TYPES
+  enum :formattype, FORMAT_TYPES
 
   alias_attribute :option_based?, :option_based
 

@@ -119,3 +119,9 @@ yarn-debug.log*
 
 # Ignore staging files in db folder since they can be auto-generated
 /db/seeds/staging
+
+# Ignore briley AWS cloud9 script to start the application
+cloud9-start.sh
+
+# Ignore key files for decrypting credentials and more.
+/config/*.key
