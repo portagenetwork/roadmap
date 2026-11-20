@@ -24,7 +24,7 @@ RUN apk update && apk add --no-cache \
     yaml-dev \
     libffi-dev \
     git \
-    nodejs=24.22.3-r0 \
+    nodejs~=24 \
     yarn \
     shared-mime-info \
     tzdata \
