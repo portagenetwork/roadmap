@@ -97,7 +97,7 @@ module PlanSnapshots
 
       def with_role(role_key)
         uri = ROLE_URIS.fetch(role_key) { raise ArgumentError, "unknown role: #{role_key.inspect}" }
-        contributors.select { |c| c.has_role?(uri) }
+        contributors.select { |c| c.role?(uri) }
       end
 
       private
@@ -127,7 +127,7 @@ module PlanSnapshots
         hash['role']
       end
 
-      def has_role?(uri)
+      def role?(uri)
         Array(role).include?(uri)
       end
 
