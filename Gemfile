@@ -2,31 +2,17 @@
 
 source 'https://rubygems.org'
 
-<<<<<<< HEAD
-ruby '3.3.14'
-=======
 ruby '~> 3.4.0'
 
 # Ruby 3.4 ships CSV separately; exports and statistics require it directly.
 gem 'csv'
->>>>>>> 814ad0262 (Upgrade/ruby 3.4 rails 8.1 (#3624))
 
 # ===========#
 # CORE RAILS #
 # ===========#
 
 # Full-stack web application framework. (http://rubyonrails.org)
-<<<<<<< HEAD
-gem 'rails', '~> 7.1.0'
-
-# TODO: Remove this once Rails addresses the issue with its dependency on mimemagic. Mimemagic had
-#       an MIT license but was using some incompatible GPL license code.
-#       Versions of mimemagic that were yanked: https://rubygems.org/gems/mimemagic/versions
-#       Analysis of the issue: https://www.theregister.com/2021/03/25/ruby_rails_code/
-gem 'mimemagic'
-=======
 gem 'rails', '~> 8.1.0'
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
 
 # Use Puma as the app server
 gem 'puma', group: :puma, require: false
@@ -98,11 +84,7 @@ gem 'flag_shih_tzu' # , "~> 0.3.23"
 
 # Flexible authentication solution for Rails with Warden
 # (https://github.com/plataformatec/devise)
-<<<<<<< HEAD
-gem 'devise', '< 5'
-=======
 gem 'devise', '~> 5.0'
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
 
 # An invitation strategy for Devise (https://github.com/scambra/devise_invitable)
 gem 'devise_invitable'
@@ -227,9 +209,6 @@ gem 'dotenv-rails'
 
 gem 'activerecord_json_validator'
 
-<<<<<<< HEAD
-gem 'mail', '2.8.1'
-=======
 gem 'logger', '~> 1.7'
 gem 'mail'
 
@@ -239,7 +218,6 @@ gem 'net-imap', '~> 0.5'
 gem 'net-pop', '~> 0.1'
 gem 'net-smtp', '~> 0.5'
 gem 'rake', '~> 13.4'
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
 
 # ================================= #
 # ENVIRONMENT SPECIFIC DEPENDENCIES #
@@ -321,13 +299,8 @@ group :ci, :development do
 
   # RuboCop is a Ruby code style checking and code formatting tool. It aims to enforce
   # the community-driven Ruby Style Guide.
-<<<<<<< HEAD
-  # Pinned by DMP Assistant so its offences align with DMPRoadmap
-  gem 'rubocop', '1.66.1' # Pinned to match DMPRoadmap release v4.1.1
-=======
   # Keep Roadmap's established lint rules during the runtime upgrade.
   gem 'rubocop', '~> 1.81.0'
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
 
   # RuboCop rules for detecting and autocorrecting undecorated strings for i18n
   # (gettext and rails-i18n)
