@@ -10,11 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
 ActiveRecord::Schema[7.1].define(version: 2026_05_07_211333) do
-=======
-ActiveRecord::Schema[8.1].define(version: 2025_01_15_102816) do
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -119,7 +115,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_01_15_102816) do
     t.index ["org_id"], name: "index_departments_on_org_id"
   end
 
-<<<<<<< HEAD
   create_table "dmptemplate_translations", id: :serial, force: :cascade do |t|
     t.integer "dmptemplate_id"
     t.string "locale", null: false
@@ -149,9 +144,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_01_15_102816) do
   end
 
   create_table "exported_plans", id: :serial, force: :cascade do |t|
-=======
-  create_table "exported_plans", id: :integer, force: :cascade do |t|
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
     t.integer "plan_id"
     t.integer "user_id"
     t.string "format"
@@ -201,7 +193,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_01_15_102816) do
     t.index ["org_id"], name: "index_guidance_groups_on_org_id"
   end
 
-<<<<<<< HEAD
   create_table "guidance_in_group", id: false, force: :cascade do |t|
     t.integer "guidance_id", null: false
     t.integer "guidance_group_id", null: false
@@ -219,9 +210,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_01_15_102816) do
   end
 
   create_table "guidances", id: :serial, force: :cascade do |t|
-=======
-  create_table "guidances", id: :integer, force: :cascade do |t|
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
     t.text "text"
     t.integer "guidance_group_id"
     t.datetime "created_at", precision: nil, null: false
@@ -326,7 +314,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_01_15_102816) do
     t.boolean "enabled", default: true
   end
 
-<<<<<<< HEAD
   create_table "oauth_access_grants", force: :cascade do |t|
     t.bigint "resource_owner_id", null: false
     t.bigint "application_id", null: false
@@ -389,9 +376,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_01_15_102816) do
   end
 
   create_table "org_token_permissions", id: :serial, force: :cascade do |t|
-=======
-  create_table "org_token_permissions", id: :integer, force: :cascade do |t|
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
     t.integer "org_id"
     t.integer "token_permission_type_id"
     t.datetime "created_at", precision: nil
@@ -400,7 +384,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_01_15_102816) do
     t.index ["token_permission_type_id"], name: "fk_rails_2aa265f538"
   end
 
-<<<<<<< HEAD
   create_table "organisation_types", id: :serial, force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -434,9 +417,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_01_15_102816) do
   end
 
   create_table "orgs", id: :serial, force: :cascade do |t|
-=======
-  create_table "orgs", id: :integer, force: :cascade do |t|
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
     t.string "name"
     t.string "abbreviation"
     t.string "target_url"
@@ -468,7 +448,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_01_15_102816) do
     t.datetime "updated_at", precision: nil, null: false
   end
 
-<<<<<<< HEAD
   create_table "phase_translations", id: :serial, force: :cascade do |t|
     t.integer "phase_id"
     t.string "locale", null: false
@@ -481,9 +460,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_01_15_102816) do
   end
 
   create_table "phases", id: :serial, force: :cascade do |t|
-=======
-  create_table "phases", id: :integer, force: :cascade do |t|
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
     t.string "title"
     t.text "description"
     t.integer "number"
@@ -496,7 +472,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_01_15_102816) do
     t.index ["versionable_id"], name: "index_phases_on_versionable_id"
   end
 
-<<<<<<< HEAD
   create_table "plan_sections", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.integer "section_id"
@@ -522,9 +497,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_01_15_102816) do
   end
 
   create_table "plans", id: :serial, force: :cascade do |t|
-=======
-  create_table "plans", id: :integer, force: :cascade do |t|
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
     t.string "title"
     t.integer "template_id"
     t.datetime "created_at", precision: nil
@@ -628,7 +600,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_01_15_102816) do
     t.index ["versionable_id"], name: "index_question_options_on_versionable_id"
   end
 
-<<<<<<< HEAD
   create_table "question_translations", id: :serial, force: :cascade do |t|
     t.integer "question_id"
     t.string "locale", null: false
@@ -641,9 +612,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_01_15_102816) do
   end
 
   create_table "questions", id: :serial, force: :cascade do |t|
-=======
-  create_table "questions", id: :integer, force: :cascade do |t|
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
     t.text "text"
     t.text "default_value"
     t.integer "number"
@@ -741,7 +709,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_01_15_102816) do
     t.index ["user_id"], name: "index_roles_on_user_id"
   end
 
-<<<<<<< HEAD
   create_table "section_translations", id: :serial, force: :cascade do |t|
     t.integer "section_id"
     t.string "locale", null: false
@@ -754,9 +721,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_01_15_102816) do
   end
 
   create_table "sections", id: :serial, force: :cascade do |t|
-=======
-  create_table "sections", id: :integer, force: :cascade do |t|
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
     t.string "title"
     t.text "description"
     t.integer "number"
@@ -769,22 +733,8 @@ ActiveRecord::Schema[8.1].define(version: 2025_01_15_102816) do
     t.index ["versionable_id"], name: "index_sections_on_versionable_id"
   end
 
-<<<<<<< HEAD
   create_table "settings", id: :serial, force: :cascade do |t|
     t.string "var", null: false
-=======
-  create_table "sessions", id: :integer, force: :cascade do |t|
-    t.string "session_id", limit: 64, null: false
-    t.text "data"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
-    t.index ["updated_at"], name: "index_sessions_on_updated_at"
-  end
-
-  create_table "settings", id: :integer, force: :cascade do |t|
-    t.string "var"
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
     t.text "value"
     t.integer "target_id", null: false
     t.string "target_type", null: false
@@ -877,7 +827,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_01_15_102816) do
     t.index ["org_id"], name: "index_trackers_on_org_id"
   end
 
-<<<<<<< HEAD
   create_table "user_role_types", id: :serial, force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -900,9 +849,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_01_15_102816) do
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
-=======
-  create_table "users", id: :integer, force: :cascade do |t|
->>>>>>> ff3c4241c (Upgrade/ruby 3.4 rails 8.1 (#3624))
     t.string "firstname"
     t.string "surname"
     t.string "email", limit: 80, default: "", null: false
