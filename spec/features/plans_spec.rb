@@ -12,8 +12,8 @@ RSpec.describe 'Plans', type: :feature do
                   name: 'Test Research Org', templates: 1)
     # Create the required default_funder org for DMP Assistant
     @funding_org = create(:org, :funder)
-    @original_default_funder_id = Rails.application.config.default_funder_id
-    Rails.application.config.default_funder_id = @funding_org.id
+    @original_default_funder_id = Rails.configuration.x.application.default_funder_id
+    Rails.configuration.x.application.default_funder_id = @funding_org.id
     # Create the required default template (also serves as an ALLIANCE GENERAL TEMPLATE)
     @default_template = create(:template, :default, :published, org_id: @funding_org.id)
     # Create an ADDITIONAL ALLIANCE TEMPLATE
@@ -23,7 +23,7 @@ RSpec.describe 'Plans', type: :feature do
   end
 
   after do
-    Rails.application.config.default_funder_id = @original_default_funder_id
+    Rails.configuration.x.application.default_funder_id = @original_default_funder_id
   end
 
   it 'User creates a new Plan', :js do

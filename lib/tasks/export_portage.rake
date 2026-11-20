@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+FUNDER_ORG_ID = ENV.fetch('FUNDER_ORG_ID', nil).to_i
+ENGLISH_ORG_ID = ENV.fetch('ENGLISH_ORG_ID', nil).to_i
+FRENCH_ORG_ID = ENV.fetch('FRENCH_ORG_ID', nil).to_i
+
 namespace :export_production_data do
   desc 'Generate seed files'
   # The procedure can be adjusted depending on whether the task will be run in a different server first
@@ -38,7 +42,7 @@ namespace :export_production_data do
       created = 6.years.ago # hard-code org creation date because it must be created before all templates/plans created
       Org.all.each do |org|
         # feedback message must fit the default language
-        if org.language_id == 2 || org.id == Rails.application.secrets.french_org_id.to_i
+        if org.language_id == 2 || org.id == FRENCH_ORG_ID
           org.feedback_msg = '<p>Bonjour %{user_name}.</p>
                               <br><p>Votre plan "%{plan_name}" a été soumis pour commentaires d’un administrateur de votre organisation.
                               <br>Si vous avez des questions concernant cette action, veuillez communiquer avec nous à %{organisation_email}.
@@ -52,7 +56,7 @@ namespace :export_production_data do
         end
         # Only FUNDER_ORG(Portage) keep its original information
         # Only Portage keep its original name and all other information
-        if org.id.to_i != Rails.application.secrets.funder_org_id.to_i
+        if org.id.to_i != FUNDER_ORG_ID
           org.created_at = created
           org.target_url = Org.column_defaults['target_url']
           org.logo_uid = Org.column_defaults['logo_uid']
@@ -61,13 +65,13 @@ namespace :export_production_data do
           org.contact_email = Faker::Internet.email
           org.links = Org.column_defaults['links']
           org.contact_name = Faker::Name.name
-          if org.id == Rails.application.secrets.english_org_id.to_i
+          if org.id == ENGLISH_ORG_ID
             org.name = 'Test Organization'
             org.contact_email = 'dmp.test.user.admin@engagedri.ca'
             org.contact_name = 'Test User'
             org.abbreviation = 'IEO'
             org.language_id = 1 # English Default
-          elsif org.id == Rails.application.secrets.french_org_id.to_i
+          elsif org.id == FRENCH_ORG_ID
             org.name = 'Organisation de test'
             org.contact_email = 'dmp.utilisateur.test.admin@engagedri.ca'
             org.contact_name = 'Utilisateur test'
@@ -175,8 +179,7 @@ namespace :export_production_data do
     file_name = 'db/seeds/sandbox/seeds_5.rb'
     FileUtils.rm_f(file_name)
     excluded_keys = %w[created_at updated_at start_date end_date]
-    org_list = [Rails.application.secrets.funder_org_id.to_i, Rails.application.secrets.english_org_id.to_i,
-                Rails.application.secrets.french_org_id.to_i]
+    org_list = [FUNDER_ORG_ID, ENGLISH_ORG_ID, FRENCH_ORG_ID]
     File.open(file_name, 'a') do |f|
       Plan.where(org_id: org_list).all.each_with_index do |plan, index|
         plan.title = "Test Plan #{index}"
@@ -191,9 +194,9 @@ namespace :export_production_data do
         f.puts "Plan.create(#{serialized})"
         # import related roles
         Role.where(plan_id: plan.id).all.each do |role|
-          role.user_id = if plan.org_id == Rails.application.secrets.funder_org_id.to_i # change all user id to 1
+          role.user_id = if plan.org_id == FUNDER_ORG_ID # change all user id to 1
                            1
-                         elsif plan.org_id == Rails.application.secrets.english_org_id.to_i # change all user id to 2
+                         elsif plan.org_id == ENGLISH_ORG_ID # change all user id to 2
                            2
                          else # change all user id to 3
                            3

@@ -4,13 +4,13 @@
 # Many of these configuration options can be set straight in your model.
 # rubocop:disable Metrics/BlockLength
 Devise.setup do |config|
-  config.secret_key = Rails.application.secrets.devise_secret_key
+  config.secret_key = Rails.configuration.x.sealed_secrets.devise_secret_key
 
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class with
   # default "from" parameter.
-  config.mailer_sender = Rails.application.secrets.mailer_from
+  config.mailer_sender = Rails.configuration.x.application.mailer_from
 
   # Configure the class responsible to send e-mails.
   # config.mailer = "Devise::Mailer"
@@ -98,7 +98,7 @@ Devise.setup do |config|
   # export RAILS_MASTER_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   # and then editing the credentials file with
   # EDITOR=your_fave_editor rails credentials:edit
-  config.pepper = Rails.application.secrets.devise_pepper
+  config.pepper = Rails.configuration.x.sealed_secrets.devise_pepper
 
   # ==> Configuration for :invitable
   # The period the generated invitation token is valid, after
@@ -260,12 +260,12 @@ Devise.setup do |config|
 
   # Any entries here MUST match a corresponding entry in the identifier_schemes table as
   # well as an identifier_schemes.schemes section in each locale file!
-  OmniAuth.config.full_host = Rails.application.secrets.omniauth_full_host
+  OmniAuth.config.full_host = Rails.configuration.x.omniauth.full_host
 
-  config.omniauth :orcid, Rails.application.secrets.orcid_client_id,
-                  Rails.application.secrets.orcid_client_secret,
+  config.omniauth :orcid, Rails.configuration.x.sealed_secrets.orcid_client_id,
+                  Rails.configuration.x.sealed_secrets.orcid_client_secret,
                   {
-                    member: Rails.application.secrets.orcid_member
+                    member: Rails.configuration.x.omniauth.orcid_client_member
                   }
 
   config.omniauth :shibboleth,
@@ -292,9 +292,9 @@ Devise.setup do |config|
       port: 443,
       scheme: "https",
       host: "cilogon.org",
-      identifier: Rails.application.secrets.cilogon_client_id,
-      secret: Rails.application.secrets.cilogon_secret_key,
-      redirect_uri: "#{Rails.application.secrets.omniauth_full_host}/users/auth/openid_connect/callback"
+      identifier: Rails.configuration.x.sealed_secrets.cilogon_client_id,
+      secret: Rails.configuration.x.sealed_secrets.cilogon_secret_key,
+      redirect_uri: "#{Rails.configuration.x.omniauth.full_host}/users/auth/openid_connect/callback"
     }
   }
 

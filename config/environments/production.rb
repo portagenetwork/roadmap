@@ -79,12 +79,12 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address: Rails.application.secrets.smtp_address,
-    port: Rails.application.secrets.smtp_port,
-    domain: Rails.application.secrets.smtp_domain,
-    user_name: Rails.application.secrets.smtp_user_name,
-    password: Rails.application.secrets.smtp_password,
-    authentication: Rails.application.secrets.smtp_authentication || 'plain',
+    address: ENV.fetch('SMTP_ADDRESS', nil),
+    port: ENV.fetch('SMTP_PORT', nil),
+    domain: ENV.fetch('SMTP_DOMAIN', nil),
+    user_name: Rails.configuration.x.sealed_secrets.smtp_user_name,
+    password: Rails.configuration.x.sealed_secrets.smtp_password,
+    authentication: ENV.fetch('SMTP_AUTHENTICATION', 'plain'),
     enable_starttls_auto: true
   }
 
@@ -95,7 +95,7 @@ Rails.application.configure do
   # to access the site and receive a 'Blocked host' error then you will need to
   # set this environment variable
   # Convert comma-separated string to array
-  dmproadmap_hosts = Rails.application.secrets.dmproadmap_host.to_s.split(',').map(&:strip)
+  dmproadmap_hosts = Rails.configuration.x.application.dmproadmap_host.to_s.split(',').map(&:strip)
   dmproadmap_hosts.each do |host|
     config.hosts << host
   end
@@ -107,4 +107,4 @@ Rails.application.configure do
 end
 # rubocop:enable Metrics/BlockLength
 # Used by Rails' routes url_helpers (typically when including a link in an email)
-Rails.application.routes.default_url_options[:host] = Rails.application.secrets.dmproadmap_host
+Rails.application.routes.default_url_options[:host] = Rails.configuration.x.application.dmproadmap_host

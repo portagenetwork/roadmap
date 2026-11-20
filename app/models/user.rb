@@ -528,7 +528,7 @@ class User < ApplicationRecord
   #
   # Returns string
   def id_as_hash
-    Digest::SHA2.hexdigest("#{Rails.application.secrets.secret_key_base}_#{id}")
+    Digest::SHA2.hexdigest("#{Rails.configuration.x.sealed_secrets.secret_key_base}_#{id}")
   end
 
   private

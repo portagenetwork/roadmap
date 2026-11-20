@@ -5,6 +5,8 @@ require 'recaptcha/rails'
 require 'csv'
 require 'nulldb/rails'
 require_relative "boot"
+require_relative '../lib/sealed_secrets'
+require_relative '../lib/env_vars'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -34,17 +36,10 @@ module DMPRoadmap
     # incompatible with the Rails module/class naming conventions
     Rails.autoloaders.main.ignore(config.root.join('lib/generators'))
 
-    # CVE-2022-32224: add some compatibility with YAML.safe_load
-    # Rails 5,6,7 are using YAML.safe_load as the default YAML deserializer
-    config.active_record.yaml_column_permitted_classes = [ActiveSupport::HashWithIndifferentAccess, Symbol, Date, Time]
-
     # HTML tags that are allowed to pass through `sanitize`.
     config.action_view.sanitized_allowed_tags = %w[
       p br strong em a table thead tbody tr td th tfoot caption ul ol li
     ]
-    # CVE-2022-32224: add some compatibility with YAML.safe_load
-    # Rails 5,6,7 are using YAML.safe_load as the default YAML deserializer
-    config.active_record.yaml_column_permitted_classes = [ActiveSupport::HashWithIndifferentAccess, Symbol, Date, Time]
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
@@ -58,8 +53,24 @@ module DMPRoadmap
     #       moving our helper methods into Presenters if it makes sense
     config.action_controller.include_all_helpers = true
 
-    # Set the default host for mailer URLs
-    config.action_mailer.default_url_options = { host: Rails.application.secrets.mailer_default_host }
+    # Action mailer settings
+    action_mailer_config = EnvVars.load_action_mailer
+    config.action_mailer.default_url_options = {
+      host: action_mailer_config[:host]
+    }
+
+    # Application-level settings
+    config.x.application = ActiveSupport::OrderedOptions.new.merge!(EnvVars.load_application)
+
+    # OmniAuth settings
+    config.x.omniauth = ActiveSupport::OrderedOptions.new.merge!(EnvVars.load_omniauth)
+
+    # Feature flags
+    config.x.features = ActiveSupport::OrderedOptions.new.merge!(EnvVars.load_features)
+
+    # Store the sealed secrets in config.x.sealed_secrets, making them accessible
+    # throughout the application (e.g. config.x.sealed_secrets.database_url).
+    config.x.sealed_secrets = ActiveSupport::OrderedOptions.new.merge!(SealedSecrets.load)
 
     # Enable shibboleth as an alternative authentication method
     # Requires server configuration and omniauth shibboleth provider configuration
@@ -99,9 +110,8 @@ module DMPRoadmap
     # DMP Assistant works with the assumption that the user will not use a
     # specific funder. The view for choosing a funder when creating a plan
     # removed the option for selecting a funder. A funder is needed to show the
-    # customized templates. For this reason we are specifying in the
-    # documentation the funder that
-    config.default_funder_id = Rails.application.secrets.default_funder_id.to_i
+    # customized templates.
+    # NOTE: This is now configured via config.x.application.default_funder_id
 
     # apply application styling to doorkeeper views
     config.to_prepare do
