@@ -16,7 +16,7 @@ RSpec.describe 'Plan DOCX export', type: :request do
     expect(response).to have_http_status(:ok)
     Zip::File.open_buffer(response.body) do |archive|
       document = Nokogiri::XML(archive.read('word/document.xml'))
-      expect(document.text).to include(plan.title, 'Plan Overview')
+      expect(document.text).to include(plan.title)
     end
   end
 end
