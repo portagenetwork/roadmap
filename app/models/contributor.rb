@@ -16,7 +16,6 @@
 #
 # Indexes
 #
-#  index_contrib_id_and_org_id    (name,id,org_id)
 #  index_contributors_on_email    (email)
 #  index_contributors_on_org_id   (org_id)
 #  index_contributors_on_plan_id  (plan_id)
