@@ -8,9 +8,8 @@
 #  active            :boolean
 #  context           :integer
 #  description       :string
-#  external_service  :string
-#  identifier_prefix :string
-#  logo_url          :string
+#  identifier_prefix :text
+#  logo_url          :text
 #  name              :string
 #  created_at        :datetime
 #  updated_at        :datetime

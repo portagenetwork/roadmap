@@ -25,8 +25,6 @@
 #  last_api_access        :datetime
 #  last_sign_in_at        :datetime
 #  last_sign_in_ip        :string
-#  ldap_password          :string
-#  ldap_username          :string
 #  other_organisation     :string
 #  recovery_email         :string
 #  remember_created_at    :datetime

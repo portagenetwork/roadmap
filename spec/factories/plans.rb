@@ -19,7 +19,6 @@
 #  visibility                 :integer          default(3), not null
 #  created_at                 :datetime
 #  updated_at                 :datetime
-#  api_client_id              :integer
 #  funder_id                  :integer
 #  grant_id                   :integer
 #  org_id                     :integer
@@ -28,12 +27,11 @@
 #
 # Indexes
 #
-#  index_plans_on_api_client_id  (api_client_id)
-#  index_plans_on_fos_id         (research_domain_id)
-#  index_plans_on_funder_id      (funder_id)
-#  index_plans_on_grant_id       (grant_id)
-#  index_plans_on_org_id         (org_id)
-#  index_plans_on_template_id    (template_id)
+#  index_plans_on_funder_id           (funder_id)
+#  index_plans_on_grant_id            (grant_id)
+#  index_plans_on_org_id              (org_id)
+#  index_plans_on_research_domain_id  (research_domain_id)
+#  index_plans_on_template_id         (template_id)
 #
 # Foreign Keys
 #

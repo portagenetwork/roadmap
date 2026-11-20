@@ -4,28 +4,22 @@
 #
 # Table name: api_clients
 #
-#  id              :integer          not null, primary key
-#  callback_method :integer
-#  callback_uri    :string
-#  client_secret   :string           not null
-#  confidential    :boolean          default(TRUE)
-#  contact_email   :string
-#  contact_name    :string
-#  description     :string
-#  homepage        :string
-#  last_access     :datetime
-#  name            :string           not null
-#  redirect_uri    :text
-#  scopes          :string           default(""), not null
-#  trusted         :boolean          default(FALSE)
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  client_id       :string           not null
-#  org_id          :integer
+#  id            :integer          not null, primary key
+#  client_secret :string           not null
+#  contact_email :string           not null
+#  contact_name  :string
+#  description   :string
+#  homepage      :string
+#  last_access   :datetime
+#  name          :string           not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  client_id     :string           not null
+#  org_id        :integer
 #
 # Indexes
 #
-#  index_oauth_applications_on_name  (name)
+#  index_api_clients_on_name  (name)
 #
 
 FactoryBot.define do
