@@ -28,12 +28,9 @@ RUN apk update && apk add --no-cache \
     nodejs~=24 \
     yarn \
     shared-mime-info \
-    tzdata \
-    ca-certificates
+    tzdata
 
-RUN apk upgrade --no-cache \
-    ca-certificates \
-    ca-certificates-bundle
+RUN apk upgrade --no-cache
 
 WORKDIR $INSTALL_PATH
 
@@ -105,9 +102,7 @@ RUN apk update && apk add --no-cache \
   && rm -rf /tmp/* \
   && apk del .build-deps
 
-RUN apk upgrade --no-cache \
-    ca-certificates \
-    ca-certificates-bundle
+RUN apk upgrade --no-cache
 
 WORKDIR $INSTALL_PATH
 
@@ -155,6 +150,8 @@ ENTRYPOINT ["/usr/bin/entrypoint.sh"]
 FROM nginx:1.31.3-alpine AS assets
 
 ENV INSTALL_PATH=/usr/src/app
+
+RUN apk upgrade --no-cache
 
 # Create non-root user
 RUN addgroup -g 3000 -S dmpgroup && \
