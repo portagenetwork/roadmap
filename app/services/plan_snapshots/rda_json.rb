@@ -127,7 +127,7 @@ module PlanSnapshots
         hash['role']
       end
 
-      def has_role?(uri) # rubocop:disable Naming/PredicateName
+      def has_role?(uri)
         Array(role).include?(uri)
       end
 
