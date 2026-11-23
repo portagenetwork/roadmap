@@ -144,6 +144,16 @@ global:
 # type: object
 # @schema
 app:
+
+  # @schema
+  # type: string
+  # @schema
+  # -- Shared HTTP path for application health probes
+  #  (Must match an application route; the default Rails health route is /up.
+  #  A different path must also be reflected in production host authorization.)
+  # @section -- Application Configuration
+  healthCheckPath: /up
+
   # @schema
   # type: integer
   # minimum: 1
@@ -317,9 +327,6 @@ app:
   # -- Startup probe configuration for the app
   # @section -- Application Configuration
   startupProbe:
-    httpGet:
-      path: /up
-      port: http
     periodSeconds: 10
     timeoutSeconds: 10
     failureThreshold: 48
@@ -328,9 +335,6 @@ app:
   # -- Liveness probe configuration for the app
   # @section -- Application Configuration
   livenessProbe:
-    httpGet:
-      path: /up
-      port: http
     periodSeconds: 20
     timeoutSeconds: 10
     failureThreshold: 6
@@ -339,9 +343,6 @@ app:
   # -- Readiness probe configuration for the app
   # @section -- Application Configuration
   readinessProbe:
-    httpGet:
-      path: /up
-      port: http
     periodSeconds: 20
     timeoutSeconds: 10
     failureThreshold: 6
