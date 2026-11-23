@@ -20,14 +20,14 @@ RSpec.describe 'Email Confirmation', type: :feature do
     user = create(:user, :unconfirmable)
 
     # Actions
-    sign_in(user)
+    sign_in(user, expect_signed_in: false)
     user.reload
 
     # Expectations
     expectations_for_unconfirmable_user_after_sign_in_attempt(user)
 
     # Actions
-    sign_in(user)
+    sign_in(user, expect_signed_in: false)
 
     # Expectations
     expect_request_new_confirmation_link_message
