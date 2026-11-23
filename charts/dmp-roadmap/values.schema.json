@@ -130,7 +130,7 @@
               "additionalProperties": false,
               "properties": {
                 "path": {
-                  "default": "/api/v1/heartbeat",
+                  "default": "/up",
                   "required": [],
                   "title": "path",
                   "type": "string"
@@ -230,7 +230,7 @@
               "additionalProperties": false,
               "properties": {
                 "path": {
-                  "default": "/api/v1/heartbeat",
+                  "default": "/up",
                   "required": [],
                   "title": "path",
                   "type": "string"
@@ -520,7 +520,7 @@
               "additionalProperties": false,
               "properties": {
                 "path": {
-                  "default": "/api/v1/heartbeat",
+                  "default": "/up",
                   "required": [],
                   "title": "path",
                   "type": "string"
