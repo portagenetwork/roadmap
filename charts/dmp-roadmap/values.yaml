@@ -318,7 +318,7 @@ app:
   # @section -- Application Configuration
   startupProbe:
     httpGet:
-      path: /api/v1/heartbeat
+      path: /up
       port: http
     periodSeconds: 10
     timeoutSeconds: 10
@@ -329,7 +329,7 @@ app:
   # @section -- Application Configuration
   livenessProbe:
     httpGet:
-      path: /api/v1/heartbeat
+      path: /up
       port: http
     periodSeconds: 20
     timeoutSeconds: 10
@@ -340,7 +340,7 @@ app:
   # @section -- Application Configuration
   readinessProbe:
     httpGet:
-      path: /api/v1/heartbeat
+      path: /up
       port: http
     periodSeconds: 20
     timeoutSeconds: 10
