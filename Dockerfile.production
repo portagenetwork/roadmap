@@ -141,9 +141,6 @@ USER dmpuser
 
 EXPOSE 3000
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-    CMD wget -qO- ${BASE_URL}/api/v1/heartbeat || exit 1
-
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]
 
 # nginx stage to serve static assets
