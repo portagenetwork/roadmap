@@ -114,6 +114,8 @@ COPY --from=wkhtmltopdf /bin/wkhtmltopdf /usr/bin/wkhtmltopdf
 # Copy data for timezone and mime types from builder stage
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=builder /usr/share/mime /usr/share/mime
+# Copy Bundler and its configuration from the builder stage
+COPY --from=builder /usr/local/bundle /usr/local/bundle
 # Copy application code from builder stage
 COPY --from=builder --chown=dmpuser:dmpgroup $INSTALL_PATH $INSTALL_PATH
 
