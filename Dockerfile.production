@@ -6,6 +6,7 @@ ENV INSTALL_PATH=/usr/src/app \
     RAILS_ENV=production \
     NODE_ENV=production \
     BUNDLE_WITHOUT='development:test:mysql:aws:sandbox:ci:wkhtmltopdf' \
+    BUNDLE_USER_HOME=/usr/src/app/tmp/bundle \
     # Dummy value to enable `rake assets:precompile` without a real db
     DATABASE_URL=nulldb://nohost
 
@@ -64,7 +65,8 @@ USER dmpuser
 
 FROM ruby:3.4.13-alpine AS app
 
-ENV INSTALL_PATH=/usr/src/app
+ENV INSTALL_PATH=/usr/src/app \
+    BUNDLE_USER_HOME=/usr/src/app/tmp/bundle
 
 # Create non-root user with same UID/GID as builder
 RUN addgroup -g 3000 -S dmpgroup && \
