@@ -1,27 +1,7 @@
 <%
-  snapshot_title = @snapshot.title.presence || @plan.title
-  contributors = @snapshot.contributors.to_a
-  contributor_names = contributors.filter_map { |c| c.respond_to?(:name) ? c.name.presence : c['name'].presence }
-
-  org_names = contributors.filter_map do |c|
-    org = if c.respond_to?(:org)
-            c.org
-          elsif c.respond_to?(:affiliation)
-            c.affiliation
-          elsif c.is_a?(Hash)
-            c['org'] || c['affiliation']
-          end
-
-    if org.respond_to?(:name)
-      org.name.presence
-    elsif org.is_a?(Hash)
-      (org['name'] || org[:name]).presence
-    else
-      org.presence
-    end
-  end
-
-  organization_names = ([@plan.org&.name.presence] + org_names).compact.uniq
+  snapshot_title = snapshot_display_title(@snapshot)
+  contributor_names = snapshot_contributor_names(@snapshot)
+  organization_names = snapshot_organization_names(@snapshot, @plan)
 %>
 
 <% title "#{snapshot_title} - Version #{@snapshot.version}" %>
