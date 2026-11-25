@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Changed
+
  - Remove organisational visibility from plan snapshots [#1452](https://github.com/portagenetwork/roadmap/pull/1452)
 
 ### Dependency Updates
@@ -21,7 +22,9 @@
 
  - chore(deps): bump nginx from 1.31.7-alpine to 1.31.8-alpine [#1449](https://github.com/portagenetwork/roadmap/pull/1449)
 
-  - chore(deps): bump surnet/alpine-wkhtmltopdf from 3.23.4-0.12.6-small to 3.24.3-0.12.6-small [#1448](https://github.com/portagenetwork/roadmap/pull/1448)
+ - chore(deps): bump surnet/alpine-wkhtmltopdf from 3.23.4-0.12.6-small to 3.24.3-0.12.6-small [#1448](https://github.com/portagenetwork/roadmap/pull/1448)
+
+ - chore(deps): bump nginx from 1.31.8-alpine to 1.31.9-alpine [#1488](https://github.com/portagenetwork/roadmap/pull/1488)
 
 ### Fixed
 
