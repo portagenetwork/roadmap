@@ -26,6 +26,8 @@
 
  - chore(deps): bump nginx from 1.31.8-alpine to 1.31.9-alpine [#1488](https://github.com/portagenetwork/roadmap/pull/1488)
 
+ - chore(deps): bump docker/login-action from 4.7.0 to 4.8.0 [#1465](https://github.com/portagenetwork/roadmap/pull/1465)
+
 ### Fixed
 
  - fix(perms): restrict `manage_oauth_apps` management to super admins [#1460](https://github.com/portagenetwork/roadmap/pull/1460)
