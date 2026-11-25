@@ -77,7 +77,9 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
       it 'defaults to JSON when no format is provided' do
         subject
 
-        expect(request_path).to end_with("/plans/#{plan.id}/versions/#{snapshot.version}")
+        expect(request_path).to eq(plan_snapshot_path(plan, snapshot))
+        expect(request_path).to include("/plans/#{plan.id}/")
+        expect(request_path).to end_with("/#{snapshot.version}")
         expect(response).to have_http_status(:ok)
         expect(response.media_type).to eq('application/json')
       end
@@ -425,17 +427,16 @@ RSpec.describe 'PlanSnapshotsController', type: :request do
       before { sign_out(user) }
 
       it 'renders the public tombstone landing page with metadata' do
-        org = create(:org, name: 'University of Alberta')
-        create(:contributor, plan: plan, name: 'Jane Doe', org: org)
-
         subject
+
+        expected_contributor = snapshot.contributors.first.name
 
         expect(response).to have_http_status(:ok)
         expect(response.body).to include('This version is no longer available')
         expect(response.body).to include('Sensitive data issue')
         expect(response.body).to include(snapshot.title.presence || plan.title)
-        expect(response.body).to include('Jane Doe')
-        expect(response.body).to include('University of Alberta')
+        expect(response.body).to include(expected_contributor)
+        expect(response.body).to include(plan.org.name)
       end
     end
   end
