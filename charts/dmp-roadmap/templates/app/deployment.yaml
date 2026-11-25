@@ -59,7 +59,7 @@ spec:
               protocol: TCP
           startupProbe:
             httpGet:
-              path: /api/v1/heartbeat
+              path: {{ .Values.app.healthCheckPath }}
               port: {{ .Values.app.service.targetPort }}
             periodSeconds: {{ .Values.app.startupProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.app.startupProbe.timeoutSeconds }}
@@ -67,7 +67,7 @@ spec:
             successThreshold: {{ .Values.app.startupProbe.successThreshold }}
           livenessProbe:
             httpGet:
-              path: /api/v1/heartbeat
+              path: {{ .Values.app.healthCheckPath }}
               port: {{ .Values.app.service.targetPort }}
             periodSeconds: {{ .Values.app.livenessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.app.livenessProbe.timeoutSeconds }}
@@ -75,7 +75,7 @@ spec:
             successThreshold: {{ .Values.app.livenessProbe.successThreshold }}
           readinessProbe:
             httpGet:
-              path: /api/v1/heartbeat
+              path: {{ .Values.app.healthCheckPath }}
               port: {{ .Values.app.service.targetPort }}
             periodSeconds: {{ .Values.app.readinessProbe.periodSeconds }}
             timeoutSeconds: {{ .Values.app.readinessProbe.timeoutSeconds }}

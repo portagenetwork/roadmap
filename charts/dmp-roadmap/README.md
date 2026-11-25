@@ -382,16 +382,17 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 | app.autoscaling.targetCPUUtilizationPercentage | int | `80` | Target CPU utilization percentage |
 | app.env | list | `[]` | Environment variables to pass to DMP Roadmap app |
 | app.envFrom | list | `[]` | envFrom to pass to DMP Roadmap app |
+| app.healthCheckPath | string | `"/up"` | Shared HTTP path for application health probes  (Must match an application route; the default Rails health route is /up.  A different path must also be reflected in production host authorization.) |
 | app.image.imagePullPolicy | string | global.image.imagePullPolicy | Image pull policy for the DMP Roadmap app |
 | app.image.repository | string | global.image.repository | Repository to use for the DMP Roadmap app |
 | app.image.tag | string | global.image.tag or chart appVersion | Tag to use for the DMP Roadmap app |
 | app.imagePullSecrets | list | global.imagePullSecrets | Secrets with credentials to pull images from a private registry |
-| app.livenessProbe | object | `{"failureThreshold":6,"httpGet":{"path":"/api/v1/heartbeat","port":"http"},"periodSeconds":20,"successThreshold":1,"timeoutSeconds":10}` | Liveness probe configuration for the app |
+| app.livenessProbe | object | `{"failureThreshold":6,"periodSeconds":20,"successThreshold":1,"timeoutSeconds":10}` | Liveness probe configuration for the app |
 | app.nodeSelector | object | `{}` | Node selector for the app deployment |
 | app.podAnnotations | object | `{}` | Pod annotations for the app deployment |
 | app.podLabels | object | `{}` | Pod labels for the app deployment |
 | app.podSecurityContext | object | `{"fsGroup":3000}` | Pod security context for the app deployment |
-| app.readinessProbe | object | `{"failureThreshold":6,"httpGet":{"path":"/api/v1/heartbeat","port":"http"},"periodSeconds":20,"successThreshold":1,"timeoutSeconds":10}` | Readiness probe configuration for the app |
+| app.readinessProbe | object | `{"failureThreshold":6,"periodSeconds":20,"successThreshold":1,"timeoutSeconds":10}` | Readiness probe configuration for the app |
 | app.replicas | int | `1` | Number of app replicas |
 | app.resources | object | `{"limits":{"cpu":"500m","memory":"1Gi"},"requests":{"cpu":"200m","memory":"512Mi"}}` | Resource requests and limits for the app |
 | app.securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"privileged":false,"readOnlyRootFilesystem":true,"runAsNonRoot":true,"runAsUser":1000,"seccompProfile":{"type":"RuntimeDefault"}}` | Container security context for the app deployment |
@@ -402,7 +403,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 | app.serviceAccount.automount | bool | `true` | Automatically mount a ServiceAccount's API credentials? |
 | app.serviceAccount.create | bool | `true` | Specifies whether a service account should be created |
 | app.serviceAccount.name | string | If not set and create is true, a name is generated using the fullname template | The name of the service account to use. |
-| app.startupProbe | object | `{"failureThreshold":48,"httpGet":{"path":"/api/v1/heartbeat","port":"http"},"periodSeconds":10,"successThreshold":1,"timeoutSeconds":10}` | Startup probe configuration for the app |
+| app.startupProbe | object | `{"failureThreshold":48,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":10}` | Startup probe configuration for the app |
 | app.tolerations | list | `[]` | Tolerations for the app deployment |
 | app.volumeMounts | list | `[]` | Additional volume mounts for the app deployment |
 | app.volumes | list | `[]` | Additional volumes for the app deployment |

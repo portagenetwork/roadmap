@@ -72,6 +72,13 @@
           "title": "envFrom",
           "type": "array"
         },
+        "healthCheckPath": {
+          "default": "/up",
+          "description": "Shared HTTP path for application health probes\n (Must match an application route; the default Rails health route is /up.\n A different path must also be reflected in production host authorization.)",
+          "required": [],
+          "title": "healthCheckPath",
+          "type": "string"
+        },
         "image": {
           "additionalProperties": false,
           "description": "# DMP Roadmap app image",
@@ -126,29 +133,6 @@
               "title": "failureThreshold",
               "type": "integer"
             },
-            "httpGet": {
-              "additionalProperties": false,
-              "properties": {
-                "path": {
-                  "default": "/api/v1/heartbeat",
-                  "required": [],
-                  "title": "path",
-                  "type": "string"
-                },
-                "port": {
-                  "default": "http",
-                  "required": [],
-                  "title": "port",
-                  "type": "string"
-                }
-              },
-              "required": [
-                "path",
-                "port"
-              ],
-              "title": "httpGet",
-              "type": "object"
-            },
             "periodSeconds": {
               "default": 20,
               "required": [],
@@ -169,7 +153,6 @@
             }
           },
           "required": [
-            "httpGet",
             "periodSeconds",
             "timeoutSeconds",
             "failureThreshold",
@@ -226,29 +209,6 @@
               "title": "failureThreshold",
               "type": "integer"
             },
-            "httpGet": {
-              "additionalProperties": false,
-              "properties": {
-                "path": {
-                  "default": "/api/v1/heartbeat",
-                  "required": [],
-                  "title": "path",
-                  "type": "string"
-                },
-                "port": {
-                  "default": "http",
-                  "required": [],
-                  "title": "port",
-                  "type": "string"
-                }
-              },
-              "required": [
-                "path",
-                "port"
-              ],
-              "title": "httpGet",
-              "type": "object"
-            },
             "periodSeconds": {
               "default": 20,
               "required": [],
@@ -269,7 +229,6 @@
             }
           },
           "required": [
-            "httpGet",
             "periodSeconds",
             "timeoutSeconds",
             "failureThreshold",
@@ -516,29 +475,6 @@
               "title": "failureThreshold",
               "type": "integer"
             },
-            "httpGet": {
-              "additionalProperties": false,
-              "properties": {
-                "path": {
-                  "default": "/api/v1/heartbeat",
-                  "required": [],
-                  "title": "path",
-                  "type": "string"
-                },
-                "port": {
-                  "default": "http",
-                  "required": [],
-                  "title": "port",
-                  "type": "string"
-                }
-              },
-              "required": [
-                "path",
-                "port"
-              ],
-              "title": "httpGet",
-              "type": "object"
-            },
             "periodSeconds": {
               "default": 10,
               "required": [],
@@ -559,7 +495,6 @@
             }
           },
           "required": [
-            "httpGet",
             "periodSeconds",
             "timeoutSeconds",
             "failureThreshold",
