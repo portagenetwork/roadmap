@@ -54,8 +54,9 @@ class PlanSnapshotsController < ApplicationController
     handle_doi_error(e)
   end
 
-  # PUT /plans/:plan_id/versions/:version/tombstone
+  # PATCH /plans/:plan_id/versions/:version/tombstone
   def tombstone
+    authorize @snapshot
     tombstone_snapshot_transaction
     redirect_to plan_snapshots_path(@plan), notice: format(
       _('Version %{version} has been tombstoned and its DOI status has been updated to registered.'),

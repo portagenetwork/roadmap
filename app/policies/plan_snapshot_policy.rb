@@ -18,7 +18,10 @@ class PlanSnapshotPolicy < ApplicationPolicy
   end
 
   def tombstone?
-    @user.present? && @user.can_super_admin?
+    return false unless user.present? && user.can_super_admin?
+    return true unless record.is_a?(PlanSnapshot)
+
+    record.publicly_visible? && !record.tombstoned?
   end
 
   private
