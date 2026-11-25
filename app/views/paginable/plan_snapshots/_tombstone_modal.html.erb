@@ -1,0 +1,34 @@
+<div class="modal fade" id="tombstone-snapshot-<%= snapshot.id %>" tabindex="-1"
+     aria-labelledby="tombstone-modal-label-<%= snapshot.id %>" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <%= form_with url: tombstone_plan_snapshot_path(plan, snapshot), method: :patch, local: true do |f| %>
+        <div class="modal-header">
+          <h5 class="modal-title" id="tombstone-modal-label-<%= snapshot.id %>">
+            <%= _('Remove Version %{version}') % { version: snapshot.version } %>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<%= _('Close') %>"></button>
+        </div>
+
+        <div class="modal-body">
+          <p>
+            <%= _('This will update the DataCite DOI from findable to registered and redirect the DOI link to a tombstone landing page.') %>
+          </p>
+          <div class="mb-3">
+            <% reason_id = "removal_reason_#{snapshot.id}" %>
+            <%= f.label :removal_reason, _('Reason for removal'), for: reason_id, class: 'form-label' %>
+            <%= f.select :removal_reason,
+                         options_for_select(PlanSnapshot::TOMBSTONE_REASONS),
+                         { include_blank: _('Select a reason...') },
+                         { id: reason_id, class: 'form-select', required: true } %>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><%= _('Cancel') %></button>
+          <%= f.submit _('Confirm Removal'), class: 'btn btn-danger' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
