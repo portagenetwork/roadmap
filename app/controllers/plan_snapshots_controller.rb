@@ -4,6 +4,8 @@
 class PlanSnapshotsController < ApplicationController
   include PdfExportable
 
+  class DoiMintingError < StandardError; end
+
   JSON_GENERATION_ERROR_ATTRIBUTES = %i[rda_json extension_json].freeze
 
   before_action :set_plan
@@ -38,18 +40,50 @@ class PlanSnapshotsController < ApplicationController
 
   # POST /plans/:plan_id/versions
   def create
-    snapshot = PlanSnapshot.create_from_plan(plan: @plan, visibility: plan_snapshot_params[:visibility])
+    snapshot = create_snapshot_in_transaction
 
-    if snapshot.persisted?
-      redirect_to plan_snapshots_path(@plan),
-                  notice: _('New version published.')
+    if snapshot&.persisted?
+      PublishDoiJob.perform_later(snapshot) if snapshot.publicly_visible?
+      redirect_to plan_snapshots_path(@plan), notice: success_notice(snapshot)
     else
-      redirect_to plan_snapshots_path(@plan),
-                  alert: create_failure_alert(snapshot)
+      redirect_to plan_snapshots_path(@plan), alert: create_failure_alert(snapshot)
     end
+  rescue DoiMintingError => e
+    handle_doi_error(e)
   end
 
   private
+
+  def create_snapshot_in_transaction
+    @plan.with_lock do
+      visibility = plan_snapshot_params[:visibility] || 'privately_visible'
+      snapshot = PlanSnapshot.create_from_plan(plan: @plan, visibility: visibility)
+
+      mint_snapshot_doi(snapshot) if snapshot.persisted? && snapshot.publicly_visible?
+
+      snapshot
+    end
+  end
+
+  def mint_snapshot_doi(snapshot)
+    DoiPublisherService.publish_snapshot_doi(snapshot)
+  rescue StandardError => e
+    raise DoiMintingError, e.message
+  end
+
+  def success_notice(snapshot)
+    if snapshot.publicly_visible?
+      _('New version published. DOI minting has been queued and will complete shortly.')
+    else
+      _('New version published.')
+    end
+  end
+
+  def handle_doi_error(error)
+    Rails.logger.error("Version publishing cancelled — DOI minting failed for Plan ##{@plan.id}: #{error.message}")
+    redirect_to plan_snapshots_path(@plan),
+                alert: _('Unable to publish version because DOI minting failed.')
+  end
 
   def authorize_plan
     authorize @plan, policy_class: PlanSnapshotPolicy
@@ -102,8 +136,10 @@ class PlanSnapshotsController < ApplicationController
       notify_json_generation_failure(snapshot)
       _('An error was detected and a new version cannot be published at this time. ' \
         'The administrators of the repository have been alerted.')
+    elsif snapshot&.errors&.any?
+      _("Unable to create the version. #{snapshot.errors.full_messages.join(', ')}")
     else
-      failure_message(snapshot, _('create'))
+      _('Unable to create the version.')
     end
   end
 

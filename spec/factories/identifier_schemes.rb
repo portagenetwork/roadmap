@@ -44,6 +44,13 @@ FactoryBot.define do
       identifier_prefix { 'https://www.cilogon.org/' }
     end
 
+    trait :datacite do
+      name { 'datacite' }
+      identifier_prefix { 'https://doi.org/' }
+      description { 'DataCite DOI provider' }
+      active { true }
+    end
+
     %i[
       authentication
       orgs
