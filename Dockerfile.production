@@ -1,11 +1,12 @@
 FROM surnet/alpine-wkhtmltopdf:3.23.4-0.12.6-small AS wkhtmltopdf
 
-FROM ruby:3.3.14-alpine3.23 AS builder
+FROM ruby:3.4.13-alpine AS builder
 
 ENV INSTALL_PATH=/usr/src/app \
     RAILS_ENV=production \
     NODE_ENV=production \
     BUNDLE_WITHOUT='development:test:mysql:aws:sandbox:ci:wkhtmltopdf' \
+    BUNDLE_USER_HOME=/usr/src/app/tmp/bundle \
     # Dummy value to enable `rake assets:precompile` without a real db
     DATABASE_URL=nulldb://nohost
 
@@ -24,7 +25,7 @@ RUN apk update && apk add --no-cache \
     yaml-dev \
     libffi-dev \
     git \
-    nodejs=24.22.3-r0 \
+    nodejs~=24 \
     yarn \
     shared-mime-info \
     tzdata \
@@ -62,9 +63,10 @@ USER root
 RUN rm -rf ${INSTALL_PATH}/node_modules ${INSTALL_PATH}/tmp/*
 USER dmpuser
 
-FROM ruby:3.3.14-alpine3.23 AS app
+FROM ruby:3.4.13-alpine AS app
 
-ENV INSTALL_PATH=/usr/src/app
+ENV INSTALL_PATH=/usr/src/app \
+    BUNDLE_USER_HOME=/usr/src/app/tmp/bundle
 
 # Create non-root user with same UID/GID as builder
 RUN addgroup -g 3000 -S dmpgroup && \
@@ -114,6 +116,8 @@ COPY --from=wkhtmltopdf /bin/wkhtmltopdf /usr/bin/wkhtmltopdf
 # Copy data for timezone and mime types from builder stage
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=builder /usr/share/mime /usr/share/mime
+# Copy Bundler and its configuration from the builder stage
+COPY --from=builder /usr/local/bundle /usr/local/bundle
 # Copy application code from builder stage
 COPY --from=builder --chown=dmpuser:dmpgroup $INSTALL_PATH $INSTALL_PATH
 

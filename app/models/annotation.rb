@@ -6,7 +6,7 @@
 #
 #  id             :integer          not null, primary key
 #  text           :text
-#  type           :integer          default("example_answer"), not null
+#  type           :integer          default(0), not null
 #  created_at     :datetime
 #  updated_at     :datetime
 #  org_id         :integer
@@ -33,7 +33,7 @@ class Annotation < ApplicationRecord
   # I liked type as the name for the enum so overriding inheritance column
   self.inheritance_column = nil
 
-  enum type: %i[example_answer guidance]
+  enum :type, %i[example_answer guidance]
 
   # ================
   # = Associations =

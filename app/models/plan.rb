@@ -19,7 +19,7 @@
 #  identifier                 :string
 #  start_date                 :datetime
 #  title                      :string
-#  visibility                 :integer          default("privately_visible"), not null
+#  visibility                 :integer          default(3), not null
 #  created_at                 :datetime
 #  updated_at                 :datetime
 #  funder_id                  :integer
@@ -76,10 +76,10 @@ class Plan < ApplicationRecord
   # ==============
 
   # public is a Ruby keyword so using publicly
-  enum visibility: %i[organisationally_visible publicly_visible
-                      is_test privately_visible]
+  enum :visibility, %i[organisationally_visible publicly_visible
+                       is_test privately_visible]
 
-  enum funding_status: %i[planned funded denied]
+  enum :funding_status, %i[planned funded denied]
 
   alias_attribute :name, :title
 

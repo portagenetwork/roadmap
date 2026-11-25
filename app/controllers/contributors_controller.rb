@@ -3,6 +3,7 @@
 # Controller for the Contributors page
 class ContributorsController < ApplicationController
   include OrgSelectable
+
   helper PaginableHelper
 
   before_action :fetch_plan
@@ -80,7 +81,6 @@ class ContributorsController < ApplicationController
       render :edit
     end
   end
-  # rubocop:enable
 
   # DELETE /plans/:plan_id/contributors/:id
   def destroy

@@ -16,7 +16,7 @@ module DMPRoadmap
   # DMP Assistant application
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.1
+    config.load_defaults 8.1
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
@@ -27,6 +27,9 @@ module DMPRoadmap
     # OVERRIDES TO DEFAULT RAILS CONFIG #
     # --------------------------------- #
     config.autoload_lib(ignore: %w[tasks])
+
+    # Images use Dragonfly; revisit this when using Active Storage variants.
+    config.active_storage.variant_processor = :disabled
 
     # CVE-2022-32224: add some compatibility with YAML.safe_load
     # Rails 5,6,7 are using YAML.safe_load as the default YAML deserializer

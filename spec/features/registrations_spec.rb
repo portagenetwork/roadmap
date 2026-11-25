@@ -49,7 +49,7 @@ RSpec.describe 'Registrations', type: :feature do
     click_button 'Create account'
 
     # Expectations
-    expect(current_path).to eql(root_path)
+    expect(page).to have_current_path(root_path)
     expect(User.count).to be_zero
   end
 

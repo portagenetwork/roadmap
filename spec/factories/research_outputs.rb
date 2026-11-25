@@ -6,12 +6,12 @@
 #
 #  id                      :bigint(8)        not null, primary key
 #  abbreviation            :string
-#  access                  :integer          default("open"), not null
+#  access                  :integer          default(0), not null
 #  byte_size               :bigint(8)
 #  description             :text
 #  display_order           :integer
 #  is_default              :boolean
-#  output_type             :integer          default("dataset"), not null
+#  output_type             :integer          default(3), not null
 #  output_type_description :string
 #  personal_data           :boolean
 #  release_date            :datetime

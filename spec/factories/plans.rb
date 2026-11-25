@@ -16,7 +16,7 @@
 #  identifier                 :string
 #  start_date                 :datetime
 #  title                      :string
-#  visibility                 :integer          default("privately_visible"), not null
+#  visibility                 :integer          default(3), not null
 #  created_at                 :datetime
 #  updated_at                 :datetime
 #  funder_id                  :integer

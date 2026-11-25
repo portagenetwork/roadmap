@@ -3,6 +3,7 @@
 # Validation for the format of the JSON for Org links
 class OrgLinksValidator < ActiveModel::Validator
   include JsonLinkValidator
+
   def validate(record)
     links = record.links
     if links.is_a?(Hash)

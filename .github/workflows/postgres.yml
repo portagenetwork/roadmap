@@ -9,7 +9,7 @@ jobs:
     services:
       # Postgres installation
       db:
-        image: postgres
+        image: postgres:16
         env:
           # Latest version of Postgres has increased security. We can use the default
           # user/password in this testing scenario though so use the following env
@@ -45,7 +45,7 @@ jobs:
     # Install Node
     - uses: actions/setup-node@v7
       with:
-        node-version: '24.22.3'
+        node-version: 24
         cache: 'yarn'
 
     # Install the Postgres developer packages
@@ -80,14 +80,15 @@ jobs:
     # Run yarn install for JS dependencies
     - name: 'Yarn Install'
       run: |
-        yarn install
+        yarn install --frozen-lockfile
     
     # TEMPORARY WORKAROUND FOR THE FOLLOWING ISSUE: https://github.com/portagenetwork/roadmap/issues/1032
     # Remove this once our tests are compatible with the new version of Chrome
     # Source: https://github.com/teamcapybara/capybara/issues/2800#issuecomment-2731100953
     - name: Remove image-bundled Chrome
       run: sudo apt-get purge google-chrome-stable
-    - name: Setup stable Chrome
+    - name: Setup Chrome 128
+      id: setup-chrome
       uses: browser-actions/setup-chrome@v2
       with:
         chrome-version: 128
@@ -97,8 +98,15 @@ jobs:
     # Initialize the DB
     - name: 'Setup Test DB'
       run: |
-        DISABLE_SPRING=1 bundle exec rails db:setup RAILS_ENV=test
+        bundle exec rails db:setup RAILS_ENV=test
         bundle exec rails db:migrate RAILS_ENV=test
+
+    # PostgreSQL is the canonical source of the shared schema.rb.
+    - name: "Check schema drift"
+      run: |
+        bundle exec rails db:schema:dump
+        git diff --exit-code -- db/schema.rb
+
 
     # Prebuild the CSS, JS and image assets
     - name: 'Compile Assets'
@@ -113,6 +121,10 @@ jobs:
 
     # Run the time consuming integration tests (using Chrome headless browser)
     - name: 'Run Integration Tests'
+      env:
+        CHROME_BIN: ${{ steps.setup-chrome.outputs.chrome-path }}
       run: |
+        "$CHROME_BIN" --version
+        chromedriver --version
         bundle exec rspec spec/features/
         bundle exec rspec spec/integration/

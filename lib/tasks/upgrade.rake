@@ -2,7 +2,6 @@
 
 # Upgrade tasks for versions < 3.0. See https://github.com/DMPRoadmap/roadmap/releases for information
 # on how and when to run each task.
-
 # rubocop:disable Naming/VariableNumber
 namespace :upgrade do
   desc 'Upgrade to DMP Assistant 4.1.1+portage-4.2.0'
