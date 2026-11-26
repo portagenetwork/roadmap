@@ -20,21 +20,21 @@ class DoiPublisherService
       )
     end
 
-    # 2. ASYNCHRONOUS (PublishDoiJob): Syncs bidirectional DataCite relationships
+    # 2. ASYNCHRONOUS (PublishDoiJob): Syncs bidirectional DataCite relationships & target URLs
     def update_canonical_and_relationships(snapshot)
       plan = snapshot.plan
 
       # Fetch Canonical DMP DOI
       canonical_identifier = plan.dmp_id.value
 
-      # Update Canonical DMP metadata at DataCite (HasVersion -> snapshot DOIs)
+      # Update Canonical DMP metadata & target URL at DataCite (HasVersion -> snapshot DOIs)
       update_canonical_doi(
         plan: plan,
         snapshot: snapshot,
         canonical_doi_url: canonical_identifier
       )
 
-      # Update Snapshot metadata at DataCite (IsVersionOf -> canonical DOI)
+      # Update Snapshot metadata & target URL at DataCite (IsVersionOf -> canonical DOI)
       update_snapshot_doi(
         plan: plan,
         snapshot: snapshot,
@@ -74,6 +74,16 @@ class DoiPublisherService
               .where('version < ?', snapshot.version)
               .order(:version)
               .last&.identifier
+    end
+
+    def latest_published_snapshot(plan, fallback:)
+      # INNER JOIN against identifiers filters out private snapshots without DOIs,
+      # and where(tombstoned_at: nil) skips removed versions
+      plan.snapshots
+          .joins(:identifier)
+          .where(tombstoned_at: nil)
+          .order(version: :desc)
+          .first || fallback
     end
 
     def mint_canonical_doi(plan, snapshot)
@@ -151,14 +161,20 @@ class DoiPublisherService
       DoiNormalizerService.full_url("#{prefix}/dmp.#{snapshot.plan_id}.v#{snapshot.version}")
     end
 
+    def snapshot_landing_url(plan, snapshot)
+      Rails.application.routes.url_helpers.landing_plan_snapshot_url(plan, snapshot)
+    end
+
     def update_canonical_doi(plan:, snapshot:, canonical_doi_url:)
       has_version_dois = Identifier.for_plan_snapshot
                                    .where(identifiable_id: plan.snapshots.pluck(:id))
                                    .pluck(:value)
+      latest_snapshot = latest_published_snapshot(plan, fallback: snapshot)
 
       update_doi_record(
         plan: plan,
-        snapshot: snapshot,
+        # canonical DOI metadata should match that of most recent snapshot
+        snapshot: latest_snapshot,
         doi_url: canonical_doi_url,
         is_canonical: true,
         has_version_dois: has_version_dois
@@ -167,7 +183,7 @@ class DoiPublisherService
 
     def update_snapshot_doi(plan:, snapshot:, canonical_doi_url:)
       snapshot_identifier = snapshot.identifier
-      return if snapshot_identifier.blank?
+      return if snapshot_identifier.blank? || snapshot.tombstoned?
 
       update_doi_record(
         plan: plan,
@@ -210,6 +226,7 @@ class DoiPublisherService
 
       payload = JSON.parse(json_output)
       payload['data']['attributes']['event'] = datacite_event
+      payload['data']['attributes']['url'] = snapshot_landing_url(plan, snapshot)
       payload
     end
 
