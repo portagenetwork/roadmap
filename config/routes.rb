@@ -136,6 +136,7 @@ Rails.application.routes.draw do
       member do
         patch :tombstone
         get :tombstone, action: :tombstone_page
+        get :landing, action: :landing_page
       end
     end
 
