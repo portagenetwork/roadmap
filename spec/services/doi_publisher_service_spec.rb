@@ -67,6 +67,62 @@ RSpec.describe DoiPublisherService, type: :service do
     end
   end
 
+  describe '.tombstone_snapshot_doi' do
+    let(:tombstone_url) { "https://example.org/plans/#{plan.id}/versions/#{snapshot.version}/tombstone" }
+
+    context 'when the snapshot does not have an identifier' do
+      it 'returns nil without making API requests' do
+        result = described_class.tombstone_snapshot_doi(snapshot, tombstone_url: tombstone_url)
+
+        expect(result).to be_nil
+        expect(a_request(:put, %r{/dois})).not_to have_been_made
+      end
+    end
+
+    context 'when the snapshot has a DOI identifier' do
+      let!(:snapshot_doi) do
+        create(:identifier,
+               identifiable: snapshot,
+               identifier_scheme: IdentifierScheme.datacite,
+               value: 'https://doi.org/10.83996/snapshot-2')
+      end
+
+      before do
+        stub_request(:put, %r{/dois/10\.83996%2Fsnapshot-2})
+          .to_return(status: 200, body: { data: { id: '10.83996/snapshot-2', type: 'dois' } }.to_json)
+      end
+
+      it 'sends a PUT request to DataCite with event "hide" and the tombstone URL' do
+        described_class.tombstone_snapshot_doi(snapshot, tombstone_url: tombstone_url)
+
+        expect(
+          a_request(:put, %r{/dois/10\.83996%2Fsnapshot-2}).with do |req|
+            body = JSON.parse(req.body)
+            data = body['data']
+            attributes = data['attributes']
+
+            data['id'] == '10.83996/snapshot-2' &&
+              data['type'] == 'dois' &&
+              attributes['event'] == 'hide' &&
+              attributes['url'] == tombstone_url
+          end
+        ).to have_been_made.once
+      end
+
+      context 'when DataCite returns an error response' do
+        before do
+          stub_request(:put, %r{/dois/10\.83996%2Fsnapshot-2})
+            .to_return(status: 500, body: { errors: [{ title: 'Internal Server Error' }] }.to_json)
+        end
+
+        it 'raises an error so the caller can roll back' do
+          expect { described_class.tombstone_snapshot_doi(snapshot, tombstone_url: tombstone_url) }
+            .to raise_error(StandardError)
+        end
+      end
+    end
+  end
+
   describe '.update_canonical_and_relationships' do
     context 'when the plan already has a canonical DOI' do
       let!(:canonical_doi) do

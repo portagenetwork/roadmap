@@ -1,0 +1,60 @@
+<%
+  snapshot_title = snapshot_display_title(@snapshot)
+  contributor_names = snapshot_contributor_names(@snapshot)
+  organization_names = snapshot_organization_names(@snapshot, @plan)
+%>
+
+<% title "#{snapshot_title} - Version #{@snapshot.version}" %>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="d-flex justify-content-between align-items-start">
+      <div>
+        <h1><%= snapshot_title %></h1>
+        <p class="text-muted">
+          <%= format(_('Published Version %{version}'), version: @snapshot.version) %>
+          <% if @snapshot.doi.present? %>
+            &middot; <%= link_to @snapshot.doi, @snapshot.doi, target: '_blank', rel: 'noopener noreferrer' %>
+          <% end %>
+        </p>
+      </div>
+
+      <div class="dropdown">
+        <button class="btn btn-link dropdown-toggle" type="button"
+                id="plan-snapshot-<%= @snapshot.id %>-actions" data-bs-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+          <%= _('Actions') %>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="plan-snapshot-<%= @snapshot.id %>-actions">
+          <li><%= link_to _('View PDF'), plan_snapshot_path(@plan, @snapshot, format: :pdf), class: 'dropdown-item px-3' %></li>
+          <li><%= link_to _('View RDA JSON'), plan_snapshot_path(@plan, @snapshot, format: :json), class: 'dropdown-item px-3' %></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-10 col-md-offset-1">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= _('Plan Metadata') %></h3>
+      </div>
+      <div class="panel-body">
+        <dl class="dl-horizontal">
+          <dt><%= _('Title') %></dt>
+          <dd><%= snapshot_title %></dd>
+
+          <dt><%= _('Created Date') %></dt>
+          <dd><%= l(@snapshot.created_at.to_date, format: :long) %></dd>
+
+          <dt><%= _('Contributors') %></dt>
+          <dd><%= contributor_names.present? ? contributor_names.join(', ') : _('Not specified') %></dd>
+
+          <dt><%= _('Organizations') %></dt>
+          <dd><%= organization_names.present? ? organization_names.join(', ') : _('Not specified') %></dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>

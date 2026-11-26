@@ -17,6 +17,13 @@ class PlanSnapshotPolicy < ApplicationPolicy
     @record.administerable_by?(@user.id)
   end
 
+  def tombstone?
+    return false unless user.present? && user.can_super_admin?
+    return true unless record.is_a?(PlanSnapshot)
+
+    record.publicly_visible? && !record.tombstoned?
+  end
+
   private
 
   # @record is the underlying plan

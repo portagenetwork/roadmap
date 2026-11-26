@@ -132,7 +132,13 @@ Rails.application.routes.draw do
               only: %i[index show create],
               controller: 'plan_snapshots',
               path: 'versions',
-              param: :version
+              param: :version do
+      member do
+        patch :tombstone
+        get :tombstone, action: :tombstone_page
+        get :landing, action: :landing_page
+      end
+    end
 
     resource :export, only: [:show], controller: 'plan_exports'
 

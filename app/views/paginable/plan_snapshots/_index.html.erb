@@ -23,21 +23,43 @@
         <td><%= identifier.type %></td>
         <td><%= snapshot.version %></td>
         <td><%= snapshot.created_at.to_date %></td>
-        <td><%= snapshot.visibility_label %></td>
+        <td><%= snapshot.tombstoned? ? _('tombstoned') : snapshot.visibility_label %></td>
         <td>
-          <div class="dropdown">
-            <button class="btn btn-link dropdown-toggle" type="button"
-                    id="plan-snapshot-<%= snapshot.id %>-actions" data-bs-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="true">
-              <%= _('Actions') %>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="plan-snapshot-<%= snapshot.id %>-actions">
-              <li><%= link_to _('View PDF'), plan_snapshot_path(plan, snapshot, format: :pdf), class: 'dropdown-item  px-3' %></li>
-              <li><%= link_to _('View RDA JSON'), plan_snapshot_path(plan, snapshot, format: :json), class: 'dropdown-item  px-3' %></li>
-            </ul>
-          </div>
+          <% if snapshot.tombstoned? %>
+            <%= _('N/A') %>
+          <% else %>
+            <div class="dropdown">
+              <button class="btn btn-link dropdown-toggle" type="button"
+                      id="plan-snapshot-<%= snapshot.id %>-actions" data-bs-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="true">
+                <%= _('Actions') %>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="plan-snapshot-<%= snapshot.id %>-actions">
+                <li><%= link_to _('View PDF'), plan_snapshot_path(plan, snapshot, format: :pdf), class: 'dropdown-item  px-3' %></li>
+                <li><%= link_to _('View RDA JSON'), plan_snapshot_path(plan, snapshot, format: :json), class: 'dropdown-item  px-3' %></li>
+                <% if PlanSnapshotPolicy.new(current_user, plan).tombstone? && snapshot.identifier.present? %>
+                  <li><hr class="dropdown-divider"></li>
+                  <li>
+                    <button type="button"
+                            class="dropdown-item text-danger px-3"
+                            data-bs-toggle="modal"
+                            data-bs-target="#tombstone-snapshot-<%= snapshot.id %>">
+                      <%= _('Remove version') %>
+                    </button>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
+
+<% if current_user&.can_super_admin? %>
+  <% scope.each do |snapshot| %>
+    <% next if snapshot.tombstoned? || snapshot.identifier.blank? %>
+    <%= render partial:'paginable/plan_snapshots/tombstone_modal', locals: { plan: plan, snapshot: snapshot } %>
+  <% end %>
+<% end %>

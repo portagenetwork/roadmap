@@ -8,9 +8,11 @@ class PlanSnapshotsController < ApplicationController
 
   JSON_GENERATION_ERROR_ATTRIBUTES = %i[rda_json extension_json].freeze
 
+  skip_before_action :authenticate_user!, only: %i[tombstone_page landing_page show], raise: false
   before_action :set_plan
-  before_action :authorize_plan
-  before_action :set_snapshot, only: [:show]
+  before_action :authorize_plan, except: %i[tombstone_page landing_page show]
+  before_action :set_snapshot, only: %i[show tombstone tombstone_page landing_page]
+  before_action :authorize_show, only: %i[show]
 
   # GET /plans/:plan_id/versions
   def index
@@ -24,6 +26,8 @@ class PlanSnapshotsController < ApplicationController
 
   # GET /plans/:plan_id/versions/:version
   def show
+    render :tombstone, formats: [:html] and return if @snapshot.tombstoned?
+
     result = PlanSnapshots::FixityCheckService.new(@snapshot).call
     if result[:status] == :failed
       render json: {
@@ -52,7 +56,42 @@ class PlanSnapshotsController < ApplicationController
     handle_doi_error(e)
   end
 
+  # PATCH /plans/:plan_id/versions/:version/tombstone
+  def tombstone
+    authorize @snapshot
+    tombstone_snapshot_transaction
+    PublishDoiJob.perform_later(@snapshot) if @snapshot.identifier.present? && @plan.dmp_id.present?
+    redirect_to plan_snapshots_path(@plan), notice: format(
+      _('Version %{version} has been tombstoned and its DOI status has been updated to registered.'),
+      version: @snapshot.version
+    )
+  rescue StandardError => e
+    handle_tombstone_error(e)
+  end
+
+  # GET /plans/:plan_id/versions/:version/tombstone
+  def tombstone_page
+    return head :not_found unless @snapshot.tombstoned?
+
+    render :tombstone
+  end
+
+  # GET /plans/:plan_id/versions/:version/landing
+  def landing_page
+    return redirect_to tombstone_plan_snapshot_path(@plan, @snapshot.version) if @snapshot.tombstoned?
+    return head :not_found unless @snapshot.publicly_visible? || @snapshot.identifier.present?
+
+    render :landing
+  end
+
   private
+
+  def authorize_show
+    return if @snapshot.tombstoned? || @snapshot.publicly_visible?
+
+    authenticate_user! if respond_to?(:authenticate_user!, true)
+    authorize_plan
+  end
 
   def create_snapshot_in_transaction
     @plan.with_lock do
@@ -83,6 +122,22 @@ class PlanSnapshotsController < ApplicationController
     Rails.logger.error("Version publishing cancelled — DOI minting failed for Plan ##{@plan.id}: #{error.message}")
     redirect_to plan_snapshots_path(@plan),
                 alert: _('Unable to publish version because DOI minting failed.')
+  end
+
+  def tombstone_snapshot_transaction
+    @snapshot.transaction do
+      @snapshot.update!(tombstoned_at: Time.current, removal_reason: params.require(:removal_reason))
+      DoiPublisherService.tombstone_snapshot_doi(
+        @snapshot,
+        tombstone_url: tombstone_plan_snapshot_url(@plan, @snapshot.version)
+      )
+    end
+  end
+
+  def handle_tombstone_error(error)
+    Rails.logger.error("Failed to tombstone snapshot ##{@snapshot.id}: #{error.message}")
+    redirect_to plan_snapshots_path(@plan),
+                alert: format(_('Unable to remove version: %{error}'), error: error.message)
   end
 
   def authorize_plan

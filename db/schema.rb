@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_10_26_193912) do
+ActiveRecord::Schema.define(version: 2026_11_16_204408) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -492,6 +492,8 @@ ActiveRecord::Schema.define(version: 2026_10_26_193912) do
     t.datetime "fixity_checked_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "tombstoned_at"
+    t.string "removal_reason"
     t.index ["fixity_checked_at"], name: "index_plan_snapshots_on_fixity_checked_at"
     t.index ["plan_id", "version"], name: "index_plan_snapshots_on_plan_id_and_version", unique: true
     t.index ["plan_id"], name: "index_plan_snapshots_on_plan_id"
