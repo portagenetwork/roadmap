@@ -47,6 +47,8 @@ class Identifier < ApplicationRecord
 
   validate :orcid_format, if: -> { identifier_scheme&.name == 'orcid' }
 
+  validate :valid_doi_format, if: -> { identifier_scheme&.name == 'doi' && value.present? }
+
   # ===============
   # = Scopes =
   # ===============
@@ -160,5 +162,12 @@ class Identifier < ApplicationRecord
   def normalized_orcid_value
     raw = value.to_s.strip
     raw.split(ORCID_HOST).last
+  end
+
+  def valid_doi_format
+    raw_value = respond_to?(:value_without_scheme_prefix) ? value_without_scheme_prefix : value
+    return if ExternalApis::DoiResolutionService.normalize_doi(raw_value).present?
+
+    errors.add(:value, _('does not appear to be a valid DOI'))
   end
 end

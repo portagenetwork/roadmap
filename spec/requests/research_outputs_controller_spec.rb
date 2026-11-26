@@ -263,17 +263,20 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
       expect(research_output.identifier_for_scheme(scheme: 'doi')).to be_nil
     end
 
-    it 'ignores an invalid DOI on create without blocking save' do
+    it 'does not create a research output when an invalid DOI is submitted on save' do
       expect do
         post plan_research_outputs_path(plan),
              params: { prefill_doi: 'bad-doi', research_output: research_output_params }
-      end.to change(ResearchOutput, :count).by(1)
+      end.not_to change(ResearchOutput, :count)
 
-      expect(ResearchOutput.order(:id).last.identifier_for_scheme(scheme: 'doi')).to be_nil
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include('Does not appear to be a valid DOI.')
+      expect(Nokogiri::HTML(response.body).at_css('#doi_lookup_input')['value']).to eq('bad-doi')
     end
 
-    it 'preserves the existing DOI when an invalid DOI is submitted on update' do
-      research_output = create(:research_output, plan: plan, repositories_count: 0, metadata_standards_count: 0)
+    it 'does not update a research output when an invalid DOI is submitted on save' do
+      research_output = create(:research_output, plan: plan, title: 'Original title', repositories_count: 0,
+                                                 metadata_standards_count: 0)
       research_output.identifiers.create!(identifier_scheme: doi_scheme, value: doi)
 
       patch plan_research_output_path(plan, research_output), params: {
@@ -282,7 +285,11 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
                            access: research_output.access }
       }
 
-      expect(research_output.reload.identifier_for_scheme(scheme: 'doi')&.value_without_scheme_prefix).to eq(doi)
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include('Does not appear to be a valid DOI.')
+      expect(Nokogiri::HTML(response.body).at_css('#doi_lookup_input')['value']).to eq('bad-doi')
+      expect(research_output.reload.title).to eq('Original title')
+      expect(research_output.identifier_for_scheme(scheme: 'doi')&.value_without_scheme_prefix).to eq(doi)
     end
 
     it 'normalizes a full DOI URL when saved without clicking Fetch & Add' do

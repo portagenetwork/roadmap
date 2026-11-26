@@ -44,13 +44,14 @@ class ResearchOutputsController < ApplicationController
     args = process_nillable_values(args: args)
     @research_output = ResearchOutput.new(args)
     authorize @research_output
+    assign_doi_identifier
 
     if @research_output.save
-      persist_doi_identifier
       redirect_to plan_research_outputs_path(@plan),
                   notice: success_message(@research_output, _('added'))
     else
-      flash[:alert] = failure_message(@research_output, _('add'))
+      @prefill_doi = params[:prefill_doi].presence
+      flash.now[:alert] = failure_message(@research_output, _('add'))
       render 'research_outputs/new'
     end
   end
@@ -65,18 +66,19 @@ class ResearchOutputsController < ApplicationController
     # Clear any existing repository and metadata_standard selections.
     @research_output.repositories.clear
     @research_output.metadata_standards.clear
+    assign_doi_identifier
 
     if @research_output.update(args)
-      persist_doi_identifier
       redirect_to plan_research_outputs_path(@plan),
                   notice: success_message(@research_output, _('saved'))
     else
-      redirect_to edit_plan_research_output_path(@plan, @research_output),
-                  alert: failure_message(@research_output, _('save'))
+      @prefill_doi = params[:prefill_doi].presence
+      flash.now[:alert] = failure_message(@research_output, _('save'))
+      render 'research_outputs/edit'
     end
   end
-  # rubocop:enable Metrics/AbcSize
 
+  # rubocop:enable Metrics/AbcSize
   # DELETE /plans/:plan_id/research_outputs/:id
   def destroy
     authorize @research_output
@@ -156,20 +158,6 @@ class ResearchOutputsController < ApplicationController
 
   private
 
-  def persist_doi_identifier # rubocop:disable Metrics/CyclomaticComplexity
-    scheme = IdentifierScheme.by_name('doi').first
-    return if scheme.blank?
-
-    raw_doi = @prefill_doi || params[:prefill_doi]
-    identifier = @research_output.identifier_for_scheme(scheme: scheme)
-    return identifier&.destroy! if raw_doi&.blank?
-
-    clean_doi = ExternalApis::DoiResolutionService.normalize_doi(raw_doi)
-    return if clean_doi.blank?
-
-    (identifier || @research_output.identifiers.build(identifier_scheme: scheme)).update!(value: clean_doi)
-  end
-
   def prefill_from_doi(doi)
     result = ExternalApis::DoiResolutionService.fetch_metadata(doi: doi)
     if result[:status] == :ok
@@ -194,6 +182,23 @@ class ResearchOutputsController < ApplicationController
     else
       _('An unexpected error occurred.')
     end
+  end
+
+  def assign_doi_identifier
+    scheme = IdentifierScheme.by_name('doi').first
+    raw_doi = @prefill_doi || params[:prefill_doi]
+    return if scheme.blank? || raw_doi.nil?
+
+    identifier = @research_output.identifier_for_scheme(scheme: scheme)
+    return identifier&.mark_for_destruction if raw_doi.blank?
+
+    set_doi_identifier(scheme, identifier, raw_doi)
+  end
+
+  def set_doi_identifier(scheme, identifier, raw_doi)
+    clean_doi = ExternalApis::DoiResolutionService.normalize_doi(raw_doi) || raw_doi.to_s.strip
+    target = identifier || @research_output.identifiers.build(identifier_scheme: scheme)
+    target.value = clean_doi
   end
 
   def output_params

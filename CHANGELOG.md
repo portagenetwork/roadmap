@@ -2,9 +2,6 @@
 
 ## [Unreleased]
 
-### Fixed
- - Resolve DOI metadata once when pre-filling research outputs, with specific lookup errors and retry [#1427](https://github.com/portagenetwork/roadmap/pull/1427)
-
 ### Changed
  - Remove organisational visibility from plan snapshots [#1452](https://github.com/portagenetwork/roadmap/pull/1452)
 
