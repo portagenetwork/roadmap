@@ -8,9 +8,11 @@ class PlanSnapshotsController < ApplicationController
 
   JSON_GENERATION_ERROR_ATTRIBUTES = %i[rda_json extension_json].freeze
 
+  skip_before_action :authenticate_user!, only: %i[tombstone_page landing_page show], raise: false
   before_action :set_plan
-  before_action :authorize_plan, except: [:tombstone_page]
-  before_action :set_snapshot, only: %i[show tombstone tombstone_page]
+  before_action :authorize_plan, except: %i[tombstone_page landing_page show]
+  before_action :set_snapshot, only: %i[show tombstone tombstone_page landing_page]
+  before_action :authorize_show, only: %i[show]
 
   # GET /plans/:plan_id/versions
   def index
@@ -58,6 +60,7 @@ class PlanSnapshotsController < ApplicationController
   def tombstone
     authorize @snapshot
     tombstone_snapshot_transaction
+    PublishDoiJob.perform_later(@snapshot) if @snapshot.identifier.present? && @plan.dmp_id.present?
     redirect_to plan_snapshots_path(@plan), notice: format(
       _('Version %{version} has been tombstoned and its DOI status has been updated to registered.'),
       version: @snapshot.version
@@ -73,7 +76,22 @@ class PlanSnapshotsController < ApplicationController
     render :tombstone
   end
 
+  # GET /plans/:plan_id/versions/:version/landing
+  def landing_page
+    return redirect_to tombstone_plan_snapshot_path(@plan, @snapshot.version) if @snapshot.tombstoned?
+    return head :not_found unless @snapshot.publicly_visible? || @snapshot.identifier.present?
+
+    render :landing
+  end
+
   private
+
+  def authorize_show
+    return if @snapshot.tombstoned? || @snapshot.publicly_visible?
+
+    authenticate_user! if respond_to?(:authenticate_user!, true)
+    authorize_plan
+  end
 
   def create_snapshot_in_transaction
     @plan.with_lock do
