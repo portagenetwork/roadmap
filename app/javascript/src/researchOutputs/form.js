@@ -41,7 +41,7 @@ $(() => {
     const statusText = $('#doi_lookup_status');
 
     const doi = inputField.val().trim();
-    const cleanDoi = doi.replace(/^https?:\/\/doi\.org\//i, '');
+    const cleanDoi = doi.replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, '');
 
     const prefillPath = button.data('prefill-path');
 

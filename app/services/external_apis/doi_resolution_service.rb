@@ -49,12 +49,8 @@ module ExternalApis
       def fetch_metadata(doi:)
         return { status: :blank } if doi.blank?
 
-        # Strip 'https://doi.org/'
-        clean_doi = doi.strip.gsub(%r{^https?://doi.org/}, '')
-
-        # Validate DOIs with regex
-        # See https://www.crossref.org/blog/dois-and-matching-regular-expressions/ for more
-        return { status: :invalid } unless clean_doi.match?(MODERN_DOI_REGEX) || clean_doi.match?(OLD_DOI_REGEX)
+        clean_doi = normalize_doi(doi)
+        return { status: :invalid } if clean_doi.blank?
 
         # Check top-level metadata cache first to prevent duplicate resolutions
         cache_key = "doi_resolution/metadata/#{clean_doi.downcase}"
