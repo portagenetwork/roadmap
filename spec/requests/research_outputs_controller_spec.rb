@@ -292,6 +292,98 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
       expect(research_output.identifier_for_scheme(scheme: 'doi')&.value_without_scheme_prefix).to eq(doi)
     end
 
+    describe 'replacing repository and metadata standard selections' do
+      let(:research_output) { create(:research_output, plan: plan, title: 'Original title') }
+      let(:new_repository) { create(:repository) }
+      let(:new_metadata_standard) { create(:metadata_standard) }
+      let(:updated_output_params) do
+        {
+          title: 'Updated title',
+          output_type: research_output.output_type,
+          access: research_output.access,
+          repositories_attributes: { '0' => { id: new_repository.id } },
+          metadata_standards_attributes: { '0' => { id: new_metadata_standard.id } }
+        }
+      end
+
+      before do
+        research_output.identifiers.create!(identifier_scheme: doi_scheme, value: doi)
+      end
+
+      it 'preserves existing selections when an invalid DOI prevents an update' do
+        Rails.configuration.x.madmp.stubs(:enable_repository_selection).returns(true)
+        Rails.configuration.x.madmp.stubs(:enable_metadata_standard_selection).returns(true)
+        original_repository = research_output.repositories.first
+        original_metadata_standard = research_output.metadata_standards.first
+
+        patch plan_research_output_path(plan, research_output),
+              params: { prefill_doi: 'bad-doi', research_output: updated_output_params }
+
+        expect(response).to have_http_status(:ok)
+        expect(flash[:alert]).to match(/does not appear to be a valid DOI/i)
+        document = Nokogiri::HTML(response.body)
+        expect(document.at_css('#research_output_title')['value']).to eq('Updated title')
+        expect(document.at_css('#doi_lookup_input')['value']).to eq('bad-doi')
+        expect(document.at_css("input[name*='repositories_attributes'][value='#{new_repository.id}']")).to be_present
+        expect(document.at_css("input[name*='metadata_standards_attributes'][value='#{new_metadata_standard.id}']"))
+          .to be_present
+
+        research_output.reload
+        aggregate_failures do
+          expect(research_output.title).to eq('Original title')
+          expect(research_output.identifier_for_scheme(scheme: 'doi')&.value_without_scheme_prefix).to eq(doi)
+          expect(research_output.repositories).to contain_exactly(original_repository)
+          expect(research_output.metadata_standards).to contain_exactly(original_metadata_standard)
+        end
+      end
+
+      it 'replaces existing selections when the update succeeds' do
+        new_doi = '10.1111/new-doi'
+
+        patch plan_research_output_path(plan, research_output),
+              params: { prefill_doi: new_doi, research_output: updated_output_params }
+
+        expect(response).to redirect_to(plan_research_outputs_path(plan))
+        research_output.reload
+        expect(research_output.title).to eq('Updated title')
+        expect(research_output.identifier_for_scheme(scheme: 'doi')&.value_without_scheme_prefix).to eq(new_doi)
+        expect(research_output.repositories).to contain_exactly(new_repository)
+        expect(research_output.metadata_standards).to contain_exactly(new_metadata_standard)
+      end
+    end
+
+    it 'preserves existing selections when another validation prevents an update' do
+      research_output = create(:research_output, plan: plan)
+      original_repository = research_output.repositories.first
+      original_metadata_standard = research_output.metadata_standards.first
+
+      patch plan_research_output_path(plan, research_output), params: {
+        prefill_doi: doi,
+        research_output: { title: '', output_type: research_output.output_type, access: research_output.access }
+      }
+
+      expect(response).to have_http_status(:ok)
+      research_output.reload
+      expect(research_output.identifier_for_scheme(scheme: 'doi')).to be_nil
+      expect(research_output.repositories).to contain_exactly(original_repository)
+      expect(research_output.metadata_standards).to contain_exactly(original_metadata_standard)
+    end
+
+    it 'removes existing selections when a valid update submits none' do
+      research_output = create(:research_output, plan: plan)
+
+      patch plan_research_output_path(plan, research_output), params: {
+        prefill_doi: doi,
+        research_output: { title: research_output.title, output_type: research_output.output_type,
+                           access: research_output.access }
+      }
+
+      expect(response).to redirect_to(plan_research_outputs_path(plan))
+      research_output.reload
+      expect(research_output.repositories).to be_empty
+      expect(research_output.metadata_standards).to be_empty
+    end
+
     it 'normalizes a full DOI URL when saved without clicking Fetch & Add' do
       post plan_research_outputs_path(plan), params: {
         prefill_doi: "  https://doi.org/#{doi}  ",
