@@ -19,41 +19,39 @@ class ResearchOutputsController < ApplicationController
 
   # GET /plans/:plan_id/research_outputs/new
   def new
-    @research_output = ResearchOutput.new(plan_id: @plan.id)
+    @research_output = ResearchOutput.new(plan_id: @plan.id, output_type: nil)
     authorize @research_output
 
-    # Check if a DOI parameter was carried over in the redirect URL query string
+    # Pre-fill from a DOI supplied in the query string
     return unless params[:prefill_doi].present?
 
-    # Call DataCite or Crossref service using the DOI string found in the URL parameters
-    result = ExternalApis::DoiResolutionService.fetch_metadata(doi: params[:prefill_doi])
+    @prefill_doi = params[:prefill_doi].presence
 
-    return unless result[:status] == :ok && result[:metadata].present?
-
-    metadata = result[:metadata]
-
-    @research_output.assign_attributes(
-      metadata.slice(:title, :description, :output_type, :release_date)
-    )
+    prefill_from_doi(params[:prefill_doi])
   end
 
   # GET /plans/:plan_id/research_outputs/:id/edit
   def edit
     authorize @research_output
+    @prefill_doi = params[:prefill_doi].presence ||
+                   @research_output.identifier_for_scheme(scheme: 'doi')&.value_without_scheme_prefix
+    prefill_from_doi(params[:prefill_doi]) if params[:prefill_doi].present?
   end
 
   # POST /plans/:plan_id/research_outputs
-  def create
+  def create # rubocop:disable Metrics/AbcSize
     args = process_byte_size.merge({ plan_id: @plan.id })
     args = process_nillable_values(args: args)
     @research_output = ResearchOutput.new(args)
     authorize @research_output
+    assign_doi_identifier
 
     if @research_output.save
       redirect_to plan_research_outputs_path(@plan),
                   notice: success_message(@research_output, _('added'))
     else
-      flash[:alert] = failure_message(@research_output, _('add'))
+      @prefill_doi = params[:prefill_doi].presence
+      flash.now[:alert] = failure_message(@research_output, _('add'))
       render 'research_outputs/new'
     end
   end
@@ -65,20 +63,26 @@ class ResearchOutputsController < ApplicationController
     args = process_nillable_values(args: args)
     authorize @research_output
 
-    # Clear any existing repository and metadata_standard selections.
-    @research_output.repositories.clear
-    @research_output.metadata_standards.clear
+    saved = ResearchOutput.transaction(requires_new: true) do
+      @research_output.repositories.clear
+      @research_output.metadata_standards.clear
+      assign_doi_identifier
+      raise ActiveRecord::Rollback unless @research_output.update(args)
 
-    if @research_output.update(args)
+      true
+    end
+
+    if saved
       redirect_to plan_research_outputs_path(@plan),
                   notice: success_message(@research_output, _('saved'))
     else
-      redirect_to edit_plan_research_output_path(@plan, @research_output),
-                  alert: failure_message(@research_output, _('save'))
+      @prefill_doi = params[:prefill_doi].presence
+      flash.now[:alert] = failure_message(@research_output, _('save'))
+      render 'research_outputs/edit'
     end
   end
-  # rubocop:enable Metrics/AbcSize
 
+  # rubocop:enable Metrics/AbcSize
   # DELETE /plans/:plan_id/research_outputs/:id
   def destroy
     authorize @research_output
@@ -156,29 +160,50 @@ class ResearchOutputsController < ApplicationController
                                       .page(params[:page])
   end
 
-  def fetch_doi
-    authorize ResearchOutput.new(plan_id: params[:plan_id])
+  private
 
-    # Obtain research output metadata from DataCite or Crossref service
-    result = ExternalApis::DoiResolutionService.fetch_metadata(
-      doi: params[:doi]
-    )
-
-    case result[:status]
-    when :ok
-      render json: result[:metadata]
-    when :blank
-      render json: { error: 'DOI is required.' }, status: :bad_request
-    when :invalid
-      render json: { error: 'Does not appear to be a valid DOI.' }, status: :bad_request
-    when :not_found
-      render json: { error: 'Could not find metadata for the provided DOI.' }, status: :not_found
+  def prefill_from_doi(doi)
+    result = ExternalApis::DoiResolutionService.fetch_metadata(doi: doi)
+    if result[:status] == :ok
+      @research_output.assign_attributes(
+        result[:metadata].slice(:title, :description, :output_type, :release_date)
+      )
     else
-      render json: { error: 'An unexpected error occurred.' }, status: :internal_server_error
+      flash.now[:alert] = doi_error_message(result[:status])
     end
   end
 
-  private
+  def doi_error_message(status)
+    case status
+    when :blank
+      _('DOI is required.')
+    when :invalid
+      _('Does not appear to be a valid DOI.')
+    when :not_found
+      _('Could not find metadata for the provided DOI. Please check the DOI and try again, or enter details manually.')
+    when :service_unavailable
+      _('DOI lookup service is currently unavailable. Please enter details manually.')
+    else
+      _('An unexpected error occurred.')
+    end
+  end
+
+  def assign_doi_identifier
+    scheme = IdentifierScheme.by_name('doi').first
+    raw_doi = @prefill_doi || params[:prefill_doi]
+    return if scheme.blank? || raw_doi.nil?
+
+    identifier = @research_output.identifier_for_scheme(scheme: scheme)
+    return identifier&.mark_for_destruction if raw_doi.blank?
+
+    set_doi_identifier(scheme, identifier, raw_doi)
+  end
+
+  def set_doi_identifier(scheme, identifier, raw_doi)
+    clean_doi = ExternalApis::DoiResolutionService.normalize_doi(raw_doi) || raw_doi.to_s.strip
+    target = identifier || @research_output.identifiers.build(identifier_scheme: scheme)
+    target.value = clean_doi
+  end
 
   def output_params
     params.require(:research_output)

@@ -29,7 +29,7 @@ RSpec.describe Api::V2::DeserializationService do
       scheme = create(:identifier_scheme, name: 'doi',
                                           identifier_prefix: Faker::Internet.url)
       dmp_id = create(:identifier, identifiable: @plan,
-                                   identifier_scheme: scheme, value: SecureRandom.uuid)
+                                   identifier_scheme: scheme, value: '10.9999/12345')
       json = { type: 'doi', identifier: dmp_id.value }
       expect(described_class.plan_from_dmp_id(dmp_id: json)).to eql(@plan)
     end
