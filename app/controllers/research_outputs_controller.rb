@@ -22,20 +22,15 @@ class ResearchOutputsController < ApplicationController
     @research_output = ResearchOutput.new(plan_id: @plan.id, output_type: nil)
     authorize @research_output
 
-    # Pre-fill from a DOI supplied in the query string
-    return unless params[:prefill_doi].present?
-
-    @prefill_doi = params[:prefill_doi].presence
-
-    prefill_from_doi(params[:prefill_doi])
+    render_doi_lookup(params[:prefill_doi]) if request.format.json?
   end
 
   # GET /plans/:plan_id/research_outputs/:id/edit
   def edit
     authorize @research_output
-    @prefill_doi = params[:prefill_doi].presence ||
-                   @research_output.identifier_for_scheme(scheme: 'doi')&.value_without_scheme_prefix
-    prefill_from_doi(params[:prefill_doi]) if params[:prefill_doi].present?
+    return render_doi_lookup(params[:prefill_doi]) if request.format.json?
+
+    @prefill_doi = @research_output.identifier_for_scheme(scheme: 'doi')&.value_without_scheme_prefix
   end
 
   # POST /plans/:plan_id/research_outputs
@@ -162,15 +157,27 @@ class ResearchOutputsController < ApplicationController
 
   private
 
-  def prefill_from_doi(doi)
+  def render_doi_lookup(doi)
     result = ExternalApis::DoiResolutionService.fetch_metadata(doi: doi)
-    if result[:status] == :ok
-      @research_output.assign_attributes(
-        result[:metadata].slice(:title, :description, :output_type, :release_date)
-      )
-    else
-      flash.now[:alert] = doi_error_message(result[:status])
+    if result[:status] != :ok
+      return render json: { error: doi_error_message(result[:status]) }, status: :unprocessable_entity
     end
+
+    @research_output.assign_attributes(result[:metadata].slice(:title, :description, :output_type, :release_date))
+    presenter = ResearchOutputPresenter.new(research_output: @research_output)
+    render json: {
+      metadata: doi_lookup_metadata,
+      byte_sizable: presenter.byte_sizable?
+    }
+  end
+
+  def doi_lookup_metadata
+    {
+      title: @research_output.title,
+      description: @research_output.description,
+      output_type: @research_output.output_type,
+      release_date: @research_output.release_date&.to_date&.iso8601
+    }
   end
 
   def doi_error_message(status)
