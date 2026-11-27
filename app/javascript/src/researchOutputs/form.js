@@ -85,7 +85,11 @@ $(() => {
       const other = metadata.output_type === 'other';
       $('.output-type-description').toggleClass('visually-hidden-focusable d-none', !other);
       $('#research_output_output_type_description').attr('aria-required', String(other));
-      $('.file-details-section').toggleClass('d-none', !result.byte_sizable);
+      const fileDetailsSection = $('.file-details-section');
+      fileDetailsSection.toggleClass('d-none', !result.byte_sizable);
+      if (!result.byte_sizable) {
+        fileDetailsSection.find('#research_output_file_size').val('');
+      }
       setLookupStatus('text-success', getConstant('DOI_LOOKUP_SUCCESS'));
     }).fail((xhr) => {
       const message = xhr.responseJSON && xhr.responseJSON.error;
