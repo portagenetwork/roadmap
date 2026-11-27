@@ -19,6 +19,7 @@ repository_tooltip = _("Repositories preserve, manage, and provide access to man
         <p class="form-label mt-0 mb-2">
           <%= _("Enter a DOI (e.g., 10.5281/zenodo.4884775) to automatically import its metadata into a new form.") %>
         </p>
+        <p class="form-text"><%= _("A successful lookup replaces the title, description, output type, and release date.") %></p>
 
         <div class="input-group">
           <input type="text"
@@ -35,7 +36,7 @@ repository_tooltip = _("Repositories preserve, manage, and provide access to man
           </button>
         </div>
 
-        <span id="doi_lookup_status" class="form-text d-none mt-2 mb-0"></span>
+        <span id="doi_lookup_status" class="form-text d-none mt-2 mb-0" role="status" aria-live="polite"></span>
       </div>
     </div>
   </div>

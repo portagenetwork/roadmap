@@ -47,23 +47,72 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
     Rails.cache.clear
   end
 
-  describe 'GET /plans/:plan_id/research_outputs/new with DOI prefill' do
-    it 'resolves the DOI once and pre-fills the form' do
-      datacite_request = stub_datacite_request(
-        body: datacite_json,
-        headers: { 'Content-Type' => 'application/json' }
-      )
+  describe 'DOI lookup' do
+    describe 'JSON DOI lookup' do
+      it 'returns metadata without saving a research output' do
+        datacite_request = stub_datacite_request(
+          body: datacite_json,
+          headers: { 'Content-Type' => 'application/json' }
+        )
 
-      get new_plan_research_output_path(plan, prefill_doi: doi)
+        expect do
+          get new_plan_research_output_path(plan, format: :json), params: { prefill_doi: doi }
+        end.not_to change(ResearchOutput, :count)
 
-      expect(response).to have_http_status(:ok)
-      expect(response.body).to include('Example dataset')
-      document = Nokogiri::HTML(response.body)
-      expect(document.at_css('#doi_lookup_input')['value']).to eq(doi)
-      expect(document.at_css('#research_output_output_type option[selected]')['value']).to eq('dataset')
-      expect(document.at_css('#research_output_release_date')['value']).to eq('2021-05-12')
-      expect(flash[:alert]).to be_nil
-      expect(datacite_request).to have_been_requested.once
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body).to eq(
+          'metadata' => {
+            'title' => 'Example dataset',
+            'description' => 'Abstract description text...',
+            'output_type' => 'dataset',
+            'release_date' => '2021-05-12'
+          },
+          'byte_sizable' => true
+        )
+        expect(datacite_request).to have_been_requested.once
+      end
+
+      it 'returns an error when the DOI is not found without changing the existing output' do
+        research_output = create(:research_output, plan: plan, title: 'Existing output')
+        stub_datacite_request(status: 404)
+        stub_crossref_request(status: 404)
+
+        get edit_plan_research_output_path(plan, research_output, format: :json), params: { prefill_doi: doi }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.parsed_body.fetch('error')).to include('Could not find metadata')
+        expect(research_output.reload.title).to eq('Existing output')
+      end
+
+      it 'returns an error when DOI providers are unavailable' do
+        stub_datacite_request(status: 500)
+        stub_crossref_request(status: 500)
+
+        get new_plan_research_output_path(plan, format: :json), params: { prefill_doi: doi }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.parsed_body.fetch('error')).to include('DOI lookup service is currently unavailable')
+      end
+
+      it 'validates DOI input without calling providers' do
+        datacite_request = stub_request(:get, /api\.datacite\.org/)
+
+        get new_plan_research_output_path(plan, format: :json), params: { prefill_doi: 'bad-doi' }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.parsed_body.fetch('error')).to include('Does not appear to be a valid DOI')
+        expect(datacite_request).not_to have_been_requested
+      end
+
+      it 'requires permission to edit the plan' do
+        other_plan = create(:plan)
+        datacite_request = stub_request(:get, /api\.datacite\.org/)
+
+        get new_plan_research_output_path(other_plan, format: :json), params: { prefill_doi: doi }
+
+        expect(response).to have_http_status(:forbidden)
+        expect(datacite_request).not_to have_been_requested
+      end
     end
 
     it 'supports metadata larger than the cookie session limit' do
@@ -75,69 +124,27 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
         headers: { 'Content-Type' => 'application/json' }
       )
 
-      get new_plan_research_output_path(plan, prefill_doi: doi)
+      get new_plan_research_output_path(plan, format: :json), params: { prefill_doi: doi }
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include('A long abstract')
+      expect(response.parsed_body.dig('metadata', 'description')).to eq(large_description.strip)
       expect(session[:doi_prefill_data]).to be_nil
     end
 
-    it 'rejects an invalid DOI without calling providers and stays on the form' do
-      invalid_doi = 'xxxx 10.1234/example'
+    it 'does not look up a DOI supplied to an HTML form URL' do
       datacite_request = stub_request(:get, /api\.datacite\.org/)
       crossref_request = stub_request(:get, /api\.crossref\.org/)
+      research_output = create(:research_output, plan: plan, title: 'Existing output')
 
-      get new_plan_research_output_path(plan, prefill_doi: invalid_doi)
+      get new_plan_research_output_path(plan), params: { prefill_doi: doi }
 
       expect(response).to have_http_status(:ok)
+      expect(Nokogiri::HTML(response.body).at_css('#doi_lookup_input')['value']).to be_blank
+      get edit_plan_research_output_path(plan, research_output), params: { prefill_doi: doi }
+      expect(response).to have_http_status(:ok)
+      expect(Nokogiri::HTML(response.body).at_css('#research_output_title')['value']).to eq('Existing output')
       expect(datacite_request).not_to have_been_requested
       expect(crossref_request).not_to have_been_requested
-      expect(response.body).to include('Does not appear to be a valid DOI.')
-
-      document = Nokogiri::HTML(response.body)
-      expect(document.at_css('#doi_lookup_input')['value']).to eq(invalid_doi)
-    end
-
-    context 'when resolving the DOI fails' do
-      it 'tells the user when providers are unavailable' do
-        stub_datacite_request(status: 500)
-        stub_crossref_request(status: 500)
-
-        get new_plan_research_output_path(plan, prefill_doi: doi)
-
-        expect(response).to have_http_status(:ok)
-        expect(response.body).to include('DOI lookup service is currently unavailable')
-      end
-
-      it 'tells the user when metadata cannot be found and preserves context on new' do
-        missing_doi = '10.5281/not-found'
-        stub_datacite_request(target_doi: missing_doi, status: 404)
-        stub_crossref_request(target_doi: missing_doi, status: 404)
-
-        get new_plan_research_output_path(plan, prefill_doi: missing_doi)
-
-        expect(response).to have_http_status(:ok)
-        expect(response.body).to include('Could not find metadata for the provided DOI.')
-
-        document = Nokogiri::HTML(response.body)
-        expect(document.at_css('#doi_lookup_input')['value']).to eq(missing_doi)
-      end
-
-      it 'tells the user when metadata cannot be found and preserves context on edit' do
-        research_output = create(:research_output, plan: plan, title: 'Existing output')
-        missing_doi = '10.5281/not-found'
-        stub_datacite_request(target_doi: missing_doi, status: 404)
-        stub_crossref_request(target_doi: missing_doi, status: 404)
-
-        get edit_plan_research_output_path(plan, research_output, prefill_doi: missing_doi)
-
-        expect(response).to have_http_status(:ok)
-        expect(response.body).to include('Could not find metadata for the provided DOI.')
-
-        document = Nokogiri::HTML(response.body)
-        expect(document.at_css('#research_output_title')['value']).to eq('Existing output')
-        expect(document.at_css('#doi_lookup_input')['value']).to eq(missing_doi)
-      end
     end
   end
 
@@ -212,12 +219,11 @@ RSpec.describe 'ResearchOutputs DOI Fetching', type: :request do
         headers: { 'Content-Type' => 'application/json' }
       )
 
-      get edit_plan_research_output_path(plan, research_output, prefill_doi: doi)
+      get edit_plan_research_output_path(plan, research_output, format: :json), params: { prefill_doi: doi }
 
       expect(response).to have_http_status(:ok)
-      document = Nokogiri::HTML(response.body)
-      expect(document.at_css('#research_output_title')['value']).to eq('Example dataset')
-      expect(document.at_css('#research_output_release_date')['value']).to eq('2021-05-12')
+      expect(response.parsed_body.dig('metadata', 'title')).to eq('Example dataset')
+      expect(response.parsed_body.dig('metadata', 'release_date')).to eq('2021-05-12')
 
       original_count = ResearchOutput.count
 
