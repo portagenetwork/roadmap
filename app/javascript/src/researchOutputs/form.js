@@ -33,7 +33,6 @@ $(() => {
     }
   });
 
-  // Resolve the DOI in the new form request to avoid a second provider lookup.
   $('body').on('click', '#btn_prefill_doi', (e) => {
     e.preventDefault();
     const button = $(e.currentTarget);
@@ -64,7 +63,40 @@ $(() => {
     }
 
     button.prop('disabled', true).text(getConstant('DOI_VALIDATION_VERIFYING'));
-    window.location.href = `${prefillPath}?prefill_doi=${encodeURIComponent(cleanDoi)}`;
+    setLookupStatus('text-muted', getConstant('DOI_VALIDATION_VERIFYING'));
+
+    $.ajax({
+      url: prefillPath,
+      data: { prefill_doi: cleanDoi },
+      dataType: 'json',
+    }).done((result) => {
+      if (inputField.val().trim() !== doi) {
+        setLookupStatus('text-danger', getConstant('DOI_LOOKUP_CHANGED'));
+        return;
+      }
+
+      const { metadata } = result;
+      $('#research_output_title').val(metadata.title);
+      $('#research_output_description').val(metadata.description);
+      const editor = Tinymce.findEditorById('research_output_description');
+      if (editor) editor.setContent(metadata.description || '');
+      $('#research_output_release_date').val(metadata.release_date);
+      $('#research_output_output_type').val(metadata.output_type);
+      const other = metadata.output_type === 'other';
+      $('.output-type-description').toggleClass('visually-hidden-focusable d-none', !other);
+      $('#research_output_output_type_description').attr('aria-required', String(other));
+      const fileDetailsSection = $('.file-details-section');
+      fileDetailsSection.toggleClass('d-none', !result.byte_sizable);
+      if (!result.byte_sizable) {
+        fileDetailsSection.find('#research_output_file_size').val('');
+      }
+      setLookupStatus('text-success', getConstant('DOI_LOOKUP_SUCCESS'));
+    }).fail((xhr) => {
+      const message = xhr.responseJSON && xhr.responseJSON.error;
+      setLookupStatus('text-danger', message || getConstant('DOI_LOOKUP_ERROR'));
+    }).always(() => {
+      button.prop('disabled', false).text(getConstant('DOI_BUTTON_TEXT_DEFAULT'));
+    });
   });
 
   // Expands/Collapses the search results 'More info'/'Less info' section
