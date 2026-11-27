@@ -63,12 +63,16 @@ class ResearchOutputsController < ApplicationController
     args = process_nillable_values(args: args)
     authorize @research_output
 
-    # Clear any existing repository and metadata_standard selections.
-    @research_output.repositories.clear
-    @research_output.metadata_standards.clear
-    assign_doi_identifier
+    saved = ResearchOutput.transaction(requires_new: true) do
+      @research_output.repositories.clear
+      @research_output.metadata_standards.clear
+      assign_doi_identifier
+      raise ActiveRecord::Rollback unless @research_output.update(args)
 
-    if @research_output.update(args)
+      true
+    end
+
+    if saved
       redirect_to plan_research_outputs_path(@plan),
                   notice: success_message(@research_output, _('saved'))
     else
